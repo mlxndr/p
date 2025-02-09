@@ -3,18 +3,53 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="author" content="Marc Alexander">
-		<title>My First reveal.js Presentation</title>
 		<link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
         <link rel="stylesheet" href="css/fonts.css">
 		<link rel="stylesheet" href="css/base.css"  id="theme">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <meta name="author" content="Marc Alexander">
+		<title>Test reveal.js Presentation</title>
     </head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
+
+                <!-- Title Pages -->
+
+                <section>
+                    <h1 class="tpa1 r-fit-text">“...if I was a labrador I'd be put down”</h1>
+                    <h2 class="tpa2 r-fit-text">The discourse of Scottish opinions on assisted dying</h2>
+                    <br><br><br><br><br>
+                    <table class="tpa3">
+                        <tr>
+                            <td class="tpa4-l">Marc Alexander <span class="subtle">and</span> James Balfour<br><span class="subtle">University of Glasgow</span></td>
+                            <td class="tpa4-r"><span class="small-caps">pala2024</span>, Sheffield<br><span class="subtle">June 2024</span></td>
+                        </tr>
+                        <tr style="padding-bottom: 5em; padding-top: 5em""><td colspan="2"><hr></td></tr>
+                        <tr>
+                            <td class="tpa4-l"><img src="img/leverhulme_cmyk_black2.png" height="55em" alt="Leverhulme Trust Logo"></td>
+                            <td class="tpa4-r"><img src="img/uog_mono.png"  height="58em" alt="University of Glasgow Logo"></td>
+                        </tr>
+                    </table>
+                </section>
+    
+                <section>
+                    <h1 class="r-fit-text tpb1">Dynamic Semantics</h1>
+                    <h2 class="r-fit-text tpb2">Change and Structure in the Meaning of English</h2>
+
+                    <br><br><br><br><br>
+
+                    <div class="tpb3">
+                        <p>Centre for Research in Linguistics, Queen's University Belfast<br><small><span class="subtle">February 2025</span></small></p>
+                        <p>—</p>
+                        <p>Marc Alexander, <span class="subtle">with</span> Fraser Dallachy, Christian Kay, <span class="subtle">and</span> Andrew Struan <br><small><span class="subtle">University of Glasgow</span></small></p>
+                    </div>
+                </section>
+
+                <!-- Pages -->
+
 				<section>
-					<h1>My First Presentation</h1>
+					<h1>My Sample Presentation</h1>
 					<p>Created with reveal.js</p>
 				</section>
 				
@@ -47,115 +82,29 @@
 					<p>This slide has a blue background</p>
 				</section>
 
+                <!-- Closing Slides -->
+
                 <section>
-                    <h1 class="r-fit-text" style="font-weight: bold; font-family: var(--r-main-font);">"...if I was a labrador I'd be put down"</h1>
-                    <h2 class="r-fit-text" style="font-size: 1.5em; font-weight: normal;">The discourse of Scottish opinions on assisted dying</h2>
+                    <h1 class="tpa1 r-fit-text">“...if I was a labrador I'd be put down”</h1>
+                    <h2 class="tpa2 r-fit-text">The discourse of Scottish opinions on assisted dying</h2>
                     <br><br><br><br><br>
-                    <table style="width: 100%;">
+                    <table class="tpa3">
                         <tr>
-                            <td style="width: 50%; text-align: left;">Marc Alexander <span class="subtle">and</span> James Balfour<br><span class="subtle">University of Glasgow</span></td>
-                            <td style="width: 50%; text-align: right;"><span class="small-caps">pala2024</span>, Sheffield<br><span class="subtle">June 2024</span></td>
+                            <td class="tpa4-l">Marc Alexander <span class="subtle">and</span> James Balfour<br><span  style="font-size: 0.7em;"">marc.alexander@glasgow.ac.uk, james.balfour@glasgow.ac.uk</span></td>
+                            <td class="tpa4-r" style="vertical-align: bottom;">Slides:</td>
                         </tr>
                         <tr style="padding-bottom: 5em; padding-top: 5em""><td colspan="2"><hr></td></tr>
                         <tr>
-                            <td style="width: 50%; text-align: left;"><img src="img/leverhulme_cmyk_black2.png" height="70em" alt="Leverhulme Trust Logo"></td>
-                            <td style="width: 50%; text-align: right;"><img src="img/uog_mono.png"  height="70em" alt="University of Glasgow Logo"></td>
+                            <td class="tpa4-l" style="line-height: 2.2;"><img src="img/uog_mono.png"  width="200px" alt="University of Glasgow Logo"><br><img src="img/leverhulme_cmyk_black2.png" width="200px" alt="Leverhulme Trust Logo"></td>
+                            <td class="tpa4-r"></td>
                         </tr>
                     </table>
-    
                 </section>
-    
-                <!-- Second Slide - Dynamic Semantics -->
-                <section>
-                    <h1 style="margin: 20px; padding: 0px;">Dynamic Semantics</h1>
-                    <h2 class="r-fit-text" style="margin: 0px; padding: 0px;">Change and Structure in the Meaning of English</h2>
-
-                    <br><br><br><br><br><br>
-
-                    <div>
-                        <p>Centre for Research in Linguistics, Queen's University Belfast<br><small><span class="subtle">February 2025</span></p>
-                        <p><small>–</small></p>
-                        <p>Marc Alexander, <span class="subtle">with</span> Fraser Dallachy, Christian Kay, <span class="subtle">and</span> Andrew Struan <br><small><span class="subtle">University of Glasgow</span></small></p>
-                    </div>
-                </section>
-    
-
+ 
+                <script src="node_modules/reveal.js/dist/reveal.js"></script>
+                <script src="node_modules/reveal.js-menu/menu.js"></script>
+                <script src="inc/revconfig.js"></script>
 			</div>
 		</div>
-		<script src="node_modules/reveal.js/dist/reveal.js"></script>
-        <script src="node_modules/reveal.js-menu/menu.js"></script>
-		<script>
-			Reveal.initialize({
-                plugins: [ RevealMenu ],
-                menu: {
-                    // Function to get metadata
-                    getMetadata: function() {
-                        return {
-                            author: document.querySelector('meta[name="author"]').getAttribute('content'),
-                            technologies: document.querySelector('meta[name="technologies"]').getAttribute('content'),
-                            lastUpdated: document.querySelector('meta[name="last-updated"]').getAttribute('content')
-                        };
-                    },
-                    side: 'left',
-                    width: 'normal',
-                    custom: [
-                        {
-                            title: 'Info',
-                            icon: '<i class="fa fa-info">ℹ</i>',
-                            content: '<div class="slide-menu-info"><br><small>' +
-                                    '<i class="fa-solid fa-person-chalkboard" aria-hidden="true" style="opacity: 0.4;"></i> Created using <a href="https://revealjs.com" target="blank">reveal.js</a> & <a href="https://github.com/denehyg/reveal.js-menu" target="blank">reveal.js-menu</a><br>' +
-                                    '<i class="fa-solid fa-user-pen" aria-hidden="true" style="opacity: 0.4;"></i> Customisations by Marc Alexander <br>' +
-                                    '<i class="fa-solid fa-font" aria-hidden="true" style="opacity: 0.4;"></i> Fonts by <a href="https://mbtype.com/" target="blank">Matthew Butterick</a> <br>' +
-                                    '<i class="fa-brands fa-github" aria-hidden="true" style="opacity: 0.4;"></i> Hosted on <a href="https://mlxndr.github.io/" target="blank">GitHub</a><br></small>' +
-                                    '</div>'
-                        }
-                    ],
-                    numbers: false,
-                    titleSelector: 'h1, h2, h3',
-                    useTextContentForMissingTitles: true,
-                    hideMissingTitles: false,
-                    openButton: false,
-                    keyboard: true,
-                    markers: true,
-                    themes: [
-                        { 
-                            name: 'Dark Background', 
-                            theme: 'css/th-d-bg.css'
-                        },
-                        { 
-                            name: 'Dark Black',
-                            theme: 'css/th-d-bl.css'
-                        },
-                        { 
-                            name: 'Dark Green',
-                            theme: 'css/th-d-gr.css'
-                        },
-                        { 
-                            name: 'Dark Blue',
-                            theme: 'css/th-d-bu.css'
-                        },
-                        { 
-                            name: 'Light White',
-                            theme: 'css/th-l-wh.css'
-                        },
-                        { 
-                            name: 'Light Cream',
-                            theme: 'css/th-l-cr.css'
-                        },
-                        { 
-                            name: 'Light Background',
-                            theme: 'css/th-l-bg.css'
-                        }
-                    ],
-                    transitions: true,
-                    loadIcons: true
-                    },
-                controls: true,
-				progress: true,
-				center: true,
-				hash: true,
-                transition: 'slide'
-			});
-		</script>
 	</body>
 </html>

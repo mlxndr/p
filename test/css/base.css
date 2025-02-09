@@ -1,12 +1,50 @@
 /* Base variables */
 :root {
     /* Base fonts */
-    --r-heading-font: 'Concourse OT 3 Regular Caps', sans-serif;
-    --r-heading-bold-font: 'Concourse OT 3 Bold Caps', sans-serif;
-    --r-main-font: 'Concourse OT 3 Regular', sans-serif;
-    --r-serif-font: 'Equity OT B Regular', serif;
+    --r-heading-font: 'Concourse 2 Thin Caps', sans-serif;
+    --r-heading-bold-font: 'Concourse 7 Bold Caps', sans-serif;
+    --r-main-font: 'Concourse 2 Thin', sans-serif;
+    --r-serif-font: 'Century Supra Regular', serif;
     --r-code-font: 'Fira Code', monospace;
-    
+
+    /* Base fonts */
+    .C2 {font-family: 'Concourse 2 Thin';}
+    .C2C {font-family: 'Concourse 2 Thin Caps';}
+    .C2I {font-family: 'Concourse 2 Thin Italic';}
+    .C2IC {font-family: 'Concourse 2 Thin Italic Caps';}
+    .C3 {font-family: 'Concourse 3 Book';}
+    .C3C {font-family: 'Concourse 3 Book Caps';}
+    .C3I {font-family: 'Concourse 3 Book Italic';}
+    .C3IC {font-family: 'Concourse 3 Book Italic Caps';}
+    .C4 {font-family: 'Concourse 4 Medium';}
+    .C4C {font-family: 'Concourse 4 Medium Caps';}
+    .C4I {font-family: 'Concourse 4 Medium Italic';}
+    .C4IC {font-family: 'Concourse 4 Medium Italic Caps';}
+    .C6 {font-family: 'Concourse 6 Semibold';}
+    .C6C {font-family: 'Concourse 6 Semibold Caps';}
+    .C6I {font-family: 'Concourse 6 Semibold Italic';}
+    .C6CI {font-family: 'Concourse 6 Semibold Italic Caps';}
+    .C7 {font-family: 'Concourse 7 Bold';}
+    .C7C {font-family: 'Concourse 7 Bold Caps';}
+    .C7I {font-family: 'Concourse 7 Bold Italic';}
+    .C7CI {font-family: 'Concourse 7 Bold Italic Caps';}
+    .C8 {font-family: 'Concourse 8 Black';}
+    .C8C {font-family: 'Concourse 8 Black Caps';}
+    .C8I {font-family: 'Concourse 8 Black Italic';}
+    .C8CI {font-family: 'Concourse 8 Black Italic Caps';}
+    .E {font-family: 'Equity Regular';}
+    .EC {font-family: 'Equity Regular Caps';}
+    .EI {font-family: 'Equity Italic';}
+    .EIC {font-family: 'Equity Italic Caps';}
+    .EB {font-family: 'Equity Bold';}
+    .EBI {font-family: 'Equity Bold Italic';}
+    .ECIB {font-family: 'Equity Bold Italic Caps';}
+    .EBC {font-family: 'Equity Bold Caps';}
+    .CSB {font-family: 'Century Supra Bold';}
+    .CSI {font-family: 'Century Supra Italic';}
+    .CSIB {font-family: 'Century Supra Bold Italic';}
+    .CS {font-family: 'Century Supra Regular';}
+
     /* Sizes */
     --r-main-font-size: 32px;
     --r-heading1-size: 2.5em;
@@ -35,6 +73,60 @@
     font-family: var(--r-main-font);
     font-weight: normal;
 }
+
+.reveal .tpa1 {
+    font-family: 'Concourse 7 Bold';
+    font-size: 2.5em;
+    font-weight: normal;
+    margin: 0em; 
+    padding: 0em;
+}
+
+.reveal .tpa2 {
+    font-size: 1.8em;
+    font-family: var(--r-main-font);
+    font-weight: normal;
+    font-size: 1.5em; 
+    font-weight: normal; 
+    margin: 0em; 
+    padding: 0.3em;
+}
+
+.reveal .tpa3 {
+    width: 100%; 
+    font-size: 20pt; 
+    line-height: 1.3;
+}
+
+.reveal .tpa4-l {
+    width: 50%; 
+    text-align: left;
+}
+
+.reveal .tpa4-r {
+    width: 50%; 
+    text-align: right;
+}
+
+.reveal .tpb1 {
+    font-family: 'Concourse 2 Thin Caps';
+    margin: 20px; 
+    padding: 0px;
+}
+
+.reveal .tpb2 {
+    font-family: 'Concourse 2 Thin';
+    margin: 0px;
+    padding: 0px;
+}
+
+.reveal .tpb3 {
+    font-family: 'Concourse 2 Thin';
+    font-size: 20pt;
+    margin: 1px;
+    padding: 0px;
+}
+
 .reveal .author {
     margin-top: 2em;
     font-size: 1.2em;
@@ -68,7 +160,7 @@
 
 /* Small caps variant */
 .reveal .small-caps {
-    font-family: 'Concourse OT 3 Regular Caps', sans-serif;
+    font-family: 'Concourse 2 Thin Caps', sans-serif;
 }
 
 /* Serif text */
@@ -77,11 +169,11 @@
 }
 
 .reveal .serif-italic {
-    font-family: 'Equity OT B Italic', serif;
+    font-family: 'Equity Italic', serif;
 }
 
 .reveal .serif-bold {
-    font-family: 'Equity OT B Bold', serif;
+    font-family: 'Equity Bold', serif;
 }
 
 /* Code blocks */
@@ -97,13 +189,13 @@
 
 /* Bold variants */
 .reveal strong {
-    font-family: 'Concourse OT 3 Bold', sans-serif;
+    font-family: 'Concourse 7 Bold', sans-serif;
     font-weight: normal;
 }
 
 /* Italic variants */
 .reveal em {
-    font-family: 'Concourse OT 3 Italic', sans-serif;
+    font-family: 'Concourse 3 Book Italic', sans-serif;
     font-style: normal;
 }
 

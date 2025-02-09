@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>My First reveal.js Presentation</title>
+		<link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
+        <link rel="stylesheet" href="css/fonts.css">
+		<link rel="stylesheet" href="css/custom.css">
+	</head>
+	<body>
+		<div class="reveal d-bg">
+			<div class="slides">
+				<section>
+					<h1>My First Presentation</h1>
+					<p>Created with reveal.js</p>
+				</section>
+				
+				<section>
+					<h2>Slide with Bullet Points</h2>
+					<ul>
+						<li class="fragment">This point appears first</li>
+						<li class="fragment">This point appears second</li>
+						<li class="fragment">And this one last</li>
+					</ul>
+				</section>
+
+				<section data-background="#007acc">
+					<h2>Slide with Custom Background</h2>
+					<p>This slide has a blue background</p>
+				</section>
+			</div>
+		</div>
+		<script src="node_modules/reveal.js/dist/reveal.js"></script>
+        <script src="node_modules/reveal.js-menu/menu.js"></script>
+        <script>
+            Reveal.initialize({
+                menu: {
+                    // Add custom themes to menu
+                    themes: [
+                        {
+                            name: 'Dark (Background)',
+                            theme: 'd-bg'
+                        },
+                        {
+                            name: 'Dark (Black)',
+                            theme: 'd-bl'
+                        },
+                        {
+                            name: 'Dark (Blue tint)',
+                            theme: 'd-bu'
+                        },
+                        {
+                            name: 'Dark (Green tint)',
+                            theme: 'd-gr'
+                        },
+                        {
+                            name: 'Light (Background)',
+                            theme: 'l-bg'
+                        },
+                        {
+                            name: 'Light (White)',
+                            theme: 'l-wh'
+                        },
+                        {
+                            name: 'Light (Cream)',
+                            theme: 'l-cr'
+                        }
+                    ],
+                    // Other menu settings
+                    side: 'left',
+                    width: 300,
+                    numbers: false,
+                    titleSelector: 'h1, h2, h3',
+                    useTextContentForMissingTitles: true,
+                    hideMissingTitles: false,
+                    markers: true,
+                    custom: false,
+                    themesPath: 'css/',
+                    transitions: false,
+                    loadIcons: false
+                },
+            // Other reveal.js options
+                controls: true,
+				progress: true,
+				hash: true,
+			});
+		</script>
+	</body>
+</html>

@@ -1,0 +1,164 @@
+:root {
+    /* Base fonts */
+    --r-heading-font: 'Concourse OT 3 Regular Caps', sans-serif;
+    --r-heading-bold-font: 'Concourse OT 3 Bold Caps', sans-serif;
+    --r-main-font: 'Concourse OT 3 Regular', sans-serif;
+    --r-serif-font: 'Equity OT B Regular', serif;
+    --r-code-font: 'Fira Code', monospace;
+    
+    /* Sizes */
+    --r-main-font-size: 32px;
+    --r-heading1-size: 2.5em;
+    --r-heading2-size: 1.6em;
+
+    /* Colour palette */
+    --black-text: #0D0D0D;
+    --white-text: #FFFFFF;
+    --dark-black-bg: #282828;
+    --dark-green-bg: #353935;
+    --dark-blue-bg: #00003F;
+    --white-bg: #FFFFFF;
+    --cream-bg: #FFFFF4;
+    
+    /* Grey scales */
+    --white-subtle: #A9A9A9;
+    --white-bg-shade: #494949;
+    --black-subtle: #666666;  /* A readable grey for light backgrounds */
+    --black-bg-shade: #E6E6E6;  /* A light grey for light backgrounds */
+}
+
+/* Dark background image theme */
+.reveal.d-bg {
+    background-image: url('bgdark.png');
+    background-size: cover;
+    --r-heading-color: var(--white-text);
+    color: var(--white-text);
+}
+.reveal.d-bg .subtle { color: var(--white-subtle); }
+.reveal.d-bg .bg-shade { color: var(--white-bg-shade); }
+
+/* Dark black theme */
+.reveal.d-bl {
+    background-color: var(--dark-black-bg);
+    --r-heading-color: var(--white-text);
+    color: var(--white-text);
+}
+.reveal.d-bl .subtle { color: var(--white-subtle); }
+.reveal.d-bl .bg-shade { color: var(--white-bg-shade); }
+
+/* Dark green theme */
+.reveal.d-gr {
+    background-color: var(--dark-green-bg);
+    --r-heading-color: var(--white-text);
+    color: var(--white-text);
+}
+.reveal.d-gr .subtle { color: var(--white-subtle); }
+.reveal.d-gr .bg-shade { color: var(--white-bg-shade); }
+
+/* Dark blue theme */
+.reveal.d-bu {
+    background-color: var(--dark-blue-bg);
+    --r-heading-color: var(--white-text);
+    color: var(--white-text);
+}
+.reveal.d-bu .subtle { color: var(--white-subtle); }
+.reveal.d-bu .bg-shade { color: var(--white-bg-shade); }
+
+/* Light white theme */
+.reveal.l-wh {
+    background-color: var(--white-bg);
+    --r-heading-color: var(--black-text);
+    color: var(--black-text);
+}
+.reveal.l-wh .subtle { color: var(--black-subtle); }
+.reveal.l-wh .bg-shade { color: var(--black-bg-shade); }
+
+/* Light cream theme */
+.reveal.l-cr {
+    background-color: var(--cream-bg);
+    --r-heading-color: var(--black-text);
+    color: var(--black-text);
+}
+.reveal.l-cr .subtle { color: var(--black-subtle); }
+.reveal.l-cr .bg-shade { color: var(--black-bg-shade); }
+
+/* Light background image theme */
+.reveal.l-bg {
+    background-image: url('bgcolour.png');
+    background-size: cover;
+    --r-heading-color: var(--black-text);
+    color: var(--black-text);
+}
+.reveal.l-bg .subtle { color: var(--black-subtle); }
+.reveal.l-bg .bg-shade { color: var(--black-bg-shade); }
+
+/* Menu styling */
+.reveal .slide-menu {
+    background-color: #333;
+}
+
+.reveal .slide-menu-item {
+    color: #fff;
+}
+
+.reveal .slide-menu-item.selected {
+    background-color: #666;
+}
+
+/* Base typography */
+.reveal {
+    font-family: var(--r-main-font);
+    font-size: var(--r-main-font-size);
+}
+
+/* Headings */
+.reveal h1, .reveal h2, .reveal h3 {
+    font-family: var(--r-heading-font);
+    color: var(--r-heading-color);
+    text-transform: none; /* Ensures proper small caps usage */
+}
+
+.reveal h1 {
+    font-family: var(--r-heading-bold-font);
+}
+
+/* Small caps variant for main text */
+.reveal .small-caps {
+    font-family: 'Concourse OT 3 Regular Caps', sans-serif;
+}
+
+/* Serif text */
+.reveal .serif {
+    font-family: var(--r-serif-font);
+}
+
+.reveal .serif-italic {
+    font-family: 'Equity OT B Italic', serif;
+}
+
+.reveal .serif-bold {
+    font-family: 'Equity OT B Bold', serif;
+}
+
+/* Code blocks */
+.reveal pre, .reveal code {
+    font-family: var(--r-code-font);
+}
+
+/* Remove italic from blockquotes */
+.reveal blockquote {
+    font-style: normal;
+    font-family: var(--r-serif-font); /* Using Equity for quotes by default */
+}
+
+/* Bold variants */
+.reveal strong {
+    font-family: 'Concourse OT 3 Bold', sans-serif;
+    font-weight: normal; /* Let the font handle the weight */
+}
+
+/* Italic variants */
+.reveal em {
+    font-family: 'Concourse OT 3 Italic', sans-serif;
+    font-style: normal; /* Let the font handle the style */
+}

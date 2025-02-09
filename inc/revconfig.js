@@ -33,31 +33,31 @@ Reveal.initialize({
         themes: [
             { 
                 name: 'Dark Background', 
-                theme: 'css/th-d-bg.css'
+                theme: '../css/th-d-bg.css'
             },
             { 
                 name: 'Dark Black',
-                theme: 'css/th-d-bl.css'
+                theme: '../css/th-d-bl.css'
             },
             { 
                 name: 'Dark Green',
-                theme: 'css/th-d-gr.css'
+                theme: '../css/th-d-gr.css'
             },
             { 
                 name: 'Dark Blue',
-                theme: 'css/th-d-bu.css'
+                theme: '../css/th-d-bu.css'
             },
             { 
                 name: 'Light White',
-                theme: 'css/th-l-wh.css'
+                theme: '../css/th-l-wh.css'
             },
             { 
                 name: 'Light Cream',
-                theme: 'css/th-l-cr.css'
+                theme: '../css/th-l-cr.css'
             },
             { 
                 name: 'Light Background',
-                theme: 'css/th-l-bg.css'
+                theme: '../css/th-l-bg.css'
             }
         ],
         transitions: true,

@@ -216,3 +216,10 @@
     font-size: 0.85em;
     line-height: 1.4;
 }
+
+
+.predicator { color: #D32F2F; }  /* Deep red for predicators */
+.subject { color: #2E7D32; }     /* Deep green for subjects */
+.object { color: #7B1FA2; }      /* Deep purple for objects */
+.complement { color: #1976D2; }  /* Deep blue for complements */
+.adverbial { color: #E65100; }   /* Orange for adverbials */

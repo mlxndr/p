@@ -9,18 +9,33 @@
 		<link rel="stylesheet" href="css/custom.css">
 	</head>
 	<body>
-		<div class="reveal d-bg">
+		<div class="reveal theme-d-bg">
 			<div class="slides">
 				<section>
 					<h1>My First Presentation</h1>
 					<p>Created with reveal.js</p>
 				</section>
 				
+                <section>
+                    <h2>Literary Reference</h2>
+                    <blockquote class="serif">
+                        This quote will appear in Equity
+                    </blockquote>
+                </section>
+
+                <section>
+                    <h2>Code Example</h2>
+                    <pre><code>function example() {
+                    // This will be in Fira Code
+                }</code></pre>
+                </section>
+
 				<section>
 					<h2>Slide with Bullet Points</h2>
 					<ul>
 						<li class="fragment">This point appears first</li>
 						<li class="fragment">This point appears second</li>
+                        <li class="fragment">This text will be in <span class="small-caps">Concourse small caps</span></li>
 						<li class="fragment">And this one last</li>
 					</ul>
 				</section>
@@ -33,57 +48,29 @@
 		</div>
 		<script src="node_modules/reveal.js/dist/reveal.js"></script>
         <script src="node_modules/reveal.js-menu/menu.js"></script>
-        <script>
-            Reveal.initialize({
+		<script>
+			Reveal.initialize({
+                plugins: [ RevealMenu ],
                 menu: {
-                    // Add custom themes to menu
-                    themes: [
-                        {
-                            name: 'Dark (Background)',
-                            theme: 'd-bg'
-                        },
-                        {
-                            name: 'Dark (Black)',
-                            theme: 'd-bl'
-                        },
-                        {
-                            name: 'Dark (Blue tint)',
-                            theme: 'd-bu'
-                        },
-                        {
-                            name: 'Dark (Green tint)',
-                            theme: 'd-gr'
-                        },
-                        {
-                            name: 'Light (Background)',
-                            theme: 'l-bg'
-                        },
-                        {
-                            name: 'Light (White)',
-                            theme: 'l-wh'
-                        },
-                        {
-                            name: 'Light (Cream)',
-                            theme: 'l-cr'
-                        }
-                    ],
-                    // Other menu settings
                     side: 'left',
-                    width: 300,
+                    width: 'normal',
                     numbers: false,
                     titleSelector: 'h1, h2, h3',
                     useTextContentForMissingTitles: true,
                     hideMissingTitles: false,
+                    openButton: false,
+                    keyboard: true,
                     markers: true,
                     custom: false,
                     themesPath: 'css/',
-                    transitions: false,
-                    loadIcons: false
-                },
-            // Other reveal.js options
+                    transitions: true,
+                    loadIcons: true
+                    },
                 controls: true,
 				progress: true,
+				center: true,
 				hash: true,
+                transition: 'slide'
 			});
 		</script>
 	</body>

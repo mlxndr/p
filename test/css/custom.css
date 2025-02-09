@@ -28,82 +28,69 @@
 }
 
 /* Dark background image theme */
-.reveal.d-bg {
+.theme-d-bg {
     background-image: url('bgdark.png');
     background-size: cover;
     --r-heading-color: var(--white-text);
     color: var(--white-text);
 }
-.reveal.d-bg .subtle { color: var(--white-subtle); }
-.reveal.d-bg .bg-shade { color: var(--white-bg-shade); }
+.reveal.theme-d-bg .subtle { color: var(--white-subtle); }
+.reveal.theme-d-bg .bg-shade { color: var(--white-bg-shade); }
 
 /* Dark black theme */
-.reveal.d-bl {
+.reveal.theme-d-bl {
     background-color: var(--dark-black-bg);
     --r-heading-color: var(--white-text);
     color: var(--white-text);
 }
-.reveal.d-bl .subtle { color: var(--white-subtle); }
-.reveal.d-bl .bg-shade { color: var(--white-bg-shade); }
+.reveal.theme-d-bl .subtle { color: var(--white-subtle); }
+.reveal.theme-d-bl .bg-shade { color: var(--white-bg-shade); }
 
 /* Dark green theme */
-.reveal.d-gr {
+.reveal.theme-d-gr {
     background-color: var(--dark-green-bg);
     --r-heading-color: var(--white-text);
     color: var(--white-text);
 }
-.reveal.d-gr .subtle { color: var(--white-subtle); }
-.reveal.d-gr .bg-shade { color: var(--white-bg-shade); }
+.reveal.theme-d-gr .subtle { color: var(--white-subtle); }
+.reveal.theme-d-gr .bg-shade { color: var(--white-bg-shade); }
 
 /* Dark blue theme */
-.reveal.d-bu {
+.reveal.theme-d-bu {
     background-color: var(--dark-blue-bg);
     --r-heading-color: var(--white-text);
     color: var(--white-text);
 }
-.reveal.d-bu .subtle { color: var(--white-subtle); }
-.reveal.d-bu .bg-shade { color: var(--white-bg-shade); }
+.reveal.theme-d-bu .subtle { color: var(--white-subtle); }
+.reveal.theme-d-bu .bg-shade { color: var(--white-bg-shade); }
 
 /* Light white theme */
-.reveal.l-wh {
+.reveal.theme-l-wh {
     background-color: var(--white-bg);
     --r-heading-color: var(--black-text);
     color: var(--black-text);
 }
-.reveal.l-wh .subtle { color: var(--black-subtle); }
-.reveal.l-wh .bg-shade { color: var(--black-bg-shade); }
+.reveal.theme-l-wh .subtle { color: var(--black-subtle); }
+.reveal.theme-l-wh .bg-shade { color: var(--black-bg-shade); }
 
 /* Light cream theme */
-.reveal.l-cr {
+.reveal.theme-l-cr {
     background-color: var(--cream-bg);
     --r-heading-color: var(--black-text);
     color: var(--black-text);
 }
-.reveal.l-cr .subtle { color: var(--black-subtle); }
-.reveal.l-cr .bg-shade { color: var(--black-bg-shade); }
+.reveal.theme-l-cr .subtle { color: var(--black-subtle); }
+.reveal.theme-l-cr .bg-shade { color: var(--black-bg-shade); }
 
 /* Light background image theme */
-.reveal.l-bg {
+.reveal.theme-l-bg {
     background-image: url('bgcolour.png');
     background-size: cover;
     --r-heading-color: var(--black-text);
     color: var(--black-text);
 }
-.reveal.l-bg .subtle { color: var(--black-subtle); }
-.reveal.l-bg .bg-shade { color: var(--black-bg-shade); }
-
-/* Menu styling */
-.reveal .slide-menu {
-    background-color: #333;
-}
-
-.reveal .slide-menu-item {
-    color: #fff;
-}
-
-.reveal .slide-menu-item.selected {
-    background-color: #666;
-}
+.reveal.theme-l-bg .subtle { color: var(--black-subtle); }
+.reveal.theme-l-bg .bg-shade { color: var(--black-bg-shade); }
 
 /* Base typography */
 .reveal {

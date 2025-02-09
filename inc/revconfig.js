@@ -1,5 +1,5 @@
 Reveal.initialize({
-    plugins: [ RevealMenu ],
+    plugins: [ RevealMenu, RevealNotes, RevealHighlight, RevealZoom ],
     menu: {
         // Function to get metadata
         getMetadata: function() {

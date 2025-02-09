@@ -26,8 +26,49 @@
 }
 
 .reveal h1 {
-    font-family: var(--r-heading-bold-font);
+    font-size: 2.5em;
+    font-weight: normal;
 }
+
+.reveal h2 {
+    font-size: 1.8em;
+    font-family: var(--r-main-font);
+    font-weight: normal;
+}
+.reveal .author {
+    margin-top: 2em;
+    font-size: 1.2em;
+}
+.reveal .affiliation {
+    color: var(--r-subtle);
+    font-size: 1em;
+}
+.reveal .conference {
+    position: absolute;
+    right: 0;
+    bottom: 1em;
+    text-align: right;
+    color: var(--r-subtle);
+}
+
+.reveal .logos {
+    position: absolute;
+    bottom: 1em;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.reveal .logos img {
+    height: 60px;
+    margin: 0 20px;
+}
+.dark-slide {
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+}
+
 
 /* Small caps variant */
 .reveal .small-caps {
@@ -72,10 +113,9 @@
 
 /* Menu info box */
 .slide-menu-info {
-    border-top: 1px solid rgba(128, 128, 128, 0.2);
     padding: 10px 0;
-    margin: 20px 20px 0 20px;
-    text-align: center;
+    margin: 0 10px 0 10px;
+    text-align: left;
     font-family: var(--r-main-font);
 }
 

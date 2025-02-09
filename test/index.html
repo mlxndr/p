@@ -3,11 +3,13 @@
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="author" content="Marc Alexander">
 		<title>My First reveal.js Presentation</title>
 		<link rel="stylesheet" href="node_modules/reveal.js/dist/reveal.css">
         <link rel="stylesheet" href="css/fonts.css">
 		<link rel="stylesheet" href="css/base.css"  id="theme">
-	</head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    </head>
 	<body>
 		<div class="reveal th-l-cr">
 			<div class="slides">
@@ -44,6 +46,44 @@
 					<h2>Slide with Custom Background</h2>
 					<p>This slide has a blue background</p>
 				</section>
+
+                <section>
+                    <h1 style="font-size: 1.5em; margin-bottom: 0.5em; font-weight: bold; font-family: var(--r-main-font);">"...if I was a labrador I'd be put down"</h1>
+                    <h2 style="font-size: 1.5em; font-weight: normal; margin-bottom: 1em">The discourse of Scottish opinions on assisted dying</h2>
+                    
+                    <div class="author">
+                        <p>Marc Alexander <span style="color: #666">and</span> James Balfour</p>
+                        <p class="affiliation">University of Glasgow</p>
+                    </div>
+                    
+                    <div class="conference" style="font-size: 1.2em">
+                        <p><span class="small-caps"">pala2024</span>, Sheffield</p>
+                        <p style="color: #666">June 2024</p>
+                    </div>
+                    
+                    <div class="logos">
+                        <img src="/img/leverhulme_cmyk_black2.png" alt="Leverhulme Trust Logo">
+                        <img src="/img/uog_mono.png" alt="University of Glasgow Logo">
+                    </div>
+                </section>
+    
+                <!-- Second Slide - Dynamic Semantics -->
+                <section class="dark-slide">
+                    <h1 style="margin-bottom: 0.3em">Dynamic Semantics</h1>
+                    <h2 style="color: rgba(255,255,255,0.9); margin-bottom: 2em">Change and Structure in the Meaning of English</h2>
+                    
+                    <div style="margin-top: 4em">
+                        <p style="color: rgba(255,255,255,0.8)">Centre for Research in Linguistics, Queen's University Belfast</p>
+                        <p style="color: rgba(255,255,255,0.7)">February 2025</p>
+                    </div>
+                    
+                    <div style="margin-top: 2em">
+                        <p>Marc Alexander, with Fraser Dallachy, Christian Kay, and Andrew Struan</p>
+                        <p>University of Glasgow</p>
+                    </div>
+                </section>
+    
+
 			</div>
 		</div>
 		<script src="node_modules/reveal.js/dist/reveal.js"></script>
@@ -52,8 +92,28 @@
 			Reveal.initialize({
                 plugins: [ RevealMenu ],
                 menu: {
+                    // Function to get metadata
+                    getMetadata: function() {
+                        return {
+                            author: document.querySelector('meta[name="author"]').getAttribute('content'),
+                            technologies: document.querySelector('meta[name="technologies"]').getAttribute('content'),
+                            lastUpdated: document.querySelector('meta[name="last-updated"]').getAttribute('content')
+                        };
+                    },
                     side: 'left',
                     width: 'normal',
+                    custom: [
+                        {
+                            title: 'Info',
+                            icon: '<i class="fa fa-info">ℹ</i>',
+                            content: '<div class="slide-menu-info"><br><small>' +
+                                    '<i class="fa-solid fa-person-chalkboard" aria-hidden="true" style="opacity: 0.4;"></i> Created using <a href="https://revealjs.com" target="blank">reveal.js</a> & <a href="https://github.com/denehyg/reveal.js-menu" target="blank">reveal.js-menu</a><br>' +
+                                    '<i class="fa-solid fa-user-pen" aria-hidden="true" style="opacity: 0.4;"></i> Customisations by Marc Alexander <br>' +
+                                    '<i class="fa-solid fa-font" aria-hidden="true" style="opacity: 0.4;"></i> Fonts by <a href="https://mbtype.com/" target="blank">Matthew Butterick</a> <br>' +
+                                    '<i class="fa-brands fa-github" aria-hidden="true" style="opacity: 0.4;"></i> Hosted on <a href="https://mlxndr.github.io/" target="blank">GitHub</a><br></small>' +
+                                    '</div>'
+                        }
+                    ],
                     numbers: false,
                     titleSelector: 'h1, h2, h3',
                     useTextContentForMissingTitles: true,
@@ -89,17 +149,6 @@
                         { 
                             name: 'Light Background',
                             theme: 'css/th-l-bg.css'
-                        }
-                    ],
-                    custom: [
-                        {
-                            title: 'Info',
-                            icon: '<i class="fa fa-info">ℹ</i>',
-                            content: '<div class="slide-menu-info">' +
-                                    'Created by Marc Alexander<br>' +
-                                    '<small>Using reveal.js & reveal.js-menu<br>' +
-                                    'Last updated: 09 Feb 2025' +
-                                    '</small></div>'
                         }
                     ],
                     transitions: true,

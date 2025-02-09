@@ -1,0 +1,14 @@
+@import url('base.css');
+
+.reveal {
+    background-color: #FFFFF4;
+    color: #0D0D0D;
+}
+
+.reveal .subtle { 
+    color: #666666; 
+}
+
+.reveal .bg-shade { 
+    color: #E6E6E6; 
+}

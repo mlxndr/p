@@ -1,0 +1,85 @@
+/* Base variables */
+:root {
+    /* Base fonts */
+    --r-heading-font: 'Concourse OT 3 Regular Caps', sans-serif;
+    --r-heading-bold-font: 'Concourse OT 3 Bold Caps', sans-serif;
+    --r-main-font: 'Concourse OT 3 Regular', sans-serif;
+    --r-serif-font: 'Equity OT B Regular', serif;
+    --r-code-font: 'Fira Code', monospace;
+    
+    /* Sizes */
+    --r-main-font-size: 32px;
+    --r-heading1-size: 2.5em;
+    --r-heading2-size: 1.6em;
+}
+
+/* Base typography */
+.reveal {
+    font-family: var(--r-main-font);
+    font-size: var(--r-main-font-size);
+}
+
+/* Headings */
+.reveal h1, .reveal h2, .reveal h3 {
+    font-family: var(--r-heading-font);
+    text-transform: none;
+}
+
+.reveal h1 {
+    font-family: var(--r-heading-bold-font);
+}
+
+/* Small caps variant */
+.reveal .small-caps {
+    font-family: 'Concourse OT 3 Regular Caps', sans-serif;
+}
+
+/* Serif text */
+.reveal .serif {
+    font-family: var(--r-serif-font);
+}
+
+.reveal .serif-italic {
+    font-family: 'Equity OT B Italic', serif;
+}
+
+.reveal .serif-bold {
+    font-family: 'Equity OT B Bold', serif;
+}
+
+/* Code blocks */
+.reveal pre, .reveal code {
+    font-family: var(--r-code-font);
+}
+
+/* Blockquotes */
+.reveal blockquote {
+    font-style: normal;
+    font-family: var(--r-serif-font);
+}
+
+/* Bold variants */
+.reveal strong {
+    font-family: 'Concourse OT 3 Bold', sans-serif;
+    font-weight: normal;
+}
+
+/* Italic variants */
+.reveal em {
+    font-family: 'Concourse OT 3 Italic', sans-serif;
+    font-style: normal;
+}
+
+/* Menu info box */
+.slide-menu-info {
+    border-top: 1px solid rgba(128, 128, 128, 0.2);
+    padding: 10px 0;
+    margin: 20px 20px 0 20px;
+    text-align: center;
+    font-family: var(--r-main-font);
+}
+
+.slide-menu-info small {
+    font-size: 0.85em;
+    line-height: 1.4;
+}

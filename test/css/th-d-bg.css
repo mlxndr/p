@@ -1,0 +1,15 @@
+@import url('base.css');
+
+.reveal {
+    background-image: url('bgdark.png');
+    background-size: cover;
+    color: #FFFFFF;
+}
+
+.reveal .subtle { 
+    color: #A9A9A9; 
+}
+
+.reveal .bg-shade { 
+    color: #494949; 
+}

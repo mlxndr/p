@@ -58,26 +58,25 @@
 }
 
 /* Headings */
-.reveal h1, .reveal h2, .reveal h3 {
-    font-family: var(--r-heading-font);
-    text-transform: none;
-}
 
 .reveal h1 {
     font-size: 2.5em;
     font-weight: normal;
+    text-transform: none;
 }
 
 .reveal h2 {
     font-size: 1.8em;
     font-family: var(--r-main-font);
     font-weight: normal;
+    text-transform: none;
 }
 
 .reveal h3 {
     font-size: 1.5em;
     font-family: 'Concourse 6 Semibold';
     font-weight: normal;
+    text-transform: none;
 }
 
 .reveal .tpa1 {

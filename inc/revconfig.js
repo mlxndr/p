@@ -65,7 +65,7 @@ Reveal.initialize({
         },
     controls: true,
     progress: true,
-    center: true,
+    center: false,
     hash: true,
     transition: 'slide'
 });

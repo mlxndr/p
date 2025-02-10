@@ -1,49 +1,11 @@
 /* Base variables */
 :root {
     /* Base fonts */
-    --r-heading-font: 'Concourse 2 Thin Caps', sans-serif;
-    --r-heading-bold-font: 'Concourse 7 Bold Caps', sans-serif;
-    --r-main-font: 'Concourse 2 Thin', sans-serif;
-    --r-serif-font: 'Century Supra Regular', serif;
+    --r-heading-font: 'Concourse', sans-serif;
+    --r-heading-bold-font: 'Concourse', sans-serif;
+    --r-main-font: 'Concourse', sans-serif;
+    --r-serif-font: 'Century Supra', serif;
     --r-code-font: 'Fira Code', monospace;
-
-    /* Base fonts */
-    .C2 {font-family: 'Concourse 2 Thin';}
-    .C2C {font-family: 'Concourse 2 Thin Caps';}
-    .C2I {font-family: 'Concourse 2 Thin Italic';}
-    .C2IC {font-family: 'Concourse 2 Thin Italic Caps';}
-    .C3 {font-family: 'Concourse 3 Book';}
-    .C3C {font-family: 'Concourse 3 Book Caps';}
-    .C3I {font-family: 'Concourse 3 Book Italic';}
-    .C3IC {font-family: 'Concourse 3 Book Italic Caps';}
-    .C4 {font-family: 'Concourse 4 Medium';}
-    .C4C {font-family: 'Concourse 4 Medium Caps';}
-    .C4I {font-family: 'Concourse 4 Medium Italic';}
-    .C4IC {font-family: 'Concourse 4 Medium Italic Caps';}
-    .C6 {font-family: 'Concourse 6 Semibold';}
-    .C6C {font-family: 'Concourse 6 Semibold Caps';}
-    .C6I {font-family: 'Concourse 6 Semibold Italic';}
-    .C6CI {font-family: 'Concourse 6 Semibold Italic Caps';}
-    .C7 {font-family: 'Concourse 7 Bold';}
-    .C7C {font-family: 'Concourse 7 Bold Caps';}
-    .C7I {font-family: 'Concourse 7 Bold Italic';}
-    .C7CI {font-family: 'Concourse 7 Bold Italic Caps';}
-    .C8 {font-family: 'Concourse 8 Black';}
-    .C8C {font-family: 'Concourse 8 Black Caps';}
-    .C8I {font-family: 'Concourse 8 Black Italic';}
-    .C8CI {font-family: 'Concourse 8 Black Italic Caps';}
-    .E {font-family: 'Equity Regular';}
-    .EC {font-family: 'Equity Regular Caps';}
-    .EI {font-family: 'Equity Italic';}
-    .EIC {font-family: 'Equity Italic Caps';}
-    .EB {font-family: 'Equity Bold';}
-    .EBI {font-family: 'Equity Bold Italic';}
-    .ECIB {font-family: 'Equity Bold Italic Caps';}
-    .EBC {font-family: 'Equity Bold Caps';}
-    .CSB {font-family: 'Century Supra Bold';}
-    .CSI {font-family: 'Century Supra Italic';}
-    .CSIB {font-family: 'Century Supra Bold Italic';}
-    .CS {font-family: 'Century Supra Regular';}
 
     /* Sizes */
     --r-main-font-size: 32px;
@@ -62,6 +24,7 @@
 .reveal h1 {
     font-size: 2.5em;
     font-weight: normal;
+    font-variant: normal;
     text-transform: none;
 }
 
@@ -74,15 +37,15 @@
 
 .reveal h3 {
     font-size: 1.5em;
-    font-family: 'Concourse 6 Semibold';
-    font-weight: normal;
+    font-family: 'Concourse';
+    font-weight: 600;
     text-transform: none;
 }
 
 .reveal .tpa1 {
-    font-family: 'Concourse 7 Bold';
+    font-family: 'Concourse';
     font-size: 2.5em;
-    font-weight: normal;
+    font-weight: 700;
     margin: 0em; 
     padding: 0em;
 }
@@ -91,8 +54,6 @@
     font-size: 1.8em;
     font-family: var(--r-main-font);
     font-weight: normal;
-    font-size: 1.5em; 
-    font-weight: normal; 
     margin: 0em; 
     padding: 0.3em;
 }
@@ -114,71 +75,44 @@
 }
 
 .reveal .tpb1 {
-    font-family: 'Concourse 2 Thin Caps';
+    font-family: 'Concourse';
+    font-weight: 200;
     margin: 20px; 
     padding: 0px;
 }
 
 .reveal .tpb2 {
-    font-family: 'Concourse 2 Thin';
+    font-family: 'Concourse';
+    font-weight: 200;
     margin: 0px;
     padding: 0px;
 }
 
 .reveal .tpb3 {
-    font-family: 'Concourse 2 Thin';
+    font-family: 'Concourse';
+    font-weight: 200;
     font-size: 20pt;
     margin: 1px;
     padding: 0px;
 }
 
-.reveal .author {
-    margin-top: 2em;
-    font-size: 1.2em;
-}
-.reveal .affiliation {
-    color: var(--r-subtle);
-    font-size: 1em;
-}
-.reveal .conference {
-    position: absolute;
-    right: 0;
-    bottom: 1em;
-    text-align: right;
-    color: var(--r-subtle);
+.reveal ul {
+    text-align: left;
+    list-style-type: "\2014";
+    margin: 10px 0;
 }
 
-.reveal .logos {
-    position: absolute;
-    bottom: 1em;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.reveal .logos img {
-    height: 60px;
-    margin: 0 20px;
+.reveal li {
+    margin: 20px 0;
 }
 
-
-/* Small caps variant */
-.reveal .small-caps {
-    font-family: 'Concourse 2 Thin Caps', sans-serif;
+.reveal ul ul {
+    font-size: 85%;
 }
 
 /* Serif text */
 .reveal .serif {
     font-family: var(--r-serif-font);
-}
-
-.reveal .serif-italic {
-    font-family: 'Equity Italic', serif;
-}
-
-.reveal .serif-bold {
-    font-family: 'Equity Bold', serif;
 }
 
 /* Code blocks */
@@ -190,18 +124,6 @@
 .reveal blockquote {
     font-style: normal;
     font-family: var(--r-serif-font);
-}
-
-/* Bold variants */
-.reveal strong {
-    font-family: 'Concourse 7 Bold', sans-serif;
-    font-weight: normal;
-}
-
-/* Italic variants */
-.reveal em {
-    font-family: 'Concourse 3 Book Italic', sans-serif;
-    font-style: normal;
 }
 
 /* Menu info box */

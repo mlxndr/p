@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Presentations</title>
+  <style>
+    body {
+      font-family: sans-serif;
+    }
+    ul {
+      list-style-type: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 10px;
+    }
+    a {
+      text-decoration: none;
+      color: #007bff; /* Example link color */
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Presentations</h1>
+  <ul id="presentation-list">
+    </ul>
+
+  <script>
+    fetch('./') // Fetch the root directory
+      .then(response => response.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const links = doc.querySelectorAll('a'); // Get all links
+
+        const presentationList = document.getElementById('presentation-list');
+
+        links.forEach(link => {
+          const href = link.getAttribute('href');
+
+          // Filter for directories (ensure they end with a slash) and exclude the parent directory link if present.
+            if (href.endsWith('/') && href !== '../') {
+
+              const presentationName = href.slice(0, -1); // Remove trailing slash
+
+              // Create list item and link
+              const listItem = document.createElement('li');
+              const presentationLink = document.createElement('a');
+              presentationLink.href = presentationName; // Link to the presentation directory
+              presentationLink.textContent = presentationName; // Display the name
+              listItem.appendChild(presentationLink);
+              presentationList.appendChild(listItem);
+            }
+        });
+      });
+  </script>
+</body>
+</html>

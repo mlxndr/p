@@ -1,0 +1,30 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main # Or your main branch name
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16 # Or a suitable version
+
+      - name: Install dependencies (if any)
+        run: npm install
+
+      - name: Generate presentation list
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
+        with:
+          branch: main # Or your main branch
+          folder: . # The folder containing your built site (root directory)

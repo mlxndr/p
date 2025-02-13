@@ -27,8 +27,11 @@ jobs:
       - name: Generate presentation list
         run: npm run build
 
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1 # Correct action!
+        with:
+          path: . # Upload everything in the root directory (your built site)
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
-        with:
-          artifact-location: . # The folder containing your built site (root directory)
+        uses: actions/deploy-pages@v1 # Correct action!

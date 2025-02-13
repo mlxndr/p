@@ -8,6 +8,10 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment identity
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -24,7 +28,8 @@ jobs:
         run: npm run build
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v1
         with:
-          branch: main # Or your main branch
-          folder: . # The folder containing your built site (root directory)
+          # No 'branch' input needed.  It infers from the workflow trigger.
+          static_site_generator: true #Let github pages know the site is static

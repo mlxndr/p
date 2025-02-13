@@ -31,5 +31,4 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v1
         with:
-          # No 'branch' input needed.  It infers from the workflow trigger.
-          static_site_generator: true #Let github pages know the site is static
+          artifact-location: . # The folder containing your built site (root directory)

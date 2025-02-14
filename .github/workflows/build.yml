@@ -28,10 +28,10 @@ jobs:
         run: npm run build
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4  # Correct and up-to-date action!
         with:
           name: github-pages # Name of the artifact (optional but good practice)
-          path: .         # Upload everything in the root directory  <- Correct indentation!
+          path: .         # Upload everything in the root directory
 
       - name: Deploy to GitHub Pages
         id: deployment

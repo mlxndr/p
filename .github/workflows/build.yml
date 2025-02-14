@@ -3,19 +3,17 @@ name: Build and Deploy
 on:
   push:
     branches:
-      - main # Or your main branch name
-
-  pull_request: # Add this to trigger on pull requests as well
-    branches:
       - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment identity
-    if: github.ref == 'refs/heads/main' # Only run on pushes to the main branch
+      pages: write
+      id-token: write
+    if: github.ref == 'refs/heads/main'
+
+    environment: github-pages # Name of the environment MUST match!
 
     steps:
       - name: Checkout code
@@ -24,7 +22,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16 # Or a suitable version
+          node-version: 16
 
       - name: Install dependencies (if any)
         run: npm install

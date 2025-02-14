@@ -28,10 +28,11 @@ jobs:
         run: npm run build
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1 # Correct action!
+        uses: actions/upload-artifact@v3
         with:
-          path: . # Upload everything in the root directory (your built site)
+          name: github-pages # Name of the artifact (optional but good practice)
+          path: . # Upload everything in the root directory
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1 # Correct action!
+        uses: actions/deploy-pages@v1 # No 'artifact' input needed!

@@ -31,8 +31,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: github-pages # Name of the artifact (optional but good practice)
-          path: . # Upload everything in the root directory
+          path: .         # Upload everything in the root directory  <- Correct indentation!
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1 # No 'artifact' input needed!
+        uses: actions/deploy-pages@v1 # No 'with' configuration needed!

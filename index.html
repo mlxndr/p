@@ -9,11 +9,18 @@
 <body class="bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <header class="mb-12 text-center">
-            <h1 class="text-4xl font-bold text-gray-800 mb-2">Presentations</h1>
-            <p class="text-gray-600">Browse available presentations</p>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">Resources</h1>
+            <p class="text-gray-600">Browse available presentations and applications</p>
         </header>
 
-        <div id="presentations-list" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <section class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Presentations</h2>
+            <div id="presentations-list" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"></div>
+        </section>
+
+        <section>
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">Shiny Applications</h2>
+            <div id="shiny-apps-list" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             <!-- Presentations will be listed here -->
         </div>
     </div>
@@ -61,8 +68,40 @@
                 .join(' ');
         }
 
-        // Fetch directories when the page loads
+        // Define your Shiny apps
+        const shinyApps = [
+            {
+                name: 'Uncivil',
+                description: 'Browsing data for Alexander and Struan, uncivilized in the history of English',
+                url: 'https://mlxndr.shinyapps.io/Uncivil'
+            },
+            // Add more apps as needed
+        ];
+
+        function displayShinyApps() {
+            const shinyAppsList = document.getElementById('shiny-apps-list');
+            
+            shinyApps.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200';
+                
+                card.innerHTML = `
+                    <h2 class="text-xl font-semibold text-gray-800 mb-2">${app.name}</h2>
+                    <p class="text-gray-600 mb-4">${app.description}</p>
+                    <a href="${app.url}" 
+                       target="_blank"
+                       class="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors duration-200">
+                        Launch App
+                    </a>
+                `;
+                
+                shinyAppsList.appendChild(card);
+            });
+        }
+
+        // Fetch directories and display Shiny apps when the page loads
         fetchDirectories();
+        displayShinyApps();
     </script>
 </body>
 </html>

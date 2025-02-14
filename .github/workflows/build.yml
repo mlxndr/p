@@ -5,12 +5,17 @@ on:
     branches:
       - main # Or your main branch name
 
+  pull_request: # Add this to trigger on pull requests as well
+    branches:
+      - main
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       pages: write      # to deploy to Pages
       id-token: write   # to verify the deployment identity
+    if: github.ref == 'refs/heads/main' # Only run on pushes to the main branch
 
     steps:
       - name: Checkout code
@@ -28,11 +33,11 @@ jobs:
         run: npm run build
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4  # Correct and up-to-date action!
+        uses: actions/upload-artifact@v4
         with:
-          name: github-pages # Name of the artifact (optional but good practice)
-          path: .         # Upload everything in the root directory
+          name: github-pages
+          path: .
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1 # No 'with' configuration needed!
+        uses: actions/deploy-pages@v1

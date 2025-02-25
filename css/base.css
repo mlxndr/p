@@ -19,6 +19,13 @@
     font-size: var(--r-main-font-size);
 }
 
+body {
+    font-variant-numeric: oldstyle-nums;
+    -moz-font-feature-settings: "onum";
+    -webkit-font-feature-settings: "onum";
+    font-feature-settings: "onum";
+  }
+
 /* Headings */
 
 .reveal h1 {
@@ -47,7 +54,7 @@
 .reveal .tpa1 {
     font-family: 'Concourse';
     font-size: 2.5em;
-    font-weight: 700;
+    font-weight: 600;
     margin: 0em; 
     padding: 0em;
 }

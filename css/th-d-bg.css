@@ -1,7 +1,7 @@
 @import url('base.css');
 
 .reveal {
-    background-image: url('bgdark.png');
+    background-image: url('../bg/bgdark.png');
     background-size: cover;
     color: #FFFFFF;
 }

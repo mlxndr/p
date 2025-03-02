@@ -1,0 +1,15 @@
+@import url('base.css');
+
+.reveal {
+    background-image: url('../bg/l-plaster.jpg');
+    background-size: cover;
+    color: #0D0D0D;
+}
+
+.subtle { 
+    color: #666666; 
+}
+
+.bg-shade { 
+    color: #E6E6E6; 
+}

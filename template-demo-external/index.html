@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Common head elements -->
+    <!-- From /inc/presentation-head.html -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../inc/reveal.js/dist/reveal.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../inc/reveal.js/plugin/highlight/monokai.css">
+    
+    <!-- Presentation-specific head elements -->
+    <link rel="stylesheet" href="../css/th-l-cr.css" id="theme">
+    <meta name="author" content="Marc Alexander">
+    <title>External Markdown Files Demo</title>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Title slide - Using HTML for complex formatting -->
+            <section>
+                <br><br><br><br><br>
+                <h1 class="tpa1 r-fit-text">External Markdown Files</h1>
+                <h2 class="tpa2 r-fit-text">Separating Content and Presentation</h2>
+                <br><br><br><br><br>
+                <table class="tpa3">
+                    <tr>
+                        <td class="tpa4-l">Marc Alexander<br><span class="subtle">University of Glasgow</span></td>
+                        <td class="tpa4-r">Demo Presentation<br><span class="subtle">February 2025</span></td>
+                    </tr>
+                    <tr style="padding-bottom: 5em; padding-top: 5em"><td colspan="2"><hr></td></tr>
+                    <tr>
+                        <td class="tpa4-l"><img src="../img/leverhulme_cmyk_black2.png" height="55em" alt="Leverhulme Trust Logo"></td>
+                        <td class="tpa4-r"><img src="../img/uog_mono.png" height="58em" alt="University of Glasgow Logo"></td>
+                    </tr>
+                </table>
+            </section>
+            
+            <!-- Content slides using external Markdown files -->
+            <section data-markdown="slides/01-intro.md"></section>
+            
+            <section data-markdown="slides/02-features.md"></section>
+            
+            <section data-markdown="slides/03-fragments.md"></section>
+            
+            <section data-markdown="slides/04-notes.md"></section>
+            
+            <section data-markdown="slides/05-workflow.md"></section>
+            
+            <!-- Footer slide - Using HTML for complex formatting -->
+            <section>
+                <h1 class="tpa1 r-fit-text">External Markdown Files</h1>
+                <h2 class="tpa2 r-fit-text">Separating Content and Presentation</h2>
+                <br><br><br><br><br>
+                <table class="tpa3">
+                    <tr>
+                        <td class="tpa4-l">Marc Alexander <span class="subtle">and</span> Colleagues<br><span style="font-size: 0.7em;">marc.alexander@glasgow.ac.uk</span></td>
+                        <td class="tpa4-r" style="vertical-align: bottom;">Slides: https://example.com/slides</td>
+                    </tr>
+                    <tr style="padding-bottom: 5em; padding-top: 5em"><td colspan="2"><hr></td></tr>
+                    <tr>
+                        <td class="tpa4-l" style="line-height: 2.2;">
+                            <img src="../img/uog_mono.png" width="200px" alt="University of Glasgow Logo"><br>
+                            <img src="../img/leverhulme_cmyk_black2.png" width="200px" alt="Leverhulme Trust Logo">
+                        </td>
+                        <td class="tpa4-r"></td>
+                    </tr>
+                </table>
+            </section>
+        </div>
+    </div>
+    
+    <!-- Common scripts with markdown support -->
+    <!-- From /inc/presentation-scripts-markdown.html -->
+    <script src="../inc/reveal.js/dist/reveal.js"></script>
+    <script src="../inc/reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="../inc/reveal.js/plugin/reveal.js-menu/menu.js"></script>
+    <script src="../inc/reveal.js/plugin/notes/notes.js"></script>
+    <script src="../inc/revconfig-markdown.js"></script>
+</body>
+</html>

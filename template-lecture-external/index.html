@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Common head elements -->
+    <!-- From /inc/presentation-head.html -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../inc/reveal.js/dist/reveal.css">
+    <link rel="stylesheet" href="../css/fonts.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="../inc/reveal.js/plugin/highlight/monokai.css">
+    
+    <!-- Presentation-specific head elements -->
+    <link rel="stylesheet" href="../css/th-l-cr.css" id="theme">
+    <meta name="author" content="Marc Alexander">
+    <title>From Clauses to Sentences - External Files</title>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides">
+            <!-- Title slide - Using HTML for complex formatting -->
+            <section>
+                <br><br><br><br><br><br><h1 class="tpa1 r-fit-text">From Clauses to Sentences</h1>
+                <h3>External Markdown Files Version</h3>
+                <br><br><br><br><br><br>
+                <table class="tpa3">
+                    <tr style="padding-bottom: 5em; padding-top: 5em"><td colspan="2"><hr></td></tr>
+                    <tr>
+                        <td class="tpa4-l">English Language & Linguistics 1A<span style="font-variant-caps: all-small-caps;">A</span><small><br>Meaning & Structure 3<br>Professor Marc Alexander</small></td>
+                        <td class="tpa4-r"><img src="../img/uog_mono.png" height="90em" alt="University of Glasgow Logo"></td>
+                    </tr>
+                </table>
+            </section>
+            
+            <!-- Content slides using external Markdown files -->
+            <section data-markdown="slides/01-elements.md"></section>
+            
+            <section data-markdown="slides/02-whats-left.md"></section>
+            
+            <section data-markdown="slides/03-where-are-we.md"></section>
+            
+            <section data-markdown="slides/04-levels.md"></section>
+            
+            <section data-markdown="slides/05-what-is-clause.md"></section>
+            
+            <section data-markdown="slides/06-styles.md"></section>
+            
+            <!-- Footer slide using markdown file -->
+            <section data-markdown="slides/07-followup.md"></section>
+        </div>
+    </div>
+    
+    <!-- Common scripts with markdown support -->
+    <!-- From /inc/presentation-scripts-markdown.html -->
+    <script src="../inc/reveal.js/dist/reveal.js"></script>
+    <script src="../inc/reveal.js/plugin/markdown/markdown.js"></script>
+    <script src="../inc/reveal.js/plugin/reveal.js-menu/menu.js"></script>
+    <script src="../inc/reveal.js/plugin/notes/notes.js"></script>
+    <script src="../inc/revconfig-markdown.js"></script>
+</body>
+</html>

@@ -1,7 +1,26 @@
 // Function to switch logos based on theme
 function switchLogosForTheme(theme) {
-    const isDarkTheme = theme.includes('th-d-');
-    console.log("Switching logos for theme:", theme, "isDark:", isDarkTheme);
+    let isDarkTheme;
+    
+    // Check if the theme is a string (like a URL) or a boolean
+    if (typeof theme === 'boolean') {
+        isDarkTheme = theme;
+    } else {
+        // First try to determine theme from filename
+        if (typeof theme === 'string' && theme.includes('th-d-')) {
+            isDarkTheme = true;
+        } else if (typeof theme === 'string' && theme.includes('th-l-')) {
+            isDarkTheme = false;
+        } else {
+            // If that fails, check the CSS custom property
+            const computed = getComputedStyle(document.documentElement);
+            const themeMode = computed.getPropertyValue('--theme-mode');
+            isDarkTheme = themeMode.includes('dark');
+            console.log("Detected theme from CSS properties:", themeMode);
+        }
+    }
+    
+    console.log("Switching logos, isDark:", isDarkTheme);
     
     // First try with relative paths
     let uogLogos = document.querySelectorAll('img[src*="uog_mono.png"], img[src*="uog_white.png"]');

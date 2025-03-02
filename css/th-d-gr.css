@@ -1,5 +1,9 @@
 @import url('base.css');
 
+:root {
+    --theme-mode: 'dark';
+}
+
 .reveal {
     background-color: #353935;
     color: #FFFFFF;

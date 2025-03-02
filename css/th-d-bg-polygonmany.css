@@ -1,5 +1,9 @@
 @import url('base.css');
 
+:root {
+    --theme-mode: 'dark';
+}
+
 .reveal {
     background-image: url('../bg/d-polygonmany.jpg');
     background-size: cover;

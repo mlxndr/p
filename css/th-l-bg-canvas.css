@@ -1,5 +1,9 @@
 @import url('base.css');
 
+:root {
+    --theme-mode: 'light';
+}
+
 .reveal {
     background-image: url('../bg/l-canvas.jpg');
     background-size: cover;

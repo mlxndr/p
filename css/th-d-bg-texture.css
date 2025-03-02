@@ -1,5 +1,9 @@
 @import url('base.css');
 
+:root {
+    --theme-mode: 'dark';
+}
+
 .reveal {
     background-image: url('../bg/d-texture.jpg');
     background-size: cover;

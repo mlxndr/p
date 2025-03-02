@@ -110,23 +110,16 @@ Reveal.initialize({
                 theme: '../css/th-l-wh.css'
             },
             { 
+                name: 'Light Canvas',
+                theme: '../css/th-l-bg-canvas.css'
+            },
+            { 
                 name: 'Light Paper',
                 theme: '../css/th-l-bg-paper.css'
             },
             { 
                 name: 'Light Plaster',
                 theme: '../css/th-l-bg-plaster.css'
-            },            { 
-                name: 'Light Texture',
-                theme: '../css/th-l-bg-texture.css'
-            },
-            { 
-                name: 'Testing - Old BG Dark', 
-                theme: '../css/th-d-bg.css'
-            },
-            { 
-                name: 'Testing - Old BG Light', 
-                theme: '../css/th-l-bg.css'
             }
         ],
         transitions: true,

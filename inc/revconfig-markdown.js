@@ -77,10 +77,6 @@ Reveal.initialize({
         markers: true,
         themes: [
             { 
-                name: 'Dark Background', 
-                theme: '../css/th-d-bg.css'
-            },
-            { 
                 name: 'Dark Black',
                 theme: '../css/th-d-bl.css'
             },
@@ -93,16 +89,44 @@ Reveal.initialize({
                 theme: '../css/th-d-bu.css'
             },
             { 
-                name: 'Light White',
-                theme: '../css/th-l-wh.css'
+                name: 'Dark Concrete', 
+                theme: '../css/th-d-bg-concrete.css'
+            },
+            { 
+                name: 'Dark Polygons Blue', 
+                theme: '../css/th-d-bg-polygonblue.css'
+            },
+            { 
+                name: 'Dark Polygons Red', 
+                theme: '../css/th-d-bg-polygonred.css'
+            },
+            { 
+                name: 'Dark Many Polygons', 
+                theme: '../css/th-d-bg-polygonmany.css'
+            },
+            { 
+                name: 'Dark Texture', 
+                theme: '../css/th-d-bg-texture.css'
             },
             { 
                 name: 'Light Cream',
                 theme: '../css/th-l-cr.css'
             },
             { 
-                name: 'Light Background',
-                theme: '../css/th-l-bg.css'
+                name: 'Light White',
+                theme: '../css/th-l-wh.css'
+            },
+            { 
+                name: 'Light Canvas',
+                theme: '../css/th-l-bg-canvas.css'
+            },
+            { 
+                name: 'Light Paper',
+                theme: '../css/th-l-bg-paper.css'
+            },
+            { 
+                name: 'Light Plaster',
+                theme: '../css/th-l-bg-plaster.css'
             }
         ],
         transitions: true,

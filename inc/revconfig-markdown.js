@@ -1,3 +1,41 @@
+// Function to switch logos based on theme
+function switchLogosForTheme(theme) {
+    const isDarkTheme = theme.includes('th-d-');
+    console.log("Switching logos for theme:", theme, "isDark:", isDarkTheme);
+    
+    // First try with relative paths
+    let uogLogos = document.querySelectorAll('img[src*="uog_mono.png"], img[src*="uog_white.png"]');
+    let leverhulmeLogos = document.querySelectorAll('img[src*="leverhulme_cmyk_black2.png"], img[src*="leverhulme_cmyk_white2.png"]');
+    
+    // If we don't find any, try with absolute paths
+    if (uogLogos.length === 0) {
+        uogLogos = document.querySelectorAll('img[src$="uog_mono.png"], img[src$="uog_white.png"]');
+    }
+    
+    if (leverhulmeLogos.length === 0) {
+        leverhulmeLogos = document.querySelectorAll('img[src$="leverhulme_cmyk_black2.png"], img[src$="leverhulme_cmyk_white2.png"]');
+    }
+    
+    console.log("Found UoG logos:", uogLogos.length);
+    console.log("Found Leverhulme logos:", leverhulmeLogos.length);
+    
+    uogLogos.forEach(logo => {
+        console.log("Changing UoG logo from", logo.src);
+        // Get the directory part of the path
+        const path = logo.src.substring(0, logo.src.lastIndexOf('/') + 1);
+        logo.src = isDarkTheme ? path + 'uog_white.png' : path + 'uog_mono.png';
+        console.log("  to", logo.src);
+    });
+    
+    leverhulmeLogos.forEach(logo => {
+        console.log("Changing Leverhulme logo from", logo.src);
+        // Get the directory part of the path
+        const path = logo.src.substring(0, logo.src.lastIndexOf('/') + 1);
+        logo.src = isDarkTheme ? path + 'leverhulme_cmyk_white2.png' : path + 'leverhulme_cmyk_black2.png';
+        console.log("  to", logo.src);
+    });
+}
+
 Reveal.initialize({
     plugins: [ RevealMarkdown, RevealMenu, RevealNotes ],
     markdown: {
@@ -68,11 +106,85 @@ Reveal.initialize({
             }
         ],
         transitions: true,
-        loadIcons: true
+        loadIcons: true,
+        // Add theme change callback for the menu
+        themeSwitched: function(themeName, themeUrl) {
+            console.log("Menu callback: theme switched to", themeUrl);
+            switchLogosForTheme(themeUrl);
+        }
         },
     controls: true,
     progress: true,
     center: false,
     hash: true,
     transition: 'slide'
+});
+
+// For direct access to logo switching
+window.switchThemeLogos = function(isDark) {
+    switchLogosForTheme(isDark ? 'th-d-' : 'th-l-');
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log("DOM loaded, setting up theme handling");
+    
+    // Try to find any logos that might be on the page initially
+    const initialLogos = document.querySelectorAll('img[src*="uog_mono.png"], img[src*="uog_white.png"], img[src*="leverhulme_cmyk_black2.png"], img[src*="leverhulme_cmyk_white2.png"]');
+    console.log("Initial logos found:", initialLogos.length);
+    
+    // Handle the initial theme
+    setTimeout(() => {
+        const initialStylesheet = document.querySelector('link[rel="stylesheet"][href*="th-"]');
+        if (initialStylesheet) {
+            const themeHref = initialStylesheet.getAttribute('href');
+            console.log("Initial theme detected:", themeHref);
+            switchLogosForTheme(themeHref);
+        } else {
+            console.log("No initial theme stylesheet found");
+        }
+    }, 500); // Small delay to ensure everything is loaded
+    
+    // Set up alternate event listeners for reveal.js menu
+    document.addEventListener('click', (event) => {
+        // Check if it's a theme menu item that was clicked
+        if (event.target && event.target.closest('.slide-menu-item[data-theme]')) {
+            const themeItem = event.target.closest('.slide-menu-item[data-theme]');
+            const themeUrl = themeItem.getAttribute('data-theme');
+            console.log("Menu theme change detected via click:", themeUrl);
+            setTimeout(() => switchLogosForTheme(themeUrl), 100); // Small delay for theme to apply
+        }
+    });
+    
+    // Also listen for any theme changes that might happen outside the menu
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
+                const target = mutation.target;
+                if (target.getAttribute('rel') === 'stylesheet' && target.getAttribute('href').includes('th-')) {
+                    console.log("Theme change detected via mutation:", target.getAttribute('href'));
+                    switchLogosForTheme(target.getAttribute('href'));
+                }
+            }
+        });
+    });
+    
+    const stylesheets = document.querySelectorAll('link[rel="stylesheet"]');
+    stylesheets.forEach(sheet => {
+        observer.observe(sheet, { attributes: true });
+    });
+    
+    // Additional theme change detection for reveal.js
+    if (typeof Reveal !== 'undefined') {
+        console.log("Setting up Reveal event listeners");
+        Reveal.on('ready', () => {
+            console.log("Reveal ready event fired");
+            setTimeout(() => {
+                const currentStylesheet = document.querySelector('link[rel="stylesheet"][href*="th-"]');
+                if (currentStylesheet) {
+                    console.log("Theme on Reveal ready:", currentStylesheet.getAttribute('href'));
+                    switchLogosForTheme(currentStylesheet.getAttribute('href'));
+                }
+            }, 500);
+        });
+    }
 });

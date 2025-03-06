@@ -2,6 +2,8 @@
 function switchLogosForTheme(theme) {
     let isDarkTheme;
     
+    console.log("switchLogosForTheme called with:", theme);
+    
     // Check if the theme is a string (like a URL) or a boolean
     if (typeof theme === 'boolean') {
         isDarkTheme = theme;
@@ -12,11 +14,26 @@ function switchLogosForTheme(theme) {
         } else if (typeof theme === 'string' && theme.includes('th-l-')) {
             isDarkTheme = false;
         } else {
-            // If that fails, check the CSS custom property
-            const computed = getComputedStyle(document.documentElement);
-            const themeMode = computed.getPropertyValue('--theme-mode');
-            isDarkTheme = themeMode.includes('dark');
-            console.log("Detected theme from CSS properties:", themeMode);
+            // If that fails, check for dark text/background color as a fallback
+            try {
+                // Check if the current theme has a dark background by analyzing the body color
+                const bodyColor = window.getComputedStyle(document.body).color;
+                // Extract RGB values from the color string
+                const rgb = bodyColor.match(/\d+/g);
+                if (rgb && rgb.length >= 3) {
+                    // If the text color is light (high values), then background is likely dark
+                    const brightness = (parseInt(rgb[0]) + parseInt(rgb[1]) + parseInt(rgb[2])) / 3;
+                    isDarkTheme = brightness > 128;
+                    console.log("Determined theme from body text color brightness:", brightness, "isDark:", isDarkTheme);
+                } else {
+                    // Default to light theme if we can't determine
+                    isDarkTheme = false;
+                }
+            } catch (e) {
+                console.error("Error detecting theme:", e);
+                // Default to light theme
+                isDarkTheme = false;
+            }
         }
     }
     

@@ -129,6 +129,14 @@ body {
     font-family: var(--r-serif-font);
 }
 
+/*HREF */
+
+.reveal a {
+    color: #5F9EA0;
+    text-decoration: none;
+}
+
+
 /* Code blocks */
 .reveal pre, .reveal code {
     font-family: var(--r-code-font);
@@ -153,6 +161,13 @@ body {
     line-height: 1.4;
 }
 
+.reveal.reveal img
+{
+    border: none;
+    box-shadow: none;
+    max-height: calc(66vh);
+    max-width: calc(66vw);
+}
 
 .predicator { color: #D32F2F; }  /* Deep red for predicators */
 .subject { color: #2E7D32; }     /* Deep green for subjects */

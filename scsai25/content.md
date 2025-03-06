@@ -1,4 +1,4 @@
-## Recent advances
+## Five recent advances
 
 * Reasoning/think-aloud
 * Web search
@@ -39,11 +39,11 @@
 
 ## Glasgow's choice
 
-* More by default than anything else, Glasgow has chosen Microsoft's Copilot model
-* [https://gla.sharepoint.com/sites/learning-innovation/SitePages/Gen-AI-Digital-Skills-for-Generative-AI.aspx](LISU offer support and information)
-* Access at Copilot tab at [https://www.microsoft365.com/](https://www.microsoft365.com/) or the Copilot app, or the tab in Teams.
+* The University of Glasgow has chosen Microsoft's Copilot model (not Copilot Pro)
+* [LISU offer support and information](https://gla.sharepoint.com/sites/learning-innovation/SitePages/Gen-AI-Digital-Skills-for-Generative-AI.aspx)
+* Access using the Copilot tab at [microsoft365.com](https://www.microsoft365.com/) or using the Copilot app, or the Copilot tab in Teams.
 * *When signed in with your GUID,* chats and files 'aren’t used to train models under enterprise data protection'. Don't use files you can't store on OneDrive.
-* 'If the process requires you to make a decision, as a general rule of thumb make sure that you are making that decision, not generative AI'
+* 'If the process requires you to make a decision, as a general rule of thumb make sure that you are making that decision, not generative AI.'
 
 ---
 
@@ -65,7 +65,7 @@
 
 ## Context window
 
-* The "working memory" of a generative model in tokens (approx 3/4 of a word in English)
+* The "working memory" of a generative model in tokens (1 paragraph ~= 100 tokens)
 * GPT3 (free ChatGPT model at 2022 launch): 2k tokens
 * GPT3.5 Turbo (the free ChatGPT model in May 2023): 16k tokens
 * Claude 2 (November 2023): 200k tokens
@@ -95,13 +95,13 @@
 
 ## NotebookLM
 
-* [https://notebooklm.google.com](notebooklm.google.com)
+* [notebooklm.google.com](https://notebooklm.google.com)
 * Takes a range of sources you provide it so you can 'chat' with the sources, create briefings, study guides, test questions, timelines, FAQs, and 'audio overviews'
 * Free users:
   * Up to 100 notebooks, each notebook can contain up to 50 sources, each source can be up to 500,000 words long
   * 50 chat queries per day, 3 audio overviews per day
-* [https://notebooklm.google.com/notebook/9507b18c-d384-4955-b9db-1a967cc06942](Example, with thanks to James Balfour)
-* [https://notebooklm.google.com/notebook/3a959b5b-7d7f-4fa5-8b15-3ac92cc39213](Example of more sources)
+* [Example, with thanks to James Balfour](https://notebooklm.google.com/notebook/9507b18c-d384-4955-b9db-1a967cc06942)
+* [Example of more sources](https://notebooklm.google.com/notebook/3a959b5b-7d7f-4fa5-8b15-3ac92cc39213)
 
 --
 
@@ -111,7 +111,7 @@
 * For research, this usually involves:
     * Asking a question
     * Optionally giving clarification
-    * The agent analysing the question, performing searches on the internet, retrieving search results, reading them, reformulating more searches, reflecting on what else needs searched for, taking note of what's relevant or useful, then iterating on this until either at a maximum or 'satisfied' about the answer
+    * The AI agent then analysing the question, performing searches on the internet, retrieving search results, reading them, reformulating more searches, reflecting on what else needs searched for, taking note of what's relevant or useful, then iterating on this until either at a maximum or 'satisfied' about the answer
     * Writing up this process as a research note
 
 ---
@@ -137,7 +137,7 @@
 
 ## Simple prompt, free model
 
-* No login
+* ChatGPT, no login
 * Likely GPT 4o-mini
 * Poor response: generic, random examples, shallow writing, brief, overreliance on bullets, irrelevant material, eg:
   * **7. Contrast and Juxtaposition** Describing the perfume in relation to other scents or experiences, especially contrasting ones, can highlight its unique characteristics. *"Amid the musky scent of leather, the perfume was like a breath of fresh air," or "Her perfume was a stark contrast to the stale, musty room."*
@@ -173,7 +173,7 @@
 
 ## Two further research examples
 
-* [TEI-XML encoding of an early modern letter](https://chatgpt.com/share/67c9524c-ded4-800e-bad5-4f484ef1e1a5)
+* [TEI-XML encoding of an early modern letter](https://claude.ai/share/9ab39b30-bcd7-418d-a280-cd2b83d0c4e3)
 * [OCRing 19th-century parliamentary text](https://gemini.google.com/app/f01c5018aba56b98)
 
 --
@@ -240,7 +240,7 @@
 
 ## QAA's suggestions
 
-* Observed competence: 'observe a student complete one or more specific tasks related to their discipline [...]] and interview them about their understanding of the related principles, context and applications' (OSCE-style)
+* Observed competence: 'observe a student complete one or more specific tasks related to their discipline [...] and interview them about their understanding of the related principles, context and applications' (OSCE-style)
 * Oral examinations ('with appropriate safeguards'): 'oral examinations in the form of structured interviews conducted by two or more examiners with clearly set out rubrics and appropriate safeguards for vulnerable students may be used formatively or summatively as a synoptic assessment. In addition, mini-vivas, in which small groups of students are interviewed together about their written submissions, can serve both to authenticate the work and contribute to its assessment'
 * There are volume implications here, but then again we overassess right now anyway
 

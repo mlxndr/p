@@ -2,11 +2,15 @@
 
 :root {
     --theme-mode: 'dark';
+    --r-main-font: 'Equity', serif;
+    --r-heading-font: 'Equity', serif;
+    --r-heading-bold-font: 'Equity', serif;
+    --r-font-color: #FFFFFF;
 }
 
 .reveal {
-    background-color: #00003F;
-    color: #FFFFFF;
+    background-color: #183153;
+    color: var(--r-font-color);
 }
 
 .subtle { 

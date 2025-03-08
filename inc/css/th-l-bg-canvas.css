@@ -2,12 +2,13 @@
 
 :root {
     --theme-mode: 'light';
+    --r-font-color: #0D0D0D;
 }
 
 .reveal {
-    background-image: url('../bg/l-canvas.jpg');
+    background-image: url('bg/l-canvas.jpg');
     background-size: cover;
-    color: #0D0D0D;
+    color: var(--r-font-color);
 }
 
 .subtle { 

@@ -73,7 +73,22 @@ function switchLogosForTheme(theme) {
 }
 
 Reveal.initialize({
-    plugins: [ RevealMenu, RevealNotes ],
+    plugins: [ RevealMarkdown, RevealMenu, RevealNotes, PdfExport, Appearance ],
+    navigationMode: 'linear',
+    showSlideNumber: 'print',
+    pdfSeparateFragments: false,
+    controls: false,
+    progress: true,
+    center: false,
+    hash: true,
+    transition: 'slide',
+    markdown: {
+        smartypants: true,
+        gfm: true,
+        breaks: true,
+        // Optionally animate Markdown lists
+        animateLists: true
+    },
     menu: {
         // Function to get metadata
         getMetadata: function() {
@@ -106,70 +121,78 @@ Reveal.initialize({
         markers: true,
         themes: [
             { 
-                name: 'Dark Black',
-                theme: '../css/th-d-bl.css'
-            },
-            { 
-                name: 'Dark Green',
-                theme: '../css/th-d-gr.css'
-            },
-            { 
-                name: 'Dark Blue',
-                theme: '../css/th-d-bu.css'
-            },
-            { 
-                name: 'Dark Concrete', 
-                theme: '../css/th-d-bg-concrete.css'
-            },
-            { 
-                name: 'Dark Polygons Blue', 
-                theme: '../css/th-d-bg-polygonblue.css'
-            },
-            { 
-                name: 'Dark Polygons Red', 
-                theme: '../css/th-d-bg-polygonred.css'
-            },
-            { 
-                name: 'Dark Many Polygons', 
-                theme: '../css/th-d-bg-polygonmany.css'
-            },
-            { 
-                name: 'Dark Texture', 
-                theme: '../css/th-d-bg-texture.css'
-            },
-            { 
                 name: 'Light Cream',
-                theme: '../css/th-l-cr.css'
+                theme: '../inc/css/th-l-cr.css'
+            },
+            { 
+                name: 'Light Eggshell',
+                theme: '../inc/css/th-l-eg.css'
+            },
+            { 
+                name: 'Light Seashell',
+                theme: '../inc/css/th-l-se.css'
             },
             { 
                 name: 'Light White',
-                theme: '../css/th-l-wh.css'
+                theme: '../inc/css/th-l-wh.css'
             },
             { 
                 name: 'Light Canvas',
-                theme: '../css/th-l-bg-canvas.css'
+                theme: '../inc/css/th-l-bg-canvas.css'
             },
             { 
                 name: 'Light Paper',
-                theme: '../css/th-l-bg-paper.css'
+                theme: '../inc/css/th-l-bg-paper.css'
             },
             { 
                 name: 'Light Plaster',
-                theme: '../css/th-l-bg-plaster.css'
+                theme: '../inc/css/th-l-bg-plaster.css'
+            },
+            { 
+                name: 'Dark Black',
+                theme: '../inc/css/th-d-bl.css'
+            },
+            { 
+                name: 'Dark Green',
+                theme: '../inc/css/th-d-gr.css'
+            },
+            { 
+                name: 'Dark Concrete', 
+                theme: '../inc/css/th-d-bg-concrete.css'
+            },
+            { 
+                name: 'Dark Polygons Blue', 
+                theme: '../inc/css/th-d-bg-polygonblue.css'
+            },
+            { 
+                name: 'Dark Polygons Red', 
+                theme: '../inc/css/th-d-bg-polygonred.css'
+            },
+            { 
+                name: 'Dark Many Polygons', 
+                theme: '../inc/css/th-d-bg-polygonmany.css'
+            },
+            { 
+                name: 'Dark Texture', 
+                theme: '../inc/css/th-d-bg-texture.css'
+            },
+            { 
+                name: 'Experimental - High Accessibility', 
+                theme: '../inc/css/th-l-acc.css'
+            },
+            { 
+                name: 'Experimental - Dark Blue with Serif',
+                theme: '../inc/css/th-d-bu.css'
             }
         ],
         transitions: true,
         loadIcons: true,
         // Add theme change callback for the menu
         themeSwitched: function(themeName, themeUrl) {
+            console.log("Menu callback: theme switched to", themeUrl);
             switchLogosForTheme(themeUrl);
         }
-    },
-    controls: true,
-    progress: true,
-    center: false,
-    hash: true,
-    transition: 'slide'
+        },
 });
 
 // For direct access to logo switching
@@ -238,19 +261,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }, 500);
         });
-        
-        // Try to access the menu plugin's theme switcher
-        if (Reveal.getPlugin && Reveal.getPlugin('menu')) {
-            const menuPlugin = Reveal.getPlugin('menu');
-            if (menuPlugin && menuPlugin.switchTheme) {
-                const originalSwitchTheme = menuPlugin.switchTheme;
-                menuPlugin.switchTheme = function(theme) {
-                    originalSwitchTheme.call(menuPlugin, theme);
-                    console.log("Theme switched via menu plugin:", theme.theme);
-                    switchLogosForTheme(theme.theme);
-                };
-                console.log("Menu plugin theme switcher hooked");
-            }
-        }
     }
 });

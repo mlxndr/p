@@ -2,12 +2,13 @@
 
 :root {
     --theme-mode: 'dark';
+    --r-font-color: #FFFFFF;
 }
 
 .reveal {
-    background-image: url('../bg/d-texture.jpg');
+    background-image: url('bg/d-texture.jpg');
     background-size: cover;
-    color: #FFFFFF;
+    color: var(--r-font-color);
 }
 
 .subtle { 

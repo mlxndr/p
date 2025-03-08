@@ -2,11 +2,12 @@
 
 :root {
     --theme-mode: 'light';
+    --r-font-color: #0D0D0D;
 }
 
 .reveal {
     background-color: #FFFFFF;
-    color: #0D0D0D;
+    color: var(--r-font-color);
 }
 
 .subtle { 

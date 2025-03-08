@@ -1,14 +1,13 @@
-## Five recent advances
+# Outline
 
-* Reasoning/think-aloud
-* Web search
-* Context window increases
-* Multimodal capabilities
-* Agentive research
+* Current AI models
+* Five recent advances
+* Agentive examples
+* Implications
 
---
+---
 
-## Current major models
+## Current AI models
 
 * OpenAI's ChatGPT
 * Microsoft's Copilot
@@ -39,13 +38,23 @@
 
 ## Glasgow's choice
 
-* The University of Glasgow has chosen Microsoft's Copilot model (not Copilot Pro)
+* University of Glasgow has chosen Microsoft's Copilot model (not Copilot Pro)
 * [LISU offer support and information](https://gla.sharepoint.com/sites/learning-innovation/SitePages/Gen-AI-Digital-Skills-for-Generative-AI.aspx)
 * Access using the Copilot tab at [microsoft365.com](https://www.microsoft365.com/) or using the Copilot app, or the Copilot tab in Teams.
 * *When signed in with your GUID,* chats and files 'aren’t used to train models under enterprise data protection'. Don't use files you can't store on OneDrive.
 * 'If the process requires you to make a decision, as a general rule of thumb make sure that you are making that decision, not generative AI.'
 
 ---
+
+## Five recent advances
+
+* Reasoning/think-aloud
+* Web search
+* Context window increases
+* Multimodal capabilities
+* Agentive research
+
+--
 
 ## Reasoning models
 
@@ -109,10 +118,10 @@
 
 * An 'agent' is an autonomous system which analyses input, makes 'decisions', and has the ability to make unsupervised actions towards a goal
 * For research, this usually involves:
-    * Asking a question
-    * Optionally giving clarification
-    * The AI agent then analysing the question, performing searches on the internet, retrieving search results, reading them, reformulating more searches, reflecting on what else needs searched for, taking note of what's relevant or useful, then iterating on this until either at a maximum or 'satisfied' about the answer
-    * Writing up this process as a research note
+  * Asking a question
+  * Optionally giving clarification
+  * The AI agent then analysing the question, performing searches on the internet, retrieving search results, reading them, reformulating more searches, reflecting on what else needs searched for, taking note of what's relevant or useful, then iterating on this until either at a maximum or 'satisfied' about the answer
+  * Writing up this process as a research note
 
 ---
 
@@ -131,7 +140,7 @@
 
 * How do English speakers use metaphors and other strategies to represent the sensation of smelling perfume in written text?
 * For a PhD level linguist interested in how English speakers use metaphors and other strategies to represent the sensation of smelling perfume in written text, produce a report focusing on academic research and corpus linguistics which comprehensively answers this question.
-* Investigate how English speakers use metaphors and other linguistic strategies to evoke the sensation of smelling perfume in written text. Apply corpus analysis to study large-scale data, drawing out patterns, trends, and subtleties in how perfume scents are described. You are preparing this research for a PhD thesis that focuses on linguistic representations of smell, particularly in the domain of perfume descriptions. The objective is to produce a data-driven study that can reveal underlying patterns, novel conceptual metaphors, and any emerging trends in English discourse relating to scent.
+  * Investigate how English speakers use metaphors and other linguistic strategies to evoke the sensation of smelling perfume in written text. Apply corpus analysis to study large-scale data, drawing out patterns, trends, and subtleties in how perfume scents are described. You are preparing this research for a PhD thesis that focuses on linguistic representations of smell, particularly in the domain of perfume descriptions. The objective is to produce a data-driven study that can reveal underlying patterns, novel conceptual metaphors, and any emerging trends in English discourse relating to scent.
 
 --
 
@@ -152,7 +161,7 @@
 
 --
 
-## Agentive research
+## Agentive research 1
 
 * Perplexity using 'deep research', free users get five deep research queries a day
 * [Link](https://www.perplexity.ai/search/for-a-phd-level-linguist-inter-btUVrBI8Qs.G2NF9.IWfvw)
@@ -160,7 +169,7 @@
 
 --
 
-## Agentive research
+## Agentive research 2
 
 * ChatGPT Plus using 'deep research'
 * [Link](https://chatgpt.com/share/67c87be1-2778-800e-9aac-f31f0c1c3162)
@@ -178,7 +187,7 @@
 
 --
 
-## More...
+## More
 
 * Try Gamma for slides
 * Try Scite and Elicit for finding papers
@@ -201,7 +210,7 @@
 
 --
 
-![Figure 3 from the HEPI report, showing how students use AI](img/hepi2.png)
+![Figure 2 from the HEPI report, showing how students use AI](img/hepi2.png)
 
 <!-- .element: class="r-stretch" -->
 
@@ -238,7 +247,7 @@
 
 --
 
-## QAA's suggestions
+## QAA's suggestions 1
 
 * Observed competence: 'observe a student complete one or more specific tasks related to their discipline [...] and interview them about their understanding of the related principles, context and applications' (OSCE-style)
 * Oral examinations ('with appropriate safeguards'): 'oral examinations in the form of structured interviews conducted by two or more examiners with clearly set out rubrics and appropriate safeguards for vulnerable students may be used formatively or summatively as a synoptic assessment. In addition, mini-vivas, in which small groups of students are interviewed together about their written submissions, can serve both to authenticate the work and contribute to its assessment'
@@ -246,7 +255,7 @@
 
 --
 
-## QAA's suggestions
+## QAA's suggestions 2
 
 * Coursework that integrates AI by design: the AI 'completes routine and/or repetitive tasks'
 * Hybrid submissions, including student work and AI together: 'allowing hybrid submissions in which the contribution of AI is fully acknowledged [...] is a useful transitional arrangement as providers plan for the near future in which Generative Artificial Intelligence is embedded in the licensed software used by staff and students'
@@ -262,7 +271,7 @@
 
 --
 
-## Alicja Syska on the essay
+## Alicja Syska on the essay 1
 
 * Writing is a way to clarify and undertake deep thinking
 * [We tried to kill the essay – now let’s resurrect it](https://blogs.lse.ac.uk/highereducation/2025/02/27/we-tried-to-kill-the-essay-now-lets-resurrect-it/)
@@ -270,7 +279,7 @@
 
 --
 
-## Alicja Syska on the essay
+## Alicja Syska on the essay 2
 
 * 'What AI can help with is to break down the misconceptions around writing, make it more achievable, more democratic, less fraught, less intimidating, and more rewarding. It still shouldn’t be easy[...] If we can find a sustainable way to use AI as Socratic service that questions, prompts, and encourages deeper engagement with the content, and offers feedback on ideas and argument, style, and voice, but not to appropriate the exact words or answers it comes up with, then we have a chance to use it to learn and grow, rather than reduce learning gains.'
 * '...reimagining the good old essay may just help us fulfil the original vision of Enlightenment education and – by treating writing as a practice of freedom – bring us closer to bell hooks’s ideal of the classroom as a location of possibility.'

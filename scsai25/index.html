@@ -1,51 +1,37 @@
 <!doctype html>
-<html>
+<html lang="en">
 <head>
-    <!-- Common head elements -->
-    <!-- From /inc/presentation-head.html -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../inc/reveal.js/dist/reveal.css">
-    <link rel="stylesheet" href="../css/fonts.css">
-    <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="../inc/reveal.js/plugin/highlight/monokai.css">
-    <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-    
-    <!-- Presentation-specific head elements -->
-    <link rel="stylesheet" href="../css/th-l-cr.css" id="theme">
-    <meta name="author" content="Marc Alexander">
     <title>SCS - Some AI updates</title>
+    <script>
+        fetch('../inc/pres-head.html')
+            .then(response => response.text())
+            .then(html => {
+                       document.head.insertAdjacentHTML('afterbegin', html);
+                   });
+    </script>
 </head>
 <body>
     <div class="reveal">
-        <div class="slides">
+        <div class="slides"  style="height:100%;width:100%;">
             <!-- Title slide - Using HTML for complex formatting -->
             <section>
                 <br><br><br><br><br>
-                <h2 class="tpa1">Some AI updates</h2>
-                <br><br><br><br><br><br><br><br><br><br>
-                <table class="tpa3">
-                    <tr>
-                        <td class="tpa4-r">SCS School Collective<br><span class="subtle">March 2025</span></td>
-                    </tr>
-                </table>
+                <h1 class="pres-title">Some AI updates</h1>
+                <div class="titlebr">
+                    SCS School Collective<br><span class="subtle">March 2025<br>Marc Alexander</span>
             </section>
             
-            <!-- Content slides from a single Markdown file -->
-            <!-- The data-separator attribute defines how slides are separated -->
-            <section data-markdown="./content.md"
-                     data-separator="^\n---\n"
-                     data-separator-vertical="^\n--\n"
-                     data-separator-notes="^notes:"
-                     data-charset="utf-8">
-            </section>
+            <!-- Content slides -->
+            <section data-markdown="./content.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
         </div>
     </div>    
+
     <script src="../inc/reveal.js/dist/reveal.js"></script>
-    <script src="../inc/reveal.js/plugin/markdown/markdown.js"></script>
     <script src="../inc/reveal.js/plugin/reveal.js-menu/menu.js"></script>
+    <script src="../inc/reveal.js/plugin/markdown/markdown.js"></script>
     <script src="../inc/reveal.js/plugin/notes/notes.js"></script>
-    <script src="../inc/revconfig-markdown.js"></script>
+    <script src="../inc/reveal.js/plugin/pdfexport/pdfexport.js"></script>
+    <script src="../inc/reveal.js/plugin/appearance/appearance.js"></script>
+    <script src="../inc/revconfig.js"></script>
 </body>
 </html>

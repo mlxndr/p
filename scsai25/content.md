@@ -81,13 +81,13 @@
 
 --
 
-![Claude correctly identifying an airplane model from a photo of the cabin ceiling](./claude1.png)
+![Claude correctly identifying an airplane model from a photo of the cabin ceiling](img/claude1.png)
 
 <!-- .element: class="r-stretch" -->
 
 --
 
-![Claude giving directions based on a photo of a street sign](./claude2.png)
+![Claude giving directions based on a photo of a Paris metro sign](img/claude2.png)
 
 <!-- .element: class="r-stretch" -->
 
@@ -105,7 +105,7 @@
 
 --
 
-## Agentive research 
+## Agentive research
 
 * An 'agent' is an autonomous system which analyses input, makes 'decisions', and has the ability to make unsupervised actions towards a goal
 * For research, this usually involves:
@@ -195,25 +195,25 @@
 
 --
 
-![Figure 1 from the HEPI report, showing what students use AI for](./hepi1.png)
+![Figure 1 from the HEPI report, showing what students use AI for](img/hepi1.png)
 
 <!-- .element: class="r-stretch" -->
 
 --
 
-![Figure 3 from the HEPI report, showing how students use AI](./hepi2.png)
+![Figure 3 from the HEPI report, showing how students use AI](img/hepi2.png)
 
 <!-- .element: class="r-stretch" -->
 
 --
 
-![Figure 4 from the HEPI report, showing student views on acceptable uses](./hepi3.png)
+![Figure 4 from the HEPI report, showing student views on acceptable uses](img/hepi3.png)
 
 <!-- .element: class="r-stretch" -->
 
 --
 
-![An extract from the HEPI report with student comments critical of their institution's lack of clarity](./hepi4.png)
+![An extract from the HEPI report with student comments critical of their institution's lack of clarity](img/hepi4.png)
 
 <!-- .element: class="r-stretch" -->
 

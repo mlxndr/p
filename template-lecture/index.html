@@ -1,32 +1,26 @@
 <!doctype html>
 <html>
 <head>
-    <!-- Common head elements -->
-    <!-- From /inc/presentation-head.html -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../inc/reveal.js/dist/reveal.css">
-    <link rel="stylesheet" href="../css/fonts.css">
-    <link rel="stylesheet" href="../css/base.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="../inc/reveal.js/plugin/highlight/monokai.css">
-    
-    <!-- Presentation-specific head elements -->
-    <link rel="stylesheet" href="../css/th-l-cr.css" id="theme">
-    <meta name="author" content="Marc Alexander">
     <title>From Clauses to Sentences</title>
+    <script>
+        fetch('../inc/pres-head.html')
+            .then(response => response.text())
+            .then(html => {
+                       document.head.insertAdjacentHTML('afterbegin', html);
+                   });
+    </script>
 </head>
 <body>
     <div class="reveal">
         <div class="slides">
             <!-- Title slide -->
             <section>
-                <br><br><br><br><br><br><h1 class="tpa1 r-fit-text">From Clauses to Sentences</h1>
-                <br><br><br><br><br><br>
+                <br><br><br><br><h1 class="tpa1 r-fit-text">From Clauses to Sentences</h1>
+                <br><br><br><br>
                 <table class="tpa3">
                     <tr style="padding-bottom: 5em; padding-top: 5em"><td colspan="2"><hr></td></tr>
                     <tr>
-                        <td class="tpa4-l">English Language & Linguistics 1A<span style="font-variant-caps: all-small-caps;">A</span><small><br>Meaning & Structure 3<br>Professor Marc Alexander</small></td>
+                        <td class="tpa4-l">English Language & Linguistics <span style="font-variant-caps: all-small-caps;">1A</span><small><br>Meaning & Structure 3<br>Professor Marc Alexander</small></td>
                         <td class="tpa4-r"><img src="../img/uog_mono.png" height="90em" alt="University of Glasgow Logo"></td>
                     </tr>
                 </table>
@@ -81,11 +75,12 @@
         </div>
     </div>
     
-    <!-- Common scripts -->
-    <!-- From /inc/presentation-scripts.html -->
     <script src="../inc/reveal.js/dist/reveal.js"></script>
     <script src="../inc/reveal.js/plugin/reveal.js-menu/menu.js"></script>
+    <script src="../inc/reveal.js/plugin/markdown/markdown.js"></script>
     <script src="../inc/reveal.js/plugin/notes/notes.js"></script>
+    <script src="../inc/reveal.js/plugin/pdfexport/pdfexport.js"></script>
+    <script src="../inc/reveal.js/plugin/appearance/appearance.js"></script>
     <script src="../inc/revconfig.js"></script>
 </body>
 </html>

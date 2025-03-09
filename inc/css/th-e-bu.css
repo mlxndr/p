@@ -2,15 +2,24 @@
 
 :root {
     --theme-mode: 'dark';
-    --r-main-font: 'Equity', serif;
-    --r-heading-font: 'Equity', serif;
-    --r-heading-bold-font: 'Equity', serif;
+    --r-main-font: 'Century Supra', serif;
     --r-font-color: #FFFFFF;
 }
 
 .reveal {
     background-color: #183153;
     color: var(--r-font-color);
+}
+
+h2 {
+    font-variant: small-caps !important;
+    font-weight: 400;
+    text-transform: none;
+    text-align: center;    
+}
+
+ul {
+    line-height: 1.1 !important;
 }
 
 .subtle { 

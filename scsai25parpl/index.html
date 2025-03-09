@@ -9,6 +9,7 @@
                        document.head.insertAdjacentHTML('afterbegin', html);
                    });
     </script>
+    <link rel="stylesheet" href="../inc/css/th-e-mx.css" id="theme">
 </head>
 <body>
     <div class="reveal">
@@ -32,7 +33,12 @@
     <script src="../inc/reveal.js/plugin/notes/notes.js"></script>
     <script src="../inc/reveal.js/plugin/pdfexport/pdfexport.js"></script>
     <script src="../inc/reveal.js/plugin/appearance/appearance.js"></script>
-    <script src="../inc/reveal.js/plugin/onetimer/onetimer.js"></script>
     <script src="../inc/revconfig.js"></script>
+    <script>
+        Reveal.initialize({
+        parallaxBackgroundImage: '../inc/css/bg/l-plaster-par.jpg',
+        parallaxBackgroundSize: '3000px 1080px', // CSS syntax, e.g. "2100px 900px" - currently only pixels are supported (don't use % or auto)
+        });
+    </script>
 </body>
 </html>

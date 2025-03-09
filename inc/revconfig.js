@@ -1,79 +1,8 @@
-// Function to switch logos based on theme
-function switchLogosForTheme(theme) {
-    let isDarkTheme;
-    
-    console.log("switchLogosForTheme called with:", theme);
-    
-    // Check if the theme is a string (like a URL) or a boolean
-    if (typeof theme === 'boolean') {
-        isDarkTheme = theme;
-    } else {
-        // First try to determine theme from filename
-        if (typeof theme === 'string' && theme.includes('th-d-')) {
-            isDarkTheme = true;
-        } else if (typeof theme === 'string' && theme.includes('th-l-')) {
-            isDarkTheme = false;
-        } else {
-            // If that fails, check for dark text/background color as a fallback
-            try {
-                // Check if the current theme has a dark background by analyzing the body color
-                const bodyColor = window.getComputedStyle(document.body).color;
-                // Extract RGB values from the color string
-                const rgb = bodyColor.match(/\d+/g);
-                if (rgb && rgb.length >= 3) {
-                    // If the text color is light (high values), then background is likely dark
-                    const brightness = (parseInt(rgb[0]) + parseInt(rgb[1]) + parseInt(rgb[2])) / 3;
-                    isDarkTheme = brightness > 128;
-                    console.log("Determined theme from body text color brightness:", brightness, "isDark:", isDarkTheme);
-                } else {
-                    // Default to light theme if we can't determine
-                    isDarkTheme = false;
-                }
-            } catch (e) {
-                console.error("Error detecting theme:", e);
-                // Default to light theme
-                isDarkTheme = false;
-            }
-        }
-    }
-    
-    console.log("Switching logos, isDark:", isDarkTheme);
-    
-    // First try with relative paths
-    let uogLogos = document.querySelectorAll('img[src*="uog_mono.png"], img[src*="uog_white.png"]');
-    let leverhulmeLogos = document.querySelectorAll('img[src*="leverhulme_cmyk_black2.png"], img[src*="leverhulme_cmyk_white2.png"]');
-    
-    // If we don't find any, try with absolute paths
-    if (uogLogos.length === 0) {
-        uogLogos = document.querySelectorAll('img[src$="uog_mono.png"], img[src$="uog_white.png"]');
-    }
-    
-    if (leverhulmeLogos.length === 0) {
-        leverhulmeLogos = document.querySelectorAll('img[src$="leverhulme_cmyk_black2.png"], img[src$="leverhulme_cmyk_white2.png"]');
-    }
-    
-    console.log("Found UoG logos:", uogLogos.length);
-    console.log("Found Leverhulme logos:", leverhulmeLogos.length);
-    
-    uogLogos.forEach(logo => {
-        console.log("Changing UoG logo from", logo.src);
-        // Get the directory part of the path
-        const path = logo.src.substring(0, logo.src.lastIndexOf('/') + 1);
-        logo.src = isDarkTheme ? path + 'uog_white.png' : path + 'uog_mono.png';
-        console.log("  to", logo.src);
-    });
-    
-    leverhulmeLogos.forEach(logo => {
-        console.log("Changing Leverhulme logo from", logo.src);
-        // Get the directory part of the path
-        const path = logo.src.substring(0, logo.src.lastIndexOf('/') + 1);
-        logo.src = isDarkTheme ? path + 'leverhulme_cmyk_white2.png' : path + 'leverhulme_cmyk_black2.png';
-        console.log("  to", logo.src);
-    });
-}
-
 Reveal.initialize({
-    plugins: [ RevealMarkdown, RevealMenu, RevealNotes, PdfExport, Appearance ],
+    plugins: [ RevealMarkdown, RevealMenu, RevealNotes, PdfExport, Appearance, OneTimer ],
+    width: 1050,
+    height: 700,
+    margin: 0.1,
     navigationMode: 'linear',
     showSlideNumber: 'print',
     pdfSeparateFragments: false,
@@ -121,145 +50,79 @@ Reveal.initialize({
         markers: true,
         themes: [
             { 
-                name: 'Light Cream',
+                name: 'Light: Cream',
                 theme: '../inc/css/th-l-cr.css'
             },
             { 
-                name: 'Light Eggshell',
+                name: 'Light: Eggshell',
                 theme: '../inc/css/th-l-eg.css'
             },
             { 
-                name: 'Light Seashell',
+                name: 'Light: Seashell',
                 theme: '../inc/css/th-l-se.css'
             },
             { 
-                name: 'Light White',
+                name: 'Light: White',
                 theme: '../inc/css/th-l-wh.css'
             },
             { 
-                name: 'Light Canvas',
+                name: 'Light: Canvas',
                 theme: '../inc/css/th-l-bg-canvas.css'
             },
             { 
-                name: 'Light Paper',
+                name: 'Light: Paper',
                 theme: '../inc/css/th-l-bg-paper.css'
             },
             { 
-                name: 'Light Plaster',
+                name: 'Light: Plaster',
                 theme: '../inc/css/th-l-bg-plaster.css'
             },
             { 
-                name: 'Dark Black',
+                name: 'Dark: Near-Black',
                 theme: '../inc/css/th-d-bl.css'
             },
             { 
-                name: 'Dark Green',
+                name: 'Dark: Green',
                 theme: '../inc/css/th-d-gr.css'
             },
             { 
-                name: 'Dark Concrete', 
+                name: 'Dark: Concrete', 
                 theme: '../inc/css/th-d-bg-concrete.css'
             },
             { 
-                name: 'Dark Polygons Blue', 
+                name: 'Dark: Polygons Blue', 
                 theme: '../inc/css/th-d-bg-polygonblue.css'
             },
             { 
-                name: 'Dark Polygons Red', 
+                name: 'Dark: Polygons Red', 
                 theme: '../inc/css/th-d-bg-polygonred.css'
             },
             { 
-                name: 'Dark Many Polygons', 
+                name: 'Dark: Many Polygons', 
                 theme: '../inc/css/th-d-bg-polygonmany.css'
             },
             { 
-                name: 'Dark Texture', 
+                name: 'Dark: Texture', 
                 theme: '../inc/css/th-d-bg-texture.css'
             },
             { 
-                name: 'Experimental - High Accessibility', 
-                theme: '../inc/css/th-l-acc.css'
+                name: 'Experimental: High Accessibility', 
+                theme: '../inc/css/th-e-acc.css'
             },
             { 
-                name: 'Experimental - Dark Blue with Serif',
-                theme: '../inc/css/th-d-bu.css'
+                name: 'Experimental: Dark Blue with Serif',
+                theme: '../inc/css/th-e-bu.css'
+            },
+            { 
+                name: 'Experimental: Background Colour',
+                theme: '../inc/css/th-e-bg-col.css'
+            },
+            { 
+                name: 'Experimental: Mixed Serif',
+                theme: '../inc/css/th-e-mx.css'
             }
         ],
         transitions: true,
         loadIcons: true,
-        // Add theme change callback for the menu
-        themeSwitched: function(themeName, themeUrl) {
-            console.log("Menu callback: theme switched to", themeUrl);
-            switchLogosForTheme(themeUrl);
-        }
         },
-});
-
-// For direct access to logo switching
-window.switchThemeLogos = function(isDark) {
-    switchLogosForTheme(isDark ? 'th-d-' : 'th-l-');
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    console.log("DOM loaded, setting up theme handling");
-    
-    // Try to find any logos that might be on the page initially
-    const initialLogos = document.querySelectorAll('img[src*="uog_mono.png"], img[src*="uog_white.png"], img[src*="leverhulme_cmyk_black2.png"], img[src*="leverhulme_cmyk_white2.png"]');
-    console.log("Initial logos found:", initialLogos.length);
-    
-    // Handle the initial theme
-    setTimeout(() => {
-        const initialStylesheet = document.querySelector('link[rel="stylesheet"][href*="th-"]');
-        if (initialStylesheet) {
-            const themeHref = initialStylesheet.getAttribute('href');
-            console.log("Initial theme detected:", themeHref);
-            switchLogosForTheme(themeHref);
-        } else {
-            console.log("No initial theme stylesheet found");
-        }
-    }, 500); // Small delay to ensure everything is loaded
-    
-    // Set up alternate event listeners for reveal.js menu
-    document.addEventListener('click', (event) => {
-        // Check if it's a theme menu item that was clicked
-        if (event.target && event.target.closest('.slide-menu-item[data-theme]')) {
-            const themeItem = event.target.closest('.slide-menu-item[data-theme]');
-            const themeUrl = themeItem.getAttribute('data-theme');
-            console.log("Menu theme change detected via click:", themeUrl);
-            setTimeout(() => switchLogosForTheme(themeUrl), 100); // Small delay for theme to apply
-        }
-    });
-    
-    // Also listen for any theme changes that might happen outside the menu
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
-                const target = mutation.target;
-                if (target.getAttribute('rel') === 'stylesheet' && target.getAttribute('href').includes('th-')) {
-                    console.log("Theme change detected via mutation:", target.getAttribute('href'));
-                    switchLogosForTheme(target.getAttribute('href'));
-                }
-            }
-        });
-    });
-    
-    const stylesheets = document.querySelectorAll('link[rel="stylesheet"]');
-    stylesheets.forEach(sheet => {
-        observer.observe(sheet, { attributes: true });
-    });
-    
-    // Additional theme change detection for reveal.js
-    if (typeof Reveal !== 'undefined') {
-        console.log("Setting up Reveal event listeners");
-        Reveal.on('ready', () => {
-            console.log("Reveal ready event fired");
-            setTimeout(() => {
-                const currentStylesheet = document.querySelector('link[rel="stylesheet"][href*="th-"]');
-                if (currentStylesheet) {
-                    console.log("Theme on Reveal ready:", currentStylesheet.getAttribute('href'));
-                    switchLogosForTheme(currentStylesheet.getAttribute('href'));
-                }
-            }, 500);
-        });
-    }
 });

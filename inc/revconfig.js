@@ -50,24 +50,16 @@ Reveal.initialize({
         markers: true,
         themes: [
             { 
-                name: 'Light: Cream',
+                name: '★ Black on Cream',
                 theme: '../inc/css/th-l-cr.css'
             },
             { 
-                name: 'Light: Eggshell',
-                theme: '../inc/css/th-l-eg.css'
+                name: '★ White on Underlight Background',
+                theme: '../inc/css/th-d-bg-underlit.css'
             },
             { 
-                name: 'Light: Seashell',
-                theme: '../inc/css/th-l-se.css'
-            },
-            { 
-                name: 'Light: White',
-                theme: '../inc/css/th-l-wh.css'
-            },
-            { 
-                name: 'Light: Canvas',
-                theme: '../inc/css/th-l-bg-canvas.css'
+                name: '★ High Accessibility', 
+                theme: '../inc/css/th-l-acc.css'
             },
             { 
                 name: 'Light: Paper',
@@ -78,16 +70,16 @@ Reveal.initialize({
                 theme: '../inc/css/th-l-bg-plaster.css'
             },
             { 
-                name: 'Dark: Near-Black',
-                theme: '../inc/css/th-d-bl.css'
+                name: 'Light: Canvas',
+                theme: '../inc/css/th-l-bg-canvas.css'
+            },
+            { 
+                name: 'Dark: Blue',
+                theme: '../inc/css/th-d-bu.css'
             },
             { 
                 name: 'Dark: Green',
                 theme: '../inc/css/th-d-gr.css'
-            },
-            { 
-                name: 'Dark: Concrete', 
-                theme: '../inc/css/th-d-bg-concrete.css'
             },
             { 
                 name: 'Dark: Polygons Blue', 
@@ -98,28 +90,8 @@ Reveal.initialize({
                 theme: '../inc/css/th-d-bg-polygonred.css'
             },
             { 
-                name: 'Dark: Many Polygons', 
-                theme: '../inc/css/th-d-bg-polygonmany.css'
-            },
-            { 
                 name: 'Dark: Texture', 
                 theme: '../inc/css/th-d-bg-texture.css'
-            },
-            { 
-                name: 'Experimental: High Accessibility', 
-                theme: '../inc/css/th-e-acc.css'
-            },
-            { 
-                name: 'Experimental: Dark Blue with Serif',
-                theme: '../inc/css/th-e-bu.css'
-            },
-            { 
-                name: 'Experimental: Background Colour',
-                theme: '../inc/css/th-e-bg-col.css'
-            },
-            { 
-                name: 'Experimental: Mixed Serif',
-                theme: '../inc/css/th-e-mx.css'
             }
         ],
         transitions: true,

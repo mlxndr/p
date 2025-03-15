@@ -1,17 +1,14 @@
 <!doctype html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="../inc/reveal.js/dist/reveal.css">
-        <link rel="stylesheet" href="../css/fonts.css">
-		<link rel="stylesheet" href="../css/base.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-		<link rel="stylesheet" href="../inc/reveal.js/plugin/highlight/monokai.css">
-        <link rel="stylesheet" href="../css/th-l-cr.css"  id="theme">
-        <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-        <meta name="author" content="Marc Alexander">
+    <head>
 		<title>Test reveal.js Presentation</title>
+        <script>
+            fetch('../inc/pres-head.html')
+                .then(response => response.text())
+                .then(html => {
+                           document.head.insertAdjacentHTML('afterbegin', html);
+                       });
+        </script>
     </head>
 	<body>
 		<div class="reveal">
@@ -129,15 +126,12 @@
                         </tr>
                     </table>
                 </section>
- 
-                <script src="../inc/reveal.js/dist/reveal.js"></script>
-                <script src="../inc/reveal.js/plugin/reveal.js-menu/menu.js"></script>
-                <script src="../inc/reveal.js/plugin/markdown/markdown.js"></script>
-                <script src="../inc/reveal.js/plugin/notes/notes.js"></script>
-                <script src="../inc/reveal.js/plugin/pdfexport/pdfexport.js"></script>
-                <script src="../inc/reveal.js/plugin/appearance/appearance.js"></script>
-                <script src="../inc/revconfig.js"></script>
             </div>
 		</div>
-	</body>
-</html>
+        <script src="../inc/scripts-config.js"></script>
+        <script src="../inc/script-loader.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', loadScripts);
+        </script>
+    </body>
+    </html>

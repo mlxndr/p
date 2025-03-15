@@ -1,18 +1,15 @@
 <!doctype html>
 <html>
 	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="../inc/reveal.js/dist/reveal.css">
-        <link rel="stylesheet" href="../css/fonts.css">
-		<link rel="stylesheet" href="../css/base.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-		<link rel="stylesheet" href="../inc/reveal.js/plugin/highlight/monokai.css">
-        <link rel="stylesheet" href="../css/th-l-cr.css"  id="theme">
-        <meta name="author" content="Marc Alexander and Andrew Struan">
-        <link rel="icon" type="image/svg+xml" href="../favicon.svg">
-		<title>Test reveal.js Presentation</title>
-    </head>
+        <title>DSNA 2025 - Alexander and Struan</title>
+        <script>
+            fetch('../inc/pres-head.html')
+                .then(response => response.text())
+                .then(html => {
+                           document.head.insertAdjacentHTML('afterbegin', html);
+                       });
+        </script>
+        </head>
 	<body>
 		<div class="reveal">
 			<div class="slides">
@@ -20,10 +17,9 @@
                 <!-- Title Page -->
 
                 <section>
-                    <br><br><h1 class="tpa1 r-fit-text" style="font-weight: 200; font-variant-caps: all-small-caps;">Synonym Roll</h1>
-                    <h2 class="tpa2 r-fit-text" style="padding-bottom: 1em;">Historical Thesauruses as Analytical Historical Frameworks</h2>
-                    <br><br><br><br><br>
-                    <table class="tpa3">
+                    <br><h1 class="pres-title r-fit-text" width="100%" style="font-weight: 200; font-variant-caps: all-small-caps;">Synonym Role</h1>
+                    <p class="pres-subtitle r-fit-text" style="padding-bottom: 1em;">Historical Thesauruses as Analytical Historical Frameworks</p>
+                    <table class="titlebr" width="100%">
                         <tr>
                             <td class="tpa4-l">Marc Alexander <span class="subtle">and</span> Andrew Struan<br><span class="subtle">University of Glasgow</span></td>
                             <td class="tpa4-r"><span style="font-variant-caps: all-small-caps;">DSNA 25</span>, Buffalo<br><span class="subtle">May 2025</span></td>
@@ -113,10 +109,10 @@
                 <!-- Closing Slide -->
 
                 <section>                
-                    <br><br><h1 class="tpa1 r-fit-text" style="font-weight: 200; font-variant-caps: all-small-caps;">Synonym Roll</h1>
-                    <h2 class="tpa2 r-fit-text" style="padding-bottom: 1em;">Historical Thesauruses as Analytical Historical Frameworks</h2>
-                    <br><br><br><br>
-                    <table class="tpa3">
+                    <br><br><h1 class="pres-title r-fit-text" width="100%" style="font-weight: 200; font-variant-caps: all-small-caps;">Synonym Roll</h1>
+                    <p class="pres-subtitle r-fit-text" style="padding-bottom: 1em;">Historical Thesauruses as Analytical Historical Frameworks</p>
+                    <br><br>
+                    <table class="tablebr" width="100%">
                         <tr>
                             <td class="tpa4-l">Marc Alexander <span class="subtle">and</span> Andrew Struan<br><span  style="font-size: 0.7em;"">marc.alexander@glasgow.ac.uk, andrew.struan@glasgow.ac.uk</span></td>
                             <td class="tpa4-r" style="vertical-align: bottom;">Slides:</td>
@@ -128,12 +124,12 @@
                         </tr>
                     </table>
                 </section>
- 
-                <script src="../inc/reveal.js/dist/reveal.js"></script>
-                <script src="../inc/reveal.js/plugin/reveal.js-menu/menu.js"></script>
-                <script src="../inc/reveal.js/plugin/notes/notes.js"></script>
-                <script src="../inc/revconfig.js"></script>
-			</div>
+ 			</div>
 		</div>
-	</body>
+        <script src="../inc/scripts-config.js"></script>
+        <script src="../inc/script-loader.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', loadScripts);
+        </script>
+    </body>
 </html>

@@ -1,5 +1,5 @@
 .slide-menu-wrapper {
-  font-family: Concourse, 'Source Sans Pro', Helvetica, sans-serif;
+  font-family: var(--r-main-font);
 }
 
 .slide-menu-wrapper .slide-menu {
@@ -40,6 +40,7 @@
   padding: 0;
   width: 100%;
   border-bottom: solid 1px #555;
+  font-family: var(--r-main-font);
 }
 
 .slide-menu-wrapper .slide-menu-item,
@@ -79,6 +80,7 @@
 .slide-menu-wrapper .slide-menu-item.no-title .slide-menu-item-title,
 .slide-menu-wrapper .slide-menu-item-vertical.no-title .slide-menu-item-title {
   font-style: italic;
+  font-family: var(--r-main-font);
 }
 
 .slide-menu-wrapper .slide-menu-item-number {
@@ -171,6 +173,7 @@
   margin: 0;
   padding: 0;
   border-bottom: solid 2px #666;
+  font-family: var(--r-main-font);
 }
 
 .slide-menu-wrapper .slide-menu-toolbar > li {
@@ -181,6 +184,7 @@
   cursor: pointer;
   color: #aaa;
   border-radius: 3px;
+  font-family: var(--r-main-font);
 }
 
 .slide-menu-wrapper .slide-menu-toolbar > li.toolbar-panel-button i,

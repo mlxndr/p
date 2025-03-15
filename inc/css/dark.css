@@ -1,0 +1,6 @@
+:root {
+    --r-font-color: rgba(var(--dark-primary-r), var(--dark-primary-g), var(--dark-primary-b), 1);
+    --r-border-color: rgba(var(--dark-primary-r), var(--dark-primary-g), var(--dark-primary-b), 0.25);
+    --r-subtle-color: rgba(var(--dark-primary-r), var(--dark-primary-g), var(--dark-primary-b), 0.5);
+    --r-link-color: var(--r-dark-link-color);
+}

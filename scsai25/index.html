@@ -13,7 +13,7 @@
 <body>
     <div class="reveal">
         <div class="slides"  style="height:100%;width:100%;">
-            <!-- Title slide - Using HTML for complex formatting -->
+            <!-- Title slide - use HTML for complex formatting -->
             <section>
                 <br><br><br><br><br>
                 <h1 class="pres-title">Some AI updates</h1>
@@ -26,13 +26,10 @@
         </div>
     </div>    
 
-    <script src="../inc/reveal.js/dist/reveal.js"></script>
-    <script src="../inc/reveal.js/plugin/reveal.js-menu/menu.js"></script>
-    <script src="../inc/reveal.js/plugin/markdown/markdown.js"></script>
-    <script src="../inc/reveal.js/plugin/notes/notes.js"></script>
-    <script src="../inc/reveal.js/plugin/pdfexport/pdfexport.js"></script>
-    <script src="../inc/reveal.js/plugin/appearance/appearance.js"></script>
-    <script src="../inc/reveal.js/plugin/onetimer/onetimer.js"></script>
-    <script src="../inc/revconfig.js"></script>
+    <script src="../inc/scripts-config.js"></script>
+    <script src="../inc/script-loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadScripts);
+    </script>
 </body>
 </html>

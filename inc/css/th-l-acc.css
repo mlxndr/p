@@ -1,27 +1,18 @@
 @import url('base.css');
+@import url('light.css');
 
 :root {
-    --theme-mode: 'light';
     --r-main-font: 'Atkinson Hyperlegible', sans-serif !important;
     --r-heading-font: 'Atkinson Hyperlegible', sans-serif !important;
     --r-heading-bold-font: 'Atkinson Hyperlegible', sans-serif !important;
-    --r-font-color: #0D0D0D;
+    --r-serif-font: 'Atkinson Hyperlegible', serif !important;
 }
 
 .reveal {
     background-color: #EDD1B0;
-    color: var(--r-font-color);
 }
 
-.subtle { 
-    color: #0D0D0D80; 
+h1, h2, h3, .pres-title {
+    font-weight: 600 !important;
+    font-variant: normal !important;
 }
-
-.bg-shade { 
-    color: #E6E6E6; 
-}
-
-li::marker {
-    color: #0D0D0D40;
-}
-

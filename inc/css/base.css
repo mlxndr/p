@@ -1,11 +1,11 @@
 /* Base variables */
 :root {
     /* Base fonts */
-    --r-heading-font: 'Concourse', sans-serif;
-    --r-heading-bold-font: 'Concourse', sans-serif;
-    --r-main-font: 'Concourse', sans-serif;
-    --r-serif-font: 'Century Supra', serif;
-    --r-code-font: 'Fira Code', monospace;
+    --r-heading-font: 'Equity', 'Constantia', 'Georgia', serif;
+    --r-heading-bold-font: 'Equity', 'Constantia', 'Georgia', serif;
+    --r-main-font: 'Concourse', 'Aptos', 'Corbel', 'Helvetica Neue', 'Helvetica', sans-serif;
+    --r-serif-font: 'Equity', 'Constantia', 'Georgia', serif;
+    --r-code-font: 'JetBrains Mono', 'Fira Code', 'Iosevka', 'Cascadia Code', monospace;
 
     /* Sizes */
     --r-main-font-size: 32px;
@@ -13,11 +13,27 @@
     /* Colors */
     --progress-background: background-color;
     --progress-color: hwb(from var(--r-font-color) h w b / 0.2);
+    --light-primary-r: 13;
+    --light-primary-g: 13;
+    --light-primary-b: 13;
+    --dark-primary-r: 255;
+    --dark-primary-g: 255;
+    --dark-primary-b: 255;
+    --r-light-link-color: #2F5A8C;
+    --r-dark-link-color: #5F9EA0;
 
     font-variant-numeric: oldstyle-nums;
     -moz-font-feature-settings: "onum";
     -webkit-font-feature-settings: "onum";
     font-feature-settings: "onum";
+    font-variant-ligatures: common-ligatures;
+    -moz-font-feature-settings: "liga", "clig";
+    -webkit-font-feature-settings: "liga", "clig";
+    font-feature-settings: "liga", "clig";
+    font-variant-ligatures: contextual;
+    -moz-font-feature-settings: "calt";
+    -webkit-font-feature-settings: "calt";
+    font-feature-settings: "calt";
 }
 
 img {
@@ -35,10 +51,12 @@ img {
 
 /* Base typography */
 .reveal {
+    color: var(--r-font-color);
     font-family: var(--r-main-font);
     font-size: var(--r-main-font-size);
-    font-weight: 400;
+    font-weight: 300;
     line-height: 1.15;
+    text-align: left;
 }
 
 .reveal section {
@@ -47,22 +65,28 @@ img {
 
 /* Headings */
 
-.reveal h1, h2, h3 {
+h1, h2, h3 {
     font-family: var(--r-heading-font);
-    font-variant: normal;
     text-transform: none;
-    text-align: center;    
+    font-variant: small-caps;
+    font-weight: 300;
 }
 
-.reveal h1 {
+h2, h3 {
+    border-bottom: 2.35px solid var(--r-border-color);
+    text-align: left;
+}
+
+h1, h2, .pres-title {
     font-size: 1.8em;
 }
 
-.reveal h2 {
-    font-size: 1.8em;
+h1, .pres-title {
+    font-weight: 500;
 }
 
-.reveal h3 {
+
+h3 {
     font-size: 1.4em;
 }
 
@@ -86,11 +110,18 @@ img {
     font-size: 85%;
 }
 
+.subtle { 
+    color: var(--r-subtle-color);
+}
+
+li::marker {
+    color: var(--r-border-color);
+}
 
 /*HREF */
 
 .reveal a {
-    color: #5F9EA0;
+    color: var(--r-link-color);
     text-decoration: none;
 }
 
@@ -103,11 +134,10 @@ img {
     text-align: right;
     font-size: 0.9em;
 }
-
 .reveal .pres-title {
-    font-family: var(--r-main-font);
+    font-family: var(--r-heading-font);
     font-size: 2.5em;
-    font-weight: 600;
+    font-weight: 500;
     margin: 0em; 
     padding: 0em;
 }
@@ -186,10 +216,18 @@ img {
 
 /* Menu info box */
 .slide-menu-info {
-    padding: 10px 0;
-    margin: 0 10px 0 10px;
+    padding: 0;
+    margin: 0px 10px 2px 10px;
     text-align: left;
     font-family: var(--r-main-font);
+}
+
+.slide-menu-info p {
+    margin-bottom: 9px;
+}
+
+.slide-menu-info i {
+    margin-right: 3px;
 }
 
 .slide-menu-info small {

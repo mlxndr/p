@@ -29,18 +29,6 @@ Reveal.initialize({
         },
         side: 'left',
         width: 'normal',
-        custom: [
-            {
-                title: 'Info',
-                icon: '<i class="fa fa-info">ℹ</i>',
-                content: '<div class="slide-menu-info"><br><small>' +
-                        '<i class="fa-solid fa-person-chalkboard" aria-hidden="true" style="opacity: 0.4;"></i> Created using <a href="https://revealjs.com" target="blank">reveal.js</a> & <a href="https://github.com/denehyg/reveal.js-menu" target="blank">reveal.js-menu</a><br>' +
-                        '<i class="fa-solid fa-user-pen" aria-hidden="true" style="opacity: 0.4;"></i> Customisations by Marc Alexander <br>' +
-                        '<i class="fa-solid fa-font" aria-hidden="true" style="opacity: 0.4;"></i> Fonts by <a href="https://mbtype.com/" target="blank">Matthew Butterick</a> <br>' +
-                        '<i class="fa-brands fa-github" aria-hidden="true" style="opacity: 0.4;"></i> Hosted on <a href="https://mlxndr.github.io/" target="blank">GitHub</a><br></small>' +
-                        '</div>'
-            }
-        ],
         numbers: false,
         titleSelector: 'h1, h2, h3',
         useTextContentForMissingTitles: true,
@@ -54,8 +42,8 @@ Reveal.initialize({
                 theme: '../inc/css/th-l-cr.css'
             },
             { 
-                name: '★ White on Underlight Background',
-                theme: '../inc/css/th-d-bg-underlit.css'
+                name: '★ White on Twilight Background',
+                theme: '../inc/css/th-d-bg-twilight.css'
             },
             { 
                 name: '★ High Accessibility', 
@@ -90,11 +78,30 @@ Reveal.initialize({
                 theme: '../inc/css/th-d-bg-polygonred.css'
             },
             { 
-                name: 'Dark: Texture', 
-                theme: '../inc/css/th-d-bg-texture.css'
+                name: 'Dark: Black Rows', 
+                theme: '../inc/css/th-d-bg-rows.css'
+            },
+            { 
+                name: 'Experimental: Cream with Inverted Fonts', 
+                theme: '../inc/css/th-e-l-cr-invert.css'
+            },
+            { 
+                name: 'Experimental: Twilight with Inverted Fonts', 
+                theme: '../inc/css/th-e-bg-twilight-invert.css'
             }
         ],
         transitions: true,
+        custom: [
+            {
+                title: 'Info',
+                icon: '<i class="fa fa-info">ℹ</i>',
+                content: '<div class="slide-menu-info"><br><small>' +
+                        '<p><i class="fa-solid fa-person-chalkboard" aria-hidden="true" style="opacity: 0.4;"></i> Created using <a href="https://revealjs.com" target="blank">reveal.js</a> & <a href="https://github.com/denehyg/reveal.js-menu" target="blank">reveal.js-menu</a></p>' +
+                        '<p><i class="fa-solid fa-user-pen" aria-hidden="true" style="opacity: 0.4;"></i> Customisations by <a href="https://mga.is" target="blank">Marc Alexander</a></p>' +
+                        '<p><i class="fa-solid fa-font" aria-hidden="true" style="opacity: 0.4;"></i> Concourse, Equity, Century Supra fonts by <a href="https://mbtype.com/" target="blank">Matthew Butterick</a>, accessible font Atkinson Hyperlegible by the <a href="https://brailleinstitute.org/freefont" target="blank">Braille Institute</a>, and monospaced font by <a href="https://www.jetbrains.com/lp/mono">JetBrains</a></p>' +
+                        '<p><i class="fa-solid fa-images" aria-hidden="true" style="opacity: 0.4;"></i> Slide backgrounds by <a href="https://https://basicappleguy.com/" target="blank">BasicAppleGuy</a> and <a href="https://unsplash.com" target="blank">Unsplash</a></p>' +                        '<p><i class="fa-brands fa-github" aria-hidden="true" style="opacity: 0.4;"></i> Hosted on <a href="https://mlxndr.github.io/" target="blank">GitHub</a></p></small>' +                        '</div  >'
+            }
+        ],
         loadIcons: true,
         },
 });

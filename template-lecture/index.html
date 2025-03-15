@@ -17,10 +17,10 @@
             <section>
                 <br><br><br><br><h1 class="tpa1 r-fit-text">From Clauses to Sentences</h1>
                 <br><br><br><br>
-                <table class="tpa3">
+                <table class="titlebr" width="100%">
                     <tr style="padding-bottom: 5em; padding-top: 5em"><td colspan="2"><hr></td></tr>
                     <tr>
-                        <td class="tpa4-l">English Language & Linguistics <span style="font-variant-caps: all-small-caps;">1A</span><small><br>Meaning & Structure 3<br>Professor Marc Alexander</small></td>
+                        <td class="tpa4-l">English Language & Linguistics <span style="font-variant-caps: all-small-caps;">1A</span><small><br>Meaning & Structure <span style="font-family: 'Concourse Index'; font-variant-numeric: normal !important">3</span><br>Professor Marc Alexander</small></td>
                         <td class="tpa4-r"><img src="../img/uog_mono.png" height="90em" alt="University of Glasgow Logo"></td>
                     </tr>
                 </table>
@@ -75,12 +75,10 @@
         </div>
     </div>
     
-    <script src="../inc/reveal.js/dist/reveal.js"></script>
-    <script src="../inc/reveal.js/plugin/reveal.js-menu/menu.js"></script>
-    <script src="../inc/reveal.js/plugin/markdown/markdown.js"></script>
-    <script src="../inc/reveal.js/plugin/notes/notes.js"></script>
-    <script src="../inc/reveal.js/plugin/pdfexport/pdfexport.js"></script>
-    <script src="../inc/reveal.js/plugin/appearance/appearance.js"></script>
-    <script src="../inc/revconfig.js"></script>
+    <script src="../inc/scripts-config.js"></script>
+    <script src="../inc/script-loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadScripts);
+    </script>
 </body>
 </html>

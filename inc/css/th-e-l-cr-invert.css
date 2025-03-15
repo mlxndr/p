@@ -1,0 +1,13 @@
+@import url('base.css');
+@import url('light.css');
+
+.reveal {
+    background-color: #F2F2EA;
+    font-family: 'Equity', serif !important;
+    font-feature-settings: "ss01" 1;
+}
+
+h1, h2, h3, .pres-title {
+    font-family: 'Concourse', serif !important;
+    font-feature-settings: "ss01" 0;
+}

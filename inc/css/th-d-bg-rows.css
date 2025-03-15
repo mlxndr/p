@@ -2,6 +2,7 @@
 @import url('dark.css');
 
 .reveal {
-    background-image: url('bg/d-polygonred.jpg');
+    background-color: #183153;
+    background-image: url('bg/d-rows.jpg');
     background-size: cover;
 }

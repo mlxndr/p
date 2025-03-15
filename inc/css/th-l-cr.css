@@ -1,41 +1,6 @@
 @import url('base.css');
-
-:root {
-    --theme-mode: 'light';
-    --r-font-color: #0D0D0D;
-}
+@import url('light.css');
 
 .reveal {
     background-color: #F2F2EA;
-    color: var(--r-font-color);
-}
-
-.subtle { 
-    color: #0D0D0D80; 
-}
-
-.bg-shade { 
-    color: #E6E6E6; 
-}
-
-.reveal {
-    font-weight: 300 !important;
-}
-
-li::marker {
-    color: #0D0D0D40;
-  }
-
-h2, h3 {
-    font-family: 'Century Supra', serif !important;
-    font-variant: small-caps !important;
-    font-weight: 300 !important;
-    text-transform: none !important;
-    text-align: left !important;    
-    border-bottom: 2.35px solid #0D0D0D40 !important;
-}
-
-.pres-title {
-    font-family: 'Century Supra', serif !important;
-    font-variant: small-caps !important;
 }

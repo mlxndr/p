@@ -165,12 +165,12 @@ li::marker {
 }
 
 .reveal .tpa4-l {
-    width: 50%; 
+    width: 75%; 
     text-align: left;
 }
 
 .reveal .tpa4-r {
-    width: 50%; 
+    width: 25%; 
     text-align: right;
 }
 

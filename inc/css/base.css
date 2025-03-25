@@ -127,6 +127,13 @@ li::marker {
 
 /* Title Page Stuff */
 
+.t-center {
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
 .titlebr {
     position: absolute;
     bottom:30px;

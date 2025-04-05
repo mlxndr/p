@@ -9,7 +9,7 @@
 
     /* Colors */
     --r-font-color: #1a1a1a;
-    --r-background-color: #fff;
+    --r-background-color: #F2F2EA;
     --r-link-color: #2F5A8C;
     --r-border-color: #666;
     --r-subtle-color: #666;
@@ -34,7 +34,7 @@ body {
 }
 
 .header {
-    border-bottom: 2px solid var(--r-border-color);
+    border-bottom: 1px solid var(--r-border-color);
     padding-bottom: 1rem;
     margin-bottom: 2rem;
 }
@@ -56,7 +56,7 @@ body {
 
 /* Section styling */
 .section {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     page-break-inside: avoid;
 }
 
@@ -65,17 +65,17 @@ h2, h3 {
     text-transform: none;
     font-variant: small-caps;
     font-weight: 300;
-    border-bottom: 1px solid var(--r-border-color);
-    margin-top: 2rem;
-    margin-bottom: 1rem;
+    border-bottom: 0.5px solid var(--r-border-color);
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 h2 {
-    font-size: 18pt;
+    font-size: 14pt;
 }
 
 h3 {
-    font-size: 16pt;
+    font-size: 12pt;
 }
 
 /* Lists */

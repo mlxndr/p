@@ -957,7 +957,8 @@ var QRCode;
         // Enable anti-aliasing for smoother edges
         // ctx.imageSmoothingEnabled = false;
         
-        // Draw each module as a pixel-aligned rectangle
+        // Draw all modules as a single path to eliminate gaps
+        ctx.beginPath();
         for (var row = 0; row < moduleCount; row++) {
             for (var col = 0; col < moduleCount; col++) {
                 if (qrCodeAlg.isDark(row, col)) {
@@ -966,10 +967,11 @@ var QRCode;
                     var width = tileW;
                     var height = tileH;
                     
-                    ctx.fillRect(x, y, width, height);
+                    ctx.rect(x, y, width, height);
                 }
             }
         }
+        ctx.fill();
         
         // Public API
         return {
@@ -1033,8 +1035,9 @@ var QRCode;
                 // Enable anti-aliasing for smoother edges
                 // ctx.imageSmoothingEnabled = false;
                 
-                // Draw QR code
+                // Draw QR code using a single path to eliminate gaps
                 ctx.fillStyle = foreground;
+                ctx.beginPath();
                 for (var row = 0; row < moduleCount; row++) {
                     for (var col = 0; col < moduleCount; col++) {
                         if (qrCodeAlg.isDark(row, col)) {
@@ -1043,10 +1046,11 @@ var QRCode;
                             var width = tileW;
                             var height = tileH;
                             
-                            ctx.fillRect(x, y, width, height);
+                            ctx.rect(x, y, width, height);
                         }
                     }
                 }
+                ctx.fill();
             },
             clear: function() {
                 // Clear the canvas

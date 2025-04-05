@@ -24,9 +24,9 @@ function loadScripts() {
       configScript.src = scriptConfig.config;
       document.body.appendChild(configScript);
       
-      // Setup theme-based logo switching after config is loaded
+      // Setup theme-based elements after config is loaded
       configScript.onload = () => {
-        setupThemeBasedLogos();
+        setupThemeBasedElements();
       };
     });
   };
@@ -34,16 +34,19 @@ function loadScripts() {
   document.body.appendChild(coreScript);
 }
 
-// Function to set up theme-based logo switching
-function setupThemeBasedLogos() {
-  // Function to switch logos based on theme
-  function switchLogos() {
-    // Get the current theme link element
+// Function to set up theme-based elements (logos and QR codes)
+function setupThemeBasedElements() {
+  // Get the current theme state
+  function getThemeState() {
     const themeLink = document.getElementById('theme');
     const themeHref = themeLink ? themeLink.getAttribute('href') : '';
-    
-    // Check if the current theme is dark (contains 'th-d' or 'dark.css')
     const isDarkTheme = themeHref && (themeHref.includes('th-d') || themeHref.includes('dark.css'));
+    return { themeLink, isDarkTheme };
+  }
+
+  // Function to switch logos based on theme
+  function switchLogos() {
+    const { isDarkTheme } = getThemeState();
     
     // Get all UoG logos
     const uogLogos = document.querySelectorAll('.uog-logo');
@@ -68,33 +71,82 @@ function setupThemeBasedLogos() {
     });
   }
   
-  // Initial logo switch based on current theme
-  setTimeout(switchLogos, 500); // Small delay to ensure theme is loaded
+  // Store QR code instances
+  const qrInstances = {};
+  
+  // Function to update QR codes based on theme
+  function updateQRCodes() {
+    const { isDarkTheme } = getThemeState();
+    
+    // Find all QR code canvases with class 'qr-code'
+    const qrCodes = document.querySelectorAll('canvas.qr-code');
+    qrCodes.forEach(function(canvas) {
+      const canvasId = canvas.id;
+      const url = canvas.getAttribute('data-url') || 'https://mga.is/';
+      const size = parseInt(canvas.getAttribute('width') || '140');
+      
+      // If we need to recreate the QR code due to theme change
+      // First clear the canvas and remove the old instance
+      if (qrInstances[canvasId]) {
+        // Clear the canvas
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Remove any child elements that might have been added by the QR library
+        while (canvas.firstChild) {
+          canvas.removeChild(canvas.firstChild);
+        }
+        
+        // Delete the instance
+        delete qrInstances[canvasId];
+      }
+      
+      // Create/update QR code with appropriate color based on theme
+      if (typeof QRCode !== 'undefined' && !qrInstances[canvasId]) {
+        // Create new QR code instance
+        qrInstances[canvasId] = new QRCode(canvasId, {
+          text: url,
+          size: size,
+          background: "transparent",
+          foreground: isDarkTheme ? "#ffffff" : "#000000",
+          typeNumber: 4,
+          errorCorrectLevel: 'H'
+        });
+      }
+    });
+  }
+  
+  // Function to update all theme-dependent elements
+  function updateThemeElements() {
+    switchLogos();
+    updateQRCodes();
+  }
+  
+  // Initial update with delay to ensure theme is loaded
+  setTimeout(updateThemeElements, 500);
   
   // Watch for theme changes
   const observer = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
       if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
-        switchLogos();
+        updateThemeElements();
       }
     });
   });
   
   // Start observing the theme link for href changes
-  const themeLink = document.getElementById('theme');
+  const { themeLink } = getThemeState();
   if (themeLink) {
     observer.observe(themeLink, { attributes: true });
   }
   
   // Handle when the theme is changed via the menu or clicks
   document.addEventListener('click', function() {
-    // Small delay to allow theme to update
-    setTimeout(switchLogos, 100);
+    setTimeout(updateThemeElements, 100);
   });
   
   // Handle when the theme is changed via keyboard shortcuts
   document.addEventListener('keydown', function() {
-    // Small delay to allow theme to update if triggered by keyboard
-    setTimeout(switchLogos, 100);
+    setTimeout(updateThemeElements, 100);
   });
 }

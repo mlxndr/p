@@ -9,6 +9,8 @@
                            document.head.insertAdjacentHTML('afterbegin', html);
                        });
         </script>
+        <!-- QR Code JS library -->
+        <script src="../inc/qr.js"></script>
         </head>
 	<body>
 		<div class="reveal">
@@ -67,13 +69,13 @@
 
                         <aside class="notes">Organisations 59 (plus 21 emails) = 80<br>
 
-                            Today for time we’re going to look at one question of the individual responses<br>
+                            Today for time we're going to look at one question of the individual responses<br>
                             
                             Five part scale, by the way, and only 3% of respondents expressed a view other than full support or full opposition<br>
                             
                             26% of all submissions were anonymous<br>
                             
-                            Another 1,322 (9.5% of all submissions) submissions that the respondent marked “not for publication”.
+                            Another 1,322 (9.5% of all submissions) submissions that the respondent marked "not for publication".
                             </aside>
 
                     </section>
@@ -120,7 +122,9 @@
                         <tr style="padding-bottom: 5em; padding-top: 5em""><td colspan="2"><hr></td></tr>
                         <tr>
                             <td class="tpa4-l" style="line-height: 2.2;"><img src="../img/uog_mono.png"  width="200px" alt="University of Glasgow Logo" class="theme-logo uog-logo"><br><img src="../img/leverhulme_cmyk_black2.png" width="200px" alt="Leverhulme Trust Logo" class="theme-logo leverhulme-logo"></td>
-                            <td class="tpa4-r" style="vertical-align: middle;"><img src="../img/pala2024qr.png"  height="140px" alt="QR Code to Slides"></td>
+                            <td class="tpa4-r" style="vertical-align: middle;">
+                                <canvas id="qr-code" class="qr-code" width="140" height="140" data-url="https://mga.is/dsna25/"></canvas>
+                            </td>
                         </tr>
                     </table>
                 </section>

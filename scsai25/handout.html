@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Marc Alexander">
+    <title>SCS - Some AI updates (Handout)</title>
+    <link rel="stylesheet" href="../inc/css/fonts.css">
+    <link rel="stylesheet" href="../inc/css/handout.css">
+    <link rel="icon" type="image/png" href="../favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="../favicon.svg" />
+    <link rel="shortcut icon" href="../favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png" />
+</head>
+<body>
+    <div class="handout-container">
+        <!-- Header will be populated from index.html -->
+        <div class="header" id="handout-header"></div>
+        
+        <!-- Content will be populated from content.md -->
+        <div class="content" id="handout-content"></div>
+        
+        <div class="footer">
+            <p>Handout generated from presentation slides - University of Glasgow</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                // Load the index.html to extract title and metadata
+                const indexResponse = await fetch('./index.html');
+                const indexHTML = await indexResponse.text();
+                
+                // Create a temporary element to parse the HTML
+                const indexParser = new DOMParser();
+                const indexDoc = indexParser.parseFromString(indexHTML, 'text/html');
+                
+                // Extract the title
+                const titleElement = indexDoc.querySelector('.pres-title');
+                const subtitleElement = indexDoc.querySelector('.titlebr');
+                
+                if (titleElement && subtitleElement) {
+                    const headerHTML = `
+                        <h1 class="title">${titleElement.textContent.trim()}</h1>
+                        <div class="subtitle">${subtitleElement.innerHTML.trim()}</div>
+                    `;
+                    document.getElementById('handout-header').innerHTML = headerHTML;
+                }
+                
+                // Load and parse content.md
+                const mdResponse = await fetch('./content.md');
+                const mdContent = await mdResponse.text();
+                
+                // Process the markdown content
+                // Split into sections (separated by ---)
+                const sections = mdContent.split(/\n---\n/);
+                
+                let contentHTML = '';
+                
+                sections.forEach(section => {
+                    // Split each section into subsections (separated by --)
+                    const subsections = section.split(/\n--\n/);
+                    
+                    subsections.forEach(subsection => {
+                        // Parse the subsection content
+                        const lines = subsection.trim().split('\n');
+                        
+                        // Start a new section div
+                        contentHTML += '<div class="section">';
+                        
+                        // Process each line
+                        let inList = false;
+                        let currentListType = null;
+                        
+                        for (let i = 0; i < lines.length; i++) {
+                            const line = lines[i];
+                            
+                            // Handle headings (## and ###)
+                            if (line.startsWith('## ')) {
+                                contentHTML += `<h2>${line.substring(3)}</h2>`;
+                                continue;
+                            }
+                            
+                            if (line.startsWith('### ')) {
+                                contentHTML += `<h3>${line.substring(4)}</h3>`;
+                                continue;
+                            }
+                            
+                            // Handle lists
+                            if (line.trim().startsWith('* ')) {
+                                if (!inList || currentListType !== 'ul') {
+                                    if (inList) contentHTML += `</${currentListType}>`;
+                                    contentHTML += '<ul>';
+                                    inList = true;
+                                    currentListType = 'ul';
+                                }
+                                contentHTML += `<li>${line.substring(2).trim()}</li>`;
+                                continue;
+                            }
+                            
+                            if (line.match(/^\d+\.\s/)) {
+                                if (!inList || currentListType !== 'ol') {
+                                    if (inList) contentHTML += `</${currentListType}>`;
+                                    contentHTML += '<ol>';
+                                    inList = true;
+                                    currentListType = 'ol';
+                                }
+                                contentHTML += `<li>${line.replace(/^\d+\.\s/, '').trim()}</li>`;
+                                continue;
+                            }
+                            
+                            // Close list if we're not in a list item anymore
+                            if (inList && line.trim() !== '' && 
+                                !line.trim().startsWith('* ') && 
+                                !line.match(/^\d+\.\s/)) {
+                                contentHTML += `</${currentListType}>`;
+                                inList = false;
+                                currentListType = null;
+                            }
+                            
+                            // Handle images
+                            if (line.startsWith('![')) {
+                                const altTextMatch = line.match(/!\[(.*?)\]/);
+                                const altText = altTextMatch ? altTextMatch[1] : '';
+                                
+                                const srcMatch = line.match(/\((.*?)\)/);
+                                const src = srcMatch ? srcMatch[1] : '';
+                                
+                                if (src) {
+                                    contentHTML += `<img src="${src}" alt="${altText}" />`;
+                                }
+                                continue;
+                            }
+                            
+                            // Handle links
+                            let processedLine = line;
+                            const linkRegex = /\[(.*?)\]\((.*?)\)/g;
+                            processedLine = processedLine.replace(linkRegex, '<a href="$2">$1</a>');
+                            
+                            // Handle empty lines (paragraphs)
+                            if (line.trim() === '') {
+                                if (!inList) contentHTML += '<br>';
+                                continue;
+                            }
+                            
+                            // Regular text (not a heading, list, or empty line)
+                            if (!line.trim().startsWith('<!--')) { // Skip comments
+                                contentHTML += `<p>${processedLine}</p>`;
+                            }
+                        }
+                        
+                        // Close any open list
+                        if (inList) {
+                            contentHTML += `</${currentListType}>`;
+                        }
+                        
+                        // Close the section
+                        contentHTML += '</div>';
+                    });
+                });
+                
+                document.getElementById('handout-content').innerHTML = contentHTML;
+                
+            } catch (error) {
+                console.error('Error loading content:', error);
+                document.getElementById('handout-content').innerHTML = '<p>Error loading content. Please try again.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

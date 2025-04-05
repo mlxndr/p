@@ -1,0 +1,184 @@
+/* Handout CSS - designed for printable presentations */
+:root {
+    /* Base fonts */
+    --r-heading-font: 'Equity', 'Constantia', 'Georgia', serif;
+    --r-heading-bold-font: 'Equity', 'Constantia', 'Georgia', serif;
+    --r-main-font: 'Concourse', 'Aptos', 'Corbel', 'Helvetica Neue', 'Helvetica', sans-serif;
+    --r-serif-font: 'Equity', 'Constantia', 'Georgia', serif;
+    --r-code-font: 'JetBrains Mono', 'Fira Code', 'Iosevka', 'Cascadia Code', monospace;
+
+    /* Colors */
+    --r-font-color: #1a1a1a;
+    --r-background-color: #fff;
+    --r-link-color: #2F5A8C;
+    --r-border-color: #666;
+    --r-subtle-color: #666;
+
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures, contextual;
+}
+
+body {
+    font-family: var(--r-main-font);
+    font-size: 12pt;
+    line-height: 1.5;
+    color: var(--r-font-color);
+    background-color: var(--r-background-color);
+    margin: 0;
+    padding: 2rem;
+}
+
+.handout-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.header {
+    border-bottom: 2px solid var(--r-border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-family: var(--r-heading-font);
+    font-size: 24pt;
+    font-weight: 500;
+    margin: 0;
+    text-transform: none;
+    font-variant: small-caps;
+}
+
+.subtitle {
+    font-size: 14pt;
+    color: var(--r-subtle-color);
+    margin-top: 0.5rem;
+}
+
+/* Section styling */
+.section {
+    margin-bottom: 2rem;
+    page-break-inside: avoid;
+}
+
+h2, h3 {
+    font-family: var(--r-heading-font);
+    text-transform: none;
+    font-variant: small-caps;
+    font-weight: 300;
+    border-bottom: 1px solid var(--r-border-color);
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 18pt;
+}
+
+h3 {
+    font-size: 16pt;
+}
+
+/* Lists */
+ul {
+    list-style-type: "\2014";
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+}
+
+ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+}
+
+li {
+    margin: 0.5rem 0;
+}
+
+li::marker {
+    color: var(--r-border-color);
+}
+
+ul ul {
+    font-size: 90%;
+}
+
+/* Links */
+a {
+    color: var(--r-link-color);
+    text-decoration: none;
+}
+
+/* Images */
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1rem auto;
+}
+
+/* Code and blockquotes */
+pre, code {
+    font-family: var(--r-code-font);
+    font-size: 0.9em;
+}
+
+blockquote {
+    font-style: normal;
+    font-family: var(--r-serif-font);
+    border-left: 3px solid var(--r-border-color);
+    padding-left: 1rem;
+    margin-left: 1rem;
+}
+
+/* For better printing */
+@media print {
+    body {
+        padding: 0;
+    }
+    
+    .handout-container {
+        max-width: 100%;
+    }
+    
+    h2 {
+        page-break-after: avoid;
+    }
+    
+    h3 {
+        page-break-after: avoid;
+    }
+    
+    .section {
+        page-break-inside: avoid;
+    }
+    
+    img {
+        page-break-inside: avoid;
+    }
+}
+
+/* Special styling classes */
+.subtle { 
+    color: var(--r-subtle-color);
+}
+
+.serif {
+    font-family: var(--r-serif-font);
+}
+
+/* Grammar colors */
+.predicator { color: #D32F2F; }
+.subject { color: #2E7D32; }
+.object { color: #7B1FA2; }
+.complement { color: #1976D2; }
+.adverbial { color: #E65100; }
+
+/* Page footer */
+.footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--r-border-color);
+    font-size: 10pt;
+    color: var(--r-subtle-color);
+    text-align: center;
+}

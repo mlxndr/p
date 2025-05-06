@@ -1,0 +1,8 @@
+@import url('base.css');
+@import url('dark.css');
+
+.reveal {
+    background-color: #183153;
+    background-image: url('bg/d-uofg-bu.jpeg');
+    background-size: cover;
+}

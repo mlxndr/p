@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>‘up yours at the end of life’</title>
+    <script>
+        fetch('../inc/pres-head.html')
+            .then(response => response.text())
+            .then(html => {
+                       document.head.insertAdjacentHTML('afterbegin', html);
+                   });
+    </script>
+    <script src="../inc/qr.js"></script>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides"  style="height:100%;width:100%;">
+            <!-- Title slide - loaded from markdown file -->
+            <section data-markdown="./title.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
+            
+            <!-- Content slides -->
+            <section data-markdown="./content.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
+            <!-- Closing Slide -->
+
+            <section>                
+                <br><br>
+                <h1 class="pres-title-headingfont" style="font-size: 65px; font-weight: 700">‘up yours at the end of life’</h1>
+                <p class="pres-subtitle-mainfont" style="font-size: 45px; padding-bottom: 1em; font-weight: 300;">Opposition, Emotion, and Overlap in a Corpus of<br> Scottish Debates on Assisted Dying</p>
+                <br><br>
+                <table class="titlebr" width="100%">
+                    <tr>
+                        <td class="tpa4-l">Marc Alexander <span class="subtle">and</span> James Balfour<br><span  style="font-size: 0.7em;"">marc.alexander@glasgow.ac.uk, james.balfour@glasgow.ac.uk</span></td>
+                        <td class="tpa4-r" style="vertical-align: bottom;">Slides:</td>
+                    </tr>
+                    <tr style="padding-bottom: 5em; padding-top: 5em""><td colspan="2"><hr></td></tr>
+                    <tr>
+                        <td class="tpa4-l" style="line-height: 2.2;"><img src="../img/uog_mono.png"  width="200px" alt="University of Glasgow Logo" class="theme-logo uog-logo"><br><img src="../img/leverhulme_cmyk_black2.png" width="200px" alt="Leverhulme Trust Logo" class="theme-logo leverhulme-logo"></td>
+                        <td class="tpa4-r" style="vertical-align: middle;">
+                            <canvas id="qr-code" class="qr-code" width="140" height="140" data-url="https://mga.is/cilc25/"></canvas>
+                        </td>
+                    </tr>
+                </table>
+            </section>
+        
+        </div>
+    </div>    
+
+    <script src="../inc/scripts-config.js"></script>
+    <script src="../inc/script-loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadScripts);
+    </script>
+</body>
+</html>

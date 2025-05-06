@@ -62,6 +62,10 @@ Reveal.initialize({
                 theme: '../inc/css/th-l-bg-canvas.css'
             },
             { 
+                name: 'Dark: Black',
+                theme: '../inc/css/th-d-bk.css'
+            },
+            { 
                 name: 'Dark: Blue',
                 theme: '../inc/css/th-d-bu.css'
             },

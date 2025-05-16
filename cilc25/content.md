@@ -223,7 +223,7 @@
   * Argued to be more legally/practically accurate
   * Critics say "assisted dying" is a euphemism
   * Retains moral/religious stigma of suicide
-* "Euthanasia": Not accurate for current bill (euthanasia is physician-administered and this bill requires self-administration)
+  * "Euthanasia": Not accurate for current bill (euthanasia is physician-administered and this bill requires self-administration)
 * "Medical Assistance in Dying (MAiD)": Canadian term sometimes found in the corpus
 
 --

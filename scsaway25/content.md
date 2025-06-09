@@ -1,10 +1,12 @@
 ## Breakdown
 
 * Withdrawal by Gender
-  - The data gathered categories gender as either Female or Male. The significant majority of those that withdrew were female (83%), higher than the college (75%).
+  - The data gathered categorises gender as either Female or Male
+  - The significant majority of those that withdrew were female (83%), higher than the college (75%)
 
 * Withdrawal by Domicile
-  - Across all levels of study Scottish students account for the greatest number of withdrawals (78%), with rUK (15%), and International (7%) students with comparable rates. This mirrors College: Scottish students (72%), rUK (16%), International (10%).
+  - Across all levels of study Scottish students account for the greatest number of withdrawals (78%), with rUK (15%), and International (7%) students with comparable rates
+  - This mirrors College: Scottish students (72%), rUK (16%), International (10%)
 
 ---
 

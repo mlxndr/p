@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>First year retention</title>
+    <script>
+        fetch('../inc/pres-head.html')
+            .then(response => response.text())
+            .then(html => {
+                       document.head.insertAdjacentHTML('afterbegin', html);
+                   });
+    </script>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides"  style="height:100%;width:100%;">
+            <!-- Title slide - loaded from markdown file -->
+            <section data-markdown="./title.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
+            
+            <!-- Content slides -->
+            <section data-markdown="./content.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
+        </div>
+    </div>    
+
+    <script src="../inc/scripts-config.js"></script>
+    <script src="../inc/script-loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadScripts);
+    </script>
+</body>
+</html>

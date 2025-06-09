@@ -10,24 +10,26 @@
 
 ## Withdrawal Questionnaire
 
-* Mental health is the primary concern, with 50% of overall withdrawals citing it as a factor.
+* Mental health is the primary concern, with 50% of overall withdrawals citing it as a factor
 
 * First-year students more frequently indicate "changing mind" (24%) and "not enjoying studies" (20%), with mental health as the third most common reason (17%)
 
-* College: 54% of withdrawals cite mental health.
+* College: 54% of withdrawals cite mental health
+
+* 91% say they want to return to higher education
 
 ---
 
 ## Withdrawal Questionnaire
 
 * Inadequate Preparation
-  - 43%: felt they weren't adequately prepared for their studies.
+  - 43%: felt they weren't adequately prepared for their studies
 
 * Social Isolation
-  - 39%: feeling isolated.
+  - 39%: feeling isolated
 
 * Belonging Concerns
-  - 35%: issues with their sense of belonging, a factor notably more significant in SCS than College.
+  - 35%: issues with their sense of belonging, a factor notably more significant in SCS than College
 
 * Stress-Related Health Issues
-  - 35%: health problems affected by academic stress.
+  - 35%: health problems affected by academic stress

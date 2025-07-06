@@ -5,4 +5,11 @@
     background-color: #183153;
     background-image: url('bg/d-uofg-bu.jpeg');
     background-size: cover;
+    font-family: 'Equity', serif !important;
+    font-feature-settings: "ss01" 1;
+}
+
+h1, h2, h3, .pres-title {
+    font-family: 'Concourse', sans-serif !important;
+    font-feature-settings: "ss01" 0;
 }

@@ -1,0 +1,6 @@
+@import url('base.css');
+@import url('dark.css');
+
+.reveal {
+    background-color: #183153;
+}

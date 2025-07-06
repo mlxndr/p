@@ -308,3 +308,9 @@
     font-weight: 600; /* SemiBold Italic */
     src: url('woff2/MonaspaceNeon-SemiBoldItalic.woff2') format('woff2');
 }
+@font-face {
+    font-family: 'Indoor Kid';
+    font-style: normal oblique 0deg 15deg;
+    font-weight: 300 700;
+    src: url('woff2/IndoorKidV2Variable.woff2') format('woff2');
+}

@@ -86,6 +86,10 @@ Reveal.initialize({
                 theme: '../inc/css/th-d-bg-rows.css'
             },
             { 
+                name: 'Experimental: Indoor Kid', 
+                theme: '../inc/css/th-l-indoor.css'
+            },
+            { 
                 name: 'Experimental: UofG Blue', 
                 theme: '../inc/css/th-d-bg-uog-bu.css'
             },

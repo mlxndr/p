@@ -9,10 +9,10 @@
 
 ## Scottish HE Context
 
-* Quality Enhancement Framework established 2003
+* Quality Enhancement Framework established 2003, updated 2024
 * Collaborative development: Scottish Funding Council, Universities Scotland, QAA, student representatives
 * Fundamental difference: prioritising enhancement over compliance auditing
-* Recognition that academics are inherently committed to excellence
+* Recognition that as all staff are committed to a high quality student experience, the system should work through supportive rather than punitive processes
 
 ---
 
@@ -29,7 +29,7 @@
 
 ## Foundational Principles
 
-* **Completeness**: All credit-bearing provision included
+* **Completeness**: All credit-bearing and PGR provision included
   - Undergraduate and postgraduate taught
   - Research degrees
   - Collaborative programmes
@@ -37,14 +37,14 @@
   
 * **Coherence**: Interconnected system where outputs inform other processes
 
-* **Devolved Responsibility**: Academic staff collectively responsible with clear governance
+* **Devolved Responsibility**: The University's staff are all held collectively responsible for maintaining academic standards
 
 ---
 
 ## More Core Principles
 
 * **Objectivity**: External perspectives in every process
-  - External academics on panels
+  - External academics on PSR panels
   - External examiners
   - Professional body accreditation
   - Student voices throughout
@@ -59,8 +59,7 @@
 ## Key Terminology
 
 * **Academic Standards**: Level of achievement required for award
-  - Absolute and constant over time
-  - Comparable across institutions
+  - Aims to be constant over time and comparable across institutions
 
 * **Academic Quality**: How effectively learning opportunities help achieve standards
   - Teaching methods
@@ -80,7 +79,7 @@
 
 ---
 
-## Three-Tier Temporal Structure
+## Three Time Periods
 
 * **Regular Activities** (continuous)
   - Course and programme approval
@@ -94,25 +93,25 @@
 * **Periodic Activities** (5-6 year cycles)
   - Periodic Subject Review
   - Student-Facing Service Reviews and Graduate School Review
-  - External Accreditation
+  - External statutory and accrediting bodies (where appropriate)
 
 ---
 
 ## Student Partnership Model
 
-* Students as partners, not customers
+* Students as partners, *not* customers
 * Elected class representatives with formal training
 * Representation recorded on achievement records
 * Staff-Student Liaison Committees (SSLCs)
-  - Student majorities
-  - Multiple governance levels
+  - Student majorities, ideally student chairs (or co-chairs)
+  - Multiple governance levels (programme, subject, School, College, SRC)
   - Address operational and enhancement issues
 
 ---
 
 ## Course Evaluation System
 
-* Mandatory for all courses
+* Mandatory questionnaire for all courses
 * Standardised core questions + context-specific additions
 * Required 'Summary and Response' documents
   - Demonstrates consideration of feedback
@@ -131,6 +130,7 @@
   - Student and staff feedback
   - External examiner reports
   - Enhancement initiative outcomes
+* Under ongoing redevelopment
 
 ---
 
@@ -149,12 +149,12 @@
 * Four-year appointments
 * Full Board of Examiners membership
 * Responsibilities:
-  - Review assessment instruments in advance
-  - Attend examination boards
+  - Review sample of assessment instruments in advance
+  - Attend examination boards (at least once a year)
   - Comment on standards achieved
   - Provide comparative judgements
 
-* Annual reports direct to Principal
+* Annual reports addressed direct to Principal (=President)
 * Systematic institutional review with required responses
 
 ---
@@ -167,6 +167,7 @@
   - Student representatives
   - Senior university staff
   - Professional services representation
+  - External accreditators where appropriate
 
 * Comprehensive self-evaluation required
 * Extensive panel visits and stakeholder meetings
@@ -181,6 +182,7 @@
 * Implementation timescales
 * Follow-up monitoring at six months
 * Good practice dissemination
+* Detailed committee review and follow-up queries
 
 ---
 
@@ -202,9 +204,11 @@
 * Additional external validation
 * Periodic review visits
 * Curriculum evaluation against professional competencies
-* Staff qualification assessment
-* Resource evaluation
-* Integrated with internal quality processes
+* Can include:
+  - Staff qualification assessment
+  - Resource evaluation
+  - Analysis of internal quality processes
+  - Regulatory review and changes
 * Drives curriculum enhancement
 
 ---
@@ -231,7 +235,7 @@
 * Peer-led, enhancement-focused
 * Co-created with staff and students
 * External review teams evaluate against TQEF principles
-* Complies with European Standards and Guidelines (ESG)
+* Complies with ENQA's European Standards and Guidelines (ESG)
 
 ---
 
@@ -246,7 +250,7 @@
 
 ---
 
-## Comparative Analysis: Glasgow vs Traditional Models
+## Comparative Analysis: Glasgow vs Traditional UK Models
 
 * Enhancement focus vs compliance monitoring
 * Academic autonomy with systematic support
@@ -268,6 +272,17 @@
 
 ---
 
+## System Weaknesses
+
+* You tell us!
+* Substantial workload
+* At least one part is being redeveloped at any given moment
+* Evaluation fatigue from staff and students
+* Meaningful engagement with the student voice
+* Challenges of getting intelligent, integrated data at every level
+
+---
+
 ## Future Directions
 
 * Enhanced data analytics for pattern identification
@@ -280,9 +295,8 @@
 
 ## Conclusion
 
-* Rigorous quality assurance through enhancement focus
-* Respects academic autonomy
-* Ensures systematic oversight
-* Promotes continuous improvement
-* Model for enhancement-focused quality management
-* Adaptable to different institutional contexts
+* We aim for rigorous quality assurance through an enhancement focus
+  - That respects academic autonomy
+  - That ensures systematic oversight
+  - That promotes continuous improvement
+  - That is adaptable to different institutional contexts

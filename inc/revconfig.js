@@ -94,6 +94,10 @@ Reveal.initialize({
                 theme: '../inc/css/th-d-bg-uog-bu.css'
             },
             { 
+                name: 'Experimental: UofG Blue with Inverted Fonts', 
+                theme: '../inc/css/th-d-bg-uog-bu-inv.css'
+            },
+            { 
                 name: 'Experimental: UofG Black', 
                 theme: '../inc/css/th-d-bg-uog-bl.css'
             },

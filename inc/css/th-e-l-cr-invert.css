@@ -8,6 +8,6 @@
 }
 
 h1, h2, h3, .pres-title {
-    font-family: 'Concourse', serif !important;
+    font-family: 'Concourse', sans-serif !important;
     font-feature-settings: "ss01" 0;
 }

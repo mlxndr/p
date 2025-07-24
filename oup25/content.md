@@ -64,7 +64,7 @@
 * Within categories:
   * "Begin with the most general and familiar"
   * "Work through to the most specific and technical"
-* BUT: Size can override this principle
+* BUT: Size can override this principle if it helps the user ("principle 0")
   * Sports example: Cricket acquired thousands of terms
   * Elevated from subcategory to standalone category
 
@@ -73,68 +73,85 @@
 
 * No set rules: "Each section will be different from the last"
 * Typical workflow:
-  1. First sort: 5-7 broad groupings + residue
+  1. First sort: 5-7 broad groupings + residue (Chase)
   2. Second sort: Sub-classes by "diagnostic components" in definitions
   3. Continue until "suitable level of delicacy"
 * Definition-based classification:
   * Look for recurring keywords
   * BUT: Similar meanings may have different surface definitions
   * Must consider full sense including quotation evidence
-* The slip system legacy:
-  * Originally worked from handwritten slips
-  * "Rarely time to go back to source OED sense"
-  * Modern practice: OED Online + specialist dictionaries
 
 ---
-## Challenging Example 1: The Problem of Holiness
-
-* Category R1.6.0. Holiness reveals sense-relation complexity:
-  * Nominal head: 14 constituents
-    * 5 from holy/hallow base
-    * 7 from sancti-/sacro- base
-    * 1 from blessed
-    * 1 transferred sense of spirituality
-  * Adjectival subordinates: 41 constituents
-    * Different proportions from each base
-    * Plus outliers like *Kramat* (from Muslim tradition)
-* The challenge: Each head noun maintains different relations with adjectives
-  * *Sacrosanctity* carries "inviolability" connotation
-  * Cannot maintain identical superordinate relations
-* Solution: Accept fluid, idiosyncratic relations within categories
+## HT Draft Classification Document: Core Definitions
+* An initial attempt (Andrew, Fraser, Jane, Kate, Marc) at ordering some of our thoughts and discussions, based on excerpts from old HT documents and publications
+* Central concept: Each category represents a semantic field with coherent meaning
 
 ---
-## Challenging Example 2: Parts of Speech and Semantic Primacy
-
-* Which is conceptually prime: noun or derivative forms?
-  * holy → holiness (etymological derivation)
-  * BUT: holiness treated as semantically primary in classification
-* The noun bias:
-  * All unindented headwords are nouns
-  * Reflects "thing-words" predominance in lexicon
-  * Pragmatic for retrievability
-* Problem case: Process/action nouns in worship categories
-  * *kneowlian/kneel* (verb) conceptually precedes *kneeling* (verbal noun)
-  * Solution: Invert relation for consistency
-  * Acknowledged artificiality for systematic coherence
+## New Categories: Sorting Process
+* **Initial sort**: Classifiers create broad conceptual categories, some slips remain unsorted
+* **Second sort**: Establishes categories and subcategories, usually settled at this stage
+* **Iterative process**: Further attempts may explore different division methods
+* **Hierarchical development**: 
+   * Save results before next round
+   * Sort within categories to create new hierarchy levels
+   * Use OED definitions for guidance, focus on recurring keywords
+   * Consult specialist dictionaries for technical terms
+* **Completion**: Repeat until all material has systematic placement
 
 ---
-## Challenging Example 3: Building Parts and the 'Locomotive' Principle
+## Category Headings: Naming Conventions
+* **Primary approach**: Use current term for the concept/semantic field from category contents
+* **Alternative approach**: Express relationship to parent category (e.g. 'parts of')
+* **Clarity considerations**: Longer headings permissible to avoid offensive/insensitive language
+* **User experience**: Consider electronic search functionality
+* **Breadcrumb principle**: Headings should read coherently up the hierarchy
+* **Parts of speech consistency**: Adjective categories headed adjectivally, etc.
+* **Word selection**: Choose prominent, current words; avoid obscure or confusing terms
+
+---
+## Ordering Principles: Structural Guidelines
+* **No universal rules**: Each category requires individual consideration
+* **Coordinate relationship**: Categories/subcategories at same level are equal
+* **Guiding principles**:
+   * Concrete to abstract (original Thesaurus principle)
+   * General to particular (prioritised when conflicts with concrete-to-abstract)
+   * Inherent arrangements: top-bottom, front-rear, size, location, importance
+   * Parts/components before kinds/varieties
+   * Polarity (occasionally applicable)
+* **Purpose**: Aid reader/user navigation, not indicate importance differences
+* **Category elevation**: Subcategories promoted based on size, concept importance, consistency, or hierarchical requirements
+
+---
+## Ordering Example (Chase): Building Parts
 
 * Problem: How to classify parts of complex structures?
   * Church buildings: larger, less familiar, more complex than houses
   * Functional classification fails (multi-purpose spaces)
   * No constant relationship between function and location
-* The 'locomotive' solution:
-  * Order parts as encountered on a walk through building
-  * All parts accorded equivalent status
-  * Sub-parts subordinated appropriately
+* Chase's 'locomotive' solution:
+  * Order parts as encountered on a walk through the building(!)
+  * All parts accorded equivalent status, sub-parts subordinated appropriately
 * Acknowledged limitations:
   * Arbitrary (different routes possible)
   * Difficulty integrating peripheral structures (triforium, chapter house)
-  * BUT: Better than purely alphabetical organization
+  * BUT: Better than another organization? Or just idiosyncratic?
 
 ---
-## Challenging Example 4: Boundary Disputes and Overlapping Fields
+## Word Categorisation: Classification Principles
+* **Folk vs scientific taxonomy**: Prefer folk taxonomy where sensible
+   * "What's it for?" prioritised over "what is it?"
+   * Exception: Very technical areas (plant/animal taxonomies) require specialist approaches
+   * Folk classifications more comprehensible to most users
+* **Duplication rules**:
+   * Word forms within same category generally avoided (legitimate exceptions exist)
+   * Sense duplication avoided but considered for user findability
+   * Future development may include cross-references
+* **Residual categories**: 'Other types of' for single-word categories when necessary
+   * Avoid where possible (lack coherent concept)
+   * Sometimes only practical solution for residual words
+
+---
+## Boundary Disputes
 
 * Faith vs Supernatural phenomena:
   * Where to place witchcraft, magic, folk belief?
@@ -144,63 +161,9 @@
     * Organized religion → Social World (institutional)
 * Music genres and cultural categories:
   * Religious music: Music or Religion?
-  * Jazz: Music or African American culture?
-  * Solution: Primary classification by function, cross-references for access
-* These decisions reveal classificatory ideology
-  * Not neutral description but interpretation
-  * Reflects worldview assumptions
-
----
-## The Problem of Polysemy and Historical Change
-
-* Each sense classified separately by meaning
-  * *sensitive* (15c): "having physical sensation" → Physical Sensation
-  * *sensitive* (19c): "emotionally perceptive" → Emotional Perception
-* Creates chains revealing semantic change:
-  * Physical → metaphorical progressions
-  * Concrete → abstract developments
-* Classification challenges:
-  * When to create new subcategories for extended senses?
-  * How to maintain coherence while tracking change?
-  * Solution: Categories as "conceptual clusters" with fuzzy edges
-* Example: *bank*
-  * Financial institution sense
-  * Geographical feature sense
-  * Each in appropriate category, linked by chronology
-
----
-## Lexical Gaps and Unattested Forms
-
-* Classification reveals systematic gaps:
-  * *atheizer* and *atheize* attested
-  * *atheization* unattested but structurally expected
-  * Used as category heading to maintain pattern
-* Types of gaps:
-  1. Sampling gaps (OED coverage limitations)
-  2. Genuine lexical gaps (concept without lexicalization)
-  3. Morphological gaps (expected but unattested forms)
-* Example of genuine gap:
-  * No term for "any part of a church service"
-  * Category R4.1.3 lacks lexical realization of superordinate
-* The "-ism" problem in religious movements:
-  * Many groups only attested with "-ist"/"-ian" forms
-  * Creates systematic gaps in category heads
-
----
-## The Scalar Challenge: Opposition and Gradation
-
-* Simple opposition inadequate for most domains
-  * Morphological opposites unevenly distributed
-  * *unholy* from *holy*, *unspiritual* from *spiritual*
-  * BUT: *belief/atheism* (not *unbelief/atheism*)
-* Complex scalar systems:
-  * R1.1.0 Faith → R1.1.12.0 Atheism
-  * Includes: proper faith, dubious faith, perverted faith, heresy, paganism
-  * Considerable semantic overlap
-  * Reflects conceptual complexity, not classificatory failure
-* Solution: Flexible treatment of opposition
-  * Separate categories for well-attested negatives
-  * Subordinate placement for simple morphological negatives
+  * Jazz: Music or Black/African American culture?
+  * Solution: Primary classification by *function*, cross-references for *access*
+* Decisions will be classificatory ideology
 
 ---
 ## Modern Challenges: From Print to Digital
@@ -211,7 +174,7 @@
   * No cross-references between distant categories
 * Digital opportunities:
   * Longer, more sensitive category headings
-  * Web-like linking structures
+  * Web-like linking structures, move beyond hierarchy
   * Multiple access points
 * Current tensions:
   * Folk taxonomy vs scientific accuracy
@@ -222,22 +185,20 @@
     * Balancing historical accuracy with modern values
 
 ---
-## Case Study: A Classification in Progress
+## Case Study: Social Media
 
-* Let's classify a modern semantic field: "Social Media"
+* (We're going to discuss computing later, but these are notes from a presentation I gave a while ago as an example!)
 * Immediate questions:
   * Under Communication? Technology? Social Interaction?
   * How to handle platform-specific vocabulary?
-  * Physical/digital metaphors (*wall*, *feed*, *friend*)
-* Applying HTE principles:
+* Applying HT principles:
   1. **Folk taxonomy**: How do users conceptualize?
-  2. **Least extension**: Platform-specific terms stay together
+  2. **Least extension**: Platform-specific terms stay together?
   3. **Functional approach**: "What's it for?" 
      * Communication tool? Identity construction? Information sharing?
-* Likely solution: Multiple classification points
-  * Primary under Communication
-  * Technical terms under Computing
-  * Social phenomena under Social Behavior
+* Can multiple classification points work?
+  * Primary under Communication/Technical terms under Computing/Social phenomena under Social Behavior?
+  * Is it so prevalent now that this *could* work?
 
 ---
 ## The Paradox of Systematic Flexibility
@@ -271,61 +232,21 @@
   * Classification as interpretation, not description
 
 ---
-## Lessons for Lexicographical Practice
+## Other Issues in Practice
 
-* Close reading of definitions insufficient
-  * Must consider full entry: quotations, etymology, usage
+* Close reading of definitions sometimes insufficient
   * Similar meanings may have divergent definition styles
 * The importance of specialist knowledge
   * When to defer to scientific taxonomy
   * When folk categories better serve users
-* Digital transformation opportunities:
-  * Move beyond hierarchical constraints
-  * Enable multiple simultaneous organizations
-  * Preserve historical worldviews while enabling modern access
 * The value of collaborative classification
-  * Individual idiosyncrasies balanced by team review
-  * Accumulated wisdom in existing structures
+  * A classification will always be idiosyncractic, but individual idiosyncrasies balanced by team review?
 
 ---
-## Future Directions and Open Questions
+## Open Questions
 
 * Methodological questions:
   * How to formalize "suitable level of delicacy"?
   * When does a subcategory merit category status?
   * Can we quantify the "principle of least extension"?
-* Technical challenges:
-  * Representing non-hierarchical relations
-  * Enabling user-driven reorganization
-  * Integrating with other semantic resources
-* Philosophical questions:
-  * Is "neutral" classification possible?
-  * How to balance historical and contemporary worldviews?
-  * What is lost in the move from print to digital?
-
----
-## Conclusion: The Living Classification
-
-* The HTE represents not a fixed taxonomy but a living system
-* Key insights:
-  * Classification must emerge from data, not be imposed
-  * Principles guide but cannot determine outcomes
-  * Flexibility and systematicity exist in productive tension
-* For lexicographers:
-  * Semantic classification reveals patterns invisible in alphabetical order
-  * Historical perspective essential for understanding present
-  * No single "correct" classification exists
-* The ultimate principle: "A classification must grow out of the relevant lexical field rather than be imposed upon it"
-
----
-## Questions for Discussion
-
-* How might OED's revision process benefit from HTE classificatory insights?
-* What role should scientific taxonomy play in general dictionaries?
-* Can semantic classification be separated from cultural interpretation?
-* How do we balance stability with evolving understanding?
-* What new classificatory challenges emerge with born-digital vocabulary?
-
-**Thank you**
-
-*"There is evidence for the view that semantic structures can be looked at in a variety of ways"*
+  

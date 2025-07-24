@@ -180,9 +180,6 @@
   * Folk taxonomy vs scientific accuracy
     * Menstruation: originally "organs of excretion"
     * Now: "reproductive cycle"
-  * Sensitivity in historical material
-    * Updating offensive category names
-    * Balancing historical accuracy with modern values
 
 ---
 ## Case Study: Social Media
@@ -197,8 +194,7 @@
   3. **Functional approach**: "What's it for?" 
      * Communication tool? Identity construction? Information sharing?
 * Can multiple classification points work?
-  * Primary under Communication/Technical terms under Computing/Social phenomena under Social Behavior?
-  * Is it so prevalent now that this *could* work?
+  * Primary under Communication/Technical terms under Computing/Social phenomena under Social Behaviour?
 
 ---
 ## The Paradox of Systematic Flexibility

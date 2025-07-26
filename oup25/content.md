@@ -49,7 +49,7 @@
 * BUT: Real implementation reveals complexity
   * Actually ended up in *structure of earth > constituent materials*
   * Shows tension between principle and practical organization
-* Modern challenge: How to handle compounds?
+* How to handle compounds?
   * *Sea salt* under SALT or SEA?
   * *Church bell* under BELL or CHURCH EQUIPMENT?
 
@@ -65,8 +65,7 @@
   * "Begin with the most general and familiar"
   * "Work through to the most specific and technical"
 * BUT: Size can override this principle if it helps the user ("principle 0")
-  * Sports example: Cricket acquired thousands of terms
-  * Elevated from subcategory to standalone category
+  * Example: Cricket acquired thousands of terms, elevated from subcategory to standalone category
 
 ---
 ## Classification Process: From Theory to Practice
@@ -148,7 +147,7 @@
    * Future development may include cross-references
 * **Residual categories**: 'Other types of' for single-word categories when necessary
    * Avoid where possible (lack coherent concept)
-   * Sometimes only practical solution for residual words
+   * But sometimes only practical solution for residual words
 
 ---
 ## Boundary Disputes
@@ -161,7 +160,7 @@
     * Organized religion → Social World (institutional)
 * Music genres and cultural categories:
   * Religious music: Music or Religion?
-  * Jazz: Music or Black/African American culture?
+  * Jazz: Music or African American culture?
   * Solution: Primary classification by *function*, cross-references for *access*
 * Decisions will be classificatory ideology
 
@@ -194,7 +193,7 @@
   3. **Functional approach**: "What's it for?" 
      * Communication tool? Identity construction? Information sharing?
 * Can multiple classification points work?
-  * Primary under Communication/Technical terms under Computing/Social phenomena under Social Behaviour?
+  * Primary under Communication, Technical terms under Computing, Social phenomena under Social Behaviour?
 
 ---
 ## The Paradox of Systematic Flexibility
@@ -206,22 +205,10 @@
   * Consistency within domains where possible
   * Accept different organizing principles across domains
   * Musical instruments: By playing method AND construction
-* This is not failure but recognition:
-  * Language resists rigid systematization
-  * Categories must "grow out of the relevant lexical field"
-  * Flexibility enables valid structuring
-
----
-## Theoretical Implications
-
-* The HTE as evidence for:
-  * Prototype theory: Categories have fuzzy boundaries
-  * Cognitive semantics: Embodied metaphor chains
-  * Historical semantics: Meaning change patterns
-* Challenges to traditional lexicography:
-  * Alphabetical organization obscures semantic relations
-  * Definitions alone insufficient for classification
-  * Diachronic perspective essential
+* Language resists rigid systematization
+* Categories must "grow out of the relevant lexical field"
+* Only *users* really matter
+* Flexibility enables valid structuring
 * The limits of classification:
   * "It is impossible to have a semantic classification that is uniquely and eternally valid"
   * Multiple valid perspectives on same data
@@ -245,4 +232,3 @@
   * How to formalize "suitable level of delicacy"?
   * When does a subcategory merit category status?
   * Can we quantify the "principle of least extension"?
-  

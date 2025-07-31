@@ -1,6 +1,6 @@
 ## Overview
 
-* Scotland's distinctive Quality Enhancement Framework
+* Scotland’s distinctive Quality Enhancement Framework
 * Focus on enhancement over compliance
 * Comprehensive quality ecosystem
 * Student partnership approach
@@ -10,7 +10,7 @@
 ## Scottish HE Context
 
 * Quality Enhancement Framework established 2003, updated 2024
-* Collaborative development: Scottish Funding Council, Universities Scotland, QAA, student representatives
+* Collaborative development: Scottish Funding Council, Universities Scotland, <span style="font-variant: small-caps;">qaa</span>, student representatives
 * Fundamental difference: prioritising enhancement over compliance auditing
 * Recognition that as all staff are committed to a high quality student experience, the system should work through supportive rather than punitive processes
 
@@ -29,27 +29,27 @@
 
 ## Foundational Principles
 
-* **Completeness**: All credit-bearing and PGR provision included
+* *Completeness*: All credit-bearing and <span style="font-variant: small-caps;">pgr</span> provision included
   * Undergraduate and postgraduate taught
   * Research degrees
   * Collaborative programmes
   * Transnational education
   
-* **Coherence**: Interconnected system where outputs inform other processes
+* *Coherence*: Interconnected system where outputs inform other processes
 
-* **Devolved Responsibility**: The University's staff are all held collectively responsible for maintaining academic standards
+* *Devolved Responsibility*: The University’s staff are all held collectively responsible for maintaining academic standards
 
 ---
 
 ## More Core Principles
 
-* **Objectivity**: External perspectives in every process
-  * External academics on PSR panels
+* *Objectivity*: External perspectives in every process
+  * External academics on <span style="font-variant: small-caps;">psr</span> panels
   * External examiners
   * Professional body accreditation
   * Student voices throughout
 
-* **Enhancement Focus**: Beyond assurance to deliberate improvement
+* *Enhancement Focus*: Beyond assurance to deliberate improvement
   * Identify and share good practice
   * Encourage innovation
   * Support teaching development
@@ -58,10 +58,10 @@
 
 ## Key Terminology
 
-* **Academic Standards**: Level of achievement required for award
+* *Academic Standards*: Level of achievement required for award
   * Aims to be constant over time and comparable across institutions
 
-* **Academic Quality**: How effectively learning opportunities help achieve standards
+* *Academic Quality*: How effectively learning opportunities help achieve standards
   * Teaching methods
   * Assessment design
   * Learning resources
@@ -81,16 +81,16 @@
 
 ## Three Time Periods
 
-* **Regular Activities** (continuous)
+* *Regular Activities* (continuous)
   * Course and programme approval
   * Student feedback and representation
 
-* **Annual Activities** (yearly reflection)
+* *Annual Activities* (yearly reflection)
   * Annual monitoring
   * Performance data review
   * Enhancement initiatives
 
-* **Periodic Activities** (5-6 year cycles)
+* *Periodic Activities* (5-6 year cycles)
   * Periodic Subject Review
   * Student-Facing Service Reviews and Graduate School Review
   * External statutory and accrediting bodies (where appropriate)
@@ -102,9 +102,9 @@
 * Students as partners, *not* customers
 * Elected class representatives with formal training
 * Representation recorded on achievement records
-* Staff-Student Liaison Committees (SSLCs)
+* Staff-Student Liaison Committees (<span style="font-variant: small-caps;">sslc</span>s)
   * Student majorities, ideally student chairs (or co-chairs)
-  * Multiple governance levels (programme, subject, School, College, SRC)
+  * Multiple governance levels (programme, subject, School, College, <span style="font-variant: small-caps;">src</span>)
   * Address operational and enhancement issues
 
 ---
@@ -113,7 +113,7 @@
 
 * Mandatory questionnaire for all courses
 * Standardised core questions + context-specific additions
-* Required 'Summary and Response' documents
+* Required ’Summary and Response’ documents
   * Demonstrates consideration of feedback
   * Shows planned actions
   * Closes the feedback loop
@@ -136,10 +136,10 @@
 
 ## Annual Monitoring Flow
 
-* Academic units produce Annual Monitoring Reports (AMRs)
-* School Quality Officers review → School Summaries (SAMS)
-* College Quality Officers review → College Summaries (CAMS)
-* Academic Standards Committee reviews CAMS
+* Academic units produce Annual Monitoring Reports (<span style="font-variant: small-caps;">amr</span>s)
+* School Quality Officers review → School Summaries (<span style="font-variant: small-caps;">sams</span>)
+* College Quality Officers review → College Summaries (<span style="font-variant: small-caps;">cams</span>)
+* Academic Standards Committee reviews <span style="font-variant: small-caps;">cams</span>
 * Issues addressed at appropriate level with university oversight
 
 ---
@@ -159,7 +159,7 @@
 
 ---
 
-## Periodic Subject Review (PSR)
+## Periodic Subject Review (<span style="font-variant: small-caps;">psr</span>)
 
 * Six-year cycle for taught provision
 * External panel composition:
@@ -213,7 +213,7 @@
 
 ---
 
-## Tertiary Education Quality Framework (TQEF)
+## Tertiary Quality Enhancement Framework (<span style="font-variant: small-caps;">tqef</span>)
 
 * New unified system for colleges and universities
 * Six core principles:
@@ -224,18 +224,18 @@
   * Data and evidence
   * Externality
 
-* Annual Self-Evaluation and Action Plan (SEAP)
+* Annual Self-Evaluation and Action Plan (<span style="font-variant: small-caps;">seap</span>)
 
 ---
 
-## Tertiary Quality Enhancement Review (TQER)
+## Tertiary Quality Enhancement Review (<span style="font-variant: small-caps;">tqer</span>)
 
 * Launched 2024
 * Single approach for all Scottish tertiary institutions
 * Peer-led, enhancement-focused
 * Co-created with staff and students
-* External review teams evaluate against TQEF principles
-* Complies with ENQA's European Standards and Guidelines (ESG)
+* External review teams evaluate against <span style="font-variant: small-caps;">tqef</span> principles
+* Complies with <span style="font-variant: small-caps;">enqa</span>’s European Standards and Guidelines (<span style="font-variant: small-caps;">esg</span>)
 
 ---
 
@@ -245,12 +245,12 @@
 * Subject Benchmark Statements
 * UK Quality Code
 * Bologna Process requirements
-* Higher Education Achievement Records (HEAR)
+* Higher Education Achievement Records (<span style="font-variant: small-caps;">hear</span>)
 * Regular international benchmarking
 
 ---
 
-## Comparative Analysis: Glasgow vs Traditional UK Models
+## Comparative Analysis: Glasgow vs Traditional <span style="font-variant: small-caps;">uk</span> Models
 
 * Enhancement focus vs compliance monitoring
 * Academic autonomy with systematic support

@@ -28,6 +28,19 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Split into sections (separated by ---)
         const sections = mdContent.split(/\n---\n/);
         
+        // Also handle sections that start with --- (at beginning of file)
+        const allSections = [];
+        sections.forEach(section => {
+            if (section.startsWith('---\n')) {
+                allSections.push(section.substring(4)); // Remove the leading ---\n
+            } else {
+                allSections.push(section);
+            }
+        });
+        
+        // Filter out empty sections
+        const nonEmptySections = allSections.filter(section => section.trim().length > 0);
+        
         let contentHTML = '';
         
         // Helper function to process text formatting and links
@@ -52,19 +65,22 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
         
         // Process content by section
-        sections.forEach(section => {
+        nonEmptySections.forEach((section, sectionIndex) => {
             // Split each section into subsections (separated by --)
             const subsections = section.split(/\n--\n/);
             
-            subsections.forEach(subsection => {
+            subsections.forEach((subsection, subsectionIndex) => {
                 // Start a new section div
                 contentHTML += '<div class="section">';
                 
                 // Process content line by line
                 let lines = subsection.trim().split('\n');
                 let i = 0;
+                let safety = 0; // Safety counter to prevent infinite loops
+                const MAX_ITERATIONS = lines.length * 10;
                 
-                while (i < lines.length) {
+                while (i < lines.length && safety < MAX_ITERATIONS) {
+                    safety++;
                     let line = lines[i];
                     
                     // Handle headings
@@ -109,45 +125,20 @@ document.addEventListener('DOMContentLoaded', async function() {
                     // Handle unordered lists
                     if (line.trim().startsWith('* ')) {
                         let listHTML = '<ul>';
+                        let currentIndentLevel = line.indexOf('*'); // Track the current indent level
                         
                         // Process this list item
                         listHTML += `<li>${processInlineMarkdown(line.substring(line.indexOf('*') + 1).trim())}`;
                         
-                        // Look for indented list items (embedded lists)
+                        // Look for more list items
                         let nestedList = false;
                         let nestedListContent = '';
                         
                         i++;
-                        while (i < lines.length) {
+                        let listSafety = 0;
+                        while (i < lines.length && listSafety < 1000) {
+                            listSafety++;
                             const nextLine = lines[i];
-                            
-                            // If it's an indented list item
-                            if (nextLine.trim().startsWith('* ') && nextLine.indexOf('*') > line.indexOf('*')) {
-                                if (!nestedList) {
-                                    nestedList = true;
-                                    nestedListContent = '<ul>';
-                                }
-                                
-                                nestedListContent += `<li>${processInlineMarkdown(nextLine.substring(nextLine.indexOf('*') + 1).trim())}</li>`;
-                                i++;
-                                continue;
-                            }
-                            
-                            // Still in the same main list but not an indented item
-                            if (nextLine.trim().startsWith('* ') && nextLine.indexOf('*') === line.indexOf('*')) {
-                                // Close nested list if we had one
-                                if (nestedList) {
-                                    nestedListContent += '</ul>';
-                                    listHTML += nestedListContent;
-                                    nestedList = false;
-                                }
-                                
-                                // Close previous item and start new one
-                                listHTML += '</li>';
-                                listHTML += `<li>${processInlineMarkdown(nextLine.substring(nextLine.indexOf('*') + 1).trim())}`;
-                                i++;
-                                continue;
-                            }
                             
                             // Not a list item anymore, so break out
                             if (!nextLine.trim().startsWith('* ')) {
@@ -158,6 +149,54 @@ document.addEventListener('DOMContentLoaded', async function() {
                                 }
                                 break;
                             }
+                            
+                            const nextIndentLevel = nextLine.indexOf('*');
+                            
+                            // If it's more indented (nested list item)
+                            if (nextIndentLevel > currentIndentLevel) {
+                                if (!nestedList) {
+                                    nestedList = true;
+                                    nestedListContent = '<ul>';
+                                }
+                                
+                                nestedListContent += `<li>${processInlineMarkdown(nextLine.substring(nextLine.indexOf('*') + 1).trim())}</li>`;
+                                i++;
+                                continue;
+                            }
+                            
+                            // Same level as original list
+                            if (nextIndentLevel === currentIndentLevel) {
+                                // Close nested list if we had one
+                                if (nestedList) {
+                                    nestedListContent += '</ul>';
+                                    listHTML += nestedListContent;
+                                    nestedList = false;
+                                    nestedListContent = '';
+                                }
+                                
+                                // Close previous item and start new one
+                                listHTML += '</li>';
+                                listHTML += `<li>${processInlineMarkdown(nextLine.substring(nextLine.indexOf('*') + 1).trim())}`;
+                                i++;
+                                continue;
+                            }
+                            
+                            // Less indented - this means we're back to a higher level list
+                            // End this list completely
+                            if (nextIndentLevel < currentIndentLevel) {
+                                // Close nested list if we had one
+                                if (nestedList) {
+                                    nestedListContent += '</ul>';
+                                    listHTML += nestedListContent;
+                                }
+                                break;
+                            }
+                        }
+                        
+                        // IMPORTANT: If we still have an open nested list when we exit the loop, close it!
+                        if (nestedList) {
+                            nestedListContent += '</ul>';
+                            listHTML += nestedListContent;
                         }
                         
                         // Close the last list item and the list
@@ -178,7 +217,9 @@ document.addEventListener('DOMContentLoaded', async function() {
                         let nestedListContent = '';
                         
                         i++;
-                        while (i < lines.length) {
+                        let listSafety = 0;
+                        while (i < lines.length && listSafety < 1000) {
+                            listSafety++;
                             const nextLine = lines[i];
                             
                             // If indented list item
@@ -228,7 +269,6 @@ document.addEventListener('DOMContentLoaded', async function() {
                     
                     // Handle empty lines as paragraph breaks
                     if (line.trim() === '') {
-                        contentHTML += '';
                         i++;
                         continue;
                     }

@@ -30,10 +30,10 @@
 ## Foundational Principles
 
 * **Completeness**: All credit-bearing and PGR provision included
-  - Undergraduate and postgraduate taught
-  - Research degrees
-  - Collaborative programmes
-  - Transnational education
+  * Undergraduate and postgraduate taught
+  * Research degrees
+  * Collaborative programmes
+  * Transnational education
   
 * **Coherence**: Interconnected system where outputs inform other processes
 
@@ -44,28 +44,28 @@
 ## More Core Principles
 
 * **Objectivity**: External perspectives in every process
-  - External academics on PSR panels
-  - External examiners
-  - Professional body accreditation
-  - Student voices throughout
+  * External academics on PSR panels
+  * External examiners
+  * Professional body accreditation
+  * Student voices throughout
 
 * **Enhancement Focus**: Beyond assurance to deliberate improvement
-  - Identify and share good practice
-  - Encourage innovation
-  - Support teaching development
+  * Identify and share good practice
+  * Encourage innovation
+  * Support teaching development
 
 ---
 
 ## Key Terminology
 
 * **Academic Standards**: Level of achievement required for award
-  - Aims to be constant over time and comparable across institutions
+  * Aims to be constant over time and comparable across institutions
 
 * **Academic Quality**: How effectively learning opportunities help achieve standards
-  - Teaching methods
-  - Assessment design
-  - Learning resources
-  - Student support
+  * Teaching methods
+  * Assessment design
+  * Learning resources
+  * Student support
 
 ---
 
@@ -82,18 +82,18 @@
 ## Three Time Periods
 
 * **Regular Activities** (continuous)
-  - Course and programme approval
-  - Student feedback and representation
+  * Course and programme approval
+  * Student feedback and representation
 
 * **Annual Activities** (yearly reflection)
-  - Annual monitoring
-  - Performance data review
-  - Enhancement initiatives
+  * Annual monitoring
+  * Performance data review
+  * Enhancement initiatives
 
 * **Periodic Activities** (5-6 year cycles)
-  - Periodic Subject Review
-  - Student-Facing Service Reviews and Graduate School Review
-  - External statutory and accrediting bodies (where appropriate)
+  * Periodic Subject Review
+  * Student-Facing Service Reviews and Graduate School Review
+  * External statutory and accrediting bodies (where appropriate)
 
 ---
 
@@ -103,9 +103,9 @@
 * Elected class representatives with formal training
 * Representation recorded on achievement records
 * Staff-Student Liaison Committees (SSLCs)
-  - Student majorities, ideally student chairs (or co-chairs)
-  - Multiple governance levels (programme, subject, School, College, SRC)
-  - Address operational and enhancement issues
+  * Student majorities, ideally student chairs (or co-chairs)
+  * Multiple governance levels (programme, subject, School, College, SRC)
+  * Address operational and enhancement issues
 
 ---
 
@@ -114,9 +114,9 @@
 * Mandatory questionnaire for all courses
 * Standardised core questions + context-specific additions
 * Required 'Summary and Response' documents
-  - Demonstrates consideration of feedback
-  - Shows planned actions
-  - Closes the feedback loop
+  * Demonstrates consideration of feedback
+  * Shows planned actions
+  * Closes the feedback loop
 * Student panel members in all periodic reviews
 
 ---
@@ -125,11 +125,11 @@
 
 * Cornerstone of quality framework
 * Comprehensive review examining:
-  - Student performance statistics
-  - Progression and completion rates
-  - Student and staff feedback
-  - External examiner reports
-  - Enhancement initiative outcomes
+  * Student performance statistics
+  * Progression and completion rates
+  * Student and staff feedback
+  * External examiner reports
+  * Enhancement initiative outcomes
 * Under ongoing redevelopment
 
 ---
@@ -149,10 +149,10 @@
 * Four-year appointments
 * Full Board of Examiners membership
 * Responsibilities:
-  - Review sample of assessment instruments in advance
-  - Attend examination boards (at least once a year)
-  - Comment on standards achieved
-  - Provide comparative judgements
+  * Review sample of assessment instruments in advance
+  * Attend examination boards (at least once a year)
+  * Comment on standards achieved
+  * Provide comparative judgements
 
 * Annual reports addressed direct to Principal (=President)
 * Systematic institutional review with required responses
@@ -163,11 +163,11 @@
 
 * Six-year cycle for taught provision
 * External panel composition:
-  - External academic specialists
-  - Student representatives
-  - Senior university staff
-  - Professional services representation
-  - External accreditators where appropriate
+  * External academic specialists
+  * Student representatives
+  * Senior university staff
+  * Professional services representation
+  * External accreditators where appropriate
 
 * Comprehensive self-evaluation required
 * Extensive panel visits and stakeholder meetings
@@ -191,11 +191,11 @@
 * Five-year cycle (four reviews + reflection year)
 * Focus on research student experience
 * Examines:
-  - Academic assessment standards
-  - Support arrangements
-  - Full student lifecycle
-  - Supervision quality
-  - Professional development
+  * Academic assessment standards
+  * Support arrangements
+  * Full student lifecycle
+  * Supervision quality
+  * Professional development
 
 ---
 
@@ -205,10 +205,10 @@
 * Periodic review visits
 * Curriculum evaluation against professional competencies
 * Can include:
-  - Staff qualification assessment
-  - Resource evaluation
-  - Analysis of internal quality processes
-  - Regulatory review and changes
+  * Staff qualification assessment
+  * Resource evaluation
+  * Analysis of internal quality processes
+  * Regulatory review and changes
 * Drives curriculum enhancement
 
 ---
@@ -217,12 +217,12 @@
 
 * New unified system for colleges and universities
 * Six core principles:
-  - Excellence in learning, teaching, assessment
-  - Supporting student success
-  - Enhancement and quality culture
-  - Student engagement and partnership
-  - Data and evidence
-  - Externality
+  * Excellence in learning, teaching, assessment
+  * Supporting student success
+  * Enhancement and quality culture
+  * Student engagement and partnership
+  * Data and evidence
+  * Externality
 
 * Annual Self-Evaluation and Action Plan (SEAP)
 
@@ -296,7 +296,7 @@
 ## Conclusion
 
 * We aim for rigorous quality assurance through an enhancement focus
-  - That respects academic autonomy
-  - That ensures systematic oversight
-  - That promotes continuous improvement
-  - That is adaptable to different institutional contexts
+  * That respects academic autonomy
+  * That ensures systematic oversight
+  * That promotes continuous improvement
+  * That is adaptable to different institutional contexts

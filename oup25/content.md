@@ -9,7 +9,9 @@
   * "We have thus tried as far as possible to allow the classification to emerge from the data rather than be imposed upon it" (Kay 1976)
   * Principal framework is structuralist semantics
 
+
 ---
+
 ## Theoretical Foundation: Lexical Field Theory
 
 * Based on structural semantics approach
@@ -21,9 +23,10 @@
   * Boundaries are "vague and difficult to define"
 * No-one has ever satisfactorily answered the question of how to determine field boundaries
   * Core items vs peripheral items
-  * The problem of arbitrary inclusion/exclusion
+  * The problem of arbitrary inclusion or exclusion
 
 ---
+
 ## Principle 1: Folk Taxonomy and Functional Classification
 
 * **"What's it for?" rather than "What is it?"**
@@ -33,12 +36,13 @@
   * NOT: *furniture and fittings > desk > writing desk*
   * BUT: *communication > writing > writing materials > writing desk*
 * This creates classificatory tensions:
-  * Where does "religious music" belong? 
+  * Where does "religious music" belong?
   * Solution: Split domains when necessary
-  * Supernatural/occult → External World (explaining the world)
+  * Supernatural, occult → External World (explaining the world)
   * Organized religion → Social World (social construct)
 
----
+--
+
 ## Principle 2: The Principle of Least Extension
 
 * "Individual lexical items are classified according to the feature of least extension"
@@ -53,7 +57,8 @@
   * *Sea salt* under SALT or SEA?
   * *Church bell* under BELL or CHURCH EQUIPMENT?
 
----
+--
+
 ## Principle 3: Concrete to Abstract, General to Particular
 
 * Overall progression: External World → Mental World → Social World
@@ -68,6 +73,7 @@
   * Example: Cricket acquired thousands of terms, elevated from subcategory to standalone category
 
 ---
+
 ## Classification Process: From Theory to Practice
 
 * No set rules: "Each section will be different from the last"
@@ -81,46 +87,55 @@
   * Must consider full sense including quotation evidence
 
 ---
+
 ## HT Draft Classification Document: Core Definitions
+
 * An initial attempt (Andrew, Fraser, Jane, Kate, Marc) at ordering some of our thoughts and discussions, based on excerpts from old HT documents and publications
 * Central concept: Each category represents a semantic field with coherent meaning
 
 ---
+
 ## New Categories: Sorting Process
+
 * **Initial sort**: Classifiers create broad conceptual categories, some slips remain unsorted
 * **Second sort**: Establishes categories and subcategories, usually settled at this stage
 * **Iterative process**: Further attempts may explore different division methods
-* **Hierarchical development**: 
-   * Save results before next round
-   * Sort within categories to create new hierarchy levels
-   * Use OED definitions for guidance, focus on recurring keywords
-   * Consult specialist dictionaries for technical terms
+* **Hierarchical development**:
+  * Save results before next round
+  * Sort within categories to create new hierarchy levels
+  * Use OED definitions for guidance, focus on recurring keywords
+  * Consult specialist dictionaries for technical terms
 * **Completion**: Repeat until all material has systematic placement
 
 ---
+
 ## Category Headings: Naming Conventions
-* **Primary approach**: Use current term for the concept/semantic field from category contents
+
+* **Primary approach**: Use current term for the concept or semantic field from category contents
 * **Alternative approach**: Express relationship to parent category (e.g. 'parts of')
-* **Clarity considerations**: Longer headings permissible to avoid offensive/insensitive language
+* **Clarity considerations**: Longer headings permissible to avoid offensive or insensitive language
 * **User experience**: Consider electronic search functionality
 * **Breadcrumb principle**: Headings should read coherently up the hierarchy
 * **Parts of speech consistency**: Adjective categories headed adjectivally, etc.
 * **Word selection**: Choose prominent, current words; avoid obscure or confusing terms
 
 ---
-## Ordering Principles: Structural Guidelines
-* **No universal rules**: Each category requires individual consideration
-* **Coordinate relationship**: Categories/subcategories at same level are equal
-* **Guiding principles**:
-   * Concrete to abstract (original Thesaurus principle)
-   * General to particular (prioritised when conflicts with concrete-to-abstract)
-   * Inherent arrangements: top-bottom, front-rear, size, location, importance
-   * Parts/components before kinds/varieties
-   * Polarity (occasionally applicable)
-* **Purpose**: Aid reader/user navigation, not indicate importance differences
-* **Category elevation**: Subcategories promoted based on size, concept importance, consistency, or hierarchical requirements
 
----
+## Ordering Principles: Structural Guidelines
+
+* No universal rules: Each category requires individual consideration
+* Coordinate relationship: Categories or subcategories at same level are equal
+* Guiding principles:
+  * Concrete to abstract (original Thesaurus principle)
+  * General to particular (prioritised when conflicts with concrete-to-abstract)
+  * Inherent arrangements: top-bottom, front-rear, size, location, importance
+  * Parts or components before kinds or varieties
+  * Polarity (occasionally applicable)
+* Purpose: Aid user navigation, not indicate importance differences
+* Category elevation: Subcategories promoted based on size, concept importance, consistency, or hierarchical requirements
+
+--
+
 ## Ordering Example (Chase): Building Parts
 
 * Problem: How to classify parts of complex structures?
@@ -128,35 +143,37 @@
   * Functional classification fails (multi-purpose spaces)
   * No constant relationship between function and location
 * Chase's 'locomotive' solution:
-  * Order parts as encountered on a walk through the building(!)
+  * Order parts as encountered on a walk through the building
   * All parts accorded equivalent status, sub-parts subordinated appropriately
-* Acknowledged limitations:
-  * Arbitrary (different routes possible)
-  * Difficulty integrating peripheral structures (triforium, chapter house)
-  * BUT: Better than another organization? Or just idiosyncratic?
+* Arbitrary (different routes possible)
+* Difficulty integrating peripheral structures (triforium, chapter house)
+* Better than another organization? Or just idiosyncratic?
 
 ---
+
 ## Word Categorisation: Classification Principles
+
 * **Folk vs scientific taxonomy**: Prefer folk taxonomy where sensible
-   * "What's it for?" prioritised over "what is it?"
-   * Exception: Very technical areas (plant/animal taxonomies) require specialist approaches
-   * Folk classifications more comprehensible to most users
+  * "What's it for?" prioritised over "what is it?"
+  * Exception: Very technical areas (plant and animal taxonomies) require specialist approaches
+  * Folk classifications more comprehensible to most users
 * **Duplication rules**:
-   * Word forms within same category generally avoided (legitimate exceptions exist)
-   * Sense duplication avoided but considered for user findability
-   * Future development may include cross-references
+  * Word forms within same category generally avoided (legitimate exceptions exist)
+  * Sense duplication avoided but considered for user findability
+  * Future development may include cross-references
 * **Residual categories**: 'Other types of' for single-word categories when necessary
-   * Avoid where possible (lack coherent concept)
-   * But sometimes only practical solution for residual words
+  * Avoid where possible (lack coherent concept)
+  * But sometimes only practical solution for residual words
 
 ---
+
 ## Boundary Disputes
 
 * Faith vs Supernatural phenomena:
   * Where to place witchcraft, magic, folk belief?
-  * Initial instinct: All under Religion/Faith
+  * Initial instinct: All under Religion
   * Solution: Split into two widely separated categories
-    * Supernatural/occult → External World (explaining phenomena)
+    * Supernatural, occult → External World (explaining phenomena)
     * Organized religion → Social World (institutional)
 * Music genres and cultural categories:
   * Religious music: Music or Religion?
@@ -165,6 +182,7 @@
 * Decisions will be classificatory ideology
 
 ---
+
 ## Modern Challenges: From Print to Digital
 
 * Original constraints of print format:
@@ -180,22 +198,24 @@
     * Menstruation: originally "organs of excretion"
     * Now: "reproductive cycle"
 
----
+--
+
 ## Case Study: Social Media
 
-* (We're going to discuss computing later, but these are notes from a presentation I gave a while ago as an example!)
+* (We're going to discuss computing later, but these are notes from a presentation I gave a while ago as an example)
 * Immediate questions:
   * Under Communication? Technology? Social Interaction?
   * How to handle platform-specific vocabulary?
 * Applying HT principles:
   1. **Folk taxonomy**: How do users conceptualize?
   2. **Least extension**: Platform-specific terms stay together?
-  3. **Functional approach**: "What's it for?" 
+  3. **Functional approach**: "What's it for?"
      * Communication tool? Identity construction? Information sharing?
 * Can multiple classification points work?
   * Primary under Communication, Technical terms under Computing, Social phenomena under Social Behaviour?
 
 ---
+
 ## The Paradox of Systematic Flexibility
 
 * Core tension: Systematic classification requires consistency
@@ -208,13 +228,10 @@
 * Language resists rigid systematization
 * Categories must "grow out of the relevant lexical field"
 * Only *users* really matter
-* Flexibility enables valid structuring
-* The limits of classification:
-  * "It is impossible to have a semantic classification that is uniquely and eternally valid"
-  * Multiple valid perspectives on same data
-  * Classification as interpretation, not description
+* Classification as interpretation, not description
 
 ---
+
 ## Other Issues in Practice
 
 * Close reading of definitions sometimes insufficient
@@ -226,6 +243,7 @@
   * A classification will always be idiosyncractic, but individual idiosyncrasies balanced by team review?
 
 ---
+
 ## Open Questions
 
 * Methodological questions:

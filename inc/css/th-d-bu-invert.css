@@ -4,7 +4,7 @@
 .reveal {
     background-color: #183153;
     font-family: 'Equity', serif !important;
-    font-feature-settings: "ss01" 1;
+    font-feature-settings: "ss01" 0;
 }
 
 h1, h2, h3, .pres-title {

@@ -1,0 +1,10 @@
+@import url('base.css');
+@import url('light.css');
+
+.reveal {
+    background-color: #A7BFC0;
+    --r-font-color: #326A2B;
+    --r-border-color: #326A2B40;
+    --r-subtle-color: #326A2B80;
+    --r-link-color: #248118;
+}

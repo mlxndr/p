@@ -112,6 +112,14 @@ Reveal.initialize({
             { 
                 name: 'Experimental: Twilight with Inverted Fonts', 
                 theme: '../inc/css/th-e-bg-twilight-invert.css'
+            },
+            { 
+                name: 'Experimental: Light Green', 
+                theme: '../inc/css/th-e-lgr.css'
+            },
+            { 
+                name: 'Experimental: Orange', 
+                theme: '../inc/css/th-e-or.css'
             }
         ],
         transitions: true,

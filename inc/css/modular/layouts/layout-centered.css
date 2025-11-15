@@ -1,0 +1,56 @@
+/* Centered Layout Pattern
+ * Description: Centered headings with left-aligned body text
+ * Use cases: Formal presentations, balanced appearance
+ */
+
+@import url('../base.css');
+
+h1, h2, h3 {
+  text-align: center;
+  border-bottom: none;
+}
+
+h1, h2, .pres-title {
+  font-size: 1.8em;
+}
+
+h3 {
+  font-size: 1.4em;
+}
+
+.reveal {
+  text-align: left;
+}
+
+.reveal ul {
+  text-align: left;
+  list-style-type: "\2014";
+  margin: 10px 0;
+  line-height: 1;
+}
+
+.reveal ol {
+  text-align: left;
+  margin: 10px 0;
+}
+
+.reveal li {
+  margin: 15px 0;
+}
+
+.reveal ul ul {
+  font-size: 85%;
+}
+
+li::marker {
+  color: var(--r-border-color);
+}
+
+.reveal a {
+  color: var(--r-link-color);
+  text-decoration: none;
+}
+
+.subtle {
+  color: var(--r-subtle-color);
+}

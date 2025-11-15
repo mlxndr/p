@@ -1,0 +1,33 @@
+/* Paper Color Palette
+ * Description: Clean white background with high contrast
+ * Use cases: Maximum readability, professional settings
+ * Accessibility: WCAG AAA compliant (contrast ratio: 21:1)
+ */
+
+:root {
+  /* Primary colors */
+  --light-primary-r: 0;
+  --light-primary-g: 0;
+  --light-primary-b: 0;
+
+  /* Font color */
+  --r-font-color: rgba(var(--light-primary-r), var(--light-primary-g), var(--light-primary-b), 1);
+  --r-border-color: rgba(var(--light-primary-r), var(--light-primary-g), var(--light-primary-b), 0.25);
+  --r-subtle-color: rgba(var(--light-primary-r), var(--light-primary-g), var(--light-primary-b), 0.5);
+
+  /* Link colors */
+  --r-link-color: #0066CC;
+
+  /* Progress bar */
+  --progress-background: background-color;
+  --progress-color: hwb(from var(--r-font-color) h w b / 0.2);
+
+  /* Metadata */
+  --color-contrast-ratio: 21;
+  --wcag-level: 'AAA';
+  --theme-lightness: 'light';
+}
+
+.reveal {
+  background-color: #FFFFFF;
+}

@@ -3,8 +3,6 @@
  * Use cases: Default academic presentation layout
  */
 
-@import url('../base.css');
-
 .reveal {
   text-align: left;
 }

@@ -3,8 +3,6 @@
  * Use cases: Formal presentations, balanced appearance
  */
 
-@import url('../base.css');
-
 h1, h2, h3 {
   text-align: center;
   border-bottom: none;

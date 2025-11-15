@@ -1,0 +1,51 @@
+/* Concourse Typography Set
+ * Description: Professional sans-serif with serif headings
+ * Body: Concourse, Headings: Equity (serif)
+ * Use cases: General academic presentations, professional conferences
+ */
+
+@import url('../fonts.css');
+
+:root {
+  /* Font families */
+  --r-main-font: 'Concourse', 'Aptos', 'Corbel', 'Helvetica Neue', 'Helvetica', sans-serif;
+  --r-heading-font: 'Equity', 'Constantia', 'Georgia', serif;
+  --r-heading-bold-font: 'Equity', 'Constantia', 'Georgia', serif;
+  --r-serif-font: 'Equity', 'Constantia', 'Georgia', serif;
+  --r-code-font: 'Monaspace Neon', 'Fira Code', 'Iosevka', 'Cascadia Code', monospace;
+
+  /* Font sizes */
+  --r-main-font-size: 32px;
+
+  /* Font features */
+  font-variant-numeric: oldstyle-nums;
+  -moz-font-feature-settings: "onum";
+  -webkit-font-feature-settings: "onum";
+  font-feature-settings: "onum";
+  font-variant-ligatures: common-ligatures;
+  -moz-font-feature-settings: "liga", "clig";
+  -webkit-font-feature-settings: "liga", "clig";
+  font-feature-settings: "liga", "clig";
+  font-variant-ligatures: contextual;
+  -moz-font-feature-settings: "calt";
+  -webkit-font-feature-settings: "calt";
+  font-feature-settings: "calt";
+}
+
+.reveal {
+  font-family: var(--r-main-font);
+  font-size: var(--r-main-font-size);
+  font-weight: 300;
+  line-height: 1.15;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--r-heading-font);
+  text-transform: none;
+  font-variant: small-caps;
+  font-weight: 300;
+}
+
+h1 {
+  font-weight: 500;
+}

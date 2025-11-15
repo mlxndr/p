@@ -261,7 +261,7 @@ Reveal.on('ready', function() {
     }
 
     // Apply button handler
-    document.addEventListener('click', async function(e) {
+    document.addEventListener('click', function(e) {
         if (e.target.id === 'modtheme-apply' || e.target.closest('#modtheme-apply')) {
             const palette = document.getElementById('modtheme-palette')?.value;
             const typography = document.getElementById('modtheme-typography')?.value;
@@ -269,39 +269,38 @@ Reveal.on('ready', function() {
             const background = document.getElementById('modtheme-background')?.value;
 
             if (palette && typography && layout && background) {
-                showStatus('⏳ Applying theme...', 'success');
+                window.themeComposer.compose({
+                    palette: palette,
+                    typography: typography,
+                    layout: layout,
+                    background: background
+                });
 
-                try {
-                    await window.themeComposer.compose({
-                        palette: palette,
-                        typography: typography,
-                        layout: layout,
-                        background: background
-                    });
+                showStatus('✓ Theme applied successfully!', 'success');
 
-                    showStatus('✓ Theme applied successfully!', 'success');
-                } catch (error) {
-                    console.error('[ModTheme] Error applying theme:', error);
-                    showStatus('✗ Error applying theme', 'error');
-                }
+                // Force Reveal to recalculate layout
+                setTimeout(() => {
+                    Reveal.layout();
+                }, 100);
             }
         }
 
         // Reset button handler
         if (e.target.id === 'modtheme-reset' || e.target.closest('#modtheme-reset')) {
             if (confirm('Reset to default theme? This will clear your saved preferences.')) {
-                showStatus('⏳ Resetting theme...', 'success');
+                window.themeComposer.compose({
+                    palette: 'cream',
+                    typography: 'concourse',
+                    layout: 'standard',
+                    background: 'none'
+                });
 
-                try {
-                    // Clear localStorage
-                    localStorage.removeItem('modular-theme-state');
+                updateDropdowns();
+                showStatus('✓ Theme reset to defaults', 'success');
 
-                    // Reload page to get original theme
-                    location.reload();
-                } catch (error) {
-                    console.error('[ModTheme] Error resetting theme:', error);
-                    showStatus('✗ Error resetting theme', 'error');
-                }
+                setTimeout(() => {
+                    Reveal.layout();
+                }, 100);
             }
         }
     });

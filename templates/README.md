@@ -15,24 +15,24 @@ All templates use standard Reveal.js markdown syntax and work with the existing 
 
 ### Core Templates
 
-- **two-column.md** - Side-by-side comparison layouts
-- **timeline.md** - Chronological events and historical sequences
-- **quote.md** - Academic quotations with proper attribution
-- **methodology.md** - Research methodology and process flows
-- **results-table.md** - Data tables with highlighting
-- **definition.md** - Term definitions and key concepts
-- **section-divider.md** - Section break slides
-- **image-caption.md** - Images with detailed captions
-- **video-embed.md** - Embedded video with context
-- **comparison-matrix.md** - Multi-dimensional comparisons
+* **two-column.md** - Side-by-side comparison layouts
+* **timeline.md** - Chronological events and historical sequences
+* **quote.md** - Academic quotations with proper attribution
+* **methodology.md** - Research methodology and process flows
+* **results-table.md** - Data tables with highlighting
+* **definition.md** - Term definitions and key concepts
+* **section-divider.md** - Section break slides
+* **image-caption.md** - Images with detailed captions
+* **video-embed.md** - Embedded video with context
+* **comparison-matrix.md** - Multi-dimensional comparisons
 
 ### Advanced Templates
 
-- **case-study.md** - Structured case study presentation
-- **argument-structure.md** - Thesis, evidence, conclusion layout
-- **literature-review.md** - Summary of research papers
-- **data-visualization.md** - Charts and graphs with interpretation
-- **takeaway.md** - Key points and action items
+* **case-study.md** - Structured case study presentation
+* **argument-structure.md** - Thesis, evidence, conclusion layout
+* **literature-review.md** - Summary of research papers
+* **data-visualization.md** - Charts and graphs with interpretation
+* **takeaway.md** - Key points and action items
 
 ## Template Categories
 
@@ -48,26 +48,26 @@ Patterns that encourage audience engagement or progressive disclosure.
 ## Customization Tips
 
 ### Colors and Styling
-- Use `<!-- .element: class="custom-class" -->` to apply custom CSS classes
-- Fragment classes: `<!-- .element: class="fragment fade-in" -->`
-- Available classes: See `/inc/css/base.css` for full list
+* Use `<!-- .element: class="custom-class" -->` to apply custom CSS classes
+* Fragment classes: `<!-- .element: class="fragment fade-in" -->`
+* Available classes: See `/inc/css/base.css` for full list
 
 ### Layout Modifications
-- Adjust column widths using inline styles
-- Use `<div>` containers for complex layouts
-- Maintain responsive design principles
+* Adjust column widths using inline styles
+* Use `<div>` containers for complex layouts
+* Maintain responsive design principles
 
 ### Combining Templates
 Templates can be mixed and matched within the same presentation. Use slide separators:
-- `---` for new horizontal slides
-- `--` for vertical slides (nested)
+* `---` for new horizontal slides
+* `--` for vertical slides (nested)
 
 ## Examples from Existing Presentations
 
 This library extracts and formalizes patterns already used in:
-- `cilc25/` - Content advisory, background sections
-- `icame25/` - Timeline layouts, methodology sections
-- `scsai25/` - Definition slides, comparison layouts
+* `cilc25/` - Content advisory, background sections
+* `icame25/` - Timeline layouts, methodology sections
+* `scsai25/` - Definition slides, comparison layouts
 
 ## Adding New Templates
 
@@ -96,17 +96,17 @@ Each template file contains:
 ## Accessibility Considerations
 
 All templates follow accessibility best practices:
-- Semantic HTML structure
-- Sufficient color contrast (works with all themes)
-- Alt text placeholders for images
-- Screen reader friendly layout
+* Semantic HTML structure
+* Sufficient color contrast (works with all themes)
+* Alt text placeholders for images
+* Screen reader friendly layout
 
 ## Integration with Themes
 
 These templates work with all existing themes in `/inc/css/`:
-- Light themes (cream, paper, plaster, canvas, indoor)
-- Dark themes (black, blue, green, polygons, UoG)
-- Accessibility themes (high contrast, Atkinson font)
+* Light themes (cream, paper, plaster, canvas, indoor)
+* Dark themes (black, blue, green, polygons, UoG)
+* Accessibility themes (high contrast, Atkinson font)
 
 Theme-specific styling is handled automatically by the CSS system.
 

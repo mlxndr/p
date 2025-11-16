@@ -13,26 +13,23 @@ All templates use standard Reveal.js markdown syntax and work with the existing 
 
 ## Available Templates
 
-### Core Templates
+### Core Layout Templates
 
-* **two-column.md** - Side-by-side comparison layouts
-* **timeline.md** - Chronological events and historical sequences
-* **quote.md** - Academic quotations with proper attribution
-* **methodology.md** - Research methodology and process flows
-* **results-table.md** - Data tables with highlighting
-* **definition.md** - Term definitions and key concepts
-* **section-divider.md** - Section break slides
-* **image-caption.md** - Images with detailed captions
-* **video-embed.md** - Embedded video with context
-* **comparison-matrix.md** - Multi-dimensional comparisons
+* **two-column.md** - Side-by-side comparison layouts (text vs. text, text vs. image, code examples)
+* **section-divider.md** - Visual breaks between major presentation sections (minimal, centered, with transitions)
+* **image-caption.md** - Images with detailed academic captions (single figures, multiple images, before/after)
+* **comparison-matrix.md** - Multi-dimensional comparisons (basic matrices, detailed assessments, pros/cons)
+* **quote.md** - Academic quotations with proper attribution (standard blocks, multiple quotes, centered emphasis)
+* **results-table.md** - Data tables with highlighting (summary tables, categorical data, longitudinal results)
 
-### Advanced Templates
+### Content Development Templates
 
-* **case-study.md** - Structured case study presentation
-* **argument-structure.md** - Thesis, evidence, conclusion layout
-* **literature-review.md** - Summary of research papers
-* **data-visualization.md** - Charts and graphs with interpretation
-* **takeaway.md** - Key points and action items
+* **timeline.md** - Chronological events and historical sequences (horizontal/vertical, branching, period-based, theoretical evolution)
+* **definition.md** - Term definitions and key concepts (single terms, glossaries, nested structures, contrasting definitions)
+* **methodology.md** - Research methodology and process flows (step-by-step, flowcharts, parallel processes, experimental designs)
+* **case-study.md** - Structured case study presentations (standard structure, problem-solution-results, multiple mini-cases, stakeholder perspectives, failure analysis)
+* **literature-review.md** - Synthesis of research scholarship (single source deep-dives, multiple source comparisons, chronological development, thematic clusters, gap analysis, theoretical debates)
+* **data-visualization.md** - Charts and graphs with interpretation (annotated charts, before/after comparisons, multi-panel grids, progressive reveal, correlation matrices)
 
 ## Template Categories
 
@@ -112,5 +109,15 @@ Theme-specific styling is handled automatically by the CSS system.
 
 ---
 
-**Last Updated:** 2025-11-15
+**Last Updated:** 2025-11-16
 **Maintained by:** Marc Alexander, University of Glasgow
+
+## Recent Additions (2025-11-16)
+
+Six new comprehensive slide layout templates added:
+* **timeline.md** - 9 chronological layout variants
+* **definition.md** - 10 terminology presentation patterns
+* **methodology.md** - 12 research methodology frameworks
+* **case-study.md** - 10 case study structures
+* **literature-review.md** - 9 literature synthesis approaches
+* **data-visualization.md** - 12 data presentation patterns with statistical context

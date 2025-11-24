@@ -1,0 +1,19 @@
+{
+  "default": true,
+  "MD001": true,
+  "MD004": { "style": "asterisk" },
+  "MD007": { "indent": 2 },
+  "MD012": { "maximum": 2 },
+  "MD013": false,
+  "MD022": false,
+  "MD024": false,
+  "MD025": false,
+  "MD026": false,
+  "MD032": false,
+  "MD033": false,
+  "MD034": false,
+  "MD035": false,
+  "MD041": false,
+  "MD047": true,
+  "MD059": false
+}

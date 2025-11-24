@@ -61,7 +61,7 @@
 ## Questions Asked
 * Question 1: Support for the proposed Bill
 * Question 2: Do you think legislation is required
-* Question 3: Views of the proposed process 
+* Question 3: Views of the proposed process
 * Question 4: Views on safeguards
 * Question 5: Should a body collect data on assisted dying
 * Question 6: Views on conscientious objections
@@ -228,7 +228,7 @@
 
 --
 
-![NOW Corpus "Assisted Dying" vs "Assisted Suicide"](img/now3.png) 
+![NOW Corpus "Assisted Dying" vs "Assisted Suicide"](img/now3.png)
 
 <!-- .element: class="r-stretch"; -->
 
@@ -258,6 +258,7 @@
 
 --
 
+### 2021 Q1 USAS ('key concepts') vs BE21, LL
 
 #### Supportive
 

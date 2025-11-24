@@ -249,7 +249,7 @@
 
 ## QAA's suggestions 1
 
-* Observed competence: 'observe a student complete one or more specific tasks related to their discipline [...] and interview them about their understanding of the related principles, context and applications' (OSCE-style)
+* Observed competence: 'observe a student complete one or more specific tasks related to their discipline \[...\] and interview them about their understanding of the related principles, context and applications' (OSCE-style)
 * Oral examinations ('with appropriate safeguards'): 'oral examinations in the form of structured interviews conducted by two or more examiners with clearly set out rubrics and appropriate safeguards for vulnerable students may be used formatively or summatively as a synoptic assessment. In addition, mini-vivas, in which small groups of students are interviewed together about their written submissions, can serve both to authenticate the work and contribute to its assessment'
 * There are volume implications here, but then again we overassess right now anyway
 
@@ -258,7 +258,7 @@
 ## QAA's suggestions 2
 
 * Coursework that integrates AI by design: the AI 'completes routine and/or repetitive tasks'
-* Hybrid submissions, including student work and AI together: 'allowing hybrid submissions in which the contribution of AI is fully acknowledged [...] is a useful transitional arrangement as providers plan for the near future in which Generative Artificial Intelligence is embedded in the licensed software used by staff and students'
+* Hybrid submissions, including student work and AI together: 'allowing hybrid submissions in which the contribution of AI is fully acknowledged \[...\] is a useful transitional arrangement as providers plan for the near future in which Generative Artificial Intelligence is embedded in the licensed software used by staff and students'
 
 --
 
@@ -281,5 +281,5 @@
 
 ## Alicja Syska on the essay 2
 
-* 'What AI can help with is to break down the misconceptions around writing, make it more achievable, more democratic, less fraught, less intimidating, and more rewarding. It still shouldn’t be easy[...] If we can find a sustainable way to use AI as Socratic service that questions, prompts, and encourages deeper engagement with the content, and offers feedback on ideas and argument, style, and voice, but not to appropriate the exact words or answers it comes up with, then we have a chance to use it to learn and grow, rather than reduce learning gains.'
+* 'What AI can help with is to break down the misconceptions around writing, make it more achievable, more democratic, less fraught, less intimidating, and more rewarding. It still shouldn’t be easy\[...\] If we can find a sustainable way to use AI as Socratic service that questions, prompts, and encourages deeper engagement with the content, and offers feedback on ideas and argument, style, and voice, but not to appropriate the exact words or answers it comes up with, then we have a chance to use it to learn and grow, rather than reduce learning gains.'
 * '...reimagining the good old essay may just help us fulfil the original vision of Enlightenment education and – by treating writing as a practice of freedom – bring us closer to bell hooks’s ideal of the classroom as a location of possibility.'

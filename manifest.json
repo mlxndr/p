@@ -8,6 +8,9 @@
       "location": "Salamanca, Spain"
     },
     {
+      "dirName": "cv"
+    },
+    {
       "dirName": "dsna25",
       "title": "Synonym Role: Historical Thesauruses as Analytical Historical Frameworks (draft)",
       "date": "2025-05",
@@ -47,9 +50,6 @@
     },
     {
       "dirName": "scsai25test2"
-    },
-    {
-      "dirName": "templates"
     }
   ]
 }

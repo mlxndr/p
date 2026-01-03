@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = '.';
-const excludedFolders = ['img', 'gamma', 'inc', 'f', 'css', 'archive', '.git', '.github', 'scripts', 'node_modules'];
+const excludedFolders = ['img', 'gamma', 'inc', 'f', 'css', 'archive', '.git', '.github', 'scripts', 'templates', 'node_modules'];
 
 const presentations = fs.readdirSync(rootDir, { withFileTypes: true })
     .filter(entry => entry.isDirectory() && !excludedFolders.includes(entry.name.toLowerCase()))

@@ -1,0 +1,55 @@
+{
+  "presentations": [
+    {
+      "dirName": "cilc25",
+      "title": "up yours at the end of life’: Opposition, Emotion, and Overlap in a Corpus of Scottish Debates on Assisted Dying",
+      "date": "2025-05",
+      "event": "16th International Conference on Corpus Linguistics",
+      "location": "Salamanca, Spain"
+    },
+    {
+      "dirName": "dsna25",
+      "title": "Synonym Role: Historical Thesauruses as Analytical Historical Frameworks (draft)",
+      "date": "2025-05",
+      "event": "DSNA25: Dictionary Society of North America",
+      "location": "Buffalo, NY"
+    },
+    {
+      "dirName": "mainz25",
+      "title": "University of Glasgow: Academic Quality Processes",
+      "date": "2025-07",
+      "event": "Glasgow-Mainz Standards",
+      "location": "Mainz"
+    },
+    {
+      "dirName": "nosh25",
+      "title": "Some exam board updates",
+      "date": "2025-05",
+      "event": "ELL Wash-Up",
+      "location": "Glasgow"
+    },
+    {
+      "dirName": "oup25",
+      "title": "HT and HTOED: Draft Guiding Principles",
+      "date": "2025-07",
+      "event": "Oxford University Press",
+      "location": "Oxford"
+    },
+    {
+      "dirName": "scsai25",
+      "title": "SCS - Some AI updates",
+      "date": "2025-03",
+      "event": "SCS School Collective",
+      "location": "Glasgow"
+    },
+    {
+      "dirName": "scsai25test"
+    },
+    {
+      "dirName": "scsai25test2"
+    },
+    {
+      "dirName": "templates"
+    }
+  ]
+}

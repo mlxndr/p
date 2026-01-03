@@ -1,8 +1,299 @@
+/* ============================================
+   mga.is — index.css
+   ============================================ */
+
+:root {
+    --color-paper: #F7F6F1;
+    --color-ink: #3d3d3d;
+    --color-ink-light: #5a5a5a;
+    --color-accent: #9B3D3D;
+    --color-rule: #d4d2c9;
+    --sidebar-width: 220px;
+    --space-xs: 0.5rem;
+    --space-s: 1rem;
+    --space-m: 1.5rem;
+    --space-l: 2.5rem;
+    --space-xl: 4rem;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 17px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 body {
-    font-family: 'Concourse', sans-serif;
+    font-family: 'Equity', Georgia, 'Times New Roman', serif;
+    font-weight: 400;
     font-variant-numeric: oldstyle-nums;
-    -moz-font-feature-settings: "onum";
-    -webkit-font-feature-settings: "onum";
     font-feature-settings: "onum";
-    
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+a {
+    color: var(--color-ink);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--color-accent);
+}
+
+/* ============================================
+   Layout
+   ============================================ */
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ============================================
+   Sidebar
+   ============================================ */
+
+.sidebar {
+    width: var(--sidebar-width);
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    padding: var(--space-xl) var(--space-m);
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--color-rule);
+}
+
+.sidebar-logo {
+    width: 56px;
+    height: auto;
+    margin-bottom: var(--space-s);
+}
+
+.sidebar-name {
+    font-family: 'Concourse', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 300;
+    color: var(--color-ink-light);
+    margin-bottom: var(--space-l);
+    letter-spacing: 0.01em;
+}
+
+.sidebar-nav {
+    list-style: none;
+    margin-bottom: auto;
+}
+
+.sidebar-nav li {
+    margin-bottom: var(--space-xs);
+}
+
+.sidebar-nav a {
+    font-family: 'Concourse', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: var(--color-ink);
+}
+
+.sidebar-nav a:hover {
+    color: var(--color-accent);
+}
+
+/* ============================================
+   Main content
+   ============================================ */
+
+.main {
+    margin-left: var(--sidebar-width);
+    flex: 1;
+    padding: var(--space-xl) var(--space-xl);
+    max-width: 800px;
+}
+
+.intro {
+    font-size: 1.25rem;
+    line-height: 1.55;
+    margin-bottom: var(--space-xl);
+    max-width: 580px;
+}
+
+/* ============================================
+   Sections
+   ============================================ */
+
+section {
+    margin-bottom: var(--space-xl);
+}
+
+h2 {
+    font-family: 'Concourse', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-ink-light);
+    margin-bottom: var(--space-m);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--color-rule);
+}
+
+/* ============================================
+   Lists
+   ============================================ */
+
+.link-list {
+    list-style: none;
+}
+
+.link-list li {
+    margin-bottom: var(--space-s);
+}
+
+.link-list a {
+    color: var(--color-ink);
+}
+
+.link-list a:hover {
+    color: var(--color-accent);
+}
+
+.link-list .description {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-ink-light);
+    margin-top: 0.1rem;
+    line-height: 1.45;
+}
+
+/* ============================================
+   Presentations
+   ============================================ */
+
+/* Directory names in small caps */
+.presentation-title {
+    font-variant: small-caps;
+    text-transform: lowercase;
+    letter-spacing: 0.03em;
+}
+
+/* Rich entries from meta.json */
+.presentation-rich {
+    font-variant: normal;
+    text-transform: none;
+}
+
+.presentation-meta {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--color-ink-light);
+    margin-top: 0.1rem;
+}
+
+/* ============================================
+   Dashboards
+   ============================================ */
+
+.dashboard-list li {
+    margin-bottom: var(--space-m);
+}
+
+/* ============================================
+   Error state
+   ============================================ */
+
+.error {
+    color: var(--color-ink-light);
+    font-style: italic;
+}
+
+/* ============================================
+   Animation
+   ============================================ */
+
+@keyframes fadeIn {
+    from { 
+        opacity: 0; 
+        transform: translateY(6px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.35s ease-out forwards;
+}
+
+section:nth-of-type(1) { animation-delay: 0s; }
+section:nth-of-type(2) { animation-delay: 0.08s; }
+section:nth-of-type(3) { animation-delay: 0.16s; }
+
+/* ============================================
+   Mobile: sidebar becomes footer
+   ============================================ */
+
+@media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        order: 2;
+        border-right: none;
+        border-top: 1px solid var(--color-rule);
+        padding: var(--space-l) var(--space-m);
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--space-m);
+    }
+
+    .sidebar-logo {
+        width: 40px;
+        margin-bottom: 0;
+    }
+
+    .sidebar-name {
+        margin-bottom: 0;
+        margin-right: auto;
+    }
+
+    .sidebar-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--space-s) var(--space-m);
+        margin-bottom: 0;
+    }
+
+    .sidebar-nav li {
+        margin-bottom: 0;
+    }
+
+    .main {
+        margin-left: 0;
+        padding: var(--space-l) var(--space-m);
+        order: 1;
+    }
+
+    .intro {
+        font-size: 1.15rem;
+    }
+
+    html {
+        font-size: 16px;
+    }
 }

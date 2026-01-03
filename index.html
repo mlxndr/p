@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentations | mga.is</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+    <title>Marc Alexander</title>
     <link rel="stylesheet" href="inc/css/fonts.css">
     <link rel="stylesheet" href="inc/css/index.css">
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
@@ -14,27 +13,43 @@
     <meta name="apple-mobile-web-app-title" content="mga.is" />
     <link rel="manifest" href="/site.webmanifest" />
 </head>
-<body style="background-color: #F2F2EA;" class="min-h-screen">
-    <div class="container mx-auto px-4 py-8">
-        <header class="mb-12 text-center">
-            <img src="img/mga.png" alt="mga.is" class="w-24 h-24 mx-auto mb-4">
-        </header>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <img src="img/mga.png" alt="" class="sidebar-logo">
+            <p class="sidebar-name">Marc Alexander</p>
+            <ul class="sidebar-nav">
+                <li><a href="/cv/alexander-cv.pdf">CV</a></li>
+                <li><a href="https://orcid.org/0000-0002-6337-2632">ORCID</a></li>
+                <li><a href="https://ht.ac.uk">Historical Thesaurus</a></li>
+                <li><a href="https://www.gla.ac.uk/schools/critical/staff/marcalexander/">University of Glasgow Profile</a></li>
+            </ul>
+        </aside>
 
-        <section class="mb-12">
-            <h2 class="text-2xl font-bold text-gray-800 mb-4" style="font-weight: 200;">Presentations</h2>
-            <div id="presentations-list" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3"></div>
-        </section>
+        <main class="main">
+            <p class="intro">
+                Professor of English Language at the University of Glasgow, 
+                where I direct the Historical Thesaurus of English. 
+                I work on semantics, corpus linguistics, and digital humanities.
+            </p>
 
-        <section>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4" style="font-weight: 200;">Shiny applications</h2>
-            <div id="shiny-apps-list" class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            <!-- Presentations will be listed here -->
-            </div>
-        </section>
-        <br><br>
-        <section>
-            <h2 class="text-2xl font-bold text-gray-800 mb-4" style="font-weight: 200;"><a href="./gamma/">Click here for Gamma and other presentations</a></h2>
-        </section>
+            <section class="fade-in">
+                <h2>Presentations</h2>
+                <ul id="presentations-list" class="link-list"></ul>
+            </section>
+
+            <section class="fade-in">
+                <h2>Dashboards</h2>
+                <ul id="shiny-apps-list" class="link-list dashboard-list"></ul>
+            </section>
+
+            <section class="fade-in">
+                <h2>Other materials</h2>
+                <ul class="link-list">
+                    <li><a href="./gamma/">Gamma presentations and other slides</a></li>
+                </ul>
+            </section>
+        </main>
     </div>
 
     <script>
@@ -46,40 +61,71 @@
                 const excludedFolders = ['img', 'gamma', 'inc', 'f', 'css', 'archive'];
                 const directories = data.filter(item => 
                     item.type === 'dir' && !excludedFolders.includes(item.name.toLowerCase()));
+                
                 const presentationsList = document.getElementById('presentations-list');
                 
-                directories.forEach(dir => {
-                    const card = document.createElement('div');
-                    card.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200';
+                if (directories.length === 0) {
+                    presentationsList.innerHTML = '<li class="error">No presentations available.</li>';
+                    return;
+                }
+
+                // Fetch meta.json for each directory (with fallback)
+                const presentations = await Promise.all(
+                    directories.map(async (dir) => {
+                        try {
+                            const metaResponse = await fetch(`https://raw.githubusercontent.com/mlxndr/p/main/${dir.name}/meta.json`);
+                            if (metaResponse.ok) {
+                                const meta = await metaResponse.json();
+                                return { ...meta, dirName: dir.name, hasMeta: true };
+                            }
+                        } catch (e) {
+                            // meta.json not found or invalid, fall back to directory name
+                        }
+                        return { dirName: dir.name, hasMeta: false };
+                    })
+                );
+
+                // Sort: entries with dates first (newest first), then entries without dates
+                presentations.sort((a, b) => {
+                    if (a.date && b.date) {
+                        return new Date(b.date) - new Date(a.date);
+                    }
+                    if (a.date) return -1;
+                    if (b.date) return 1;
+                    return a.dirName.localeCompare(b.dirName);
+                });
+
+                presentations.forEach(pres => {
+                    const li = document.createElement('li');
                     
-                    card.innerHTML = `
-                        <h2 class="text-xl font-semibold text-gray-800 mb-2" style="font-weight: 200; font-variant-caps: all-small-caps;">${formatTitle(dir.name)}</h2>
-                        <a href="/${dir.name}" 
-                           class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors duration-200">
-                            View Presentation
-                        </a>
-                    `;
+                    if (pres.hasMeta && pres.title) {
+                        // Rich display from meta.json
+                        let metaParts = [];
+                        if (pres.event) metaParts.push(pres.event);
+                        if (pres.location) metaParts.push(pres.location);
+                        if (pres.date) {
+                            const year = new Date(pres.date).getFullYear();
+                            metaParts.push(year);
+                        }
+                        
+                        li.innerHTML = `
+                            <a href="/${pres.dirName}" class="presentation-rich">${pres.title}</a>
+                            ${metaParts.length > 0 ? `<span class="presentation-meta">${metaParts.join(', ')}</span>` : ''}
+                        `;
+                    } else {
+                        // Fallback: directory name in small caps
+                        li.innerHTML = `<a href="/${pres.dirName}" class="presentation-title">${pres.dirName.replace(/-/g, ' ')}</a>`;
+                    }
                     
-                    presentationsList.appendChild(card);
+                    presentationsList.appendChild(li);
                 });
             } catch (error) {
                 console.error('Error fetching directories:', error);
-                document.getElementById('presentations-list').innerHTML = `
-                    <div class="col-span-full text-center text-red-600">
-                        Unable to load presentations. Please try again later.
-                    </div>
-                `;
+                document.getElementById('presentations-list').innerHTML = 
+                    '<li class="error">Unable to load presentations.</li>';
             }
         }
 
-        function formatTitle(dirName) {
-            return dirName
-                .split('-')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ');
-        }
-
-        // Define your Shiny apps
         const shinyApps = [
             {
                 name: 'Uncivil',
@@ -88,12 +134,12 @@
             },
             {
                 name: 'The Thematic House of Commons',
-                description: 'Browser for exploring HT thematic categories in UK parliamentary debates, 1803-2003',
+                description: 'Browser for exploring HT thematic categories in UK parliamentary debates, 1803–2003',
                 url: 'https://mlxndr.shinyapps.io/commonsthem'
             },
             {
                 name: 'Commons Thematic Browser, v1',
-                description: 'Early version of browser exploring HT thematic categories in UK parliamentary debates, 1803-2003',
+                description: 'Early version of browser exploring HT thematic categories in UK parliamentary debates, 1803–2003',
                 url: 'https://mlxndr.shinyapps.io/hansthematic'
             },
             {
@@ -135,32 +181,22 @@
                 name: 'Assisted Dying: 2021 and 2024 Consultation Overlap and Templates Analysis',
                 description: 'Overlap and template analysis dashboard of the 2021 and 2024 consultations on assisted dying in Scotland',
                 url: 'https://mlxndr.shinyapps.io/adoppover'
-            },
-            // Add more apps as needed
+            }
         ];
 
         function displayShinyApps() {
             const shinyAppsList = document.getElementById('shiny-apps-list');
             
             shinyApps.forEach(app => {
-                const card = document.createElement('div');
-                card.className = 'bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-200';
-                
-                card.innerHTML = `
-                    <h2 class="text-xl font-semibold text-gray-800 mb-2" style="font-weight: 200; font-variant-caps: all-small-caps;">${app.name}</h2>
-                    <p class="text-gray-600 mb-4">${app.description}</p>
-                    <a href="${app.url}" 
-                       target="_blank"
-                       class="inline-block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors duration-200">
-                        Launch App
-                    </a>
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <a href="${app.url}" target="_blank" rel="noopener">${app.name}</a>
+                    <span class="description">${app.description}</span>
                 `;
-                
-                shinyAppsList.appendChild(card);
+                shinyAppsList.appendChild(li);
             });
         }
 
-        // Fetch directories and display Shiny apps when the page loads
         fetchDirectories();
         displayShinyApps();
     </script>

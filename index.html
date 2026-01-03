@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Marc Alexander</title>
+    <title>mga.is</title>
     <link rel="stylesheet" href="inc/css/fonts.css">
     <link rel="stylesheet" href="inc/css/index.css">
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
@@ -18,6 +18,11 @@
         <aside class="sidebar">
             <img src="img/mga.png" alt="" class="sidebar-logo">
             <p class="sidebar-name">Marc Alexander</p>
+            <p class="sidebar-about">
+                Professor of English Linguistics at the University of Glasgow, 
+                where I direct the <i>Historical Thesaurus of English</i>. 
+                I work on semantics, corpus linguistics, and digital humanities.
+            </p>
             <ul class="sidebar-nav">
                 <li><a href="/cv/alexander-cv.pdf">CV</a></li>
                 <li><a href="https://orcid.org/0000-0002-6337-2632">ORCID</a></li>
@@ -27,12 +32,6 @@
         </aside>
 
         <main class="main">
-            <p class="intro">
-                Professor of English Language at the University of Glasgow, 
-                where I direct the Historical Thesaurus of English. 
-                I work on semantics, corpus linguistics, and digital humanities.
-            </p>
-
             <section class="fade-in">
                 <h2>Presentations</h2>
                 <ul id="presentations-list" class="link-list"></ul>
@@ -53,6 +52,46 @@
     </div>
 
     <script>
+        // Parse date strings like "2025-01", "January 2025", or "2025-01-15"
+        // Returns { display: "January 2025", sortKey: "2025-01" } or null
+        function parseDate(dateStr) {
+            if (!dateStr) return null;
+            
+            const months = [
+                'January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'
+            ];
+            
+            // Try "2025-01" or "2025-01-15" format
+            const isoMatch = dateStr.match(/^(\d{4})-(\d{2})(?:-\d{2})?$/);
+            if (isoMatch) {
+                const year = isoMatch[1];
+                const monthIndex = parseInt(isoMatch[2], 10) - 1;
+                return {
+                    display: `${months[monthIndex]} ${year}`,
+                    sortKey: `${year}-${isoMatch[2]}`
+                };
+            }
+            
+            // Try "January 2025" format
+            const textMatch = dateStr.match(/^([A-Za-z]+)\s+(\d{4})$/);
+            if (textMatch) {
+                const monthName = textMatch[1];
+                const year = textMatch[2];
+                const monthIndex = months.findIndex(m => 
+                    m.toLowerCase() === monthName.toLowerCase());
+                if (monthIndex !== -1) {
+                    const monthNum = String(monthIndex + 1).padStart(2, '0');
+                    return {
+                        display: `${months[monthIndex]} ${year}`,
+                        sortKey: `${year}-${monthNum}`
+                    };
+                }
+            }
+            
+            return null;
+        }
+
         async function fetchDirectories() {
             try {
                 const response = await fetch('https://api.github.com/repos/mlxndr/p/contents/');
@@ -76,22 +115,28 @@
                             const metaResponse = await fetch(`https://raw.githubusercontent.com/mlxndr/p/main/${dir.name}/meta.json`);
                             if (metaResponse.ok) {
                                 const meta = await metaResponse.json();
-                                return { ...meta, dirName: dir.name, hasMeta: true };
+                                const parsedDate = parseDate(meta.date);
+                                return { 
+                                    ...meta, 
+                                    dirName: dir.name, 
+                                    hasMeta: true,
+                                    parsedDate: parsedDate
+                                };
                             }
                         } catch (e) {
                             // meta.json not found or invalid, fall back to directory name
                         }
-                        return { dirName: dir.name, hasMeta: false };
+                        return { dirName: dir.name, hasMeta: false, parsedDate: null };
                     })
                 );
 
                 // Sort: entries with dates first (newest first), then entries without dates
                 presentations.sort((a, b) => {
-                    if (a.date && b.date) {
-                        return new Date(b.date) - new Date(a.date);
+                    if (a.parsedDate && b.parsedDate) {
+                        return b.parsedDate.sortKey.localeCompare(a.parsedDate.sortKey);
                     }
-                    if (a.date) return -1;
-                    if (b.date) return 1;
+                    if (a.parsedDate) return -1;
+                    if (b.parsedDate) return 1;
                     return a.dirName.localeCompare(b.dirName);
                 });
 
@@ -103,10 +148,7 @@
                         let metaParts = [];
                         if (pres.event) metaParts.push(pres.event);
                         if (pres.location) metaParts.push(pres.location);
-                        if (pres.date) {
-                            const year = new Date(pres.date).getFullYear();
-                            metaParts.push(year);
-                        }
+                        if (pres.parsedDate) metaParts.push(pres.parsedDate.display);
                         
                         li.innerHTML = `
                             <a href="/${pres.dirName}" class="presentation-rich">${pres.title}</a>

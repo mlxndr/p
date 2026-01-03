@@ -8,7 +8,7 @@
     --color-ink-light: #5a5a5a;
     --color-accent: #9B3D3D;
     --color-rule: #d4d2c9;
-    --sidebar-width: 220px;
+    --sidebar-width: 240px;
     --space-xs: 0.5rem;
     --space-s: 1rem;
     --space-m: 1.5rem;
@@ -35,7 +35,7 @@ body {
     font-feature-settings: "onum";
     background-color: var(--color-paper);
     color: var(--color-ink);
-    line-height: 1.6;
+    line-height: 1.1;
     min-height: 100vh;
 }
 
@@ -82,11 +82,20 @@ a:hover {
 
 .sidebar-name {
     font-family: 'Concourse', sans-serif;
-    font-size: 0.85rem;
+    font-size: 1.05rem;
     font-weight: 300;
-    color: var(--color-ink-light);
-    margin-bottom: var(--space-l);
+    color: var(--color-ink);
+    margin-bottom: var(--space-xs);
     letter-spacing: 0.01em;
+}
+
+.sidebar-about {
+    font-family: 'Equity', Georgia, serif;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: var(--color-ink-light);
+    line-height: 1.5;
+    margin-bottom: var(--space-l);
 }
 
 .sidebar-nav {
@@ -103,6 +112,8 @@ a:hover {
     font-size: 0.9rem;
     font-weight: 300;
     color: var(--color-ink);
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.04em;
 }
 
 .sidebar-nav a:hover {
@@ -120,13 +131,6 @@ a:hover {
     max-width: 800px;
 }
 
-.intro {
-    font-size: 1.25rem;
-    line-height: 1.55;
-    margin-bottom: var(--space-xl);
-    max-width: 580px;
-}
-
 /* ============================================
    Sections
    ============================================ */
@@ -137,10 +141,10 @@ section {
 
 h2 {
     font-family: 'Concourse', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 400;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em;
     color: var(--color-ink-light);
     margin-bottom: var(--space-m);
     padding-bottom: var(--space-xs);
@@ -240,7 +244,7 @@ section:nth-of-type(2) { animation-delay: 0.08s; }
 section:nth-of-type(3) { animation-delay: 0.16s; }
 
 /* ============================================
-   Mobile: sidebar becomes footer
+   Mobile: sidebar becomes header
    ============================================ */
 
 @media (max-width: 768px) {
@@ -252,30 +256,29 @@ section:nth-of-type(3) { animation-delay: 0.16s; }
         position: relative;
         width: 100%;
         height: auto;
-        order: 2;
+        order: 1;
         border-right: none;
-        border-top: 1px solid var(--color-rule);
-        padding: var(--space-l) var(--space-m);
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: var(--space-m);
+        border-bottom: 1px solid var(--color-rule);
+        padding: var(--space-m);
     }
 
     .sidebar-logo {
-        width: 40px;
-        margin-bottom: 0;
+        width: 44px;
+        margin-bottom: var(--space-xs);
     }
 
     .sidebar-name {
-        margin-bottom: 0;
-        margin-right: auto;
+        margin-bottom: 0.25rem;
+    }
+
+    .sidebar-about {
+        margin-bottom: var(--space-m);
     }
 
     .sidebar-nav {
         display: flex;
         flex-wrap: wrap;
-        gap: var(--space-s) var(--space-m);
+        gap: var(--space-xs) var(--space-m);
         margin-bottom: 0;
     }
 
@@ -286,11 +289,7 @@ section:nth-of-type(3) { animation-delay: 0.16s; }
     .main {
         margin-left: 0;
         padding: var(--space-l) var(--space-m);
-        order: 1;
-    }
-
-    .intro {
-        font-size: 1.15rem;
+        order: 2;
     }
 
     html {

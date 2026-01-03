@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>mga.is</title>
+    <title>Marc Alexander</title>
     <link rel="stylesheet" href="inc/css/fonts.css">
     <link rel="stylesheet" href="inc/css/index.css">
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
@@ -92,46 +92,26 @@
             return null;
         }
 
-        async function fetchDirectories() {
+        async function loadPresentations() {
             try {
-                const response = await fetch('https://api.github.com/repos/mlxndr/p/contents/');
-                const data = await response.json();
-                
-                const excludedFolders = ['img', 'gamma', 'inc', 'f', 'css', 'archive'];
-                const directories = data.filter(item => 
-                    item.type === 'dir' && !excludedFolders.includes(item.name.toLowerCase()));
+                const response = await fetch('/manifest.json');
+                const { presentations } = await response.json();
                 
                 const presentationsList = document.getElementById('presentations-list');
                 
-                if (directories.length === 0) {
+                if (!presentations || presentations.length === 0) {
                     presentationsList.innerHTML = '<li class="error">No presentations available.</li>';
                     return;
                 }
 
-                // Fetch meta.json for each directory (with fallback)
-                const presentations = await Promise.all(
-                    directories.map(async (dir) => {
-                        try {
-                            const metaResponse = await fetch(`https://raw.githubusercontent.com/mlxndr/p/main/${dir.name}/meta.json`);
-                            if (metaResponse.ok) {
-                                const meta = await metaResponse.json();
-                                const parsedDate = parseDate(meta.date);
-                                return { 
-                                    ...meta, 
-                                    dirName: dir.name, 
-                                    hasMeta: true,
-                                    parsedDate: parsedDate
-                                };
-                            }
-                        } catch (e) {
-                            // meta.json not found or invalid, fall back to directory name
-                        }
-                        return { dirName: dir.name, hasMeta: false, parsedDate: null };
-                    })
-                );
+                // Parse dates and sort
+                const withDates = presentations.map(pres => ({
+                    ...pres,
+                    parsedDate: parseDate(pres.date)
+                }));
 
                 // Sort: entries with dates first (newest first), then entries without dates
-                presentations.sort((a, b) => {
+                withDates.sort((a, b) => {
                     if (a.parsedDate && b.parsedDate) {
                         return b.parsedDate.sortKey.localeCompare(a.parsedDate.sortKey);
                     }
@@ -140,10 +120,10 @@
                     return a.dirName.localeCompare(b.dirName);
                 });
 
-                presentations.forEach(pres => {
+                withDates.forEach(pres => {
                     const li = document.createElement('li');
                     
-                    if (pres.hasMeta && pres.title) {
+                    if (pres.title) {
                         // Rich display from meta.json
                         let metaParts = [];
                         if (pres.event) metaParts.push(pres.event);
@@ -162,7 +142,7 @@
                     presentationsList.appendChild(li);
                 });
             } catch (error) {
-                console.error('Error fetching directories:', error);
+                console.error('Error loading presentations:', error);
                 document.getElementById('presentations-list').innerHTML = 
                     '<li class="error">Unable to load presentations.</li>';
             }
@@ -239,7 +219,7 @@
             });
         }
 
-        fetchDirectories();
+        loadPresentations();
         displayShinyApps();
     </script>
 </body>

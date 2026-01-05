@@ -51,15 +51,15 @@ Reveal.initialize({
             },
             { 
                 name: 'All Sans-Serif: Black on Cream',
-                theme: '../inc/css/th-m-l-cr.css'
+                theme: '../inc/css/th-l-cr-m.css'
             },
             { 
                 name: 'All Sans-Serif: Black on Cream, Thin Body Text',
-                theme: '../inc/css/th-m-l-cr-thin.css'
+                theme: '../inc/css/th-l-cr-m-thin.css'
             },
             { 
                 name: 'All Sans-Serif: White on Twilight Background',
-                theme: '../inc/css/th-m-bg-twilight.css'
+                theme: '../inc/css/th-d-bg-twilight-m.css'
             },
             { 
                 name: 'Light: Paper',
@@ -119,19 +119,19 @@ Reveal.initialize({
             },
             { 
                 name: 'Experimental: Cream with Inverted Fonts', 
-                theme: '../inc/css/th-e-l-cr-invert.css'
+                theme: '../inc/css/th-l-e-cr-invert.css'
             },
             { 
                 name: 'Experimental: Twilight with Inverted Fonts', 
-                theme: '../inc/css/th-e-bg-twilight-invert.css'
+                theme: '../inc/css/th-d-e-bg-twilight-invert.css'
             },
             { 
                 name: 'Experimental: Light Green', 
-                theme: '../inc/css/th-e-lgr.css'
+                theme: '../inc/css/th-d-e-lgr.css'
             },
             { 
                 name: 'Experimental: Orange', 
-                theme: '../inc/css/th-e-or.css'
+                theme: '../inc/css/th-d-e-or.css'
             }
         ],
         transitions: true,

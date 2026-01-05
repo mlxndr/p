@@ -2,7 +2,7 @@
   "presentations": [
     {
       "dirName": "cilc25",
-      "title": "up yours at the end of life’: Opposition, Emotion, and Overlap in a Corpus of Scottish Debates on Assisted Dying",
+      "title": "'up yours at the end of life’: Opposition, Emotion, and Overlap in a Corpus of Scottish Debates on Assisted Dying",
       "date": "2025-05",
       "event": "16th International Conference on Corpus Linguistics",
       "location": "Salamanca, Spain"
@@ -47,6 +47,13 @@
     },
     {
       "dirName": "scsai25test2"
+    },
+    {
+      "dirName": "waw-me26",
+      "title": "Folk/Lore: The Question of the 'Intelligent Average Individual'",
+      "date": "2026-01",
+      "event": "WAW-ME Workshop 'Identifying and Classifying Middle English Technical Terms'",
+      "location": "Zürich, Switzerland"
     }
   ]
 }

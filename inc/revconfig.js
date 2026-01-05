@@ -50,6 +50,18 @@ Reveal.initialize({
                 theme: '../inc/css/th-l-acc.css'
             },
             { 
+                name: 'All Sans-Serif: Black on Cream',
+                theme: '../inc/css/th-m-l-cr.css'
+            },
+            { 
+                name: 'All Sans-Serif: Black on Cream, Thin Body Text',
+                theme: '../inc/css/th-m-l-cr-thin.css'
+            },
+            { 
+                name: 'All Sans-Serif: White on Twilight Background',
+                theme: '../inc/css/th-m-bg-twilight.css'
+            },
+            { 
                 name: 'Light: Paper',
                 theme: '../inc/css/th-l-bg-paper.css'
             },
@@ -70,6 +82,10 @@ Reveal.initialize({
                 theme: '../inc/css/th-d-bu.css'
             },
             { 
+                name: 'Dark: Blue with Inverted Fonts',
+                theme: '../inc/css/th-d-bu-invert.css'
+            },
+            { 
                 name: 'Dark: Green',
                 theme: '../inc/css/th-d-gr.css'
             },
@@ -88,10 +104,6 @@ Reveal.initialize({
             { 
                 name: 'Experimental: Indoor Kid', 
                 theme: '../inc/css/th-l-indoor.css'
-            },
-            { 
-                name: 'Experimental: Blue with Inverted Fonts',
-                theme: '../inc/css/th-d-bu-invert.css'
             },
             { 
                 name: 'Experimental: UofG Blue', 

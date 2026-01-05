@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Folk/Lore: The Question of the ‘Intelligent Average Individual’</title>
+    <script>
+        fetch('../inc/pres-head.html')
+            .then(response => response.text())
+            .then(html => {
+                       document.head.insertAdjacentHTML('afterbegin', html);
+                   });
+    </script>
+    <script src="../inc/qr.js"></script>
+</head>
+<body>
+    <div class="reveal">
+        <div class="slides"  style="height:100%;width:100%;">
+            <!-- Title slide - loaded from markdown file -->
+            <section data-markdown="./title.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
+            
+            <!-- Content slides -->
+            <section data-markdown="./content.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
+            <!-- Closing Slide -->
+
+            <section>                
+                <br><br><h1 class="pres-title-headingfont" style="font-size: 95px !important; font-variant: small-caps !important; font-weight: 700">Folk/Lore</h1>
+                <p class="pres-subtitle-mainfont" style="font-size: 45px; text-align: center; padding-bottom: 1em; font-weight: 300;">The Question of the ‘Intelligent Average Individual’</p>
+                <br><br>
+                <table class="titlebr" width="100%">
+                    <tr>
+                        <td class="tpa4-l">Marc Alexander<br><span class="subtle">University of Glasgow</span></td>
+                        <td class="tpa4-r" style="vertical-align: bottom;">Slides:</td>
+                    </tr>
+                    <tr style="padding-bottom: 5em; padding-top: 5em""><td colspan="2"><hr></td></tr>
+                    <tr>
+                        <td class="tpa4-l" style="line-height: 2.2;"><img src="../img/uog_mono.png"  width="200px" alt="University of Glasgow Logo" class="theme-logo uog-logo"><br><img src="../img/ht-black-colour.png" height="60em" alt="Historical Thesaurus Logo" class="theme-logo ht-logo"></td>
+                        <td class="tpa4-r" style="vertical-align: middle;">
+                            <canvas id="qr-code" class="qr-code" width="160" height="160" data-url="https://mga.is/waw-me26/"></canvas>
+                        </td>
+                    </tr>
+                </table>
+            </section>
+        
+        </div>
+    </div>    
+
+    <script src="../inc/scripts-config.js"></script>
+    <script src="../inc/script-loader.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', loadScripts);
+    </script>
+</body>
+</html>

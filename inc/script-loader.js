@@ -58,7 +58,18 @@ function setupThemeBasedElements() {
         logo.setAttribute('src', imgSrc.replace('uog_white.png', 'uog_mono.png'));
       }
     });
-    
+
+    // Get all HT logos
+    const htLogos = document.querySelectorAll('.ht-logo');
+    htLogos.forEach(function(logo) {
+      const imgSrc = logo.getAttribute('src');
+      if (isDarkTheme) {
+        logo.setAttribute('src', imgSrc.replace('ht-black-colour.png', 'ht-white.png'));
+      } else {
+        logo.setAttribute('src', imgSrc.replace('ht-white.png', 'ht-black-colour.png'));
+      }
+    });    
+
     // Get all Leverhulme logos
     const leverhulmeLogos = document.querySelectorAll('.leverhulme-logo');
     leverhulmeLogos.forEach(function(logo) {

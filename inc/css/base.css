@@ -85,12 +85,15 @@ h1, h2, .pres-title {
 }
 
 h1, .pres-title {
-    font-weight: 500;
+    font-weight: 800;
 }
-
 
 h3 {
     font-size: 1.4em;
+}
+
+.reveal p {
+    text-align: left;
 }
 
 .reveal ul {
@@ -121,6 +124,31 @@ li::marker {
     color: var(--r-border-color);
 }
 
+.slidequote { 
+    font-size: 90%;
+    font-weight: 200;
+    text-align: left;
+}
+
+/* Table Base Styles */
+.reveal table {
+    border-collapse: collapse; /* Ensures borders are shared between cells */
+    border-spacing: 0;
+    margin-left: 0;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.reveal table th {
+    font-weight: bold;
+    text-align: left;
+    padding: 0.2em 0.5em;
+}
+
+.reveal table td {
+    text-align: left;
+    padding: 0.2em 0.5em;
+}
 
 /* Slide layouts */
 

@@ -3,8 +3,10 @@
 
 .reveal {
     background-color: #183153;
-    font-family: 'Equity', serif !important;
-    font-feature-settings: "ss01" 1;
+    background-image: url('bg/d-colours.jpg');
+    background-size: cover;
+    font-family: 'Concourse', sans-serif !important;
+    font-feature-settings: "ss01" 0;
 }
 
 h1, h2, h3, .pres-title {

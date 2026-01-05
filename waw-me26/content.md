@@ -16,16 +16,17 @@
 * Classification reflects human functional perspective, not philosophical taxonomy
 * Example: *writing desk*
   * Not: <span style='font-variant: small-caps;'>furniture and fittings > desk > writing desk</span>
-  * But: <span style='font-variant: small-caps;'>communication > writing > writing materials > writing desk</span>
+  * But: <span style='font-variant: small-caps;'>communication > writing > writing materials > <span class='subtle'>[...]</span> > writing desk</span>
 
 --
 
 ## 2: Least Extension
 
 * Place items in the narrowest, most specific category that fits
-* *Lava* and *volcanic ash* classified with <span style='font-variant: small-caps;'>volcano</span>, not with <span style='font-variant: small-caps;'>stone</span> or <span style='font-variant: small-caps;'>dust</span>
 * Maintains semantic precision and keeps related vocabulary together
 * But creates questions for compounds: *sea salt* under <span style='font-variant: small-caps;'>salt</span> or <span style='font-variant: small-caps;'>sea</span>?
+* *Lava* classified with <span style='font-variant: small-caps;'>volcano</span>, *and* with <span style='font-variant: small-caps;'>igneous rock</span>
+
 
 --
 
@@ -40,9 +41,11 @@
 ## The 'Intelligent Average Individual'
 
 * Our aim: 'a folk taxonomy, informed by what Hallig and von Wartburg describe as "naïve realism", setting forth "the intelligent average individual's view of the world, based on pre-scientific general concepts made available by language"'
-* This is a useful fiction
-* It assumes a general user whose worldview we can approximate
-* But *whose* naïve realism?
+* H&vW argued that a thesaurus should not 'correct' the language with one scientific viewpoint but should instead map the worldview embedded in the language itself
+* This idea of a shared reality is a useful fiction
+* It creates a general user whose worldview we can approximate
+* But *when* and *whose* naïve realism?
+* (H&vW implicitly assumed a Western European man.)
 
 ---
 
@@ -52,18 +55,19 @@
 * But specialisation is a continuum, not a category
 * And the boundaries of specialist knowledge shift historically
 * A physician's understanding of *melancholy* ≠ a poet's ≠ a priest's ≠ a patient's
-* All of these are 'folk' understandings within their contexts
+* In a pre-scientific worldview, all of these are 'folk' understandings within their contexts
+* And pre-scientific is a *terrible* concept; scholarship constantly reshapes 'folk' reality
 
 --
 
 ## Medieval Complications
 
-* Your four domains: <span style='font-variant: small-caps;'>Education, Law, Medicine, Religion</span>
-* In medieval England, these are not sealed professional spheres
+* WAW-ME's four domains: <span style='font-variant: small-caps;'>Education, Law, Medicine, Religion</span>
+* In this time period, these are not sealed professional spheres
   * Education conducted by religious institutions
   * Law intertwined with religious authority
   * Medicine entangled with theology and natural philosophy
-  * Religion touches everything (perhaps...)
+  * Religion can touch everything (perhaps...)
 * 'Technical' vocabulary circulates across domains
 * The 'intelligent average individual' might be literate, clergy-adjacent, and familiar with all four
 
@@ -75,7 +79,7 @@
   * 01.17 <span style='font-variant: small-caps;'>The supernatural</span> → <span style='font-variant: small-caps;'>External World</span> (explaining phenomena)
   * 03.07 <span style='font-variant: small-caps;'>Faith</span> → <span style='font-variant: small-caps;'>Social World</span> (organised religion as institution)
 * Rationale: supernatural beings/manifestations vs social practice
-* Works tolerably for Modern English, where we distinguish 'believing in ghosts' from 'going to church'
+* Works tolerably for Modern English, where many (?) speakers distinguish 'believing in vampires' from 'going to church'
 
 --
 
@@ -84,7 +88,7 @@
 * Where does *charm* go?
   * Medical practice? (remedy for illness)
   * Folk belief? (magical intervention)
-  * Orthodox religion? (prayer, blessing, invocation)
+  * Liturgical observation? (prayer, blessing, invocation)
   * All three simultaneously?
 * Where does *blessing* go?
   * Priestly function (<span style='font-variant: small-caps;'>Social World, Faith</span>)
@@ -97,14 +101,14 @@
 ## The Body and Its Humours
 
 * HTE classifies body parts functionally
-* *Teeth* → <span style='font-variant: small-caps;'>digestive system</span> (what they're for)
+* *Tooth/teeth* → <span style='font-variant: small-caps;'>digestive organs</span> (what they're for)
 * But medieval medicine thought in terms of:
   * Humours (choler, melancholy, phlegm, blood)
   * Elements (hot/cold, wet/dry)
   * Correspondences (planets, seasons, temperaments)
 * *Melancholy* in HTE sits in <span style='font-variant: small-caps;'>Mental World</span> (<span style='font-variant: small-caps;'>emotion/temperament</span>)
-* But for medieval physicians, it's equally physical: black bile, spleen, digestion
-* Whose 'folk' understanding governs?
+* But for medieval physicians, it's equally physical: black bile, spleen, digestion (Autumn, Saturn)
+* When and whose 'folk' understanding governs?
 
 --
 
@@ -116,7 +120,7 @@
   * Physical substance (<span style='font-variant: small-caps;'>External World</span>)
   * Psychological disposition (<span style='font-variant: small-caps;'>Mental World</span>)
   * Moral evaluation (<span style='font-variant: small-caps;'>Social World</span>)
-* Medieval usage does not separate these
+* Does medieval usage separate these?
 
 ---
 
@@ -141,11 +145,10 @@
 ## Where Does Penance Belong?
 
 * Religious duty
-* Legal remedy (in ecclesiastical courts)
-* Medical treatment (for spiritual sickness)
-* Educational process (moral correction)
-* HTE places it under <span style='font-variant: small-caps;'>Faith > religious practice</span>
-* But the word's *use* crosses all your domains
+* Legal remedy (in ecclesiastical courts?)
+* Medical treatment (for spiritual sickness?)
+* Educational process (moral correction?)
+* HTE places it in 12 places, many under <span style='font-variant: small-caps;'>Worship</span> but also <span style='font-variant: small-caps;'>Suffering</span>, <span style='font-variant: small-caps;'>Punishment</span>, <span style='font-variant: small-caps;'>Virtue</span>, <span style='font-variant: small-caps;'>Food</span>, and <span style='font-variant: small-caps;'>Deity</span>
 
 ---
 
@@ -169,7 +172,6 @@
 * These are etymologically and conceptually linked
 * Splitting them across <span style='font-variant: small-caps;'>Faith</span> and <span style='font-variant: small-caps;'>Medicine</span> loses something
 * Keeping them together distorts both categories
-* No solution is neutral
 
 ---
 
@@ -177,18 +179,16 @@
 
 * 'No set rules to follow'
 * 'One no sooner sets up a general principle than one is forced to revise it'
-* Each section allowed to develop its own semantic profile
+* Each section can be allowed to develop its own semantic profile
 * <span style='font-variant: small-caps;'>Musical instruments:</span> classified by playing method *and* construction
 * <span style='font-variant: small-caps;'>Plants:</span> both folk taxonomy and scientific taxonomy attempted
-* Result: 'modified folk taxonomy' — naïve view combined with more informed ones where necessary
+* Result: 'modified folk taxonomy' — naïve view combined with other views where necessary
+* But sometimes serving two principles means failing at both...
 
 --
 
-## The Value of Inconsistency
+## What Do the Citations Show?
 
-* Consistency would require imposing a single worldview
-* But language doesn't work that way
-* Different domains have different organising logics
 * The goal: classification that emerges from the data
 * 'We have thus tried as far as possible to allow the classification to emerge from the data rather than be imposed upon it' (Kay 1976)
 
@@ -203,3 +203,5 @@
 3. Should polysemous terms be split across the hierarchy (preserving category coherence) or kept together (preserving semantic history)?
 
 4. Can there be a 'folk taxonomy' for specialist vocabulary? Or is that a contradiction in terms?
+
+5. Who are the users of the resource and how would they want to navigate it?

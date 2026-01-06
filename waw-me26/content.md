@@ -64,7 +64,7 @@
 
 * WAW-ME's four domains: <span style='font-variant: small-caps;'>Education, Law, Medicine, Religion</span>
 * In this time period, these are not sealed professional spheres
-  * Education conducted by religious institutions
+  * Education primarily conducted by religious institutions
   * Law intertwined with religious authority
   * Medicine entangled with theology and natural philosophy
   * Religion can touch everything (perhaps...)

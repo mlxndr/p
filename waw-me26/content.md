@@ -17,6 +17,7 @@
 * Example: *writing desk*
   * Not: <span style='font-variant: small-caps;'>furniture and fittings > desk > writing desk</span>
   * But: <span style='font-variant: small-caps;'>communication > writing > writing materials > <span class='subtle'>[...]</span> > writing desk</span>
+* (This is easier to explain for the concrete domains...)
 
 --
 
@@ -26,7 +27,7 @@
 * Maintains semantic precision and keeps related vocabulary together
 * But creates questions for compounds: *sea salt* under <span style='font-variant: small-caps;'>salt</span> or <span style='font-variant: small-caps;'>sea</span>?
 * *Lava* classified with <span style='font-variant: small-caps;'>volcano</span>, *and* with <span style='font-variant: small-caps;'>igneous rock</span>
-
+* *Blasphemy* classified with <span style='font-variant: small-caps;'>worship</span>, not <span style='font-variant: small-caps;'>sin</span> or <span style='font-variant: small-caps;'>law</span>
 
 --
 
@@ -73,9 +74,22 @@
 
 ---
 
-## Faith/Supernatural Split
+## What is lexicography for?
 
-* HTE separates two related areas:
+* Lexicography is for a *user*
+* A conceptual structure is:
+  * A finding aid
+  * A navigation aid
+  * A proximity browser
+  * A means of clustering data
+* It is tempting to view H&vW's 'intelligent average individual' as a contemporaneous speaker, but should it be an anachronistic user?
+* For a technical domain, what is average?
+
+---
+
+### Too Many Examples
+
+* HT separates two related areas:
   * 01.17 <span style='font-variant: small-caps;'>The supernatural</span> → <span style='font-variant: small-caps;'>External World</span> (explaining phenomena)
   * 03.07 <span style='font-variant: small-caps;'>Faith</span> → <span style='font-variant: small-caps;'>Social World</span> (organised religion as institution)
 * Rationale: supernatural beings/manifestations vs social practice
@@ -100,13 +114,13 @@
 
 ## The Body and Its Humours
 
-* HTE classifies body parts functionally
+* HT classifies body parts functionally
 * *Tooth/teeth* → <span style='font-variant: small-caps;'>digestive organs</span> (what they're for)
 * But medieval medicine thought in terms of:
   * Humours (choler, melancholy, phlegm, blood)
   * Elements (hot/cold, wet/dry)
   * Correspondences (planets, seasons, temperaments)
-* *Melancholy* in HTE sits in <span style='font-variant: small-caps;'>Mental World</span> (<span style='font-variant: small-caps;'>emotion/temperament</span>)
+* *Melancholy* in HT sits in <span style='font-variant: small-caps;'>Mental World</span> (<span style='font-variant: small-caps;'>emotion/temperament</span>)
 * But for medieval physicians, it's equally physical: black bile, spleen, digestion (Autumn, Saturn)
 * When and whose 'folk' understanding governs?
 
@@ -121,6 +135,8 @@
   * Psychological disposition (<span style='font-variant: small-caps;'>Mental World</span>)
   * Moral evaluation (<span style='font-variant: small-caps;'>Social World</span>)
 * Does medieval usage separate these?
+* Chaucer, *Nun’s Priest’s Tale:* 'the greete superfluytee/of youre rede colera' – the passage has a unified semantic concept (although complex), should all the concepts of these be really scattered around a thesaurus?
+
 
 ---
 
@@ -133,7 +149,7 @@
 * *Benefit of clergy*
   * A legal privilege
   * Defined by religious status
-  * Tested by reading ability (<span style='font-variant: small-caps;'>Education</span>)
+  * Tested by reading ability eg Ps. 51:1 (<span style='font-variant: small-caps;'>Education</span>)
 * *Heresy*
   * A belief (<span style='font-variant: small-caps;'>Mental World</span>)
   * A sin (<span style='font-variant: small-caps;'>Faith</span>)
@@ -148,11 +164,21 @@
 * Legal remedy (in ecclesiastical courts?)
 * Medical treatment (for spiritual sickness?)
 * Educational process (moral correction?)
-* HTE places it in 12 places, many under <span style='font-variant: small-caps;'>Worship</span> but also <span style='font-variant: small-caps;'>Suffering</span>, <span style='font-variant: small-caps;'>Punishment</span>, <span style='font-variant: small-caps;'>Virtue</span>, <span style='font-variant: small-caps;'>Food</span>, and <span style='font-variant: small-caps;'>Deity</span>
+* HT places it in 12 places, many under <span style='font-variant: small-caps;'>Worship</span> but also <span style='font-variant: small-caps;'>Suffering</span>, <span style='font-variant: small-caps;'>Punishment</span>, <span style='font-variant: small-caps;'>Virtue</span>, <span style='font-variant: small-caps;'>Food</span>, and <span style='font-variant: small-caps;'>Deity</span>
+
+--
+
+## Other Headaches You've Probably Already Had
+
+* Blasphemy (<span style='font-variant: small-caps;'>Sin</span>? <span style='font-variant: small-caps;'>Law</span>? <span style='font-variant: small-caps;'>Wrongdoing</span>?)
+* Heresy (<span style='font-variant: small-caps;'>Worship</span>? <span style='font-variant: small-caps;'>Law</span>? <span style='font-variant: small-caps;'>Sin</span>?)
+* Usury (<span style='font-variant: small-caps;'>Sin</span>? <span style='font-variant: small-caps;'>Trade</span>?)
+* Simony (<span style='font-variant: small-caps;'>Commerce</span>? <span style='font-variant: small-caps;'>Worship</span>? <span style='font-variant: small-caps;'>Sin</span>? <span style='font-variant: small-caps;'>Law</span>? <span style='font-variant: small-caps;'>Corruption</span>?)
+* Tithe (<span style='font-variant: small-caps;'>Tax</span>? <span style='font-variant: small-caps;'>Religious administration</span>? <span style='font-variant: small-caps;'>Agriculture</span>? <span style='font-variant: small-caps;'>Proportion</span>?)
 
 ---
 
-## 'Least Extension' and Polysemy
+## Lump or Split
 
 * Principle of least extension works well for monosemous terms
 * But polysemous terms pull in multiple directions
@@ -160,48 +186,46 @@
   * Split senses across the hierarchy? (loses connections)
   * Keep senses together in one location? (distorts the category)
   * Cross-reference? (which is 'primary'?)
-* HTE generally splits by sense
-* But this can obscure historical semantic connections
+* HT generally splits by sense
+* There's an aim to be isomorphic, sense-wise, with the OED
+* But sometimes serving two structures means failing at both...
 
 --
 
 ## Cure
 
+* Wycliffite Bible: 'cure of soulis'/'cure of siknesses' — same word, related concepts
 * Spiritual sense: care of souls (*cura animarum*)
 * Medical sense: treatment of disease
 * These are etymologically and conceptually linked
 * Splitting them across <span style='font-variant: small-caps;'>Faith</span> and <span style='font-variant: small-caps;'>Medicine</span> loses something
 * Keeping them together distorts both categories
 
----
-
-## Principled Inconsistency
-
-* 'No set rules to follow'
-* 'One no sooner sets up a general principle than one is forced to revise it'
-* Each section can be allowed to develop its own semantic profile
-* <span style='font-variant: small-caps;'>Musical instruments:</span> classified by playing method *and* construction
-* <span style='font-variant: small-caps;'>Plants:</span> both folk taxonomy and scientific taxonomy attempted
-* Result: 'modified folk taxonomy' — naïve view combined with other views where necessary
-* But sometimes serving two principles means failing at both...
-
 --
 
-## What Do the Citations Show?
+## Fear
 
-* The goal: classification that emerges from the data
-* 'We have thus tried as far as possible to allow the classification to emerge from the data rather than be imposed upon it' (Kay 1976)
+* Should fear of God be near the fear of spiders?
+* What do we gain and what do we lose by each option?
+* *Are we importing the flaws of dictionaries to sit alongside the flaws of thesauruses to compound them?*
+
+---
+
+## BTh Analogues
+
+* Compared to everyday life, the learned professions are substantially *conceptual*
+* What's missing from this hierarchy:
+  * Concepts/Doctrines/Principles — where does *transubstantiation* go? *Habeas corpus?* Are the four humours instruments or materials?
+  * Statuses/Conditions/States — *excommunicated, beneficed, in holy orders, under interdict*, relational and abstract concepts, are they agents?
+  * Rights/Duties/Powers — legal and ecclesiastical vocabulary merges rights, obligations, privileges
+  * Qualities/Properties — in medicine, hot, cold, wet, dry are diagnostic and therapeutic categories rather than substances
 
 ---
 
 ## Open Questions
 
-1. When classifying ME specialised vocabulary, whose perspective should govern: the medieval specialist, the medieval layperson, or the modern user?
-
-2. If a term functions across multiple domains (<span style='font-variant: small-caps;'>medicine/religion, law/religion</span>), what counts as 'least extension'?
-
-3. Should polysemous terms be split across the hierarchy (preserving category coherence) or kept together (preserving semantic history)?
-
-4. Can there be a 'folk taxonomy' for specialist vocabulary? Or is that a contradiction in terms?
-
-5. Who are the users of the resource and how would they want to navigate it?
+1. Should the 'intelligent average individual' be a medieval speaker or an anachronistic modern user? What changes if we choose one over the other?
+2. The proposed hierarchy (Agents/Practitioners, Locations/Institutions, Instruments, Processes, Materials/Substances/Objects, Documents) works well for material culture. Will it do justice to concepts, statuses, doctrines, relationships, and rights?
+3. Can 'folk taxonomy' apply to highly abstract concepts at all? Should fear of God sit near fear of spiders? What does 'what's it for?' mean when applied to sin, justice, or heresy?
+4. Should polysemous terms be split (preserving category coherence) or kept together (preserving semantic connections)? Or are we compounding dictionary flaws with thesaurus flaws?
+5. For a specialised domain, what counts as 'average'? Who navigates a thesaurus of learned professions, and what are they looking for?

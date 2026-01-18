@@ -148,13 +148,16 @@
 
         }
 
-        // Apply background gradient via JS - try multiple approaches
-        // Run after a delay to ensure plugin CSS is fully loaded
+        // Apply background gradient via JS - force inline style
+        // Run after delay to ensure plugin is fully ready
         setTimeout(function() {
             const menus = document.querySelectorAll('.slide-menu');
             menus.forEach(function(menu) {
-                menu.style.setProperty('background', 'linear-gradient(180deg, #1a1a1a 0%, #252525 100%)', 'important');
-                menu.style.setProperty('background-color', '#1a1a1a', 'important');
+                // Force gradient with inline style - highest priority
+                menu.setAttribute('style',
+                    'background: linear-gradient(180deg, #0d0d0d 0%, #2a2a2a 100%) !important; ' +
+                    'background-color: #1a1a1a !important;'
+                );
             });
         }, 100);
 

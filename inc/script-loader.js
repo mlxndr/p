@@ -1,37 +1,45 @@
 function loadScripts() {
+  // Helper to load a script with error handling
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = resolve;
+      script.onerror = () => reject(new Error(`Failed to load script: ${src}`));
+      document.body.appendChild(script);
+    });
+  }
+
+  // Show error to user
+  function showError(message) {
+    console.error(message);
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = 'position:fixed;top:20px;left:20px;right:20px;padding:20px;background:#fee;border:2px solid #c00;color:#900;font-family:sans-serif;z-index:99999;border-radius:8px;';
+    errorDiv.innerHTML = '<strong>Presentation failed to load</strong><br>' + message + '<br><small>Check the browser console for details.</small>';
+    document.body.appendChild(errorDiv);
+  }
+
   // Load core script first
-  const coreScript = document.createElement('script');
-  coreScript.src = scriptConfig.core;
-  coreScript.onload = () => {
-    // After core loads, load enabled plugins in parallel
-    const enabledPlugins = Object.entries(scriptConfig.plugins)
-      .filter(([_, plugin]) => plugin.enabled)
-      .map(([_, plugin]) => plugin.path);
-    
-    // Load all plugins
-    const loadPromises = enabledPlugins.map(path => {
-      return new Promise((resolve) => {
-        const script = document.createElement('script');
-        script.src = path;
-        script.onload = resolve;
-        document.body.appendChild(script);
-      });
-    });
-    
-    // After all plugins load, load config
-    Promise.all(loadPromises).then(() => {
-      const configScript = document.createElement('script');
-      configScript.src = scriptConfig.config;
-      document.body.appendChild(configScript);
-      
+  loadScript(scriptConfig.core)
+    .then(() => {
+      // After core loads, load enabled plugins in parallel
+      const enabledPlugins = Object.entries(scriptConfig.plugins)
+        .filter(([_, plugin]) => plugin.enabled)
+        .map(([_, plugin]) => plugin.path);
+
+      return Promise.all(enabledPlugins.map(loadScript));
+    })
+    .then(() => {
+      // After all plugins load, load config
+      return loadScript(scriptConfig.config);
+    })
+    .then(() => {
       // Setup theme-based elements after config is loaded
-      configScript.onload = () => {
-        setupThemeBasedElements();
-      };
+      setupThemeBasedElements();
+    })
+    .catch(error => {
+      showError(error.message);
     });
-  };
-  
-  document.body.appendChild(coreScript);
 }
 
 // Function to set up theme-based elements (logos and QR codes)
@@ -150,14 +158,4 @@ function setupThemeBasedElements() {
   if (themeLink) {
     observer.observe(themeLink, { attributes: true });
   }
-  
-  // Handle when the theme is changed via the menu or clicks
-  document.addEventListener('click', function() {
-    setTimeout(updateThemeElements, 100);
-  });
-  
-  // Handle when the theme is changed via keyboard shortcuts
-  document.addEventListener('keydown', function() {
-    setTimeout(updateThemeElements, 100);
-  });
 }

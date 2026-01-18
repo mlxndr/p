@@ -406,6 +406,27 @@ li::marker {
 .fa-universal-access::before { content: '\f29a'; }
 .fa-universal-access::after { content: '\10f29a'; }
 
+.fa-university::before { content: '\f19c'; }
+.fa-university::after { content: '\10f19c'; }
+
+.fa-font-case::before { content: '\f866'; }
+.fa-font-case::after { content: '\10f866'; }
+
+.fa-transporter-2::before { content: '\e044'; }
+.fa-transporter-2::after { content: '\10e044'; }
+
+.fa-eye-slash::before { content: '\f070'; }
+.fa-eye-slash::after { content: '\10f070'; }
+
+.fa-arrows::before { content: '\f047'; }
+.fa-arrows::after { content: '\10f047'; }
+
+.fa-search-plus::before { content: '\f00e'; }
+.fa-search-plus::after { content: '\10f00e'; }
+
+.fa-circle-notch::before { content: '\f1ce'; }
+.fa-circle-notch::after { content: '\10f1ce'; }
+
 /* ========================================
    Menu Visual Enhancements
    ======================================== */
@@ -414,10 +435,48 @@ li::marker {
 .slide-menu {
     --menu-past-color: #6a9955;
     --menu-active-color: #569cd6;
-    --menu-future-color: #808080;
-    --menu-hover-bg: rgba(255,255,255,0.05);
-    --menu-selected-bg: rgba(86,156,214,0.15);
-    --menu-divider-color: rgba(255,255,255,0.1);
+    --menu-future-color: #a0a0a0;
+    --menu-hover-bg: rgba(255,255,255,0.12);
+    --menu-selected-bg: rgba(86,156,214,0.25);
+    --menu-divider-color: rgba(255,255,255,0.15);
+}
+
+/* Menu title */
+.slide-menu-title {
+    font-family: var(--r-main-font);
+    font-size: 0.9em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em;
+    text-align: center;
+    padding: 12px 18px 8px;
+    color: #ccc;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Colourful toolbar icons */
+.slide-menu-toolbar li[data-panel="Slides"] i {
+    --fa-primary-color: #74b9ff;
+    --fa-secondary-color: #a29bfe;
+}
+
+.slide-menu-toolbar li[data-panel="Custom0"] i {
+    --fa-primary-color: #55efc4;
+    --fa-secondary-color: #00b894;
+}
+
+.slide-menu-toolbar li[data-panel="Themes"] i {
+    --fa-primary-color: #ffeaa7;
+    --fa-secondary-color: #fdcb6e;
+}
+
+.slide-menu-toolbar li[data-panel="Transitions"] i {
+    --fa-primary-color: #dfe6e9;
+    --fa-secondary-color: #b2bec3;
+}
+
+.slide-menu-toolbar li.slide-menu-toolbar-button i {
+    --fa-primary-color: #ff7675;
+    --fa-secondary-color: #d63031;
 }
 
 /* Sub-slides: smaller, lighter, more indented */
@@ -434,7 +493,7 @@ li::marker {
 /* Slide state colors */
 .slide-menu-item.past {
     color: var(--menu-past-color) !important;
-    opacity: 0.7;
+    opacity: 0.85;
 }
 
 .slide-menu-item.active {
@@ -445,23 +504,23 @@ li::marker {
 
 .slide-menu-item.future {
     color: var(--menu-future-color) !important;
-    opacity: 0.5;
+    opacity: 0.7;
 }
 
 /* Vertical slide states inherit from parent */
 .slide-menu-item-vertical.past {
     color: var(--menu-past-color) !important;
-    opacity: 0.6;
+    opacity: 0.75;
 }
 
 .slide-menu-item-vertical.active {
     color: var(--menu-active-color) !important;
-    opacity: 0.9;
+    opacity: 0.95;
 }
 
 .slide-menu-item-vertical.future {
     color: var(--menu-future-color) !important;
-    opacity: 0.4;
+    opacity: 0.6;
 }
 
 /* Hover effects */
@@ -514,17 +573,23 @@ li::marker {
     background-attachment: local, local, scroll, scroll;
 }
 
-/* Theme list icons */
+/* Theme list layout */
 .slide-menu-panel[data-panel="Themes"] li {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
-.theme-icon {
-    width: 1.2em;
+/* Theme icon container for stacking */
+.theme-icons {
+    display: flex;
+    gap: 4px;
     flex-shrink: 0;
-    opacity: 0.7;
+}
+
+.theme-icons i {
+    font-size: 0.9em;
+    opacity: 0.8;
 }
 
 /* Theme icon colors - Light themes */
@@ -551,27 +616,83 @@ li::marker {
     --fa-secondary-color: #fdcb6e;
 }
 
-/* Theme icon colors - Color-only (user can customize) */
+/* Theme icon colors - University */
+.theme-icon.fa-university {
+    --fa-primary-color: #003865;
+    --fa-secondary-color: #74b9ff;
+}
+
+/* Theme icon colors - Font variant */
+.theme-icon.fa-font-case {
+    --fa-primary-color: #b2bec3;
+    --fa-secondary-color: #dfe6e9;
+}
+
+/* Theme icon colors - Color circle (duotone for FG/BG) */
 .theme-icon.fa-circle {
-    --fa-primary-color: #4a4a4a;
-    --fa-secondary-color: #4a4a4a;
+    --fa-secondary-opacity: 1;
 }
 
 /* Section headers in theme list */
 .theme-section-header {
-    font-size: 0.7em;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    color: var(--menu-active-color);
-    padding: 15px 18px 5px !important;
+    font-family: var(--r-main-font);
+    font-size: 0.85em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em;
+    color: #ccc;
+    padding: 15px 18px 8px !important;
     border-top: 1px solid var(--menu-divider-color);
-    margin-top: 10px;
+    margin-top: 8px;
     cursor: default !important;
-    opacity: 0.8;
     pointer-events: none;
 }
 
 .theme-section-header:first-child {
     border-top: none;
     margin-top: 0;
+}
+
+/* Transition list icons */
+.slide-menu-panel[data-panel="Transitions"] li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.transition-icon {
+    font-size: 0.9em;
+    opacity: 0.7;
+    width: 1.2em;
+    flex-shrink: 0;
+}
+
+/* Transition icon colors */
+.transition-icon.fa-transporter-2 {
+    --fa-primary-color: #a29bfe;
+    --fa-secondary-color: #6c5ce7;
+}
+
+.transition-icon.fa-eye-slash {
+    --fa-primary-color: #636e72;
+    --fa-secondary-color: #b2bec3;
+}
+
+.transition-icon.fa-arrows {
+    --fa-primary-color: #74b9ff;
+    --fa-secondary-color: #0984e3;
+}
+
+.transition-icon.fa-circle-notch {
+    --fa-primary-color: #fdcb6e;
+    --fa-secondary-color: #f39c12;
+}
+
+.transition-icon.fa-circle-notch.concave {
+    --fa-primary-color: #f39c12;
+    --fa-secondary-color: #fdcb6e;
+}
+
+.transition-icon.fa-search-plus {
+    --fa-primary-color: #55efc4;
+    --fa-secondary-color: #00b894;
 }

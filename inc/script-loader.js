@@ -140,22 +140,50 @@ function setupThemeBasedElements() {
     switchLogos();
     updateQRCodes();
   }
-  
+
+  // Make updateThemeElements available globally for other scripts
+  window.updateThemeElements = updateThemeElements;
+
   // Initial update with delay to ensure theme is loaded
   setTimeout(updateThemeElements, 500);
-  
-  // Watch for theme changes
-  const observer = new MutationObserver(function(mutations) {
+
+  // Watch for theme changes via attribute changes on theme link
+  let currentThemeLink = null;
+
+  function observeThemeLink(themeLink) {
+    if (!themeLink || themeLink === currentThemeLink) return;
+    currentThemeLink = themeLink;
+
+    const attrObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(mutation) {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
+          updateThemeElements();
+        }
+      });
+    });
+    attrObserver.observe(themeLink, { attributes: true });
+  }
+
+  // Start observing the initial theme link
+  const { themeLink } = getThemeState();
+  if (themeLink) {
+    observeThemeLink(themeLink);
+  }
+
+  // Also watch document.head for new theme links being added
+  // (reveal.js-menu removes and replaces the theme link element)
+  const headObserver = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
-      if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
-        updateThemeElements();
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach(function(node) {
+          if (node.nodeName === 'LINK' && node.id === 'theme') {
+            // New theme link added - observe it and trigger update
+            observeThemeLink(node);
+            setTimeout(updateThemeElements, 100);
+          }
+        });
       }
     });
   });
-  
-  // Start observing the theme link for href changes
-  const { themeLink } = getThemeState();
-  if (themeLink) {
-    observer.observe(themeLink, { attributes: true });
-  }
+  headObserver.observe(document.head, { childList: true });
 }

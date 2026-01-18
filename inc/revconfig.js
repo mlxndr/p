@@ -54,44 +54,46 @@
         keyboard: true,
         markers: true,
         themes: [
+            // MAIN (3)
             {
                 name: 'Black on Cream',
                 theme: '../inc/css/th-l-cr.css',
                 light: true,
-                iconColourFG: '#0d0d0d',
-                iconColourBG: '#f5f0e6'
+                iconColourFG: '#0D0D0D',
+                iconColourBG: '#F2F2EA'
             },
             {
                 name: 'White on Twilight Background',
                 theme: '../inc/css/th-d-bg-twilight.css',
                 light: false,
                 hasImage: true,
-                iconColourFG: '#ffffff',
-                iconColourBG: '#2d3436'
+                iconColourFG: '#FFFFFF',
+                iconColourBG: '#183153'
             },
             {
                 name: 'High Accessibility',
                 theme: '../inc/css/th-l-acc.css',
                 light: true,
                 accessible: true,
-                iconColourFG: '#000000',
-                iconColourBG: '#fffef0'
+                iconColourFG: '#0D0D0D',
+                iconColourBG: '#EDD1B0'
             },
+            // FONT VARIANTS (3)
             {
                 name: 'All Sans-Serif: Black on Cream',
                 theme: '../inc/css/th-l-cr-m.css',
                 light: true,
                 sansSerif: true,
-                iconColourFG: '#0d0d0d',
-                iconColourBG: '#f5f0e6'
+                iconColourFG: '#0D0D0D',
+                iconColourBG: '#F2F2EA'
             },
             {
                 name: 'All Sans-Serif: Black on Cream, Thin Body Text',
                 theme: '../inc/css/th-l-cr-m-thin.css',
                 light: true,
                 sansSerif: true,
-                iconColourFG: '#0d0d0d',
-                iconColourBG: '#f5f0e6'
+                iconColourFG: '#0D0D0D',
+                iconColourBG: '#F2F2EA'
             },
             {
                 name: 'All Sans-Serif: White on Twilight Background',
@@ -99,147 +101,151 @@
                 light: false,
                 hasImage: true,
                 sansSerif: true,
-                iconColourFG: '#ffffff',
-                iconColourBG: '#2d3436'
+                iconColourFG: '#FFFFFF',
+                iconColourBG: '#183153'
             },
+            // LIGHT THEMES (3)
             {
-                name: 'Light: Paper',
+                name: 'Paper',
                 theme: '../inc/css/th-l-bg-paper.css',
                 light: true,
                 hasImage: true,
-                iconColourFG: '#0d0d0d',
-                iconColourBG: '#e8e0d0'
+                iconColourFG: '#0D0D0D',
+                iconColourBG: '#F2F2EA'
             },
             {
-                name: 'Light: Plaster',
+                name: 'Plaster',
                 theme: '../inc/css/th-l-bg-plaster.css',
                 light: true,
                 hasImage: true,
-                iconColourFG: '#0d0d0d',
-                iconColourBG: '#f0ebe0'
+                iconColourFG: '#0D0D0D',
+                iconColourBG: '#F2F2EA'
             },
             {
-                name: 'Light: Canvas',
+                name: 'Canvas',
                 theme: '../inc/css/th-l-bg-canvas.css',
                 light: true,
                 hasImage: true,
-                iconColourFG: '#0d0d0d',
-                iconColourBG: '#f0e8d8'
+                iconColourFG: '#0D0D0D',
+                iconColourBG: '#F2F2EA'
             },
+            // DARK THEMES (7)
             {
-                name: 'Dark: Black',
+                name: 'Black',
                 theme: '../inc/css/th-d-bk.css',
                 light: false,
-                iconColourFG: '#ffffff',
+                iconColourFG: '#FFFFFF',
                 iconColourBG: '#000000'
             },
             {
-                name: 'Dark: Blue',
+                name: 'Blue',
                 theme: '../inc/css/th-d-bu.css',
                 light: false,
-                iconColourFG: '#ffffff',
-                iconColourBG: '#1a1a2e'
+                iconColourFG: '#FFFFFF',
+                iconColourBG: '#183153'
             },
             {
-                name: 'Dark: Blue with Inverted Fonts',
+                name: 'Blue with Inverted Fonts',
                 theme: '../inc/css/th-d-bu-invert.css',
                 light: false,
-                iconColourFG: '#1a1a2e',
-                iconColourBG: '#ffffff'
+                iconColourFG: '#183153',
+                iconColourBG: '#FFFFFF'
             },
             {
-                name: 'Dark: Green',
+                name: 'Green',
                 theme: '../inc/css/th-d-gr.css',
                 light: false,
-                iconColourFG: '#ffffff',
-                iconColourBG: '#1a2e1a'
+                iconColourFG: '#FFFFFF',
+                iconColourBG: '#353935'
             },
             {
-                name: 'Dark: Polygons Blue',
+                name: 'Polygons Blue',
                 theme: '../inc/css/th-d-bg-polygonblue.css',
                 light: false,
                 hasImage: true,
-                iconColourFG: '#ffffff',
-                iconColourBG: '#1a1a2e'
+                iconColourFG: '#FFFFFF',
+                iconColourBG: '#183153'
             },
             {
-                name: 'Dark: Polygons Red',
+                name: 'Polygons Red',
                 theme: '../inc/css/th-d-bg-polygonred.css',
                 light: false,
                 hasImage: true,
-                iconColourFG: '#ffffff',
+                iconColourFG: '#FFFFFF',
                 iconColourBG: '#2e1a1a'
             },
             {
-                name: 'Dark: Black Rows',
+                name: 'Black Rows',
                 theme: '../inc/css/th-d-bg-rows.css',
                 light: false,
                 hasImage: true,
-                iconColourFG: '#ffffff',
-                iconColourBG: '#000000'
+                iconColourFG: '#FFFFFF',
+                iconColourBG: '#183153'
             },
+            // UNIVERSITY OF GLASGOW (3)
             {
-                name: 'Experimental: Indoor Kid',
-                theme: '../inc/css/th-l-indoor.css',
-                light: true,
-                iconColourFG: '#333333',
-                iconColourBG: '#f5f5dc'
-            },
-            {
-                name: 'Experimental: UofG Blue',
+                name: 'UofG Blue',
                 theme: '../inc/css/th-d-bg-uog-bu.css',
                 light: false,
                 hasImage: true,
                 university: true,
-                iconColourFG: '#ffffff',
+                iconColourFG: '#FFFFFF',
                 iconColourBG: '#003865'
             },
             {
-                name: 'Experimental: UofG Blue with Inverted Fonts',
+                name: 'UofG Blue with Inverted Fonts',
                 theme: '../inc/css/th-d-bg-uog-bu-invert.css',
                 light: false,
                 hasImage: true,
                 university: true,
                 iconColourFG: '#003865',
-                iconColourBG: '#ffffff'
+                iconColourBG: '#FFFFFF'
             },
             {
-                name: 'Experimental: UofG Black',
+                name: 'UofG Black',
                 theme: '../inc/css/th-d-bg-uog-bl.css',
                 light: false,
                 hasImage: true,
                 university: true,
-                iconColourFG: '#ffffff',
+                iconColourFG: '#FFFFFF',
                 iconColourBG: '#000000'
             },
+            // EXPERIMENTAL (5)
             {
-                name: 'Experimental: Cream with Inverted Fonts',
-                theme: '../inc/css/th-l-e-cr-invert.css',
+                name: 'Indoor Kid',
+                theme: '../inc/css/th-l-indoor.css',
                 light: true,
-                iconColourFG: '#f5f0e6',
-                iconColourBG: '#0d0d0d'
+                iconColourFG: '#0D0D0D',
+                iconColourBG: '#F2F2EA'
             },
             {
-                name: 'Experimental: Twilight with Inverted Fonts',
+                name: 'Cream with Inverted Fonts',
+                theme: '../inc/css/th-l-e-cr-invert.css',
+                light: true,
+                iconColourFG: '#F2F2EA',
+                iconColourBG: '#0D0D0D'
+            },
+            {
+                name: 'Twilight with Inverted Fonts',
                 theme: '../inc/css/th-d-e-bg-twilight-invert.css',
                 light: false,
                 hasImage: true,
-                iconColourFG: '#2d3436',
-                iconColourBG: '#ffffff'
+                iconColourFG: '#FFFFFF',
+                iconColourBG: '#183153'
             },
             {
-                name: 'Experimental: Light Green',
+                name: 'Light Green',
                 theme: '../inc/css/th-d-e-lgr.css',
                 light: false,
-                iconColourFG: '#ffffff',
-                iconColourBG: '#2d5a2d'
+                iconColourFG: '#326A2B',
+                iconColourBG: '#A7BFC0'
             },
             {
-                name: 'Experimental: Orange',
+                name: 'Orange',
                 theme: '../inc/css/th-d-e-or.css',
                 light: false,
-                iconColourFG: '#ffffff',
-                iconColourBG: '#8b4000'
+                iconColourFG: '#F88605',
+                iconColourBG: '#742100'
             }
         ],
         transitions: true,
@@ -321,10 +327,10 @@
                 iconContainer.appendChild(icon);
             }
 
-            // Colour indicator (uses duotone circle)
+            // Colour indicator (uses duotone check-square)
             if (config.iconColourFG || config.iconColourBG) {
                 const icon = document.createElement('i');
-                icon.className = 'fad fa-circle theme-icon';
+                icon.className = 'fad fa-check-square theme-icon';
                 if (config.iconColourFG) {
                     icon.style.setProperty('--fa-primary-color', config.iconColourFG);
                 }
@@ -343,17 +349,16 @@
             const items = themePanel.querySelectorAll('li:not(.theme-section-header)');
             let lastType = '';
 
-            items.forEach(item => {
-                const text = item.textContent;
+            items.forEach((item, idx) => {
                 let currentType = '';
 
-                // First 3 are Main themes (no star prefix now)
-                const itemIndex = Array.from(themePanel.querySelectorAll('li:not(.theme-section-header)')).indexOf(item);
-                if (itemIndex < 3) currentType = 'Main';
-                else if (text.includes('Sans-Serif')) currentType = 'Font Variants';
-                else if (text.startsWith('Light:')) currentType = 'Light Themes';
-                else if (text.startsWith('Dark:')) currentType = 'Dark Themes';
-                else if (text.startsWith('Experimental:')) currentType = 'Experimental';
+                // Determine section by index (themes are in fixed order)
+                if (idx < 3) currentType = 'Main';
+                else if (idx < 6) currentType = 'Font Variants';
+                else if (idx < 9) currentType = 'Light Themes';
+                else if (idx < 16) currentType = 'Dark Themes';
+                else if (idx < 19) currentType = 'University of Glasgow';
+                else currentType = 'Experimental';
 
                 if (currentType && currentType !== lastType) {
                     const header = document.createElement('li');

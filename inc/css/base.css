@@ -427,18 +427,60 @@ li::marker {
 .fa-circle-notch::before { content: '\f1ce'; }
 .fa-circle-notch::after { content: '\10f1ce'; }
 
+.fa-check-square::before { content: '\f14a'; }
+.fa-check-square::after { content: '\10f14a'; }
+
 /* ========================================
    Menu Visual Enhancements
    ======================================== */
 
-/* Color system variables */
+/* Refined Dark colour scheme */
 .slide-menu {
-    --menu-past-color: #6a9955;
-    --menu-active-color: #569cd6;
-    --menu-future-color: #a0a0a0;
-    --menu-hover-bg: rgba(255,255,255,0.12);
-    --menu-selected-bg: rgba(86,156,214,0.25);
-    --menu-divider-color: rgba(255,255,255,0.15);
+    /* Rich dark background with subtle warmth */
+    background: linear-gradient(180deg, #1a1a1a 0%, #252525 100%) !important;
+
+    /* Colour system */
+    --menu-bg: #1e1e1e;
+    --menu-text: #e0e0e0;
+    --menu-text-muted: #a0a0a0;
+    --menu-accent: #5fa8d3;
+    --menu-past-color: #7cb987;
+    --menu-active-color: #5fa8d3;
+    --menu-future-color: #9a9a9a;
+    --menu-hover-bg: rgba(255,255,255,0.08);
+    --menu-selected-bg: rgba(95,168,211,0.2);
+    --menu-divider-color: rgba(255,255,255,0.08);
+    --menu-border: rgba(255,255,255,0.05);
+}
+
+/* Subtle inner shadow for depth */
+.slide-menu::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    box-shadow: inset 0 0 60px rgba(0,0,0,0.3);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Ensure content is above the shadow overlay */
+.slide-menu > * {
+    position: relative;
+    z-index: 1;
+}
+
+/* Refined toolbar styling */
+.slide-menu-toolbar {
+    background: rgba(0,0,0,0.2) !important;
+    border-bottom: 1px solid var(--menu-border) !important;
+}
+
+/* Menu items text color */
+.slide-menu-items li {
+    color: var(--menu-text);
 }
 
 /* Menu title */
@@ -449,8 +491,9 @@ li::marker {
     letter-spacing: 0.08em;
     text-align: center;
     padding: 12px 18px 8px;
-    color: #ccc;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    color: var(--menu-text);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    border-bottom: 1px solid var(--menu-border);
 }
 
 /* Colourful toolbar icons */
@@ -564,13 +607,14 @@ li::marker {
 /* Scroll shadows */
 .slide-menu-items {
     background:
-        linear-gradient(#333 30%, transparent),
-        linear-gradient(transparent, #333 70%) bottom,
+        linear-gradient(#1e1e1e 30%, transparent),
+        linear-gradient(transparent, #1e1e1e 70%) bottom,
         radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.3), transparent),
         radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.3), transparent) bottom;
     background-repeat: no-repeat;
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
+    padding-bottom: 20px;
 }
 
 /* Theme list layout */
@@ -592,44 +636,19 @@ li::marker {
     opacity: 0.8;
 }
 
-/* Theme icon colors - Light themes */
-.theme-icon.fa-lightbulb-on {
-    --fa-primary-color: #f5d742;
-    --fa-secondary-color: #ffeaa7;
-}
-
-/* Theme icon colors - Dark themes */
-.theme-icon.fa-moon-stars {
-    --fa-primary-color: #74b9ff;
-    --fa-secondary-color: #a29bfe;
-}
-
-/* Theme icon colors - Accessible */
+/* Monochrome theme attribute icons (not the colour indicator) */
+.theme-icon.fa-lightbulb-on,
+.theme-icon.fa-moon-stars,
+.theme-icon.fa-images,
+.theme-icon.fa-university,
+.theme-icon.fa-font-case,
 .theme-icon.fa-universal-access {
-    --fa-primary-color: #00b894;
-    --fa-secondary-color: #55efc4;
+    --fa-primary-color: #888;
+    --fa-secondary-color: #666;
 }
 
-/* Theme icon colors - Image backgrounds */
-.theme-icon.fa-images {
-    --fa-primary-color: #fd79a8;
-    --fa-secondary-color: #fdcb6e;
-}
-
-/* Theme icon colors - University */
-.theme-icon.fa-university {
-    --fa-primary-color: #003865;
-    --fa-secondary-color: #74b9ff;
-}
-
-/* Theme icon colors - Font variant */
-.theme-icon.fa-font-case {
-    --fa-primary-color: #b2bec3;
-    --fa-secondary-color: #dfe6e9;
-}
-
-/* Theme icon colors - Color circle (duotone for FG/BG) */
-.theme-icon.fa-circle {
+/* Colour check-square keeps dynamic colours from JS */
+.theme-icon.fa-check-square {
     --fa-secondary-opacity: 1;
 }
 
@@ -639,7 +658,7 @@ li::marker {
     font-size: 0.85em;
     font-feature-settings: "smcp", "c2sc";
     letter-spacing: 0.08em;
-    color: #ccc;
+    color: var(--menu-text-muted);
     padding: 15px 18px 8px !important;
     border-top: 1px solid var(--menu-divider-color);
     margin-top: 8px;
@@ -662,7 +681,8 @@ li::marker {
 .transition-icon {
     font-size: 0.9em;
     opacity: 0.7;
-    width: 1.2em;
+    min-width: 1.2em;
+    text-align: center;
     flex-shrink: 0;
 }
 

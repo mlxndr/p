@@ -530,7 +530,7 @@ html body .slide-menu-wrapper .slide-menu {
 .slide-menu-item.active {
     color: var(--menu-active-color) !important;
     opacity: 1;
-    font-weight: 500;
+    font-weight: bold;
 }
 
 .slide-menu-item.future {
@@ -547,6 +547,7 @@ html body .slide-menu-wrapper .slide-menu {
 .slide-menu-item-vertical.active {
     color: var(--menu-active-color) !important;
     opacity: 0.95;
+    font-weight: bold;
 }
 
 .slide-menu-item-vertical.future {
@@ -565,6 +566,7 @@ html body .slide-menu-wrapper .slide-menu {
 .active-menu-panel li.selected {
     background-color: var(--menu-selected-bg);
     border-left: 3px solid var(--menu-active-color);
+    font-weight: bold;
 }
 
 /* Toolbar button hover */
@@ -602,7 +604,12 @@ html body .slide-menu-wrapper .slide-menu {
     background-repeat: no-repeat;
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
-    padding-bottom: 60px;
+    padding-bottom: 80px;
+}
+
+/* Extra panel padding for scroll visibility */
+.slide-menu-panel {
+    padding-bottom: 20px;
 }
 
 /* Section headers in theme list */

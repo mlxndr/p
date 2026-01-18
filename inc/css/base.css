@@ -396,3 +396,420 @@ li::marker {
 
 .fa-sticky-note::before { content: '\f249'; }
 .fa-sticky-note::after { content: '\10f249'; }
+
+.fa-lightbulb-on::before { content: '\f672'; }
+.fa-lightbulb-on::after { content: '\10f672'; }
+
+.fa-moon-stars::before { content: '\f755'; }
+.fa-moon-stars::after { content: '\10f755'; }
+
+.fa-universal-access::before { content: '\f29a'; }
+.fa-universal-access::after { content: '\10f29a'; }
+
+.fa-university::before { content: '\f19c'; }
+.fa-university::after { content: '\10f19c'; }
+
+.fa-font-case::before { content: '\f866'; }
+.fa-font-case::after { content: '\10f866'; }
+
+.fa-transporter-2::before { content: '\e044'; }
+.fa-transporter-2::after { content: '\10e044'; }
+
+.fa-eye-slash::before { content: '\f070'; }
+.fa-eye-slash::after { content: '\10f070'; }
+
+.fa-arrows::before { content: '\f047'; }
+.fa-arrows::after { content: '\10f047'; }
+
+.fa-search-plus::before { content: '\f00e'; }
+.fa-search-plus::after { content: '\10f00e'; }
+
+.fa-circle-notch::before { content: '\f1ce'; }
+.fa-circle-notch::after { content: '\10f1ce'; }
+
+.fa-check-square::before { content: '\f14a'; }
+.fa-check-square::after { content: '\10f14a'; }
+
+.fa-stars::before { content: '\f762'; }
+.fa-stars::after { content: '\10f762'; }
+
+.fa-flask::before { content: '\f0c3'; }
+.fa-flask::after { content: '\10f0c3'; }
+
+.fa-code::before { content: '\f121'; }
+.fa-code::after { content: '\10f121'; }
+
+/* ========================================
+   Menu Visual Enhancements
+   ======================================== */
+
+/* Refined Dark colour scheme - use highest specificity */
+html body .slide-menu-wrapper .slide-menu {
+    /* Test with obvious gradient first */
+    background: linear-gradient(180deg, #0d0d0d 0%, #2a2a2a 100%) !important;
+    background-color: #1a1a1a !important;
+
+    /* Colour system */
+    --menu-bg: #1e1e1e;
+    --menu-text: #e0e0e0;
+    --menu-text-muted: #a0a0a0;
+    --menu-accent: #5fa8d3;
+    --menu-past-color: #7cb987;
+    --menu-active-color: #5fa8d3;
+    --menu-future-color: #9a9a9a;
+    --menu-hover-bg: rgba(255,255,255,0.08);
+    --menu-selected-bg: rgba(95,168,211,0.2);
+    --menu-divider-color: rgba(255,255,255,0.08);
+    --menu-border: rgba(255,255,255,0.05);
+}
+
+/* Refined toolbar styling */
+.slide-menu-toolbar {
+    background: rgba(0,0,0,0.2) !important;
+    border-bottom: 1px solid var(--menu-border) !important;
+}
+
+/* Menu items text color */
+.slide-menu-items li {
+    color: var(--menu-text);
+}
+
+/* Make anchors inherit color from parent li (overrides plugin's #ccc) */
+.slide-menu-item a,
+.slide-menu-item-vertical a {
+    color: inherit !important;
+}
+
+/* Menu title */
+.slide-menu-title {
+    font-family: var(--r-main-font);
+    font-size: 0.9em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em;
+    text-align: center;
+    padding: 12px 18px 8px;
+    color: var(--menu-text);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    border-bottom: 1px solid var(--menu-border);
+}
+
+/* Colourful toolbar icons */
+.slide-menu-toolbar li[data-panel="Slides"] i {
+    --fa-primary-color: #74b9ff;
+    --fa-secondary-color: #a29bfe;
+}
+
+.slide-menu-toolbar li[data-panel="Custom0"] i {
+    --fa-primary-color: #55efc4;
+    --fa-secondary-color: #00b894;
+}
+
+.slide-menu-toolbar li[data-panel="Themes"] i {
+    --fa-primary-color: #ffeaa7;
+    --fa-secondary-color: #fdcb6e;
+}
+
+.slide-menu-toolbar li[data-panel="Transitions"] i {
+    --fa-primary-color: #dfe6e9;
+    --fa-secondary-color: #b2bec3;
+}
+
+.slide-menu-toolbar li.slide-menu-toolbar-button i {
+    --fa-primary-color: #ff7675;
+    --fa-secondary-color: #d63031;
+}
+
+/* Sub-slides: smaller, lighter, more indented */
+.slide-menu-item-vertical {
+    font-size: 0.85em;
+    padding-left: 40px !important;
+}
+
+.slide-menu-item-vertical .slide-menu-item-vertical {
+    font-size: 0.8em;
+    padding-left: 55px !important;
+}
+
+/* Slide state colors */
+.slide-menu-item.past {
+    color: var(--menu-past-color) !important;
+    opacity: 0.85;
+}
+
+.slide-menu-item.active {
+    color: #fff !important;
+    opacity: 1;
+    font-weight: bold;
+}
+
+.slide-menu-item.future {
+    color: var(--menu-future-color) !important;
+    opacity: 0.7;
+}
+
+/* Vertical slide states inherit from parent */
+.slide-menu-item-vertical.past {
+    color: var(--menu-past-color) !important;
+    opacity: 0.75;
+}
+
+.slide-menu-item-vertical.active {
+    color: #fff !important;
+    opacity: 0.95;
+    font-weight: bold;
+}
+
+.slide-menu-item-vertical.future {
+    color: var(--menu-future-color) !important;
+    opacity: 0.6;
+}
+
+/* Hover effects */
+.slide-menu-item:hover,
+.slide-menu-item-vertical:hover {
+    background-color: var(--menu-hover-bg);
+    transition: background-color 0.15s ease;
+}
+
+/* Keep anchor color on hover (overrides plugin's white hover) */
+.slide-menu-item a:hover,
+.slide-menu-item-vertical a:hover,
+.slide-menu-panel[data-panel="Themes"] a:hover,
+.slide-menu-panel[data-panel="Transitions"] a:hover {
+    color: inherit !important;
+}
+
+/* Selected item highlight */
+.active-menu-panel li.selected {
+    background-color: var(--menu-selected-bg);
+    border-left: 3px solid var(--menu-active-color);
+    font-weight: bold;
+    color: #fff !important;
+}
+
+/* Toolbar button hover */
+.slide-menu-toolbar li:hover {
+    background-color: rgba(255,255,255,0.1);
+    transition: background-color 0.15s ease;
+}
+
+/* Active panel indicator */
+.slide-menu-toolbar li.active-toolbar-button {
+    border-bottom: 2px solid var(--menu-active-color);
+}
+
+/* Panel transitions and height fix for added Menu title */
+.slide-menu-panel {
+    transition: opacity 0.2s ease;
+    /* Plugin uses calc(100% - 60px) for toolbar only.
+       We added a ~40px Menu title, so need calc(100% - 100px) */
+    height: calc(100% - 100px) !important;
+}
+
+.slide-menu-panel.active-menu-panel {
+    animation: menuFadeIn 0.2s ease;
+}
+
+@keyframes menuFadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll shadows */
+.slide-menu-items {
+    background:
+        linear-gradient(#1e1e1e 30%, transparent),
+        linear-gradient(transparent, #1e1e1e 70%) bottom,
+        radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.3), transparent),
+        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.3), transparent) bottom;
+    background-repeat: no-repeat;
+    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+    background-attachment: local, local, scroll, scroll;
+    padding-bottom: 80px;
+}
+
+/* Section headers in theme list */
+.slide-menu-panel[data-panel="Themes"] .theme-section-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    font-family: var(--r-main-font);
+    font-size: 0.85em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em;
+    color: var(--menu-text-muted);
+    padding: 15px 18px 8px !important;
+    border-top: 1px solid var(--menu-divider-color);
+    margin-top: 8px;
+    cursor: default !important;
+    pointer-events: none;
+}
+
+.slide-menu-panel[data-panel="Themes"] .theme-section-header:first-of-type {
+    border-top: none;
+    margin-top: 0;
+}
+
+.theme-section-header span {
+    flex: 1;
+}
+
+.theme-section-header i {
+    font-size: 1em;
+    opacity: 0.6;
+    margin-left: auto;
+}
+
+/* Transition list icons */
+.slide-menu-panel[data-panel="Transitions"] li {
+    display: flex;
+    align-items: center;
+}
+
+.transition-icon {
+    font-size: 0.95em;
+    opacity: 0.9;
+    min-width: 1.4em;
+    margin-right: 10px;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+/* Transition icon colors - brighter */
+.transition-icon.fa-transporter-2 {
+    --fa-primary-color: #c4b5fd;
+    --fa-secondary-color: #a78bfa;
+}
+
+.transition-icon.fa-eye-slash {
+    --fa-primary-color: #9ca3af;
+    --fa-secondary-color: #d1d5db;
+}
+
+.transition-icon.fa-arrows {
+    --fa-primary-color: #93c5fd;
+    --fa-secondary-color: #60a5fa;
+}
+
+.transition-icon.fa-circle-notch {
+    --fa-primary-color: #fde68a;
+    --fa-secondary-color: #fbbf24;
+}
+
+.transition-icon.fa-circle-notch.concave {
+    /* Inverted: secondary becomes light, primary becomes dark */
+    --fa-primary-color: #92400e;
+    --fa-secondary-color: #fef3c7;
+}
+
+.transition-icon.fa-search-plus {
+    --fa-primary-color: #6ee7b7;
+    --fa-secondary-color: #34d399;
+}
+
+/* ===========================================
+   Keyboard Shortcuts Overlay (? key)
+   Styled to match menu design
+   =========================================== */
+
+.reveal > .overlay.overlay-help {
+    background: linear-gradient(180deg, rgba(13,13,13,0.97) 0%, rgba(42,42,42,0.97) 100%);
+    backdrop-filter: blur(8px);
+}
+
+.reveal > .overlay.overlay-help header {
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 15px;
+}
+
+.reveal > .overlay.overlay-help header a.close {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.reveal > .overlay.overlay-help header a.close:hover {
+    opacity: 1;
+}
+
+.reveal > .overlay.overlay-help .viewport {
+    color: var(--menu-text, #e0e0e0);
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner {
+    width: 500px;
+    max-width: 90vw;
+    padding: 30px 25px 60px;
+}
+
+/* Title styling - matches menu title */
+.reveal > .overlay.overlay-help .viewport .viewport-inner .title {
+    font-family: var(--r-main-font);
+    font-size: 0.95em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em;
+    color: var(--menu-text, #e0e0e0);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+}
+
+/* Table styling - elegant, matches menu items */
+.reveal > .overlay.overlay-help .viewport .viewport-inner table {
+    width: 100%;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: var(--r-main-font);
+    font-size: 15px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner table th {
+    background: rgba(0,0,0,0.3);
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 14px 18px;
+    font-weight: 500;
+    font-size: 0.85em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.06em;
+    color: var(--menu-text-muted, #a0a0a0);
+    text-align: left;
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner table th:first-child {
+    width: 45%;
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner table td {
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 12px 18px;
+    vertical-align: middle;
+    color: var(--menu-text, #e0e0e0);
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover effect on rows */
+.reveal > .overlay.overlay-help .viewport .viewport-inner table tr:hover td {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Key column - monospace styling */
+.reveal > .overlay.overlay-help .viewport .viewport-inner table td:first-child {
+    font-family: var(--r-code-font, 'JetBrains Mono', monospace);
+    font-size: 0.9em;
+    color: #93c5fd;
+    letter-spacing: 0.02em;
+}
+
+/* Action column */
+.reveal > .overlay.overlay-help .viewport .viewport-inner table td:last-child {
+    color: var(--menu-text, #e0e0e0);
+    opacity: 0.9;
+}

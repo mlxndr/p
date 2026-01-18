@@ -122,21 +122,34 @@
             title.textContent = 'Menu';
             toolbar.parentNode.insertBefore(title, toolbar);
 
-            // Reorder toolbar: Slides, Themes, Transitions, Info, Close
-            // Use setTimeout to ensure DOM is fully ready
+            // Reorder toolbar tabs AND fix keyboard navigation
+            // Plugin uses data-button attributes for keyboard nav, not DOM order
             setTimeout(function() {
+                const slidesTab = toolbar.querySelector('li[data-panel="Slides"]');
+                const themesTab = toolbar.querySelector('li[data-panel="Themes"]');
+                const transitionsTab = toolbar.querySelector('li[data-panel="Transitions"]');
                 const infoTab = toolbar.querySelector('li[data-panel="Custom0"]');
                 const closeButton = toolbar.querySelector('#close');
-                if (infoTab && closeButton) {
-                    // Move Info tab before Close button (makes it 4th: Slides, Themes, Transitions, Info, Close)
+
+                if (slidesTab && themesTab && transitionsTab && infoTab && closeButton) {
+                    // Reorder DOM: Slides, Themes, Transitions, Info, Close
+                    toolbar.insertBefore(slidesTab, closeButton);
+                    toolbar.insertBefore(themesTab, closeButton);
+                    toolbar.insertBefore(transitionsTab, closeButton);
                     toolbar.insertBefore(infoTab, closeButton);
+
+                    // Update data-button attributes to match new order for keyboard nav
+                    slidesTab.setAttribute('data-button', '0');
+                    themesTab.setAttribute('data-button', '1');
+                    transitionsTab.setAttribute('data-button', '2');
+                    infoTab.setAttribute('data-button', '3');
                 }
             }, 50);
 
-            // Apply background gradient via JS to ensure it overrides plugin CSS
-            const slideMenu = document.querySelector('.slide-menu');
+            // Apply background gradient via JS - use wrapper selector for specificity
+            const slideMenu = document.querySelector('.slide-menu-wrapper .slide-menu');
             if (slideMenu) {
-                slideMenu.style.background = 'linear-gradient(180deg, #1a1a1a 0%, #252525 100%)';
+                slideMenu.style.setProperty('background', 'linear-gradient(180deg, #1a1a1a 0%, #252525 100%)', 'important');
             }
         }
 

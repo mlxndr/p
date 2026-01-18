@@ -436,6 +436,9 @@ li::marker {
 .fa-flask::before { content: '\f0c3'; }
 .fa-flask::after { content: '\10f0c3'; }
 
+.fa-code::before { content: '\f121'; }
+.fa-code::after { content: '\10f121'; }
+
 /* ========================================
    Menu Visual Enhancements
    ======================================== */
@@ -528,7 +531,7 @@ html body .slide-menu-wrapper .slide-menu {
 }
 
 .slide-menu-item.active {
-    color: var(--menu-active-color) !important;
+    color: #fff !important;
     opacity: 1;
     font-weight: bold;
 }
@@ -545,7 +548,7 @@ html body .slide-menu-wrapper .slide-menu {
 }
 
 .slide-menu-item-vertical.active {
-    color: var(--menu-active-color) !important;
+    color: #fff !important;
     opacity: 0.95;
     font-weight: bold;
 }
@@ -567,6 +570,13 @@ html body .slide-menu-wrapper .slide-menu {
     background-color: var(--menu-selected-bg);
     border-left: 3px solid var(--menu-active-color);
     font-weight: bold;
+    color: #fff !important;
+}
+
+/* Themes/Transitions hover - keep text color, don't turn white */
+.slide-menu-panel[data-panel="Themes"] li:hover,
+.slide-menu-panel[data-panel="Transitions"] li:hover {
+    color: inherit;
 }
 
 /* Toolbar button hover */

@@ -126,12 +126,18 @@
             // Use setTimeout to ensure DOM is fully ready
             setTimeout(function() {
                 const infoTab = toolbar.querySelector('li[data-panel="Custom0"]');
-                const closeButton = toolbar.querySelector('li.slide-menu-toolbar-button');
+                const closeButton = toolbar.querySelector('#close');
                 if (infoTab && closeButton) {
                     // Move Info tab before Close button (makes it 4th: Slides, Themes, Transitions, Info, Close)
                     toolbar.insertBefore(infoTab, closeButton);
                 }
             }, 50);
+
+            // Apply background gradient via JS to ensure it overrides plugin CSS
+            const slideMenu = document.querySelector('.slide-menu');
+            if (slideMenu) {
+                slideMenu.style.background = 'linear-gradient(180deg, #1a1a1a 0%, #252525 100%)';
+            }
         }
 
         // Add section headers with icons to theme list

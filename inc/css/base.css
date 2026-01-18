@@ -430,6 +430,12 @@ li::marker {
 .fa-check-square::before { content: '\f14a'; }
 .fa-check-square::after { content: '\10f14a'; }
 
+.fa-stars::before { content: '\f762'; }
+.fa-stars::after { content: '\10f762'; }
+
+.fa-flask::before { content: '\f0c3'; }
+.fa-flask::after { content: '\10f0c3'; }
+
 /* ========================================
    Menu Visual Enhancements
    ======================================== */
@@ -614,46 +620,14 @@ li::marker {
     background-repeat: no-repeat;
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
-    padding-bottom: 20px;
-}
-
-/* Theme list layout */
-.slide-menu-panel[data-panel="Themes"] li {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* Theme icon container for stacking */
-.theme-icons {
-    display: flex;
-    gap: 4px;
-    flex-shrink: 0;
-}
-
-.theme-icons i {
-    font-size: 0.9em;
-    opacity: 0.8;
-}
-
-/* Monochrome theme attribute icons (not the colour indicator) */
-.theme-icon.fa-lightbulb-on,
-.theme-icon.fa-moon-stars,
-.theme-icon.fa-images,
-.theme-icon.fa-university,
-.theme-icon.fa-font-case,
-.theme-icon.fa-universal-access {
-    --fa-primary-color: #888;
-    --fa-secondary-color: #666;
-}
-
-/* Colour check-square keeps dynamic colours from JS */
-.theme-icon.fa-check-square {
-    --fa-secondary-opacity: 1;
+    padding-bottom: 60px;
 }
 
 /* Section headers in theme list */
 .theme-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-family: var(--r-main-font);
     font-size: 0.85em;
     font-feature-settings: "smcp", "c2sc";
@@ -669,6 +643,11 @@ li::marker {
 .theme-section-header:first-child {
     border-top: none;
     margin-top: 0;
+}
+
+.theme-section-header i {
+    font-size: 1em;
+    opacity: 0.6;
 }
 
 /* Transition list icons */

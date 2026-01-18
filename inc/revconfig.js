@@ -121,6 +121,15 @@
             title.className = 'slide-menu-title';
             title.textContent = 'Menu';
             toolbar.parentNode.insertBefore(title, toolbar);
+
+            // Reorder toolbar: Slides, Themes, Transitions, Info, Close
+            const infoTab = toolbar.querySelector('li[data-panel="Custom0"]');
+            const transitionsTab = toolbar.querySelector('li[data-panel="Transitions"]');
+            const closeButton = toolbar.querySelector('li.slide-menu-toolbar-button');
+            if (infoTab && transitionsTab && closeButton) {
+                // Move Info tab before Close button (after Transitions)
+                toolbar.insertBefore(infoTab, closeButton);
+            }
         }
 
         // Add section headers with icons to theme list

@@ -440,7 +440,8 @@ li::marker {
    Menu Visual Enhancements
    ======================================== */
 
-/* Refined Dark colour scheme */
+/* Refined Dark colour scheme - use specific selector to override plugin */
+.reveal .slide-menu,
 .slide-menu {
     /* Rich dark background with subtle warmth */
     background: linear-gradient(180deg, #1a1a1a 0%, #252525 100%) !important;
@@ -457,25 +458,6 @@ li::marker {
     --menu-selected-bg: rgba(95,168,211,0.2);
     --menu-divider-color: rgba(255,255,255,0.08);
     --menu-border: rgba(255,255,255,0.05);
-}
-
-/* Subtle inner shadow for depth */
-.slide-menu::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    box-shadow: inset 0 0 60px rgba(0,0,0,0.3);
-    pointer-events: none;
-    z-index: 0;
-}
-
-/* Ensure content is above the shadow overlay */
-.slide-menu > * {
-    position: relative;
-    z-index: 1;
 }
 
 /* Refined toolbar styling */
@@ -624,10 +606,10 @@ li::marker {
 }
 
 /* Section headers in theme list */
-.theme-section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.slide-menu-panel[data-panel="Themes"] .theme-section-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
     font-family: var(--r-main-font);
     font-size: 0.85em;
     font-feature-settings: "smcp", "c2sc";
@@ -640,58 +622,63 @@ li::marker {
     pointer-events: none;
 }
 
-.theme-section-header:first-child {
+.slide-menu-panel[data-panel="Themes"] .theme-section-header:first-of-type {
     border-top: none;
     margin-top: 0;
+}
+
+.theme-section-header span {
+    flex: 1;
 }
 
 .theme-section-header i {
     font-size: 1em;
     opacity: 0.6;
+    margin-left: auto;
 }
 
 /* Transition list icons */
 .slide-menu-panel[data-panel="Transitions"] li {
     display: flex;
     align-items: center;
-    gap: 10px;
 }
 
 .transition-icon {
-    font-size: 0.9em;
-    opacity: 0.7;
-    min-width: 1.2em;
+    font-size: 0.95em;
+    opacity: 0.9;
+    min-width: 1.4em;
+    margin-right: 10px;
     text-align: center;
     flex-shrink: 0;
 }
 
-/* Transition icon colors */
+/* Transition icon colors - brighter */
 .transition-icon.fa-transporter-2 {
-    --fa-primary-color: #a29bfe;
-    --fa-secondary-color: #6c5ce7;
+    --fa-primary-color: #c4b5fd;
+    --fa-secondary-color: #a78bfa;
 }
 
 .transition-icon.fa-eye-slash {
-    --fa-primary-color: #636e72;
-    --fa-secondary-color: #b2bec3;
+    --fa-primary-color: #9ca3af;
+    --fa-secondary-color: #d1d5db;
 }
 
 .transition-icon.fa-arrows {
-    --fa-primary-color: #74b9ff;
-    --fa-secondary-color: #0984e3;
+    --fa-primary-color: #93c5fd;
+    --fa-secondary-color: #60a5fa;
 }
 
 .transition-icon.fa-circle-notch {
-    --fa-primary-color: #fdcb6e;
-    --fa-secondary-color: #f39c12;
+    --fa-primary-color: #fde68a;
+    --fa-secondary-color: #fbbf24;
 }
 
 .transition-icon.fa-circle-notch.concave {
-    --fa-primary-color: #f39c12;
-    --fa-secondary-color: #fdcb6e;
+    --fa-primary-color: #fbbf24;
+    --fa-secondary-color: #fde68a;
 }
 
 .transition-icon.fa-search-plus {
-    --fa-primary-color: #55efc4;
-    --fa-secondary-color: #00b894;
+    --fa-primary-color: #6ee7b7;
+    --fa-secondary-color: #34d399;
 }

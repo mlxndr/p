@@ -1,163 +1,164 @@
-# Framework Improvement TODO
+# Framework Improvement Plan
 
-Based on the critique of the mga.is presentation framework, here are actionable improvements organised by priority and effort level.
-
----
-
-## High Priority / Low Effort
-
-These items address critical issues with minimal implementation cost.
-
-- [ ] **Add error handling to pres-head.html fetch**
-  - Wrap in try/catch
-  - Show user-friendly error message if fetch fails
-  - Log detailed error to console for debugging
-
-- [ ] **Add script load error handling**
-  - Implement `onerror` handlers on dynamically created scripts
-  - Reject promises on script load failure
-  - Add timeout mechanism (e.g., 10 seconds)
-
-- [ ] **Remove redundant theme update listeners**
-  - Remove the blanket `click` and `keydown` listeners in `script-loader.js`
-  - Rely solely on MutationObserver for theme changes
-  - Remove magic timeout numbers (500ms, 100ms)
-
-- [ ] **Self-host Font Awesome**
-  - Download Font Awesome subset (only used icons)
-  - Add to `/inc/css/` directory
-  - Remove CDN dependency from `pres-head.html`
+Revised based on discussion. Browser support target: 2020+ (Safari 13.1+, Chrome 80+, Firefox 74+, Edge 80+).
 
 ---
 
-## High Priority / Medium Effort
+## Approved Tasks
 
-These items address significant architectural issues.
+### 1. Replace Font Awesome CDN with Local SVGs
 
-- [ ] **Consolidate CSS theme architecture**
-  - Create `theme-base.css` with all rules using CSS custom properties
-  - Convert theme files to only override `--variable-name` values
-  - Remove duplicated vendor prefixes (keep only standard syntax)
-  - Standardise theme file naming convention
+**What:** Extract the ~13 icons actually used and embed them locally.
 
-- [ ] **Extract hardcoded theme list from revconfig.js**
-  - Move theme definitions to a separate `themes.json` file
-  - Load themes dynamically in the menu configuration
-  - Simplifies adding new themes
+**Why:**
+- Removes external CDN dependency (privacy, reliability)
+- Reduces download size dramatically (13 SVGs vs entire FA library)
+- Works offline
 
-- [ ] **Fix logo switching mechanism**
-  - Use CSS-based approach with `data-theme="dark"` attribute
-  - Define both logo versions in HTML, toggle with CSS `display` or `opacity`
-  - Remove brittle string replacement logic
+**Approach:**
+- Create `/inc/icons/` directory
+- Export needed icons from FA5 Pro as individual SVGs
+- Replace `<i class="fa-solid fa-person-chalkboard">` with inline `<svg>` or `<img src="../inc/icons/person-chalkboard.svg">`
+- Update revconfig.js icon references
+- Remove FA CDN link from pres-head.html
 
----
-
-## Medium Priority / Low Effort
-
-These items improve code quality and maintainability.
-
-- [ ] **Wrap JavaScript in IIFE or module**
-  - Encapsulate `scripts-config.js` and `script-loader.js`
-  - Avoid global scope pollution
-  - Expose only necessary API on namespaced object
-
-- [ ] **Move menu info HTML to template file**
-  - Create `inc/templates/menu-info.html`
-  - Load via fetch in revconfig.js
-  - Improves readability and maintainability
-
-- [ ] **Add prefers-reduced-motion support**
-  - Check `window.matchMedia('(prefers-reduced-motion: reduce)')`
-  - Disable slide transitions for users who prefer reduced motion
-  - Add CSS media query for animation-based classes
-
-- [ ] **Add prefers-color-scheme support**
-  - Detect system preference on initial load
-  - Set appropriate default theme (light or dark)
-  - Store user override in localStorage
+**Icons needed:**
+- info, person-chalkboard, user-pen, font, images (solid)
+- github (brands)
+- images, adjust, sticky-note, times, check-circle, arrow-alt-circle-right, circle, bars (for menu plugin)
 
 ---
 
-## Medium Priority / Medium Effort
+### 2. Add Error Handling to Script Loading
 
-These items address deeper structural issues.
+**What:** Make failures visible instead of silent.
 
-- [ ] **Introduce minimal build step**
-  - Create simple `package.json` with dev dependencies
-  - Add npm script for ESLint on JavaScript files
-  - Add npm script for CSS validation
-  - Keep optional (framework works without build)
+**Why:** Currently if pres-head.html fails to load, or a script fails, the presentation just breaks with no indication why.
 
-- [ ] **Create closing slide template**
-  - Extract closing slide HTML to reusable template
-  - Load dynamically based on meta.json or config
-  - Remove inline styles, use CSS classes only
-  - Eliminate `!important` declarations
-
-- [ ] **Replace handout markdown parser**
-  - Replace custom implementation with marked.js or markdown-it
-  - Or generate handouts at build time
-  - Remove safety counter workarounds
+**Approach:**
+- Wrap `fetch('../inc/pres-head.html')` in try/catch
+- Add `.catch()` handler that shows an error message
+- Add `onerror` handlers to dynamically created scripts
+- Log errors to console for debugging
 
 ---
 
-## Lower Priority / Higher Effort
+### 3. Remove Redundant Theme Update Listeners
 
-These items are longer-term architectural improvements.
+**What:** Remove the click and keydown listeners that fire `updateThemeElements` on every interaction.
 
-- [ ] **Add accessibility audit and fixes**
-  - Run axe-core or WAVE on all presentations
-  - Add skip links for keyboard navigation
-  - Add `aria-live` regions for theme change announcements
-  - Verify colour contrast in all themes (WCAG AA minimum)
+**Why:** The MutationObserver already watches for theme changes. The other listeners are redundant and fire constantly.
 
-- [ ] **Create presentation generator**
-  - Define presentation config in meta.json or YAML
-  - Generate index.html from template + config
-  - Reduces boilerplate duplication
-  - Simplifies creating new presentations
-
-- [ ] **Migrate to ES modules**
-  - Convert JavaScript files to ES modules
-  - Use native `import`/`export` syntax
-  - Improves dependency management
-  - Enables tree-shaking if build step added
-
-- [ ] **Add automated testing**
-  - Create simple test suite for JavaScript utilities
-  - Test theme switching logic
-  - Test script loading error handling
-  - Add to CI pipeline if using GitHub Actions
+**Approach:**
+- Keep only the MutationObserver in script-loader.js
+- Remove the `document.addEventListener('click', ...)` block
+- Remove the `document.addEventListener('keydown', ...)` block
+- Test theme switching still works via menu
 
 ---
 
-## Questions for Decision
+### 4. Fix Handout Markdown Parser
 
-Before proceeding, these questions need answers:
+**What:** Replace the custom markdown parser with a proper library.
 
-1. **Build step appetite:** Is a minimal build step acceptable, or must the framework remain entirely build-free?
+**Why:** Current parser has limited support (no tables, blockquotes) and has safety counters suggesting past bugs.
 
-2. **Browser support:** What is the minimum browser support target? (Affects ES module adoption, CSS custom property usage)
-
-3. **Theme consolidation:** Should existing 30+ themes be consolidated into fewer base themes with variant options?
-
-4. **Template system:** Would a lightweight template system (e.g., Handlebars, Nunjucks) be acceptable for presentation generation?
-
-5. **Accessibility priority:** Should WCAG AA compliance be a hard requirement for all themes?
+**Approach:**
+- Add marked.js (lightweight, ~40KB, no dependencies)
+- Replace custom `processInlineMarkdown` function with marked
+- Remove safety counter workarounds
+- Test with existing presentations
 
 ---
 
-## Suggested Implementation Order
+### 5. Add prefers-reduced-motion Support
 
-If approved, the suggested order of implementation is:
+**What:** Respect user system preferences for reduced animation.
 
-1. Error handling improvements (immediate, prevent silent failures)
-2. Remove redundant listeners (quick win, improves performance)
-3. Self-host Font Awesome (removes external dependency)
-4. CSS theme consolidation (biggest maintenance win)
-5. Template extraction (improves readability)
-6. Remaining items based on available time
+**Why:** Accessibility improvement. Some users experience motion sickness or find animations distracting.
+
+**Approach:**
+- Check `window.matchMedia('(prefers-reduced-motion: reduce)')`
+- If true, set Reveal.js transition to 'none'
+- Add CSS media query to disable other animations:
+```css
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+```
 
 ---
 
-*This TODO is for review and approval. Items can be modified, reprioritised, or removed based on project constraints.*
+### 6. Add prefers-color-scheme Support
+
+**What:** Detect system light/dark preference on first load.
+
+**Why:** Presents with appropriate theme before user manually switches.
+
+**Approach:**
+- On initial load (no localStorage theme saved), check `window.matchMedia('(prefers-color-scheme: dark)')`
+- If dark preferred, load a dark theme (e.g., th-d-bl.css)
+- If light preferred (or no preference), keep current default
+- User's manual choice still overrides and persists in localStorage
+
+---
+
+## Deferred / Not Doing
+
+- ~~Closing slide template~~ - Not wanted
+- ~~CSS theme consolidation~~ - Keeping for experimentation
+- ~~Extract theme list from revconfig.js~~ - Prefer hardcoded
+- ~~Split revconfig.js~~ - Keeping as one file
+- ~~Build step~~ - Not wanted
+- ~~ES modules migration~~ - Not wanted
+- ~~Accessibility audit~~ - Deferred
+- ~~Presentation generator~~ - Deferred
+- ~~Automated testing~~ - Deferred
+- ~~Handlebars templating~~ - Deferred (would need explanation first)
+
+---
+
+## Implementation Order
+
+1. **Error handling** (quick, prevents confusion when things break)
+2. **Remove redundant listeners** (quick, cleaner code)
+3. **Font Awesome SVGs** (removes external dependency)
+4. **prefers-reduced-motion** (quick accessibility win)
+5. **prefers-color-scheme** (quick UX improvement)
+6. **Fix markdown parser** (more involved, do last)
+
+---
+
+## Future Reference: Handlebars Explanation
+
+*For when you're ready to explore templating.*
+
+Handlebars is a simple templating language. Instead of writing HTML with JavaScript string concatenation:
+
+```javascript
+// Current approach
+const html = '<h1>' + title + '</h1><p>' + subtitle + '</p>';
+```
+
+You write a template file:
+```html
+<!-- template.hbs -->
+<h1>{{title}}</h1>
+<p>{{subtitle}}</p>
+```
+
+Then fill it with data:
+```javascript
+const html = Handlebars.compile(template)({ title: 'My Talk', subtitle: 'A Presentation' });
+```
+
+**Why it helps:** Separates structure (HTML) from data (variables). Easier to read and maintain. The template looks like actual HTML.
+
+**Why you might not need it:** You have few presentations and maintain them manually. The overhead of learning a new tool may not pay off.
+
+---
+
+*Ready for approval. Let me know if you'd like any changes before I begin implementation.*

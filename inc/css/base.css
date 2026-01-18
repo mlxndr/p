@@ -706,3 +706,110 @@ html body .slide-menu-wrapper .slide-menu {
     --fa-primary-color: #6ee7b7;
     --fa-secondary-color: #34d399;
 }
+
+/* ===========================================
+   Keyboard Shortcuts Overlay (? key)
+   Styled to match menu design
+   =========================================== */
+
+.reveal > .overlay.overlay-help {
+    background: linear-gradient(180deg, rgba(13,13,13,0.97) 0%, rgba(42,42,42,0.97) 100%);
+    backdrop-filter: blur(8px);
+}
+
+.reveal > .overlay.overlay-help header {
+    background: rgba(0,0,0,0.3);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 10px 15px;
+}
+
+.reveal > .overlay.overlay-help header a.close {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+.reveal > .overlay.overlay-help header a.close:hover {
+    opacity: 1;
+}
+
+.reveal > .overlay.overlay-help .viewport {
+    color: var(--menu-text, #e0e0e0);
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner {
+    width: 500px;
+    max-width: 90vw;
+    padding: 30px 25px 60px;
+}
+
+/* Title styling - matches menu title */
+.reveal > .overlay.overlay-help .viewport .viewport-inner .title {
+    font-family: var(--r-main-font);
+    font-size: 0.95em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em;
+    color: var(--menu-text, #e0e0e0);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+}
+
+/* Table styling - elegant, matches menu items */
+.reveal > .overlay.overlay-help .viewport .viewport-inner table {
+    width: 100%;
+    border: none;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-family: var(--r-main-font);
+    font-size: 15px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner table th {
+    background: rgba(0,0,0,0.3);
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding: 14px 18px;
+    font-weight: 500;
+    font-size: 0.85em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.06em;
+    color: var(--menu-text-muted, #a0a0a0);
+    text-align: left;
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner table th:first-child {
+    width: 45%;
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner table td {
+    border: none;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding: 12px 18px;
+    vertical-align: middle;
+    color: var(--menu-text, #e0e0e0);
+}
+
+.reveal > .overlay.overlay-help .viewport .viewport-inner table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hover effect on rows */
+.reveal > .overlay.overlay-help .viewport .viewport-inner table tr:hover td {
+    background: rgba(255,255,255,0.05);
+}
+
+/* Key column - monospace styling */
+.reveal > .overlay.overlay-help .viewport .viewport-inner table td:first-child {
+    font-family: var(--r-code-font, 'JetBrains Mono', monospace);
+    font-size: 0.9em;
+    color: #93c5fd;
+    letter-spacing: 0.02em;
+}
+
+/* Action column */
+.reveal > .overlay.overlay-help .viewport .viewport-inner table td:last-child {
+    color: var(--menu-text, #e0e0e0);
+    opacity: 0.9;
+}

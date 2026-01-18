@@ -573,13 +573,6 @@ html body .slide-menu-wrapper .slide-menu {
     color: #fff !important;
 }
 
-/* Override plugin's white hover on anchors - keep original text color */
-.slide-menu-wrapper div[data-panel="Slides"] a:hover,
-.slide-menu-wrapper div[data-panel="Themes"] a:hover,
-.slide-menu-wrapper div[data-panel="Transitions"] a:hover {
-    color: inherit !important;
-}
-
 /* Toolbar button hover */
 .slide-menu-toolbar li:hover {
     background-color: rgba(255,255,255,0.1);

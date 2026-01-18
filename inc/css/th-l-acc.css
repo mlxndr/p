@@ -2,10 +2,10 @@
 @import url('light.css');
 
 :root {
-    --r-main-font: 'Atkinson Hyperlegible', sans-serif !important;
-    --r-heading-font: 'Atkinson Hyperlegible', sans-serif !important;
-    --r-heading-bold-font: 'Atkinson Hyperlegible', sans-serif !important;
-    --r-serif-font: 'Atkinson Hyperlegible', serif !important;
+    --r-main-font: 'Luciole', sans-serif !important;
+    --r-heading-font: 'Luciole', sans-serif !important;
+    --r-heading-bold-font: 'Luciole', sans-serif !important;
+    --r-serif-font: 'Luciole', serif !important;
 }
 
 .reveal {

@@ -1,4 +1,21 @@
-Reveal.initialize({
+// Build config with user preference support
+(function() {
+    // Determine transition based on reduced motion preference
+    const transition = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'slide';
+
+    // Check if user prefers dark theme and no theme is saved
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = !savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    // If user prefers dark and no saved theme, switch to dark theme on load
+    if (prefersDark) {
+        const themeLink = document.getElementById('theme');
+        if (themeLink) {
+            themeLink.setAttribute('href', '../inc/css/th-d-bg-twilight.css');
+        }
+    }
+
+    Reveal.initialize({
     plugins: [ RevealMarkdown, RevealMenu, RevealNotes, PdfExport, Appearance, OneTimer ],
     width: 1050,
     height: 700,
@@ -10,7 +27,7 @@ Reveal.initialize({
     progress: true,
     center: false,
     hash: true,
-    transition: 'slide',
+    transition: transition,
     markdown: {
         smartypants: true,
         gfm: true,
@@ -148,4 +165,5 @@ Reveal.initialize({
         ],
         loadIcons: true,
         },
-});
+    });
+})();

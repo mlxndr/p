@@ -598,9 +598,12 @@ html body .slide-menu-wrapper .slide-menu {
     border-bottom: 2px solid var(--menu-active-color);
 }
 
-/* Panel transitions */
+/* Panel transitions and height fix for added Menu title */
 .slide-menu-panel {
     transition: opacity 0.2s ease;
+    /* Plugin uses calc(100% - 60px) for toolbar only.
+       We added a ~40px Menu title, so need calc(100% - 100px) */
+    height: calc(100% - 100px) !important;
 }
 
 .slide-menu-panel.active-menu-panel {
@@ -623,11 +626,6 @@ html body .slide-menu-wrapper .slide-menu {
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
     padding-bottom: 80px;
-}
-
-/* Extra panel padding for scroll visibility */
-.slide-menu-panel {
-    padding-bottom: 20px;
 }
 
 /* Section headers in theme list */

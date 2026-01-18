@@ -574,9 +574,9 @@ html body .slide-menu-wrapper .slide-menu {
 }
 
 /* Themes/Transitions hover - keep text color, don't turn white */
-.slide-menu-panel[data-panel="Themes"] li:hover,
-.slide-menu-panel[data-panel="Transitions"] li:hover {
-    color: inherit;
+.slide-menu-wrapper div[data-panel="Themes"] li:hover,
+.slide-menu-wrapper div[data-panel="Transitions"] li:hover {
+    color: var(--menu-text) !important;
 }
 
 /* Toolbar button hover */

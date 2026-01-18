@@ -396,3 +396,182 @@ li::marker {
 
 .fa-sticky-note::before { content: '\f249'; }
 .fa-sticky-note::after { content: '\10f249'; }
+
+.fa-lightbulb-on::before { content: '\f672'; }
+.fa-lightbulb-on::after { content: '\10f672'; }
+
+.fa-moon-stars::before { content: '\f755'; }
+.fa-moon-stars::after { content: '\10f755'; }
+
+.fa-universal-access::before { content: '\f29a'; }
+.fa-universal-access::after { content: '\10f29a'; }
+
+/* ========================================
+   Menu Visual Enhancements
+   ======================================== */
+
+/* Color system variables */
+.slide-menu {
+    --menu-past-color: #6a9955;
+    --menu-active-color: #569cd6;
+    --menu-future-color: #808080;
+    --menu-hover-bg: rgba(255,255,255,0.05);
+    --menu-selected-bg: rgba(86,156,214,0.15);
+    --menu-divider-color: rgba(255,255,255,0.1);
+}
+
+/* Sub-slides: smaller, lighter, more indented */
+.slide-menu-item-vertical {
+    font-size: 0.85em;
+    padding-left: 40px !important;
+}
+
+.slide-menu-item-vertical .slide-menu-item-vertical {
+    font-size: 0.8em;
+    padding-left: 55px !important;
+}
+
+/* Slide state colors */
+.slide-menu-item.past {
+    color: var(--menu-past-color) !important;
+    opacity: 0.7;
+}
+
+.slide-menu-item.active {
+    color: var(--menu-active-color) !important;
+    opacity: 1;
+    font-weight: 500;
+}
+
+.slide-menu-item.future {
+    color: var(--menu-future-color) !important;
+    opacity: 0.5;
+}
+
+/* Vertical slide states inherit from parent */
+.slide-menu-item-vertical.past {
+    color: var(--menu-past-color) !important;
+    opacity: 0.6;
+}
+
+.slide-menu-item-vertical.active {
+    color: var(--menu-active-color) !important;
+    opacity: 0.9;
+}
+
+.slide-menu-item-vertical.future {
+    color: var(--menu-future-color) !important;
+    opacity: 0.4;
+}
+
+/* Hover effects */
+.slide-menu-item:hover,
+.slide-menu-item-vertical:hover {
+    background-color: var(--menu-hover-bg);
+    transition: background-color 0.15s ease;
+}
+
+/* Selected item highlight */
+.active-menu-panel li.selected {
+    background-color: var(--menu-selected-bg);
+    border-left: 3px solid var(--menu-active-color);
+}
+
+/* Toolbar button hover */
+.slide-menu-toolbar li:hover {
+    background-color: rgba(255,255,255,0.1);
+    transition: background-color 0.15s ease;
+}
+
+/* Active panel indicator */
+.slide-menu-toolbar li.active-toolbar-button {
+    border-bottom: 2px solid var(--menu-active-color);
+}
+
+/* Panel transitions */
+.slide-menu-panel {
+    transition: opacity 0.2s ease;
+}
+
+.slide-menu-panel.active-menu-panel {
+    animation: menuFadeIn 0.2s ease;
+}
+
+@keyframes menuFadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Scroll shadows */
+.slide-menu-items {
+    background:
+        linear-gradient(#333 30%, transparent),
+        linear-gradient(transparent, #333 70%) bottom,
+        radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.3), transparent),
+        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.3), transparent) bottom;
+    background-repeat: no-repeat;
+    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+    background-attachment: local, local, scroll, scroll;
+}
+
+/* Theme list icons */
+.slide-menu-panel[data-panel="Themes"] li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.theme-icon {
+    width: 1.2em;
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+/* Theme icon colors - Light themes */
+.theme-icon.fa-lightbulb-on {
+    --fa-primary-color: #f5d742;
+    --fa-secondary-color: #ffeaa7;
+}
+
+/* Theme icon colors - Dark themes */
+.theme-icon.fa-moon-stars {
+    --fa-primary-color: #74b9ff;
+    --fa-secondary-color: #a29bfe;
+}
+
+/* Theme icon colors - Accessible */
+.theme-icon.fa-universal-access {
+    --fa-primary-color: #00b894;
+    --fa-secondary-color: #55efc4;
+}
+
+/* Theme icon colors - Image backgrounds */
+.theme-icon.fa-images {
+    --fa-primary-color: #fd79a8;
+    --fa-secondary-color: #fdcb6e;
+}
+
+/* Theme icon colors - Color-only (user can customize) */
+.theme-icon.fa-circle {
+    --fa-primary-color: #4a4a4a;
+    --fa-secondary-color: #4a4a4a;
+}
+
+/* Section headers in theme list */
+.theme-section-header {
+    font-size: 0.7em;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--menu-active-color);
+    padding: 15px 18px 5px !important;
+    border-top: 1px solid var(--menu-divider-color);
+    margin-top: 10px;
+    cursor: default !important;
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+.theme-section-header:first-child {
+    border-top: none;
+    margin-top: 0;
+}

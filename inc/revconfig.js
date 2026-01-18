@@ -168,4 +168,55 @@
         loadIcons: false,
         },
     });
+
+    // Enhance menu after it's ready
+    Reveal.on('menu-ready', function() {
+        // Inject theme icons
+        const themeItems = document.querySelectorAll('.slide-menu-panel[data-panel="Themes"] li');
+        themeItems.forEach(item => {
+            const text = item.textContent;
+            let iconClass = 'fa-circle'; // default for color-only themes
+
+            if (text.includes('Accessibility') || text.includes('Accessible')) {
+                iconClass = 'fa-universal-access';
+            } else if (text.includes('Light:') || text.includes('Cream') || text.includes('Paper') || text.includes('Plaster') || text.includes('Canvas')) {
+                iconClass = 'fa-lightbulb-on';
+            } else if (text.includes('Polygons') || text.includes('Rows') || text.includes('Twilight') || text.includes('Background')) {
+                iconClass = 'fa-images';
+            } else if (text.includes('Dark:')) {
+                iconClass = 'fa-moon-stars';
+            }
+
+            // Prepend icon
+            const icon = document.createElement('i');
+            icon.className = `fad ${iconClass} theme-icon`;
+            item.insertBefore(icon, item.firstChild);
+        });
+
+        // Add section headers to theme list
+        const themePanel = document.querySelector('.slide-menu-panel[data-panel="Themes"] ul');
+        if (themePanel) {
+            const items = themePanel.querySelectorAll('li');
+            let lastType = '';
+
+            items.forEach(item => {
+                const text = item.textContent;
+                let currentType = '';
+
+                if (text.startsWith('★')) currentType = 'Favorites';
+                else if (text.includes('Sans-Serif')) currentType = 'Font Variants';
+                else if (text.startsWith('Light:')) currentType = 'Light Themes';
+                else if (text.startsWith('Dark:')) currentType = 'Dark Themes';
+                else if (text.startsWith('Experimental:')) currentType = 'Experimental';
+
+                if (currentType && currentType !== lastType) {
+                    const header = document.createElement('li');
+                    header.className = 'theme-section-header';
+                    header.textContent = currentType;
+                    item.parentNode.insertBefore(header, item);
+                    lastType = currentType;
+                }
+            });
+        }
+    });
 })();

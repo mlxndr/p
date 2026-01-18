@@ -322,3 +322,98 @@ li::marker {
         transition: none !important;
     }
 }
+
+/* ============================================
+   Self-hosted SVG icon replacements
+   Replaces Font Awesome with local SVGs
+   ============================================ */
+
+/* Inline SVG icons for info panel */
+.menu-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    fill: currentColor;
+    opacity: 0.4;
+    margin-right: 3px;
+    display: inline-block;
+}
+
+/* reveal.js-menu plugin icon replacements */
+.slide-menu .fa,
+.slide-menu .fas,
+.slide-menu .far,
+.slide-menu .fab,
+.slide-menu [class*="fa-"] {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.125em;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Hide the text content of icon elements, show background */
+.slide-menu .fa::before,
+.slide-menu .fas::before,
+.slide-menu .far::before,
+.slide-menu .fab::before,
+.slide-menu [class*="fa-"]::before {
+    content: '';
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* Individual icon mappings */
+.slide-menu .fa-bars::before,
+.slide-menu-button .fa-bars::before {
+    background-image: url('../icons/bars.svg');
+}
+
+.slide-menu .fa-times::before {
+    background-image: url('../icons/times.svg');
+}
+
+.slide-menu .fa-check-circle::before {
+    background-image: url('../icons/check-circle.svg');
+}
+
+.slide-menu .fa-arrow-alt-circle-right::before {
+    background-image: url('../icons/arrow-alt-circle-right.svg');
+}
+
+.slide-menu .fa-circle::before {
+    background-image: url('../icons/circle.svg');
+}
+
+.slide-menu .fa-images::before {
+    background-image: url('../icons/images.svg');
+}
+
+.slide-menu .fa-adjust::before {
+    background-image: url('../icons/adjust.svg');
+}
+
+.slide-menu .fa-sticky-note::before {
+    background-image: url('../icons/sticky-note.svg');
+}
+
+.slide-menu .fa-info::before {
+    background-image: url('../icons/info.svg');
+}
+
+/* Ensure icons inherit text color via filter for dark/light themes */
+.slide-menu [class*="fa-"]::before {
+    filter: var(--icon-filter, none);
+}
+
+/* Dark theme icon filter - invert for visibility */
+[data-theme*="-d-"] .slide-menu [class*="fa-"]::before,
+.reveal[class*="dark"] .slide-menu [class*="fa-"]::before {
+    filter: invert(1);
+}

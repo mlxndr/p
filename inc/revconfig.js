@@ -146,12 +146,17 @@
                 }
             }, 50);
 
-            // Apply background gradient via JS - use wrapper selector for specificity
-            const slideMenu = document.querySelector('.slide-menu-wrapper .slide-menu');
-            if (slideMenu) {
-                slideMenu.style.setProperty('background', 'linear-gradient(180deg, #1a1a1a 0%, #252525 100%)', 'important');
-            }
         }
+
+        // Apply background gradient via JS - try multiple approaches
+        // Run after a delay to ensure plugin CSS is fully loaded
+        setTimeout(function() {
+            const menus = document.querySelectorAll('.slide-menu');
+            menus.forEach(function(menu) {
+                menu.style.setProperty('background', 'linear-gradient(180deg, #1a1a1a 0%, #252525 100%)', 'important');
+                menu.style.setProperty('background-color', '#1a1a1a', 'important');
+            });
+        }, 100);
 
         // Add section headers with icons to theme list
         const sections = [

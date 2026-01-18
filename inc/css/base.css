@@ -440,11 +440,11 @@ li::marker {
    Menu Visual Enhancements
    ======================================== */
 
-/* Refined Dark colour scheme - use specific selector to override plugin */
-.reveal .slide-menu,
-.slide-menu {
+/* Refined Dark colour scheme - match plugin specificity */
+.slide-menu-wrapper .slide-menu {
     /* Rich dark background with subtle warmth */
     background: linear-gradient(180deg, #1a1a1a 0%, #252525 100%) !important;
+    background-color: #1e1e1e !important;
 
     /* Colour system */
     --menu-bg: #1e1e1e;
@@ -674,8 +674,9 @@ li::marker {
 }
 
 .transition-icon.fa-circle-notch.concave {
-    --fa-primary-color: #fbbf24;
-    --fa-secondary-color: #fde68a;
+    /* Inverted: secondary becomes light, primary becomes dark */
+    --fa-primary-color: #92400e;
+    --fa-secondary-color: #fef3c7;
 }
 
 .transition-icon.fa-search-plus {

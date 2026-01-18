@@ -123,13 +123,15 @@
             toolbar.parentNode.insertBefore(title, toolbar);
 
             // Reorder toolbar: Slides, Themes, Transitions, Info, Close
-            const infoTab = toolbar.querySelector('li[data-panel="Custom0"]');
-            const transitionsTab = toolbar.querySelector('li[data-panel="Transitions"]');
-            const closeButton = toolbar.querySelector('li.slide-menu-toolbar-button');
-            if (infoTab && transitionsTab && closeButton) {
-                // Move Info tab before Close button (after Transitions)
-                toolbar.insertBefore(infoTab, closeButton);
-            }
+            // Use setTimeout to ensure DOM is fully ready
+            setTimeout(function() {
+                const infoTab = toolbar.querySelector('li[data-panel="Custom0"]');
+                const closeButton = toolbar.querySelector('li.slide-menu-toolbar-button');
+                if (infoTab && closeButton) {
+                    // Move Info tab before Close button (makes it 4th: Slides, Themes, Transitions, Info, Close)
+                    toolbar.insertBefore(infoTab, closeButton);
+                }
+            }, 50);
         }
 
         // Add section headers with icons to theme list

@@ -474,6 +474,12 @@ html body .slide-menu-wrapper .slide-menu {
     color: var(--menu-text);
 }
 
+/* Make anchors inherit color from parent li (overrides plugin's #ccc) */
+.slide-menu-item a,
+.slide-menu-item-vertical a {
+    color: inherit !important;
+}
+
 /* Menu title */
 .slide-menu-title {
     font-family: var(--r-main-font);
@@ -563,6 +569,14 @@ html body .slide-menu-wrapper .slide-menu {
 .slide-menu-item-vertical:hover {
     background-color: var(--menu-hover-bg);
     transition: background-color 0.15s ease;
+}
+
+/* Keep anchor color on hover (overrides plugin's white hover) */
+.slide-menu-item a:hover,
+.slide-menu-item-vertical a:hover,
+.slide-menu-panel[data-panel="Themes"] a:hover,
+.slide-menu-panel[data-panel="Transitions"] a:hover {
+    color: inherit !important;
 }
 
 /* Selected item highlight */

@@ -323,97 +323,76 @@ li::marker {
     }
 }
 
-/* ============================================
-   Self-hosted SVG icon replacements
-   Replaces Font Awesome with local SVGs
-   ============================================ */
-
-/* Inline SVG icons for info panel */
-.menu-icon {
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.125em;
-    fill: currentColor;
-    opacity: 0.4;
-    margin-right: 3px;
+.fad,
+.fas,
+.far,
+.slide-menu [class*="fa-"],
+.slide-menu-button [class*="fa-"] {
+    font-family: 'Font Awesome 5 Duotone';
+    font-weight: 900;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     display: inline-block;
+    position: relative;
 }
 
-/* reveal.js-menu plugin icon replacements */
-.slide-menu .fa,
-.slide-menu .fas,
-.slide-menu .far,
-.slide-menu .fab,
-.slide-menu [class*="fa-"] {
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    vertical-align: -0.125em;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+.fad::before,
+.fas::before,
+.far::before,
+.slide-menu [class*="fa-"]::before,
+.slide-menu-button [class*="fa-"]::before {
+    color: var(--fa-primary-color, inherit);
+    opacity: var(--fa-primary-opacity, 1);
 }
 
-/* Hide the text content of icon elements, show background */
-.slide-menu .fa::before,
-.slide-menu .fas::before,
-.slide-menu .far::before,
-.slide-menu .fab::before,
-.slide-menu [class*="fa-"]::before {
-    content: '';
-    display: inline-block;
-    width: 1em;
-    height: 1em;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+.fad::after,
+.fas::after,
+.far::after,
+.slide-menu [class*="fa-"]::after,
+.slide-menu-button [class*="fa-"]::after {
+    position: absolute;
+    left: 0;
+    opacity: var(--fa-secondary-opacity, 0.4);
+    color: var(--fa-secondary-color, inherit);
 }
 
-/* Individual icon mappings */
-.slide-menu .fa-bars::before,
-.slide-menu-button .fa-bars::before {
-    background-image: url('../icons/bars.svg');
-}
+/* Icon unicode values (only icons we use) */
+.fa-info::before { content: '\f129'; }
+.fa-info::after { content: '\10f129'; }
 
-.slide-menu .fa-times::before {
-    background-image: url('../icons/times.svg');
-}
+.fa-chalkboard-teacher::before { content: '\f51c'; }
+.fa-chalkboard-teacher::after { content: '\10f51c'; }
 
-.slide-menu .fa-check-circle::before {
-    background-image: url('../icons/check-circle.svg');
-}
+.fa-user-edit::before { content: '\f4ff'; }
+.fa-user-edit::after { content: '\10f4ff'; }
 
-.slide-menu .fa-arrow-alt-circle-right::before {
-    background-image: url('../icons/arrow-alt-circle-right.svg');
-}
+.fa-font::before { content: '\f031'; }
+.fa-font::after { content: '\10f031'; }
 
-.slide-menu .fa-circle::before {
-    background-image: url('../icons/circle.svg');
-}
+.fa-images::before { content: '\f302'; }
+.fa-images::after { content: '\10f302'; }
 
-.slide-menu .fa-images::before {
-    background-image: url('../icons/images.svg');
-}
+.fa-code-merge::before { content: '\f387'; }
+.fa-code-merge::after { content: '\10f387'; }
 
-.slide-menu .fa-adjust::before {
-    background-image: url('../icons/adjust.svg');
-}
+.fa-bars::before { content: '\f0c9'; }
+.fa-bars::after { content: '\10f0c9'; }
 
-.slide-menu .fa-sticky-note::before {
-    background-image: url('../icons/sticky-note.svg');
-}
+.fa-times::before { content: '\f00d'; }
+.fa-times::after { content: '\10f00d'; }
 
-.slide-menu .fa-info::before {
-    background-image: url('../icons/info.svg');
-}
+.fa-check-circle::before { content: '\f058'; }
+.fa-check-circle::after { content: '\10f058'; }
 
-/* Ensure icons inherit text color via filter for dark/light themes */
-.slide-menu [class*="fa-"]::before {
-    filter: var(--icon-filter, none);
-}
+.fa-arrow-alt-circle-right::before { content: '\f35a'; }
+.fa-arrow-alt-circle-right::after { content: '\10f35a'; }
 
-/* Dark theme icon filter - invert for visibility */
-[data-theme*="-d-"] .slide-menu [class*="fa-"]::before,
-.reveal[class*="dark"] .slide-menu [class*="fa-"]::before {
-    filter: invert(1);
-}
+.fa-circle::before { content: '\f111'; }
+.fa-circle::after { content: '\10f111'; }
+
+.fa-adjust::before { content: '\f042'; }
+.fa-adjust::after { content: '\10f042'; }
+
+.fa-sticky-note::before { content: '\f249'; }
+.fa-sticky-note::after { content: '\10f249'; }

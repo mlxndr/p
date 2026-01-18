@@ -342,3 +342,10 @@
     src: url('woff2/Luciole-BoldItalic.woff2') format('woff2');
     text-rendering: optimizeLegibility;
 }
+@font-face {
+    font-family: 'Font Awesome 5 Duotone';
+    font-style: normal;
+    font-weight: 900;
+    font-display: block;
+    src: url('woff2/fa-duotone-900.woff2') format('woff2');
+}

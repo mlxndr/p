@@ -1,0 +1,70 @@
+@import url('base.css');
+@import url('light.css');
+
+:root {
+    /* Override fonts to use Century Supra throughout */
+    --r-main-font: 'Century Supra', Georgia, serif;
+    --r-heading-font: 'Century Supra', Georgia, serif;
+    --r-heading-bold-font: 'Century Supra', Georgia, serif;
+    --r-serif-font: 'Century Supra', Georgia, serif;
+
+    /* Theme colors */
+    --terracotta: #C0644B;
+    --cream-bg: #F5EBE0;
+    --subject-color: #8B1538;
+    --object-color: #D4A017;
+}
+
+/* Content slide background (default) */
+.reveal {
+    background-color: var(--cream-bg);
+}
+
+/* Headings in terracotta */
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+    color: var(--terracotta);
+    font-variant: normal;
+}
+
+/* Remove heading underlines */
+.reveal h2,
+.reveal h3 {
+    border-bottom: none;
+}
+
+/* Title slide styling */
+.reveal section.title-slide {
+    background-color: var(--terracotta);
+}
+
+.reveal section.title-slide h1,
+.reveal section.title-slide h2,
+.reveal section.title-slide p,
+.reveal section.title-slide .pres-title-mainfont,
+.reveal section.title-slide .pres-subtitle-mainfont {
+    color: #FFFFFF;
+}
+
+/* Italic subtitles on title slide */
+.reveal section.title-slide h2,
+.reveal section.title-slide .pres-subtitle-mainfont {
+    font-style: italic;
+}
+
+/* Linguistic term colors */
+.reveal .subject {
+    color: var(--subject-color);
+}
+
+.reveal .object {
+    color: var(--object-color);
+}
+
+/* Bold emphasis styling */
+.reveal strong,
+.reveal b {
+    color: var(--terracotta);
+}

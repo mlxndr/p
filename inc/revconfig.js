@@ -61,6 +61,20 @@
             { name: 'University of Glasgow', theme: '../inc/css/th-l-bg-uog-cr-1.css' },
             { name: 'Historical Thesaurus', theme: '../inc/css/th-l-bg-ht-cr.css' },
             // ALL SANS-SERIF (3)
+            {
+                name: 'Black on Cream',
+                theme: '../inc/css/th-l-cr-m.css'
+            },
+            {
+                name: 'Black on Cream, Thin Body Text',
+                theme: '../inc/css/th-l-cr-m-thin.css'
+            },
+            {
+                name: 'White on Twilight Background',
+                theme: '../inc/css/th-d-bg-twilight-m.css'
+            },
+            // LIGHT THEMES (4)
+            { name: 'Terracotta Academic', theme: '../inc/css/th-l-terracotta.css' },
             { name: 'Black on Cream', theme: '../inc/css/th-l-cr-m.css'},
             { name: 'Black on Cream, Thin Body Text', theme: '../inc/css/th-l-cr-m-thin.css'},
             { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight-m.css'},

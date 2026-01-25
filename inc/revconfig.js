@@ -54,10 +54,12 @@
         keyboard: true,
         markers: true,
         themes: [
-            // MAIN (3)
+            // MAIN (4)
             { name: 'Black on Cream', theme: '../inc/css/th-l-cr.css' },
             { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight.css' },
             { name: 'High Accessibility', theme: '../inc/css/th-l-acc.css' },
+            { name: 'University of Glasgow', theme: '../inc/css/th-l-bg-uog-cr-1.css' },
+            { name: 'Historical Thesaurus', theme: '../inc/css/th-l-bg-ht-cr.css' },
             // ALL SANS-SERIF (3)
             {
                 name: 'Black on Cream',
@@ -73,6 +75,10 @@
             },
             // LIGHT THEMES (4)
             { name: 'Terracotta Academic', theme: '../inc/css/th-l-terracotta.css' },
+            { name: 'Black on Cream', theme: '../inc/css/th-l-cr-m.css'},
+            { name: 'Black on Cream, Thin Body Text', theme: '../inc/css/th-l-cr-m-thin.css'},
+            { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight-m.css'},
+            // LIGHT THEMES (3)
             { name: 'Paper', theme: '../inc/css/th-l-bg-paper.css' },
             { name: 'Plaster', theme: '../inc/css/th-l-bg-plaster.css' },
             { name: 'Canvas', theme: '../inc/css/th-l-bg-canvas.css' },
@@ -84,7 +90,8 @@
             { name: 'Polygons Blue', theme: '../inc/css/th-d-bg-polygonblue.css' },
             { name: 'Polygons Red', theme: '../inc/css/th-d-bg-polygonred.css' },
             { name: 'Black Rows', theme: '../inc/css/th-d-bg-rows.css' },
-            // UNIVERSITY OF GLASGOW (3)
+            // UNIVERSITY OF GLASGOW (4)
+            { name: 'UofG Cream', theme: '../inc/css/th-l-bg-uog-cr-2.css' },
             { name: 'UofG Blue', theme: '../inc/css/th-d-bg-uog-bu.css' },
             { name: 'UofG Blue with Inverted Fonts', theme: '../inc/css/th-d-bg-uog-bu-invert.css' },
             { name: 'UofG Black', theme: '../inc/css/th-d-bg-uog-bl.css' },
@@ -165,11 +172,11 @@
         // Add section headers with icons to theme list
         const sections = [
             { startIdx: 0, name: 'Main', icon: 'fa-stars' },
-            { startIdx: 3, name: 'All Sans-Serif', icon: 'fa-font-case' },
-            { startIdx: 6, name: 'Light Themes', icon: 'fa-lightbulb-on' },
-            { startIdx: 9, name: 'Dark Themes', icon: 'fa-moon-stars' },
-            { startIdx: 16, name: 'University of Glasgow', icon: 'fa-university' },
-            { startIdx: 19, name: 'Experimental', icon: 'fa-flask' }
+            { startIdx: 5, name: 'All Sans-Serif', icon: 'fa-font-case' },
+            { startIdx: 8, name: 'Light Themes', icon: 'fa-lightbulb-on' },
+            { startIdx: 11, name: 'Dark Themes', icon: 'fa-moon-stars' },
+            { startIdx: 18, name: 'University of Glasgow', icon: 'fa-university' },
+            { startIdx: 22, name: 'Experimental', icon: 'fa-flask' }
         ];
 
         const themePanel = document.querySelector('.slide-menu-panel[data-panel="Themes"] ul');

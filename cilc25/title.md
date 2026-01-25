@@ -1,5 +1,5 @@
 <br><br><h1 class="pres-title-headingfont" style="font-size: 65px; font-weight: 700">‘up yours at the end of life’</h1>
-<p class="pres-subtitle-mainfont" style="font-size: 45px; padding-bottom: 1em; font-weight: 300;">Opposition, Emotion, and Overlap in a Corpus of<br> Scottish Debates on Assisted Dying</p>
+<p class="pres-subtitle-mainfont" style="text-align: center; font-size: 45px; padding-bottom: 1em; font-weight: 300;">Opposition, Emotion, and Overlap in a <br>Corpus of Scottish Debates on Assisted Dying</p>
 <table class="titlebr" width="100%">
     <tr>
         <td class="tpa4-l">Marc Alexander <span class="subtle">and</span> James Balfour<br><span class="subtle">University of Glasgow</span></td>

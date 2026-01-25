@@ -802,7 +802,6 @@ html body .slide-menu-wrapper .slide-menu {
 
 /* Key column - monospace styling */
 .reveal > .overlay.overlay-help .viewport .viewport-inner table td:first-child {
-    font-family: var(--r-code-font, 'JetBrains Mono', monospace);
     font-size: 0.9em;
     color: #93c5fd;
     letter-spacing: 0.02em;

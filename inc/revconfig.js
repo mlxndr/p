@@ -17,9 +17,11 @@
 
     Reveal.initialize({
     plugins: [ RevealMarkdown, RevealMenu, RevealNotes, PdfExport, Appearance, OneTimer ],
-    width: 1050,
-    height: 700,
-    margin: 0.1,
+    width: 1920,
+    height: 1080,
+    margin: 0.04,
+    minScale: 0.2,       // minimum scaling
+    maxScale: 2.0,        // maximum scaling
     navigationMode: 'linear',
     showSlideNumber: 'print',
     pdfSeparateFragments: false,
@@ -54,27 +56,18 @@
         keyboard: true,
         markers: true,
         themes: [
-            // MAIN (4)
+            // MAIN (5)
             { name: 'Black on Cream', theme: '../inc/css/th-l-cr.css' },
             { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight.css' },
             { name: 'High Accessibility', theme: '../inc/css/th-l-acc.css' },
             { name: 'University of Glasgow', theme: '../inc/css/th-l-bg-uog-cr-1.css' },
             { name: 'Historical Thesaurus', theme: '../inc/css/th-l-bg-ht-cr.css' },
+            { name: 'Terracotta', theme: '../inc/css/th-l-terracotta.css' },
             // ALL SANS-SERIF (3)
-            {
-                name: 'Black on Cream',
-                theme: '../inc/css/th-l-cr-m.css'
-            },
-            {
-                name: 'Black on Cream, Thin Body Text',
-                theme: '../inc/css/th-l-cr-m-thin.css'
-            },
-            {
-                name: 'White on Twilight Background',
-                theme: '../inc/css/th-d-bg-twilight-m.css'
-            },
+            { name: 'Black on Cream', theme: '../inc/css/th-l-cr-m.css'},
+            { name: 'Black on Cream, Thin Body Text', theme: '../inc/css/th-l-cr-m-thin.css' },
+            { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight-m.css' },
             // LIGHT THEMES (4)
-            { name: 'Terracotta Academic', theme: '../inc/css/th-l-terracotta.css' },
             { name: 'Black on Cream', theme: '../inc/css/th-l-cr-m.css'},
             { name: 'Black on Cream, Thin Body Text', theme: '../inc/css/th-l-cr-m-thin.css'},
             { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight-m.css'},
@@ -172,11 +165,11 @@
         // Add section headers with icons to theme list
         const sections = [
             { startIdx: 0, name: 'Main', icon: 'fa-stars' },
-            { startIdx: 5, name: 'All Sans-Serif', icon: 'fa-font-case' },
-            { startIdx: 8, name: 'Light Themes', icon: 'fa-lightbulb-on' },
-            { startIdx: 11, name: 'Dark Themes', icon: 'fa-moon-stars' },
-            { startIdx: 18, name: 'University of Glasgow', icon: 'fa-university' },
-            { startIdx: 22, name: 'Experimental', icon: 'fa-flask' }
+            { startIdx: 6, name: 'All Sans-Serif', icon: 'fa-font-case' },
+            { startIdx: 9, name: 'Light Themes', icon: 'fa-lightbulb-on' },
+            { startIdx: 12, name: 'Dark Themes', icon: 'fa-moon-stars' },
+            { startIdx: 19, name: 'University of Glasgow', icon: 'fa-university' },
+            { startIdx: 23, name: 'Experimental', icon: 'fa-flask' }
         ];
 
         const themePanel = document.querySelector('.slide-menu-panel[data-panel="Themes"] ul');

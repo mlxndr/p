@@ -84,12 +84,10 @@
 * *Regular Activities* (continuous)
   * Course and programme approval
   * Student feedback and representation
-
 * *Annual Activities* (yearly reflection)
   * Annual monitoring
   * Performance data review
   * Enhancement initiatives
-
 * *Periodic Activities* (5-6 year cycles)
   * Periodic Subject Review
   * Student-Facing Service Reviews and Graduate School Review

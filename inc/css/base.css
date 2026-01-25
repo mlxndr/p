@@ -11,7 +11,7 @@
     --mga-atkinson: 'Atkinson Hyperlegible', 'Georgia', serif;
 
     /* Sizes */
-    --r-main-font-size: 32px;
+    --r-main-font-size: 52px;
 
     /* Colors */
     --progress-background: background-color;
@@ -26,17 +26,7 @@
     --r-dark-link-color: #5F9EA0;
 
     font-variant-numeric: oldstyle-nums;
-    -moz-font-feature-settings: "onum";
-    -webkit-font-feature-settings: "onum";
-    font-feature-settings: "onum";
-    font-variant-ligatures: common-ligatures;
-    -moz-font-feature-settings: "liga", "clig";
-    -webkit-font-feature-settings: "liga", "clig";
-    font-feature-settings: "liga", "clig";
-    font-variant-ligatures: contextual;
-    -moz-font-feature-settings: "calt";
-    -webkit-font-feature-settings: "calt";
-    font-feature-settings: "calt";
+    font-variant-ligatures: common-ligatures contextual;
 }
 
 img {
@@ -44,6 +34,11 @@ img {
     box-shadow: none;
     max-width: calc(66vw);
     max-height: calc(66vh);
+}
+
+img.r-stretch {
+    max-width: 100%;
+    max-height: 100%;
 }
 
 /* Progress bar */
@@ -68,27 +63,29 @@ img {
 
 /* Headings */
 
-h1, h2, h3 {
+.reveal h1, .reveal h2, .reveal h3 {
     font-family: var(--r-heading-font);
     text-transform: none;
     font-variant: small-caps;
     font-weight: 300;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
 }
 
-h2, h3 {
+.reveal h2, .reveal h3 {
     border-bottom: 2.35px solid var(--r-border-color);
     text-align: left;
 }
 
-h1, h2, .pres-title {
+.reveal h1, .reveal h2, .reveal .pres-title {
     font-size: 1.8em;
 }
 
-h1, .pres-title {
+.reveal h1, .reveal .pres-title {
     font-weight: 800;
 }
 
-h3 {
+.reveal h3 {
     font-size: 1.4em;
 }
 
@@ -114,6 +111,8 @@ h3 {
 
 .reveal ul ul {
     font-size: 85%;
+    margin-top: 14px;
+    margin-bottom: 20px;
 }
 
 .subtle { 
@@ -122,6 +121,8 @@ h3 {
 
 li::marker {
     color: var(--r-border-color);
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
 }
 
 .slidequote { 
@@ -224,7 +225,7 @@ li::marker {
 
 .reveal .tpa3 {
     width: 100%; 
-    font-size: 20pt; 
+    font-size: 0.625em;
     line-height: 1.3;
 }
 
@@ -243,7 +244,7 @@ li::marker {
 .reveal .tpb1 {
     font-family: var(--r-main-font);
     font-weight: 200;
-    margin: 20px; 
+    margin: 0.625em; 
     padding: 0px;
 }
 
@@ -257,7 +258,7 @@ li::marker {
 .reveal .tpb3 {
     font-family: var(--r-main-font);
     font-weight: 200;
-    font-size: 20pt;
+    font-size: 0.625em;
     margin: 1px;
     padding: 0px;
 }

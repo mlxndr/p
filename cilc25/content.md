@@ -523,11 +523,12 @@ Short and narrow: thin, as in thin end of the wedge
 
 --
 
-![Press Coverage Chart](img/image15.png) <!-- .element: class="r-stretch" -->
+
+<img src="img/image15.png" alt="Press Coverage Chart" class="r-stretch">
 
 --
 
-![Press Coverage Comparison](img/image17.png) <!-- .element: class="r-stretch" -->
+<img src="img/image17.png" alt="Press Coverage Comparison" class="r-stretch">
 
 --
 

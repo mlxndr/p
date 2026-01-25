@@ -225,7 +225,7 @@
 ## Open Questions
 
 1. Should the 'intelligent average individual' be a medieval speaker or an anachronistic modern user? What changes if we choose one over the other?
-2. The proposed hierarchy (Agents/Practitioners, Locations/Institutions, Instruments, Processes, Materials/Substances/Objects, Documents) works well for material culture. Will it do justice to concepts, statuses, doctrines, relationships, and rights?
+2. The proposed hierarchy *(Agents/Practitioners, Locations/Institutions, Instruments, Processes, Materials/Substances/Objects, Documents)* works well for material culture. Will it do justice to concepts, statuses, doctrines, relationships, and rights?
 3. Can 'folk taxonomy' apply to highly abstract concepts at all? Should fear of God sit near fear of spiders? What does 'what's it for?' mean when applied to sin, justice, or heresy?
 4. Should polysemous terms be split (preserving category coherence) or kept together (preserving semantic connections)? Or are we compounding dictionary flaws with thesaurus flaws?
 5. For a specialised domain, what counts as 'average'? Who navigates a thesaurus of learned professions, and what are they looking for?

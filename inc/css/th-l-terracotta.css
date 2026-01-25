@@ -9,15 +9,20 @@
     --r-serif-font: 'Century Supra', Georgia, serif;
 
     /* Theme colors */
-    --terracotta: #C0644B;
-    --cream-bg: #F5EBE0;
+    --terracotta: #D65F3D;
+    --cream-bg: #FBF8F5;
+    --title-subtitle-color: #FDEDD7D0;
     --subject-color: #8B1538;
     --object-color: #D4A017;
+
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+
 }
 
 /* Content slide background (default) */
 .reveal {
-    background-color: var(--cream-bg);
+    background-color: var(--cream-bg) !important;
 }
 
 /* Headings in terracotta */
@@ -26,7 +31,21 @@
 .reveal h3,
 .reveal h4 {
     color: var(--terracotta);
-    font-variant: normal;
+    font-weight: bold;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+}
+
+.reveal h1, .reveal h2, .reveal .pres-title {
+    font-size: 2em;
+}
+
+.reveal section.title-slide .subtle {
+    color: var(--title-subtitle-color) !important;
+}
+
+.reveal section.title-slide hr {
+    border: 1px solid #FDEDD740;
 }
 
 /* Remove heading underlines */
@@ -37,21 +56,61 @@
 
 /* Title slide styling */
 .reveal section.title-slide {
+    text-align: left;
+    font-variant: normal !important;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+
+}
+
+.reveal .slide-background.title-slide {
     background-color: var(--terracotta);
 }
 
+/* Title slide - main title in white */
 .reveal section.title-slide h1,
+.reveal section.title-slide .pres-title-headingfont,
+.reveal section.title-slide .pres-title-mainfont {
+    color: #FFFFFF !important;
+    font-variant: normal !important;
+    font-weight: bold !important;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+}
+
+/* Title slide - subtitle and body text in cream */
 .reveal section.title-slide h2,
+.reveal section.title-slide .pres-subtitle-mainfont,
+.reveal section.title-slide .subtle {
+    color: var(--title-subtitle-color);
+}
+
+/* Title slide - subtitle and body text in white */
 .reveal section.title-slide p,
-.reveal section.title-slide .pres-title-mainfont,
-.reveal section.title-slide .pres-subtitle-mainfont {
+.reveal section.title-slide td,
+.reveal section.title-slide span,
+.reveal section.title-slide .tpa4-l,
+.reveal section.title-slide .tpa4-r {
     color: #FFFFFF;
 }
 
-/* Italic subtitles on title slide */
-.reveal section.title-slide h2,
+/* Title slide - italic subtitle */
 .reveal section.title-slide .pres-subtitle-mainfont {
     font-style: italic;
+    text-align: left !important;
+    font-variant: normal !important;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+}
+
+.reveal section.title-slide table.titlebr {
+    text-align: left;
+}
+
+.reveal section.title-slide .tpa4-l {
+    text-align: left;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
 }
 
 /* Linguistic term colors */
@@ -67,4 +126,9 @@
 .reveal strong,
 .reveal b {
     color: var(--terracotta);
+}
+
+.reveal section.title-slide strong,
+.reveal section.title-slide b {
+    color: #FFFFFF;
 }

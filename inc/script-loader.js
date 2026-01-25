@@ -48,7 +48,7 @@ function setupThemeBasedElements() {
   function getThemeState() {
     const themeLink = document.getElementById('theme');
     const themeHref = themeLink ? themeLink.getAttribute('href') : '';
-    const isDarkTheme = themeHref && (themeHref.includes('th-d') || themeHref.includes('dark.css'));
+    const isDarkTheme = themeHref && (themeHref.includes('th-d') || themeHref.includes('dark.css') || themeHref.includes('th-l-terracotta'));
     return { themeLink, isDarkTheme };
   }
 

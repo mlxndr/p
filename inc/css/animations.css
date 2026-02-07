@@ -1,0 +1,423 @@
+/* ===========================================
+   Animation System for mga.is Presentations
+   Inspired by frontend-slides skill
+   =========================================== */
+
+/* ========== Easing Curves ========== */
+:root {
+    /* Smooth easings */
+    --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+    --ease-in-expo: cubic-bezier(0.95, 0.05, 0.795, 0.035);
+    --ease-in-out-expo: cubic-bezier(0.87, 0, 0.13, 1);
+
+    /* Bounce and spring */
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    /* Utility easings */
+    --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-snappy: cubic-bezier(0.25, 0.1, 0.25, 1);
+
+    /* Duration presets */
+    --duration-fast: 0.2s;
+    --duration-normal: 0.4s;
+    --duration-slow: 0.6s;
+    --duration-slower: 0.8s;
+    --duration-epic: 1.2s;
+}
+
+/* ========== Core Keyframes ========== */
+
+/* Blur-in: content fades in from blurred state */
+@keyframes blur-in {
+    from {
+        opacity: 0;
+        filter: blur(12px);
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+}
+
+/* Scale-in: content scales up from smaller size */
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Slide-blur-in: combines slide and blur */
+@keyframes slide-blur-in {
+    from {
+        opacity: 0;
+        filter: blur(8px);
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateX(0);
+    }
+}
+
+/* Glitch effect */
+@keyframes glitch {
+    0%, 100% {
+        transform: translate(0);
+        text-shadow: none;
+    }
+    10% {
+        transform: translate(-2px, -1px);
+        text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
+    }
+    20% {
+        transform: translate(2px, 1px);
+        text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff;
+    }
+    30% {
+        transform: translate(-1px, 2px);
+        text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
+    }
+    40% {
+        transform: translate(1px, -1px);
+        text-shadow: -2px 0 #ff00ff, 2px 0 #00ffff;
+    }
+    50% {
+        transform: translate(-2px, 2px);
+        text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
+    }
+    60%, 100% {
+        transform: translate(0);
+        text-shadow: none;
+    }
+}
+
+/* Ken Burns effect for images */
+@keyframes ken-burns {
+    0% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+/* Floating animation */
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Gradient shift for animated backgrounds */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Fade up animation */
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Scanline effect for terminal theme */
+@keyframes scanline {
+    0% {
+        transform: translateY(-100%);
+    }
+    100% {
+        transform: translateY(100vh);
+    }
+}
+
+/* Glow pulse for neon theme */
+@keyframes glow-pulse {
+    0%, 100% {
+        filter: drop-shadow(0 0 5px currentColor);
+    }
+    50% {
+        filter: drop-shadow(0 0 20px currentColor) drop-shadow(0 0 40px currentColor);
+    }
+}
+
+/* Typewriter cursor blink */
+@keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* ========== Utility Classes ========== */
+
+/* Blur-in animation */
+.blur-in {
+    animation: blur-in var(--duration-slow) var(--ease-out-expo) forwards;
+}
+
+/* Scale-in animation */
+.scale-in {
+    animation: scale-in var(--duration-normal) var(--ease-out-expo) forwards;
+}
+
+/* Slide-blur-in animation */
+.slide-blur-in {
+    animation: slide-blur-in var(--duration-slow) var(--ease-out-expo) forwards;
+}
+
+/* Fade-up animation */
+.fade-up {
+    animation: fade-up var(--duration-normal) var(--ease-out-expo) forwards;
+}
+
+/* Ken Burns effect on images */
+.ken-burns {
+    animation: ken-burns 20s ease-in-out infinite alternate;
+}
+
+/* Float animation */
+.float {
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Glitch effect - triggers on hover by default */
+.glitch {
+    position: relative;
+}
+
+.glitch:hover,
+.glitch.active {
+    animation: glitch 0.5s ease-in-out;
+}
+
+/* Glow pulse effect */
+.glow-pulse {
+    animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* ========== Stagger System ========== */
+
+/* Container with staggered children */
+.stagger > * {
+    opacity: 0;
+    animation: blur-in var(--duration-normal) var(--ease-out-expo) forwards;
+}
+
+/* Stagger delays for up to 10 children */
+.stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.stagger > *:nth-child(6) { animation-delay: 0.6s; }
+.stagger > *:nth-child(7) { animation-delay: 0.7s; }
+.stagger > *:nth-child(8) { animation-delay: 0.8s; }
+.stagger > *:nth-child(9) { animation-delay: 0.9s; }
+.stagger > *:nth-child(10) { animation-delay: 1.0s; }
+
+/* Fast stagger variant */
+.stagger-fast > * {
+    opacity: 0;
+    animation: blur-in var(--duration-fast) var(--ease-out-expo) forwards;
+}
+
+.stagger-fast > *:nth-child(1) { animation-delay: 0.05s; }
+.stagger-fast > *:nth-child(2) { animation-delay: 0.1s; }
+.stagger-fast > *:nth-child(3) { animation-delay: 0.15s; }
+.stagger-fast > *:nth-child(4) { animation-delay: 0.2s; }
+.stagger-fast > *:nth-child(5) { animation-delay: 0.25s; }
+.stagger-fast > *:nth-child(6) { animation-delay: 0.3s; }
+.stagger-fast > *:nth-child(7) { animation-delay: 0.35s; }
+.stagger-fast > *:nth-child(8) { animation-delay: 0.4s; }
+.stagger-fast > *:nth-child(9) { animation-delay: 0.45s; }
+.stagger-fast > *:nth-child(10) { animation-delay: 0.5s; }
+
+/* ========== Fragment Animation Enhancements ========== */
+
+/* Enhanced fragment animations using new easings */
+.reveal .slides section .fragment.blur-in {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(10px);
+    transition: opacity var(--duration-slow) var(--ease-out-expo),
+                filter var(--duration-slow) var(--ease-out-expo),
+                transform var(--duration-slow) var(--ease-out-expo);
+}
+
+.reveal .slides section .fragment.blur-in.visible {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0);
+}
+
+.reveal .slides section .fragment.scale-in {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity var(--duration-normal) var(--ease-out-expo),
+                transform var(--duration-normal) var(--ease-out-expo);
+}
+
+.reveal .slides section .fragment.scale-in.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* ========== Animated Boxes/Cards ========== */
+
+/* Base card styling */
+.reveal .card,
+.reveal .box {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.2em 1.5em;
+    margin: 0.5em 0;
+    backdrop-filter: blur(5px);
+}
+
+/* Light theme cards */
+.reveal[class*="th-l"] .card,
+.reveal[class*="th-l"] .box {
+    background: rgba(0, 0, 0, 0.03);
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Card grid - flexbox layout for multiple cards */
+.reveal .card-grid {
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+}
+
+.reveal .card-grid > * {
+    flex: 1 1 300px;
+    min-width: 250px;
+}
+
+/* Card with accent border */
+.reveal .card.accent {
+    border-left: 4px solid var(--r-link-color);
+}
+
+/* Highlighted card */
+.reveal .card.highlight {
+    background: rgba(var(--r-link-color), 0.1);
+    border-color: var(--r-link-color);
+}
+
+/* Card title */
+.reveal .card h3,
+.reveal .card h4,
+.reveal .box h3,
+.reveal .box h4 {
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    border-bottom: none;
+    font-size: 1.1em;
+}
+
+/* Animated cards - combine with stagger */
+.reveal .card.blur-in,
+.reveal .box.blur-in {
+    animation: blur-in var(--duration-slow) var(--ease-out-expo) forwards;
+}
+
+/* Feature boxes - icon + text layout */
+.reveal .feature-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 1em;
+    padding: 1em;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    margin: 0.5em 0;
+}
+
+.reveal .feature-box .icon {
+    font-size: 1.5em;
+    flex-shrink: 0;
+}
+
+.reveal .feature-box .content {
+    flex: 1;
+}
+
+.reveal .feature-box h4 {
+    margin: 0 0 0.3em 0;
+    border-bottom: none;
+    font-size: 1em;
+}
+
+.reveal .feature-box p {
+    margin: 0;
+    font-size: 0.85em;
+    opacity: 0.8;
+}
+
+/* ========== Theme Effect Variables ========== */
+/* Themes can set these to activate canvas effects */
+.reveal {
+    --theme-effect: none;
+    --theme-effect-color: currentColor;
+    --theme-effect-density: 50;
+}
+
+/* ========== Accessibility: Reduced Motion ========== */
+@media (prefers-reduced-motion: reduce) {
+    /* Disable all custom animations */
+    .blur-in,
+    .scale-in,
+    .slide-blur-in,
+    .fade-up,
+    .ken-burns,
+    .float,
+    .glitch,
+    .glitch:hover,
+    .glitch.active,
+    .glow-pulse,
+    .stagger > *,
+    .stagger-fast > * {
+        animation: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+        transform: none !important;
+    }
+
+    /* Disable fragment transitions */
+    .reveal .slides section .fragment.blur-in,
+    .reveal .slides section .fragment.scale-in {
+        transition: opacity 0.01ms !important;
+        filter: none !important;
+        transform: none !important;
+    }
+
+    /* Disable gradient animations */
+    .gradient-shift {
+        animation: none !important;
+        background-position: 0% 50% !important;
+    }
+}

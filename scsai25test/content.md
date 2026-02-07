@@ -46,6 +46,72 @@
 
 ---
 
+## Our Process
+
+<div class="card-grid stagger">
+  <div class="card accent">
+    <h4>1. Discovery</h4>
+    <p>We learn about your needs and goals through collaborative workshops.</p>
+  </div>
+  <div class="card accent">
+    <h4>2. Design</h4>
+    <p>Our team creates solutions tailored to your requirements.</p>
+  </div>
+  <div class="card accent">
+    <h4>3. Delivery</h4>
+    <p>We implement, test, and refine until everything is perfect.</p>
+  </div>
+</div>
+
+---
+
+## Features
+
+<div class="card-grid stagger">
+  <div class="card">
+    <h4>Speed</h4>
+    <p>Lightning fast performance.</p>
+  </div>
+  <div class="card">
+    <h4>Design</h4>
+    <p>Beautiful by default.</p>
+  </div>
+  <div class="card">
+    <h4>Flexible</h4>
+    <p>Adapts to your needs.</p>
+  </div>
+</div>
+
+---
+
+## Why Choose Us?
+
+<div class="stagger">
+  <div class="feature-box">
+    <div class="icon">⚡</div>
+    <div class="content">
+      <h4>Fast</h4>
+      <p>Optimised for performance at every level.</p>
+    </div>
+  </div>
+  <div class="feature-box">
+    <div class="icon">🎨</div>
+    <div class="content">
+      <h4>Beautiful</h4>
+      <p>Designed with attention to every detail.</p>
+    </div>
+  </div>
+  <div class="feature-box">
+    <div class="icon">🔒</div>
+    <div class="content">
+      <h4>Secure</h4>
+      <p>Built with security as a foundation.</p>
+    </div>
+  </div>
+</div>
+
+---
+
 ## Five recent advances
 
 * Reasoning/think-aloud

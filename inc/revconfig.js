@@ -56,7 +56,7 @@
         keyboard: true,
         markers: true,
         themes: [
-            // MAIN (5)
+            // MAIN (6)
             { name: 'Black on Cream', theme: '../inc/css/th-l-cr.css' },
             { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight.css' },
             { name: 'High Accessibility', theme: '../inc/css/th-l-acc.css' },
@@ -67,14 +67,10 @@
             { name: 'Black on Cream', theme: '../inc/css/th-l-cr-m.css'},
             { name: 'Black on Cream, Thin Body Text', theme: '../inc/css/th-l-cr-m-thin.css' },
             { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight-m.css' },
-            // LIGHT THEMES (4)
+            // LIGHT THEMES (6)
             { name: 'Black on Cream', theme: '../inc/css/th-l-cr-m.css'},
             { name: 'Black on Cream, Thin Body Text', theme: '../inc/css/th-l-cr-m-thin.css'},
             { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight-m.css'},
-            // LIGHT THEMES (3)
-            { name: 'Paper', theme: '../inc/css/th-l-bg-paper.css' },
-            { name: 'Plaster', theme: '../inc/css/th-l-bg-plaster.css' },
-            { name: 'Canvas', theme: '../inc/css/th-l-bg-canvas.css' },
             // DARK THEMES (7)
             { name: 'Black', theme: '../inc/css/th-d-bk.css' },
             { name: 'Blue', theme: '../inc/css/th-d-bu.css' },
@@ -83,20 +79,45 @@
             { name: 'Polygons Blue', theme: '../inc/css/th-d-bg-polygonblue.css' },
             { name: 'Polygons Red', theme: '../inc/css/th-d-bg-polygonred.css' },
             { name: 'Black Rows', theme: '../inc/css/th-d-bg-rows.css' },
-            // UNIVERSITY OF GLASGOW (4)
+            // EXPERIMENTAL (6)
             { name: 'UofG Cream', theme: '../inc/css/th-l-bg-uog-cr-2.css' },
-            { name: 'UofG Blue', theme: '../inc/css/th-d-bg-uog-bu.css' },
-            { name: 'UofG Blue with Inverted Fonts', theme: '../inc/css/th-d-bg-uog-bu-invert.css' },
-            { name: 'UofG Black', theme: '../inc/css/th-d-bg-uog-bl.css' },
-            // EXPERIMENTAL (5)
             { name: 'Indoor Kid', theme: '../inc/css/th-l-indoor.css' },
             { name: 'Cream with Inverted Fonts', theme: '../inc/css/th-l-e-cr-invert.css' },
             { name: 'Twilight with Inverted Fonts', theme: '../inc/css/th-d-e-bg-twilight-invert.css' },
             { name: 'Light Green', theme: '../inc/css/th-d-e-lgr.css' },
-            { name: 'Orange', theme: '../inc/css/th-d-e-or.css' }
+            { name: 'Orange', theme: '../inc/css/th-d-e-or.css' },
         ],
         transitions: true,
         custom: [
+            {
+                title: 'Fonts',
+                icon: '<i class="fad fa-font"></i>',
+                content:
+                    '<div class="font-section-header"><span>Presets</span><i class="fad fa-stars"></i></div>' +
+                    '<ul class="slide-menu-items font-presets">' +
+                        '<li class="slide-menu-item" data-preset="default" data-item="0">Equity / Concourse</li>' +
+                        '<li class="slide-menu-item" data-preset="century" data-item="1">Century / Concourse</li>' +
+                        '<li class="slide-menu-item" data-preset="concourse" data-item="2">All Concourse</li>' +
+                        '<li class="slide-menu-item" data-preset="all-century" data-item="3">All Century</li>' +
+                        '<li class="slide-menu-item" data-preset="accessible" data-item="4">Accessible</li>' +
+                    '</ul>' +
+                    '<div class="font-section-header"><span>Heading Font</span><i class="fad fa-heading"></i></div>' +
+                    '<ul class="slide-menu-items font-headings">' +
+                        '<li class="slide-menu-item" data-heading="equity" data-item="5">Equity</li>' +
+                        '<li class="slide-menu-item" data-heading="concourse" data-item="6">Concourse</li>' +
+                        '<li class="slide-menu-item" data-heading="century" data-item="7">Century Supra</li>' +
+                        '<li class="slide-menu-item" data-heading="luciole" data-item="8">Luciole</li>' +
+                        '<li class="slide-menu-item" data-heading="mono" data-item="9">Monaspace Neon</li>' +
+                    '</ul>' +
+                    '<div class="font-section-header"><span>Body Font</span><i class="fad fa-paragraph"></i></div>' +
+                    '<ul class="slide-menu-items font-body">' +
+                        '<li class="slide-menu-item" data-body="equity" data-item="10">Equity</li>' +
+                        '<li class="slide-menu-item" data-body="concourse" data-item="11">Concourse</li>' +
+                        '<li class="slide-menu-item" data-body="century" data-item="12">Century Supra</li>' +
+                        '<li class="slide-menu-item" data-body="luciole" data-item="13">Luciole</li>' +
+                        '<li class="slide-menu-item" data-body="mono" data-item="14">Monaspace Neon</li>' +
+                    '</ul>'
+            },
             {
                 title: 'Info',
                 icon: '<i class="fad fa-info"></i>',
@@ -128,22 +149,25 @@
             setTimeout(function() {
                 const slidesTab = toolbar.querySelector('li[data-panel="Slides"]');
                 const themesTab = toolbar.querySelector('li[data-panel="Themes"]');
+                const fontsTab = toolbar.querySelector('li[data-panel="Custom0"]');
                 const transitionsTab = toolbar.querySelector('li[data-panel="Transitions"]');
-                const infoTab = toolbar.querySelector('li[data-panel="Custom0"]');
+                const infoTab = toolbar.querySelector('li[data-panel="Custom1"]');
                 const closeButton = toolbar.querySelector('#close');
 
-                if (slidesTab && themesTab && transitionsTab && infoTab && closeButton) {
-                    // Reorder DOM: Slides, Themes, Transitions, Info, Close
+                if (slidesTab && themesTab && fontsTab && transitionsTab && infoTab && closeButton) {
+                    // Reorder DOM: Slides, Themes, Fonts, Transitions, Info, Close
                     toolbar.insertBefore(slidesTab, closeButton);
                     toolbar.insertBefore(themesTab, closeButton);
+                    toolbar.insertBefore(fontsTab, closeButton);
                     toolbar.insertBefore(transitionsTab, closeButton);
                     toolbar.insertBefore(infoTab, closeButton);
 
                     // Update data-button attributes to match new order for keyboard nav
                     slidesTab.setAttribute('data-button', '0');
                     themesTab.setAttribute('data-button', '1');
-                    transitionsTab.setAttribute('data-button', '2');
-                    infoTab.setAttribute('data-button', '3');
+                    fontsTab.setAttribute('data-button', '2');
+                    transitionsTab.setAttribute('data-button', '3');
+                    infoTab.setAttribute('data-button', '4');
                 }
             }, 50);
 
@@ -168,8 +192,7 @@
             { startIdx: 6, name: 'All Sans-Serif', icon: 'fa-font-case' },
             { startIdx: 9, name: 'Light Themes', icon: 'fa-lightbulb-on' },
             { startIdx: 12, name: 'Dark Themes', icon: 'fa-moon-stars' },
-            { startIdx: 19, name: 'University of Glasgow', icon: 'fa-university' },
-            { startIdx: 23, name: 'Experimental', icon: 'fa-flask' }
+            { startIdx: 19, name: 'Experimental', icon: 'fa-flask' }
         ];
 
         const themePanel = document.querySelector('.slide-menu-panel[data-panel="Themes"] ul');
@@ -207,5 +230,94 @@
                 item.insertBefore(icon, item.firstChild);
             }
         });
+
+        // ========================================
+        // Font Chooser Logic
+        // ========================================
+
+        // Font class arrays for easy removal
+        const headingClasses = ['heading-equity', 'heading-concourse', 'heading-century',
+                                'heading-luciole', 'heading-mono'];
+        const bodyClasses = ['body-equity', 'body-concourse', 'body-century',
+                             'body-luciole', 'body-mono'];
+
+        // Preset definitions (null means use CSS default)
+        const presets = {
+            default:      { heading: null, body: null },
+            century:      { heading: 'century', body: null },
+            concourse:    { heading: 'concourse', body: 'concourse' },
+            'all-century': { heading: 'century', body: 'century' },
+            accessible:   { heading: 'luciole', body: 'luciole' }
+        };
+
+        const reveal = document.querySelector('.reveal');
+
+        // Restore saved fonts on load
+        const savedHeading = localStorage.getItem('font-heading') || null;
+        const savedBody = localStorage.getItem('font-body') || null;
+        if (savedHeading) reveal.classList.add('heading-' + savedHeading);
+        if (savedBody) reveal.classList.add('body-' + savedBody);
+
+        // Apply fonts and update UI
+        function applyFonts(heading, body) {
+            reveal.classList.remove(...headingClasses, ...bodyClasses);
+            if (heading) reveal.classList.add('heading-' + heading);
+            if (body) reveal.classList.add('body-' + body);
+            localStorage.setItem('font-heading', heading || '');
+            localStorage.setItem('font-body', body || '');
+            updateFontSelections(heading, body);
+        }
+
+        function updateFontSelections(heading, body) {
+            // Clear all selections
+            document.querySelectorAll('[data-preset], [data-heading], [data-body]')
+                .forEach(el => el.classList.remove('selected'));
+
+            // Mark current heading selection
+            if (heading) {
+                const h = document.querySelector('[data-heading="' + heading + '"]');
+                if (h) h.classList.add('selected');
+            }
+            // Mark current body selection
+            if (body) {
+                const b = document.querySelector('[data-body="' + body + '"]');
+                if (b) b.classList.add('selected');
+            }
+            // Check if current combo matches a preset
+            for (const [name, preset] of Object.entries(presets)) {
+                if (preset.heading === heading && preset.body === body) {
+                    const p = document.querySelector('[data-preset="' + name + '"]');
+                    if (p) p.classList.add('selected');
+                    break;
+                }
+            }
+        }
+
+        // Preset click handlers
+        document.querySelectorAll('[data-preset]').forEach(item => {
+            item.addEventListener('click', function() {
+                const preset = presets[this.dataset.preset];
+                applyFonts(preset.heading, preset.body);
+            });
+        });
+
+        // Heading font click handlers
+        document.querySelectorAll('[data-heading]').forEach(item => {
+            item.addEventListener('click', function() {
+                const currentBody = localStorage.getItem('font-body') || null;
+                applyFonts(this.dataset.heading, currentBody);
+            });
+        });
+
+        // Body font click handlers
+        document.querySelectorAll('[data-body]').forEach(item => {
+            item.addEventListener('click', function() {
+                const currentHeading = localStorage.getItem('font-heading') || null;
+                applyFonts(currentHeading, this.dataset.body);
+            });
+        });
+
+        // Initialize selection state
+        updateFontSelections(savedHeading, savedBody);
     });
 })();

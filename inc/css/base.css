@@ -1,14 +1,13 @@
 /* Base variables */
 :root {
     /* Base fonts */
-    --r-heading-font: 'Equity', 'Constantia', 'Georgia', serif;
-    --r-heading-bold-font: 'Equity', 'Constantia', 'Georgia', serif;
-    --r-main-font: 'Concourse', 'Aptos', 'Corbel', 'Helvetica Neue', 'Helvetica', sans-serif;
-    --r-serif-font: 'Equity', 'Constantia', 'Georgia', serif;
-    --r-code-font: 'Monaspace Neon', 'Fira Code', 'Iosevka', 'Cascadia Code', monospace;
-    --mga-century: 'Century Supra', 'Georgia', serif;
-    --mga-indoor: 'Indoor Kid', serif;
-    --mga-atkinson: 'Atkinson Hyperlegible', 'Georgia', serif;
+    --r-heading-font: 'Equity', 'Noto Serif', 'Constantia', 'Georgia', serif;
+    --r-heading-bold-font: 'Equity', 'Noto Serif', 'Constantia', 'Georgia', serif;
+    --r-main-font: 'Concourse', 'Noto Sans', 'Aptos', 'Corbel', 'Helvetica Neue', 'Helvetica', sans-serif;
+    --r-serif-font: 'Equity', 'Noto Serif', 'Constantia', 'Georgia', serif;
+    --r-code-font: 'Monaspace Neon', 'Noto Sans Mono', 'Fira Code', 'Iosevka', 'Cascadia Code', monospace;
+    --mga-century: 'Century Supra', 'Noto Serif', 'Georgia', serif;
+    --mga-indoor: 'Indoor Kid', 'Noto Serif', serif;
 
     /* Sizes */
     --r-main-font-size: 52px;
@@ -440,6 +439,18 @@ li::marker {
 .fa-code::before { content: '\f121'; }
 .fa-code::after { content: '\10f121'; }
 
+.fa-briefcase::before { content: '\f0b1'; }
+.fa-briefcase::after { content: '\10f0b1'; }
+
+.fa-palette::before { content: '\f53f'; }
+.fa-palette::after { content: '\10f53f'; }
+
+.fa-heading::before { content: '\f1dc'; }
+.fa-heading::after { content: '\10f1dc'; }
+
+.fa-paragraph::before { content: '\f1dd'; }
+.fa-paragraph::after { content: '\10f1dd'; }
+
 /* ========================================
    Menu Visual Enhancements
    ======================================== */
@@ -500,7 +511,14 @@ html body .slide-menu-wrapper .slide-menu {
     --fa-secondary-color: #a29bfe;
 }
 
+/* Custom0 = Fonts panel */
 .slide-menu-toolbar li[data-panel="Custom0"] i {
+    --fa-primary-color: #fca5a5;
+    --fa-secondary-color: #f87171;
+}
+
+/* Custom1 = Info panel */
+.slide-menu-toolbar li[data-panel="Custom1"] i {
     --fa-primary-color: #55efc4;
     --fa-secondary-color: #00b894;
 }
@@ -812,4 +830,81 @@ html body .slide-menu-wrapper .slide-menu {
 .reveal > .overlay.overlay-help .viewport .viewport-inner table td:last-child {
     color: var(--menu-text, #e0e0e0);
     opacity: 0.9;
+}
+
+/* ===========================================
+   Font Chooser - Heading Font Overrides
+   =========================================== */
+.reveal.heading-equity {
+    --r-heading-font: 'Equity', 'Constantia', 'Georgia', serif;
+    --r-heading-bold-font: 'Equity', 'Constantia', 'Georgia', serif;
+}
+.reveal.heading-concourse {
+    --r-heading-font: 'Concourse', 'Aptos', 'Corbel', sans-serif;
+    --r-heading-bold-font: 'Concourse', 'Aptos', 'Corbel', sans-serif;
+}
+.reveal.heading-century {
+    --r-heading-font: 'Century Supra', 'Georgia', serif;
+    --r-heading-bold-font: 'Century Supra', 'Georgia', serif;
+}
+.reveal.heading-luciole {
+    --r-heading-font: 'Luciole', sans-serif;
+    --r-heading-bold-font: 'Luciole', sans-serif;
+}
+.reveal.heading-mono {
+    --r-heading-font: 'Monaspace Neon', monospace;
+    --r-heading-bold-font: 'Monaspace Neon', monospace;
+}
+
+/* ===========================================
+   Font Chooser - Body Font Overrides
+   =========================================== */
+.reveal.body-concourse {
+    --r-main-font: 'Concourse', 'Aptos', 'Corbel', sans-serif;
+}
+.reveal.body-equity {
+    --r-main-font: 'Equity', 'Constantia', 'Georgia', serif;
+}
+.reveal.body-luciole {
+    --r-main-font: 'Luciole', sans-serif;
+}
+.reveal.body-mono {
+    --r-main-font: 'Monaspace Neon', monospace;
+}
+.reveal.body-century {
+    --r-main-font: 'Century Supra', 'Georgia', serif;
+}
+
+/* ===========================================
+   Font Panel Section Headers
+   =========================================== */
+.font-section-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    font-family: var(--r-main-font);
+    font-size: 0.85em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em;
+    color: var(--menu-text-muted);
+    padding: 15px 18px 8px !important;
+    border-top: 1px solid var(--menu-divider-color);
+    margin-top: 8px;
+    cursor: default !important;
+    pointer-events: none;
+}
+
+.font-section-header:first-child {
+    border-top: none;
+    margin-top: 0;
+}
+
+.font-section-header span {
+    flex: 1;
+}
+
+.font-section-header i {
+    font-size: 1em;
+    opacity: 0.6;
+    margin-left: auto;
 }

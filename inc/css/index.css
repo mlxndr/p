@@ -80,6 +80,12 @@ a:hover {
     margin-bottom: var(--space-s);
 }
 
+.sidebar-image {
+    width: 100px;
+    height: auto;
+    margin-bottom: var(--space-s);
+}
+
 .sidebar-name {
     font-family: 'Concourse', sans-serif;
     font-size: 1.05rem;

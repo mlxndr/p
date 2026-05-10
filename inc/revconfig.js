@@ -60,7 +60,7 @@
             { name: 'Black on Cream', theme: '../inc/css/th-l-cr.css' },
             { name: 'White on Twilight Background', theme: '../inc/css/th-d-bg-twilight.css' },
             { name: 'High Accessibility', theme: '../inc/css/th-l-acc.css' },
-            { name: 'University of Glasgow', theme: '../inc/css/th-l-bg-uog-cr-1.css' },
+            { name: 'University of Glasgow', theme: '../inc/css/th-l-uog.css' },
             { name: 'Historical Thesaurus', theme: '../inc/css/th-l-bg-ht-cr.css' },
             { name: 'Terracotta', theme: '../inc/css/th-l-terracotta.css' },
             // ALL SANS-SERIF (3)

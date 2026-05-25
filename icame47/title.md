@@ -1,6 +1,6 @@
 <!-- .slide: class="title-slide" -->
 <br><br><h1 class="pres-title-headingfont" style="font-size: 2.2em !important; font-variant: small-caps !important; font-weight: 700">The Fairest in the Land?</h1>
-<p class="pres-subtitle-mainfont" style="font-size: 1.2em; text-align: center; padding-bottom: 1em; font-weight: 300;">Verbatim Transcriptions and Paralinguistic Features in the <i>Mirror of Parliament Corpus</i> (1828-1841)</p>
+<p class="pres-subtitle-mainfont" style="font-size: 1.2em; text-align: center; padding-bottom: 1em; font-weight: 300;">Verbatim Transcriptions and Paralinguistic Features <br>in the <i>Mirror of Parliament Corpus</i></p>
 <table class="titlebr" width="100%">
     <tr>
         <td class="tpa4-l">Marc Alexander<br><span class="subtle">University of Glasgow</span></td>

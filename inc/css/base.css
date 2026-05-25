@@ -908,3 +908,167 @@ html body .slide-menu-wrapper .slide-menu {
     opacity: 0.6;
     margin-left: auto;
 }
+
+/* ===========================================
+   Slide layout utilities: image + bullets
+   .two-col  = flex, fixed image proportion
+   .two-grid = grid, image at natural width
+   =========================================== */
+
+/* Shared image/text reset so nested markdown behaves.
+   max-height uses vh so images stay sane regardless of slide sizing.
+   .reveal prefix and !important needed to beat reveal.js's own img rules
+   and the global img { max-width: 66vw } in this file.
+   Override per slide with inline style="max-height: 50vh;" on the <img>,
+   or per layout by adding .h-50, .h-60, .h-70, .h-80 to the container. */
+.reveal .two-col img,
+.reveal .two-grid img,
+.reveal .two-img img {
+    margin: 0 !important;
+    max-width: 100% !important;
+    max-height: 65vh !important;
+    height: auto !important;
+    width: auto !important;
+    object-fit: contain;
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+/* In .two-img, images fill the column by default so they don't sit small.
+   Add .natural to the container to revert to natural width. */
+.reveal .two-img img {
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: 70vh !important;
+}
+
+.reveal .two-img.natural img {
+    width: auto !important;
+}
+
+/* Container-level height presets, applied alongside .two-col / .two-grid / .two-img */
+.reveal .two-col.h-50 img, .reveal .two-grid.h-50 img, .reveal .two-img.h-50 img { max-height: 50vh !important; }
+.reveal .two-col.h-60 img, .reveal .two-grid.h-60 img, .reveal .two-img.h-60 img { max-height: 60vh !important; }
+.reveal .two-col.h-70 img, .reveal .two-grid.h-70 img, .reveal .two-img.h-70 img { max-height: 70vh !important; }
+.reveal .two-col.h-80 img, .reveal .two-grid.h-80 img, .reveal .two-img.h-80 img { max-height: 80vh !important; }
+
+.two-col ul,
+.two-grid ul,
+.two-col ol,
+.two-grid ol {
+    margin: 0;
+    padding-left: 1.2em;
+    text-align: left;
+}
+
+/* Flex variant: image column is a set fraction of the slide */
+.two-col {
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+    width: 100%;
+}
+
+.two-col > .col-img {
+    flex: 0 0 40%;       /* override per-slide with inline style if needed */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.two-col > .col-text {
+    flex: 1;
+    min-width: 0;        /* prevents long words pushing the image out */
+}
+
+/* Grid variant: image takes its natural width, text fills the rest */
+.two-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    gap: 1.5em;
+    width: 100%;
+}
+
+.two-grid > .col-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.two-grid > .col-text {
+    min-width: 0;
+}
+
+/* Two-image variant: two images side by side, sized to fit.
+   Sized in the slide's virtual coordinate system (1920x1080 per revconfig.js)
+   rather than vh, because reveal scales the slide and vh refers to the
+   real viewport instead. Container height defaults to 800px (about 74%
+   of slide height) leaving room for a heading above and captions below. */
+.reveal .two-img {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 3em;
+    width: 100%;
+    height: 800px;
+    align-items: stretch;
+    justify-items: stretch;
+    margin: 0 auto;
+}
+
+.reveal .two-img.h-50 { height: 540px; }
+.reveal .two-img.h-60 { height: 648px; }
+.reveal .two-img.h-70 { height: 756px; }
+.reveal .two-img.h-80 { height: 864px; }
+.reveal .two-img.h-90 { height: 972px; }
+
+/* Each grid cell: flex column that places image above caption */
+.reveal .two-img > * {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.reveal .two-img > figure {
+    margin: 0;
+    text-align: center;
+}
+
+/* Image fills available cell space, contain preserves aspect ratio */
+.reveal .two-img img {
+    flex: 1 1 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    object-fit: contain !important;
+    margin: 0 !important;
+    display: block !important;
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+}
+
+.reveal .two-img figcaption {
+    flex: 0 0 auto;
+    width: 100%;
+    text-align: center;
+    margin-top: 0.6em;
+    font-size: 0.7em;
+    font-style: italic;
+    opacity: 0.85;
+    line-height: 1.3;
+}
+
+/* Optional vertical alignment helpers; add alongside .two-col / .two-grid */
+.two-col.align-top,
+.two-grid.align-top { align-items: start; }
+
+.two-col.align-bottom,
+.two-grid.align-bottom { align-items: end; }

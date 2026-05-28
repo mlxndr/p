@@ -12,7 +12,6 @@
 * Weekly publication of parliamentary debates, both Houses
 * Employed dedicated shorthand writers in the chamber
 * One of those reporters: the young Charles Dickens, 'the best reporter in the gallery' (Knight 1865)
-* Unlike the more-established *Hansard*, shorthand reporters used first-person reporting throughout: 'I believe...' not 'Mr. Gladstone said he believed that...'
 
 </div>
 </div>
@@ -24,18 +23,6 @@
 '...an attempt was boldly made by a gentleman named Barrow, to produce a verbal report of the proceedings of Parliament. He succeeded and carried it on for several years; and, for those years, I do not hesitate to say, that Barrow's *Mirror of Parliament* is the primary record, and not *Hansard's Debates*, because of the greater fulness which Barrow aimed at and obtained. It is within my own recollection – in the year 1833 or 1834 – just after the Reform Bill, that Gentlemen, who wanted to correct their speeches, did it for Barrow’s *Mirror of Parliament.'*
 
 <div style='font-size: 80%; text-align: right;'>W. E. Gladstone, HC Deb 20 April 1877, c1576–77</div>
-
---
-
-## Why Don't We Know About It?
-
-* The *Mirror* was ruinously expensive to produce
-* Barrow's personal loss: £5,000 (£450k/€520k in 2026 equivalent)
-* Ceased publication October 1841
-* No digital edition, survives as some scanned PDFs or hardcopies in research libraries
-* Only a handful of scholarly citations (Brown 1955; McBath 1970; Jupp 1998)
-* Barrow died in 1858, buried in a pauper's grave at Norwood
-  * Notice of his death in the *Gentleman's Magazine*, May 1858: 'towards the close of his life, Mr. Barrow, like many other brethren of the pen, suffered severely from poverty'
 
 --
 
@@ -52,7 +39,20 @@
 </figure>
 </div>
 
----
+--
+
+## Features of the Mirror
+
+* Published weekly, so on average about three days after the event
+* Paralinguistic markers in square brackets:
+  * [Hear, hear!]
+  * [Great laughter.]
+  * [Cries of 'No, no!']
+  * [With great warmth]
+  * [Striking the Table with his hand]
+* Audience reactions attributed to benches: *Opposition cheers, Ministerial laughter*
+
+--
 
 ## How Good Is It?
 
@@ -73,20 +73,16 @@ Jupp (1998) compared Mirror speech lengths against contemporaneous timings:
 
 ~6,000 words an hour is the pace of a lecture carefully delivered from a text
 
-
 --
 
-## Features of the Mirror
+## Why Don't We Know About It?
 
-* Published about three or so days after the event
-* Paralinguistic markers in square brackets:
-  * [Hear, hear!]
-  * [Great laughter.]
-  * [Cries of 'No, no!']
-  * [With great warmth]
-  * [Striking the Table with his hand]
-* Stage directions and procedural notes
-* Audience reactions attributed to benches: *Opposition cheers, Ministerial laughter*
+* The *Mirror* was ruinously expensive to produce
+* Barrow's personal loss: £5,000 (£450k/€520k in 2026 equivalent)
+* Ceased publication October 1841
+* No digital edition, survives as some scanned PDFs or hardcopies in research libraries
+* Only a handful of scholarly citations (Brown 1955; McBath 1970; Jupp 1998)
+* Barrow died in 1858, buried in a pauper's grave at Norwood
 
 ---
 
@@ -95,7 +91,7 @@ Jupp (1998) compared Mirror speech lengths against contemporaneous timings:
 <div class="two-grid">
 <div class="col-img">
 
-![A portrait of the elder Thomas Curson Hansasrd](./img/tc-hansard.png)
+![A portrait of the elder Thomas Curson Hansard](./img/tc-hansard.png)
 
 </div>
 <div class="col-text">
@@ -219,7 +215,7 @@ Several Honourable Members.—Oh! Oh! Oh!
 
 --
 
-## From OCR to Corpus
+## Corpus Pipeline
 
 * Raw OCR → correction pipeline (hyphen rejoin, spell-check with historical whitelist, LaTeX cleanup)
 * Corrected pages → speech segmentation (speaker identification from period title conventions)
@@ -229,7 +225,7 @@ Several Honourable Members.—Oh! Oh! Oh!
 
 ---
 
-## What the Mirror Preserves
+## Paralinguistics
 
 * **939 paralinguistic markers** across the three pilot periods
 * Classified into approval, disapproval, laughter, procedural, manner, interjection:
@@ -277,7 +273,7 @@ Several Honourable Members.—Oh! Oh! Oh!
 
 * '...one or two cases of *direct piracy* from the reports of the Mirror of Parliament, committed by a predecessor in this branch of literature, whose former pretensions should have withheld him...' J.H. Barrow, 6 December 1831
 
---
+---
 
 ## Comparative Signatures
 
@@ -339,3 +335,4 @@ Vice, John & Stephen Farrell. 2017. *The History of Hansard*. London: House of L
 * Full 1828–1841 corpus (all surviving Mirror volumes)
 * Systematic comparison with newspaper sources (*Times*, *Morning Chronicle*)
 * Analysis of editorial overlap and plagiarism
+

@@ -108,6 +108,17 @@
             return null;
         }
 
+        /* The same inline grammar as the slides: *italics*, ^^small caps^^,
+           %%subtle%%; a | line break reads as a plain space in a listing */
+        function fmt(str) {
+            return String(str)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/\*([^*]+)\*/g, '<i>$1</i>')
+                .replace(/\^\^([^^]+)\^\^/g, '<span style="font-variant-caps: all-small-caps;">$1</span>')
+                .replace(/%%([^%]+)%%/g, '<span style="opacity: 0.65;">$1</span>')
+                .replace(/\s*\|\s*/g, ' ');
+        }
+
         async function loadPresentations() {
             try {
                 const response = await fetch('/manifest.json');
@@ -142,12 +153,12 @@
                     if (pres.title) {
                         // Rich display from meta.json
                         let metaParts = [];
-                        if (pres.event) metaParts.push(pres.event);
-                        if (pres.location) metaParts.push(pres.location);
+                        if (pres.event) metaParts.push(fmt(pres.event));
+                        if (pres.location) metaParts.push(fmt(pres.location));
                         if (pres.parsedDate) metaParts.push(pres.parsedDate.display);
-                        
+
                         li.innerHTML = `
-                            <a href="/${pres.dirName}" class="presentation-rich">${pres.title}</a>
+                            <a href="/${pres.dirName}" class="presentation-rich">${fmt(pres.title)}</a>
                             ${metaParts.length > 0 ? `<span class="presentation-meta">${metaParts.join(', ')}</span>` : ''}
                         `;
                     } else {

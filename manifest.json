@@ -2,45 +2,91 @@
   "presentations": [
     {
       "dirName": "cilc25",
-      "title": "'up yours at the end of life’: Opposition, Emotion, and Overlap in a Corpus of Scottish Debates on Assisted Dying",
-      "date": "2025-05",
-      "event": "16th International Conference on Corpus Linguistics",
-      "location": "Salamanca, Spain"
+      "title": "‘up yours at the end of life’",
+      "subtitle": "Opposition, Emotion, and Overlap in a | Corpus of Scottish Debates on Assisted Dying",
+      "date": "May 2025",
+      "event": "^^CILC16^^",
+      "location": "Salamanca",
+      "logos": [
+        "leverhulme",
+        "uog"
+      ],
+      "authors": [
+        {
+          "name": "Marc Alexander",
+          "affiliation": "University of Glasgow",
+          "email": "marc.alexander@glasgow.ac.uk"
+        },
+        {
+          "name": "James Balfour",
+          "affiliation": "University of Glasgow",
+          "email": "james.balfour@glasgow.ac.uk"
+        }
+      ]
     },
     {
       "dirName": "icame47",
-      "title": "The Fairest in the Land: Verbatim Transcriptions and Paralinguistic Features in the Mirror of Parliament Corpus",
-      "date": "2026-05",
-      "event": "ICAME47",
-      "location": "Koblenz, Germany"
+      "title": "The Fairest in the Land?",
+      "subtitle": "Verbatim Transcriptions and Paralinguistic Features | in the *Mirror of Parliament Corpus*",
+      "date": "May 2026",
+      "event": "^^ICAME47^^",
+      "logos": [
+        "leverhulme",
+        "uog"
+      ],
+      "location": "Koblenz"
     },
     {
       "dirName": "mainz25",
-      "title": "University of Glasgow: Academic Quality Processes",
-      "date": "2025-07",
-      "event": "Glasgow-Mainz Standards",
-      "location": "Mainz"
+      "title": "University of Glasgow: | Academic Quality Processes",
+      "authors": [
+        {
+          "name": "Professor Marc Alexander"
+        },
+        {
+          "name": "Dr Andrew Struan"
+        }
+      ],
+      "event": "University of Mainz",
+      "date": "7 July 2025",
+      "logos": [
+        "uog"
+      ]
     },
     {
       "dirName": "oup25",
-      "title": "HT and HTOED: Draft Guiding Principles",
-      "date": "2025-07",
-      "event": "Oxford University Press",
-      "location": "Oxford"
+      "title": "HT and HTOED: | Draft Guiding Principles",
+      "date": "July 2025",
+      "event": "^^OUP^^",
+      "location": "Oxford",
+      "author": [],
+      "affiliation": [],
+      "email": [],
+      "logos": [],
+      "closing": false
     },
     {
       "dirName": "scsai25",
-      "title": "SCS - Some AI updates",
-      "date": "2025-03",
+      "title": "Some AI updates",
+      "date": "March 2025",
+      "author": [],
+      "affiliation": [],
+      "email": [],
       "event": "SCS School Collective",
-      "location": "Glasgow"
+      "logos": [],
+      "closing": false
     },
     {
       "dirName": "waw-me26",
-      "title": "Folk/Lore: The Question of the 'Intelligent Average Individual'",
-      "date": "2026-01",
-      "event": "WAW-ME Workshop 'Identifying and Classifying Middle English Technical Terms'",
-      "location": "Zürich, Switzerland"
+      "title": "Folk/Lore",
+      "subtitle": "The Question of the ‘Intelligent Average Individual’",
+      "date": "January 2026",
+      "event": "^^WAW-ME^^",
+      "location": "Zürich",
+      "logos": [
+        "ht",
+        "uog"
+      ]
     }
   ]
 }

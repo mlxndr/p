@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>HT/HTOED Draft Guilding Principles</title>
+    <meta charset="utf-8">
+    <title>Presentation</title>
     <script>
         fetch('../inc/pres-head.html')
             .then(response => response.text())
@@ -9,17 +10,21 @@
                        document.head.insertAdjacentHTML('afterbegin', html);
                    });
     </script>
+    <script src="../inc/qr.js"></script>
 </head>
 <body>
     <div class="reveal">
         <div class="slides"  style="height:100%;width:100%;">
-            <!-- Title slide - loaded from markdown file -->
-            <section data-markdown="./title.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
-            
+            <!-- Title slide - generated from meta.json + inc/site.json -->
+            <section data-meta="title"></section>
+
             <!-- Content slides -->
             <section data-markdown="./content.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
+
+            <!-- Closing slide - generated from meta.json (QR from the folder URL) -->
+            <section data-meta="closing"></section>
         </div>
-    </div>    
+    </div>
 
     <script src="../inc/scripts-config.js"></script>
     <script src="../inc/script-loader.js"></script>

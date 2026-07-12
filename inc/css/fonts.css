@@ -1,3 +1,8 @@
+/* Noto Sans/Serif from the Google Fonts CDN: glyph-coverage fallback for
+   characters the primary fonts lack (IPA, phonetic symbols, non-Latin).
+   Google serves unicode-range-sliced subsets, so browsers fetch only the
+   slices a deck actually uses. Self-hosting those slices is possible if
+   the CDN dependency ever becomes a problem. */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 
 .sc {
@@ -348,10 +353,66 @@
     src: url('woff2/Luciole-BoldItalic.woff2') format('woff2');
     text-rendering: optimizeLegibility;
 }
+/* Font Awesome 5 Duotone, self-hosted: available for slide content icons.
+   The rendered subset is defined in base.css (codepoint pairs) — add a
+   pair there to use a new icon. */
 @font-face {
     font-family: 'Font Awesome 5 Duotone';
     font-style: normal;
     font-weight: 900;
-    font-display: block;
+    font-display: swap;
     src: url('woff2/fa-duotone-900.woff2') format('woff2');
+}
+
+/* ---------------------------------------------------------
+   Self-hosted theme faces (variable fonts where available).
+   EB Garamond: Letterpress — self-hosted so the full OpenType
+   feature set (real small caps, oldstyle figures) is guaranteed;
+   the Google-served copy strips them. Premiera: The Library and
+   Damson body text. Bild: Marginalia's condensed margin voice
+   (wdth 50-100 via font-stretch, wght 100-900).
+   --------------------------------------------------------- */
+
+@font-face {
+    font-family: 'EB Garamond';
+    src: url('woff2/EBGaramond[wght].woff2') format('woff2');
+    font-weight: 400 800;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'EB Garamond';
+    src: url('woff2/EBGaramond-Italic[wght].woff2') format('woff2');
+    font-weight: 400 800;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Premiera';
+    src: url('woff2/Premiera-Book.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Premiera';
+    src: url('woff2/Premiera-Italic.woff2') format('woff2');
+    font-weight: 400;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Premiera';
+    src: url('woff2/Premiera-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Bild';
+    src: url('woff2/BildVariableV4[wdth,wght].woff2') format('woff2');
+    font-weight: 100 900;
+    font-stretch: 50% 100%;
+    font-style: normal;
+    font-display: swap;
 }

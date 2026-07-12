@@ -30,12 +30,38 @@ function loadScripts() {
       return Promise.all(enabledPlugins.map(loadScript));
     })
     .then(() => {
+      // Build metadata slides (title/closing placeholders) and expand
+      // @-directives in external markdown before Reveal initialises
+      // (both scripts load with the plugins above; the config script below
+      // is what calls Reveal.initialize, so both must finish first)
+      const pre = [];
+      if (typeof buildMetaSlides === 'function') {
+        pre.push(buildMetaSlides());
+      }
+      if (typeof expandMarkdownSections === 'function') {
+        pre.push(expandMarkdownSections());
+      }
+      return Promise.all(pre);
+    })
+    .then(() => {
       // After all plugins load, load config
       return loadScript(scriptConfig.config);
     })
     .then(() => {
       // Setup theme-based elements after config is loaded
       setupThemeBasedElements();
+      // Position @zoom detail images now Reveal has initialised
+      if (typeof positionZoomImages === 'function') {
+        positionZoomImages();
+      }
+      // Autofit overflowing split-slide text columns (re-run once webfonts
+      // settle, since metrics shift)
+      if (typeof autofitFillSlides === 'function') {
+        autofitFillSlides();
+        if (document.fonts && document.fonts.ready) {
+          document.fonts.ready.then(autofitFillSlides);
+        }
+      }
     })
     .catch(error => {
       showError(error.message);
@@ -48,7 +74,10 @@ function setupThemeBasedElements() {
   function getThemeState() {
     const themeLink = document.getElementById('theme');
     const themeHref = themeLink ? themeLink.getAttribute('href') : '';
-    const isDarkTheme = themeHref && (themeHref.includes('th-d') || themeHref.includes('dark.css') || themeHref.includes('th-l-terracotta'));
+    const isDarkTheme = themeHref && (themeHref.includes('th-d') || themeHref.includes('dark.css') ||
+      // light themes whose title/closing grounds need white logos and QR
+      themeHref.includes('th-l-terracotta') || themeHref.includes('th-l-burgundy') ||
+      themeHref.includes('th-l-slate') || themeHref.includes('th-l-petrol'));
     return { themeLink, isDarkTheme };
   }
 
@@ -139,6 +168,19 @@ function setupThemeBasedElements() {
   function updateThemeElements() {
     switchLogos();
     updateQRCodes();
+    // Themes change font metrics, so re-fit overflowing split columns and
+    // re-position zoom boxes. The fit resets before measuring, so late
+    // passes correct any early pass that measured mid-load.
+    function refit() {
+      if (typeof autofitFillSlides === 'function') autofitFillSlides();
+      if (typeof positionZoomImages === 'function') positionZoomImages();
+    }
+    const themeLink = document.getElementById('theme');
+    if (themeLink) {
+      themeLink.addEventListener('load', function() { setTimeout(refit, 60); }, { once: true });
+    }
+    setTimeout(refit, 350);
+    setTimeout(refit, 1100);
   }
 
   // Make updateThemeElements available globally for other scripts
@@ -157,6 +199,9 @@ function setupThemeBasedElements() {
     const attrObserver = new MutationObserver(function(mutations) {
       mutations.forEach(function(mutation) {
         if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
+          // Persist the choice (observers attach after the initial theme
+          // is applied, so only genuine changes are saved)
+          try { localStorage.setItem('theme', themeLink.getAttribute('href')); } catch (e) {}
           updateThemeElements();
         }
       });
@@ -177,7 +222,9 @@ function setupThemeBasedElements() {
       if (mutation.type === 'childList') {
         mutation.addedNodes.forEach(function(node) {
           if (node.nodeName === 'LINK' && node.id === 'theme') {
-            // New theme link added - observe it and trigger update
+            // New theme link added (the menu plugin replaces the element):
+            // persist the choice, observe it, and trigger update
+            try { localStorage.setItem('theme', node.getAttribute('href')); } catch (e) {}
             observeThemeLink(node);
             setTimeout(updateThemeElements, 100);
           }

@@ -48,14 +48,14 @@
 * “Individual lexical items are classified according to the feature of least extension”
 * Core idea: Place items in the *narrowest, most specific category* that fits
 * Classic example: *lava* and *volcanic ash*
-  * Said to be best classified with <span style="font-variant: small-caps;">volcano</span>, not with <span style="font-variant: small-caps;">stone</span> or <span style="font-variant: small-caps;">dust</span>
+  * Said to be best classified with ^^volcano^^, not with ^^stone^^ or ^^dust^^
   * Maintains semantic precision
 * BUT: Real implementation reveals complexity
   * Actually ended up in *structure of earth > constituent materials*
   * Shows tension between principle and practical organization
 * How to handle compounds?
-  * *Sea salt* under <span style="font-variant: small-caps;">salt</span> or <span style="font-variant: small-caps;">sea</span>?
-  * *Church bell* under <span style="font-variant: small-caps;">bell</span> or <span style="font-variant: small-caps;">church equipment</span>?
+  * *Sea salt* under ^^salt^^ or ^^sea^^?
+  * *Church bell* under ^^bell^^ or ^^church equipment^^?
 
 --
 
@@ -103,7 +103,7 @@
 * *Hierarchical development*:
   * Save results before next round
   * Sort within categories to create new hierarchy levels
-  * Use <span style="font-variant: small-caps;">oed</span> definitions for guidance, focus on recurring keywords
+  * Use ^^oed^^ definitions for guidance, focus on recurring keywords
   * Consult specialist dictionaries for technical terms
 * *Completion*: Repeat until all material has systematic placement
 

@@ -33,43 +33,43 @@
 
 --
 
-<!-- .slide: data-background-image="img/image4.png" data-background-size="contain" -->
+@image ./img/image4.png alt="BBC News article headlined 'Scottish assisted dying bill passes first vote', with a photo of Liam McArthur MSP holding a banner alongside campaigners with 'Let Us Choose' and 'Assisted Dying' placards outside the Scottish Parliament, 13 May 2025"
 
 --
 
-<!-- .slide: data-background-image="img/image5.png" data-background-size="contain" -->
+@image ./img/image5.png alt="News article headlined 'Assisted Dying debate was Scottish Parliament at its best', with a photo of MSPs including Liam McArthur seated in the Scottish Parliament chamber"
 
 --
 
-<!-- .slide: data-background-image="img/image6.png" data-background-size="contain" -->
+@image ./img/image6.png alt="The Scotsman opinion column headlined 'The cases both for and against Scotland's Assisted Dying Bill', by Professor June Andrews and Liam McArthur MSP, 12 May 2025"
 
 --
 
-<!-- .slide: data-background-image="img/image7.png" data-background-size="contain" -->
+@image ./img/image7.png alt="The Times comment piece by Sarah Ditum headlined 'Assisted dying can't be sanitised. Stop trying', on MPs' attempts to amend the Terminally Ill Adults (End of Life) Bill"
 
 --
 
-<!-- .slide: data-background-image="img/image8.png" data-background-size="contain" -->
+@image ./img/image8.png alt="The Times column by Iain Macwhirter headlined 'I supported voluntary euthanasia before witnessing my mother's death', published ahead of the Holyrood vote on Liam McArthur's assisted dying bill"
 
 --
 
-<!-- .slide: data-background-image="img/image9.png" data-background-size="contain" -->
+@image ./img/image9.png alt="Protesters, some in white masks, holding placards reading 'Kill the Bill, Not the Ill' and 'Don't Make Doctors Killers', captioned as attempts to change assisted dying law in the Scottish and UK parliaments (Getty Images)"
 
 --
 
-<!-- .slide: data-background-image="img/image10.jpeg" data-background-size="contain" -->
+@image ./img/image10.jpeg alt="Campaigners outside the Scottish Parliament holding 'Let Us Choose' and 'Give Me Choice Over My Death' placards behind a blue banner reading 'Vote Yes to Assisted Dying'"
 
 --
 
-<!-- .slide: data-background-image="img/image11.jpeg" data-background-size="contain" -->
+@image ./img/image11.jpeg alt="Opponents of the bill, including a woman using a wheelchair, holding hand-written placards reading 'Vote Against the Bill', 'Support to live NOT assistance to die', and 'Kill the bill Not me'"
 
 --
 
-<!-- .slide: data-background-image="img/image12.jpeg" data-background-size="contain" -->
+@image ./img/image12.jpeg alt="Dignity in Dying Scotland campaigners in pink t-shirts holding 'Let Us Choose' and 'My Choice, Dignity' placards, with one woman holding a hand-written 'My Choice' sign"
 
 --
 
-<!-- .slide: data-background-image="img/image13.jpeg" data-background-size="contain" -->
+@image ./img/image13.jpeg alt="CARE website guide page headlined 'Consultation on Assisted Dying For Terminally Ill Adults (Scotland) Bill', quoting Dr Stuart Weir opposing the bill"
 
 notes:
  Assisted dying: Providing terminally ill people the means to end their lives at their choosing
@@ -95,9 +95,8 @@ On 16 May (Friday) in England, Kim Leadbeater MP's Terminally Ill Adults (End of
 
 ## Personal Experience
 
-<div class="slidequote">
-For 26 years I worked in the emergency service <span class="subtle">[…]</span> I have witnessed at first hand and close up the sheer desperation and suffering caused by terminal illness. I have had to examine bodies and scenes where the person has died alone and in obvious agony. People with cancer who have vomited and excreted blood and body matter into bowls, coal scuttles, sinks, beds, floors etc.. before finally dying, often over a period of days and weeks  <span class="subtle">[…]</span> I was also called to all suicides and lost count of the number of people I have had to cut down from their nooses whilst their grieving family cried in the adjacent room. <span class="subtle">[…]</span> In April 2020 I was diagnosed with inoperable pancreatic cancer and given 6-12 months to live if I chose not to have palliative chemotherapy, and possibly 18 months if I chose to undertake it. My world fell apart and I had to break the news to my wife and two sons. <span class="subtle">[…]</span> I am a proud and private individual who does not want to spend my final days, weeks, or god forbid months, in a hospital or hospice, in pain with no quality of life and having to be lifted off a bed pan or worse! I do not want to be forced into ending my life alone, maybe in my car with the embers of a disposable BBQ smouldering in the boot, or hanging in a lonely wood waiting for some poor unsuspecting member of the public to find me – but with no compassionate alternative that is what I will do.
-</div>
+@quote smallest
+For 26 years I worked in the emergency service %%[…]%% I have witnessed at first hand and close up the sheer desperation and suffering caused by terminal illness. I have had to examine bodies and scenes where the person has died alone and in obvious agony. People with cancer who have vomited and excreted blood and body matter into bowls, coal scuttles, sinks, beds, floors etc.. before finally dying, often over a period of days and weeks  %%[…]%% I was also called to all suicides and lost count of the number of people I have had to cut down from their nooses whilst their grieving family cried in the adjacent room. %%[…]%% In April 2020 I was diagnosed with inoperable pancreatic cancer and given 6-12 months to live if I chose not to have palliative chemotherapy, and possibly 18 months if I chose to undertake it. My world fell apart and I had to break the news to my wife and two sons. %%[…]%% I am a proud and private individual who does not want to spend my final days, weeks, or god forbid months, in a hospital or hospice, in pain with no quality of life and having to be lifted off a bed pan or worse! I do not want to be forced into ending my life alone, maybe in my car with the embers of a disposable BBQ smouldering in the boot, or hanging in a lonely wood waiting for some poor unsuspecting member of the public to find me – but with no compassionate alternative that is what I will do.
 
 --
 
@@ -130,7 +129,7 @@ Structured with safeguards:
 
 --
 
-<!-- .slide: data-background-image="img/image14.png" data-background-size="contain" -->
+@image ./img/image14.png alt="Bar chart comparing total consultation word counts by stance (Supportive, Opposed, Neutral/Unsure) for 2021 and 2024, showing supportive submissions dominating in 2021 and opposed submissions dominating in 2024"
 
 --
 
@@ -215,7 +214,7 @@ Word count: 805,755
 
 --
 
-<!-- .slide: data-background-image="img/consultationcomp.png" data-background-size="contain" -->
+@image ./img/consultationcomp.png alt="Box plot comparing word count per document across six response stance categories (fully opposed, fully supportive, neutral, partially opposed, partially supportive, unsure), showing similar medians but many more high-word-count outliers among fully opposed and fully supportive responses"
 
 --
 
@@ -237,11 +236,11 @@ protected characteristics (under the Equality Act 2010): age, disability, gender
 
 --
 
-<!-- .slide: data-background-image="img/image15.png" data-background-size="contain" -->
+@image ./img/image15.png alt="Ipsos poll chart showing 66% support and 16% opposition (October 2024) and 65% support and 17% opposition (July 2023) to legalising doctor-assisted dying by prescription"
 
 --
 
-<!-- .slide: data-background-image="img/image16.jpg" data-background-size="contain" -->
+@image ./img/image16.jpg alt="Line chart from the NOW Corpus showing frequency per million words of 'assisted dying' and 'assisted suicide' from 2010 to 2024, with 'assisted suicide' peaking around 2014 and 'assisted dying' rising sharply to a high point in 2024"
 
 ---
 
@@ -282,15 +281,15 @@ Collocates of *death*:
 
 --
 
-<!-- .slide: data-background-image="img/USAS1.jpg" data-background-size="contain" -->
+@image ./img/USAS1.jpg alt="Table listing top USAS semantic tag categories and glosses for the Supportive and Opposed subcorpora, e.g. L1- (Dead), B2- (Disease), S8+ (Helping) and S1.2.5- (Weak)"
 
 --
 
-<!-- .slide: data-background-image="img/USAS2.jpg" data-background-size="contain" -->
+@image ./img/USAS2.jpg alt="Slope chart connecting shared USAS semantic categories between the Supportive and Opposed rankings, showing how far each category's rank shifts between the two subcorpora"
 
 --
 
-<!-- .slide: data-background-image="img/USAS3.jpg" data-background-size="contain" -->
+@image ./img/USAS3.jpg alt="The same USAS slope chart with the categories that shift most between the Supportive and Opposed rankings highlighted, including B2- (Disease), S8+ (Helping), A7+ (Likely), X2.1 (Thought, belief), S7.2+ (Respected), and E4.1- (Sad)"
 
 --
 
@@ -523,12 +522,11 @@ Short and narrow: thin, as in thin end of the wedge
 
 --
 
-
-<img src="img/image15.png" alt="Press Coverage Chart" class="r-stretch">
+@image ./img/image15.png alt="Press Coverage Chart"
 
 --
 
-<img src="img/image17.png" alt="Press Coverage Comparison" class="r-stretch">
+@image ./img/image17.png alt="Press Coverage Comparison"
 
 --
 
@@ -589,9 +587,9 @@ The patterns suggest that opponents have been more organised in their messaging 
 
 ## Copy-Paste Evidence
 
-![Copy-paste example 1](img/image19.png) <!-- .element height="40%" width="40%" -->
-
-![Copy-paste example 2](img/image20.png) <!-- .element height="40%" width="40%" -->
+@compare
+    ./img/image19.png alt="Screenshot of a suggested consultation answer, telling respondents to select 'Negative' and giving wording to paste into the response box, including the sentence 'In the absence of the Bill, such pressure would not exist'" caption="Suggested answer wording"
+    ./img/image20.png alt="Screenshot of the CARE website's 'Consultation on Assisted Dying for Terminally Ill Adults (Scotland) Bill' guide page, the source of that suggested wording" caption="Source campaign guide"
 
 Two responses (3,758 and 3,991 words) with near-identical text
 
@@ -599,7 +597,7 @@ Two responses (3,758 and 3,991 words) with near-identical text
 
 ## Word Count Comparison 2021 vs 2024
 
-![Word count comparison](img/image14.png) <!-- .element height="60%" width="60%" -->
+@image ./img/image14.png alt="Word count comparison"
 
 ---
 
@@ -638,7 +636,6 @@ CILC16, Salamanca
 
 May 2025
 
-![Title background](img/image1.png) <!-- .element: class="r-stretch" -->
 
 ---
 
@@ -657,7 +654,7 @@ May 2025
 
 ## Topic Model Results
 
-![Topic model overview](img/image21.png) <!-- .element: class="r-stretch" -->
+@image ./img/image21.png alt="Scatter plot titled 'Topic Map: Stance Association vs Overall Prevalence', plotting all 60 STM topics by effect of stance and average prevalence, with topics significantly associated with a stance shown in red"
 
 --
 
@@ -665,7 +662,7 @@ May 2025
 
 **8: live, elder*, worth, pressu*, end**
 
-![Topic 8](img/image22.png) <!-- .element height="60%" width="60%" -->
+@image ./img/image22.png alt="Bar chart of Topic 8's ('live, elder, worth, pressure, end') mean prevalence across four consultation subcorpus segments (2021/2024 supportive/opposed), highest among opposed responses"
 
 --
 
@@ -673,7 +670,7 @@ May 2025
 
 **32: kill, god, take, murder, one, wrong, precious**
 
-![Topic 32](img/image23.png) <!-- .element height="60%" width="60%" -->
+@image ./img/image23.png alt="Bar chart of Topic 32's ('kill, god, take, murder, wrong, precious') mean prevalence across four consultation subcorpus segments (2021/2024 supportive/opposed), highest among opposed responses and most prominent in 2024"
 
 --
 
@@ -681,7 +678,7 @@ May 2025
 
 **50: vulner*, pressure, burden, elder*, disabl***
 
-![Topic 50](img/image24.png) <!-- .element height="60%" width="60%" -->
+@image ./img/image24.png alt="Bar chart of Topic 50's ('vulnerable, pressure, burden, elderly, disabled') mean prevalence across four consultation subcorpus segments (2021/2024 supportive/opposed), highest among opposed responses"
 
 --
 
@@ -689,7 +686,7 @@ May 2025
 
 **29: watch, die, cancer, mother, pass, let**
 
-![Topic 29](img/image25.png) <!-- .element height="60%" width="60%" -->
+@image ./img/image25.png alt="Bar chart of Topic 29's ('watch, die, cancer, mother, pass, let') mean prevalence across four consultation subcorpus segments (2021/2024 supportive/opposed), highest among supportive responses in both years"
 
 --
 
@@ -697,7 +694,7 @@ May 2025
 
 **40: choice, right, choose, dignity, person, dignif***
 
-![Topic 40](img/image26.png) <!-- .element height="60%" width="60%" -->
+@image ./img/image26.png alt="Bar chart of Topic 40's ('choice, right, choose, dignity, person, dignified') mean prevalence across four consultation subcorpus segments (2021/2024 supportive/opposed), highest among supportive responses"
 
 --
 
@@ -705,7 +702,7 @@ May 2025
 
 **16: suffer, pain, one, love, peace, hope, distress**
 
-![Topic 16](img/image27.png) <!-- .element height="60%" width="60%" -->
+@image ./img/image27.png alt="Bar chart of Topic 16's ('suffer, pain, one, love, peace, hope, distress') mean prevalence across four consultation subcorpus segments (2021/2024 supportive/opposed), highest among supportive responses"
 
 --
 
@@ -748,4 +745,4 @@ UK press articles which meet the following criteria:
 
 ## NOW Corpus: "Assisted Dying" vs "Assisted Suicide"
 
-![NOW Corpus comparison](img/image16.jpg) <!-- .element: class="r-stretch" -->
+@image ./img/image16.jpg alt="NOW Corpus comparison"

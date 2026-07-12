@@ -1,6 +1,13 @@
 @import url('base.css');
 @import url('light.css');
 
+/* ===========================================
+   University of Glasgow
+   Follows the UofG brand identity: Noto Sans/Serif only, University
+   Blue (#011451) as the dominant colour, secondary palette for cards
+   and accents, white content ground, University Blue title slide.
+   =========================================== */
+
 :root {
     --uog-blue: #011451;
     --uog-dark-purple: #4C2683;
@@ -13,34 +20,42 @@
     --uog-light-green: #81C071;
     --uog-light-blue: #4DBBC6;
     --uog-light-yellow: #F2D25C;
+
+    --r-background-color: #FFFFFF;   /* for translucent surfaces (captions) */
 }
 
 .reveal {
     background-color: #FFFFFF;
     font-weight: 400;
-    --r-link-color: #005398;
-    /* Set font vars on .reveal so !important beats the JS-applied heading-* classes */
+    letter-spacing: -0.01em;
+    /* Never let the browser synthesise fake small caps (Noto Sans since
+       v2 does carry real smcp/c2sc, but the Google-served subset may not,
+       and the brand wants sentence case anyway) */
+    font-synthesis: weight style;
+    --r-link-color: var(--uog-dark-blue);
+    --r-subtle-color: rgba(1, 20, 81, 0.55);
+    --r-border-color: rgba(1, 20, 81, 0.25);
+    /* Brand typography: Noto Sans primary, Noto Serif secondary.
+       !important so the vars beat base.css defaults */
     --r-main-font: 'Noto Sans', 'Concourse', 'Aptos', sans-serif !important;
     --r-heading-font: 'Noto Sans', 'Concourse', 'Aptos', sans-serif !important;
     --r-heading-bold-font: 'Noto Sans', 'Concourse', 'Aptos', sans-serif !important;
     --r-serif-font: 'Noto Serif', 'Equity', 'Georgia', serif !important;
 }
 
-.reveal {
-    letter-spacing: -0.01em;
-}
-
+/* Headings: bare bold University Blue, no rule (per the brand template) */
 .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
-    color: #011451;
+    color: var(--uog-blue);
     font-variant: normal;
     font-weight: 700;
     letter-spacing: -0.03em;
 }
 
 .reveal h2, .reveal h3 {
-    border-bottom-color: #011451;
+    border-bottom: none;
 }
 
+/* Lists: standard discs with Dark Blue markers */
 .reveal ul {
     list-style-type: disc;
 }
@@ -49,9 +64,59 @@
     list-style-type: circle;
 }
 
-/* Title slide: University Blue background, white text */
+.reveal li::marker {
+    color: var(--uog-dark-blue);
+}
+
+/* Emphasis carries the brand colour */
+.reveal strong, .reveal b {
+    color: var(--uog-blue);
+}
+
+/* Tables: University Blue header row with white text (brand rule) */
+.reveal table th {
+    background: var(--uog-blue);
+    color: #FFFFFF;
+    padding: 0.25em 0.6em;
+}
+
+.reveal table td {
+    padding: 0.25em 0.6em;
+    border-bottom: 1px solid rgba(1, 20, 81, 0.15);
+}
+
+/* Cards: rounded rectangles in the secondary palette, matching the
+   PowerPoint template. Default is Light Blue with University Blue text;
+   add a variant class for the others. Dark variants take white text. */
+.reveal .card, .reveal .box {
+    background: var(--uog-light-blue);
+    color: var(--uog-blue);
+    border: none;
+    border-radius: 12px;
+    padding: 0.8em 1em;
+    backdrop-filter: none;
+}
+.reveal .card h3, .reveal .card h4, .reveal .box h3, .reveal .box h4 {
+    color: inherit;
+}
+.reveal .card.purple { background: var(--uog-light-purple); }
+.reveal .card.pink   { background: var(--uog-light-pink); }
+.reveal .card.green  { background: var(--uog-light-green); }
+.reveal .card.yellow { background: var(--uog-light-yellow); }
+.reveal .card.dark-blue   { background: var(--uog-dark-blue); color: #FFFFFF; }
+.reveal .card.dark-purple { background: var(--uog-dark-purple); color: #FFFFFF; }
+.reveal .card.dark-pink   { background: var(--uog-dark-pink); color: #FFFFFF; }
+.reveal .card.dark-green  { background: var(--uog-dark-green); color: #FFFFFF; }
+.reveal .card.dark-red    { background: var(--uog-dark-red); color: #FFFFFF; }
+
+/* Progress bar in University Blue */
+.reveal .progress {
+    color: var(--uog-blue);
+}
+
+/* Title slide: University Blue ground, white text, white logos */
 .reveal .slide-background.title-slide {
-    background-color: #011451;
+    background-color: var(--uog-blue);
 }
 
 .reveal section.title-slide h1,
@@ -67,11 +132,38 @@
 .reveal section.title-slide td,
 .reveal section.title-slide span,
 .reveal section.title-slide .tpa4-l,
-.reveal section.title-slide .tpa4-r,
-.reveal section.title-slide .subtle {
+.reveal section.title-slide .tpa4-r {
     color: rgba(255, 255, 255, 0.85);
+}
+
+/* Subtle text (e.g. the affiliation line under the author names) needs
+   to read quieter than the main title-slide text, not just inherit it */
+.reveal section.title-slide .subtle {
+    color: rgba(255, 255, 255, 0.6);
 }
 
 .reveal section.title-slide hr {
     border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* title.md styles small caps inline with !important, which no stylesheet
+   rule can outrank. font-feature-settings resolves after font-variant in
+   the font-feature pipeline, so this disables real small caps too; the
+   font-synthesis rule above already stops synthesised ones. The brand
+   template sets titles in sentence case. */
+.reveal section.title-slide,
+.reveal section.title-slide * {
+    font-feature-settings: 'smcp' 0, 'c2sc' 0;
+}
+
+/* Logos render white on the blue ground, whatever variant is loaded */
+.reveal section.title-slide .theme-logo {
+    filter: brightness(0) invert(1);
+}
+
+/* @slide contrast: this theme's ground for full-colour slides */
+:root {
+    --r-contrast-bg: #011451;
+    --r-contrast-ink: #FFFFFF;
+    --r-contrast-border: rgba(255,255,255,0.4);
 }

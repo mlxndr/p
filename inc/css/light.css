@@ -3,4 +3,12 @@
     --r-border-color: rgba(var(--light-primary-r), var(--light-primary-g), var(--light-primary-b), 0.25);
     --r-subtle-color: rgba(var(--light-primary-r), var(--light-primary-g), var(--light-primary-b), 0.5);
     --r-link-color: var(--r-light-link-color);
+}:root {
+    /* Theme background for translucent surfaces (e.g. zoom captions) */
+    --r-background-color: #F2F2EA;
+}
+:root {
+    /* @slide contrast defaults: the opposite colour mode */
+    --r-contrast-bg: #183153;
+    --r-contrast-ink: #F2F2EA;
 }

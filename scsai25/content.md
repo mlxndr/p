@@ -90,15 +90,11 @@
 
 --
 
-![Claude correctly identifying an airplane model from a photo of the cabin ceiling](img/claude1.png)
-
-<!-- .element: class="r-stretch" -->
+@image ./img/claude1.png alt="Claude correctly identifying an airplane model from a photo of the cabin ceiling"
 
 --
 
-![Claude giving directions based on a photo of a Paris metro sign](img/claude2.png)
-
-<!-- .element: class="r-stretch" -->
+@image ./img/claude2.png alt="Claude giving directions based on a photo of a Paris metro sign"
 
 --
 
@@ -204,27 +200,19 @@
 
 --
 
-![Figure 1 from the HEPI report, showing what students use AI for](img/hepi1.png)
-
-<!-- .element: class="r-stretch" -->
+@image ./img/hepi1.png alt="Figure 1 from the HEPI report, showing what students use AI for"
 
 --
 
-![Figure 2 from the HEPI report, showing how students use AI](img/hepi2.png)
-
-<!-- .element: class="r-stretch" -->
+@image ./img/hepi2.png alt="Figure 2 from the HEPI report, showing how students use AI"
 
 --
 
-![Figure 4 from the HEPI report, showing student views on acceptable uses](img/hepi3.png)
-
-<!-- .element: class="r-stretch" -->
+@image ./img/hepi3.png alt="Figure 4 from the HEPI report, showing student views on acceptable uses"
 
 --
 
-![An extract from the HEPI report with student comments critical of their institution's lack of clarity](img/hepi4.png)
-
-<!-- .element: class="r-stretch" -->
+@image ./img/hepi4.png alt="An extract from the HEPI report with student comments critical of their institution's lack of clarity"
 
 --
 

@@ -1,20 +1,11 @@
 ## The Mirror of Parliament
 
-<div class="two-grid">
-<div class="col-img">
-
-![A portrait of a young Charles Dickens, perhaps in his early 20s](./img/youngdickens.png)
-
-</div>
-<div class="col-text">
+@image-left ./img/youngdickens.png alt="A portrait of a young Charles Dickens, perhaps in his early 20s" split=38
 
 * Founded January 1828 by John Henry Barrow, barrister and journalist
 * Weekly publication of parliamentary debates, both Houses
 * Employed dedicated shorthand writers in the chamber
 * One of those reporters: the young Charles Dickens, 'the best reporter in the gallery' (Knight 1865)
-
-</div>
-</div>
 
 --
 
@@ -22,22 +13,19 @@
 
 '...an attempt was boldly made by a gentleman named Barrow, to produce a verbal report of the proceedings of Parliament. He succeeded and carried it on for several years; and, for those years, I do not hesitate to say, that Barrow's *Mirror of Parliament* is the primary record, and not *Hansard's Debates*, because of the greater fulness which Barrow aimed at and obtained. It is within my own recollection – in the year 1833 or 1834 – just after the Reform Bill, that Gentlemen, who wanted to correct their speeches, did it for Barrow’s *Mirror of Parliament.'*
 
-<div style='font-size: 80%; text-align: right;'>W. E. Gladstone, HC Deb 20 April 1877, c1576–77</div>
+<p class="md-source">W. E. Gladstone, HC Deb 20 April 1877, c1576–77</p>
 
 --
 
+<!-- JUDGEMENT: originally a side-by-side of full page + close crop; converted
+     to @zoom (the full page zooms into the left-column detail, using the
+     existing close-crop file for sharpness). To revert to the side-by-side:
+     @compare
+       ./img/mirror1834-06-03.png alt="Mirror of Parliament, 3 June 1834" caption="Mirror of Parliament, 3 June 1834"
+       ./img/mirror1834-06-03close.png alt="Excerpt from left column" caption="Excerpt from left column" -->
 ## What Does It Look Like?
 
-<div class="two-img">
-<figure>
-<img src="./img/mirror1834-06-03.png" alt="Mirror of Parliament, 3 June 1834">
-<figcaption><i>Mirror of Parliament</i>, 3 June 1834</figcaption>
-</figure>
-<figure>
-<img src="./img/mirror1834-06-03close.png" alt="Excerpt from left column of the Mirror of Parliament, 3 June 1834">
-<figcaption>Excerpt from left column</figcaption>
-</figure>
-</div>
+@zoom ./img/mirror1834-06-03.png to=./img/mirror1834-06-03close.png focus=24.5,83.7 scale=5.2 caption-start="Mirror of Parliament, 3 June 1834" alt="Full page of the Mirror of Parliament, 3 June 1834"
 
 --
 
@@ -58,7 +46,7 @@
 
 Jupp (1998) compared Mirror speech lengths against contemporaneous timings:
 
-<div style='font-size: 70%;'>
+<div class="md-small">
 
 | Speech | Reported duration | *Mirror* word count | Words/hour |
 | --- | --- | --- | --- |
@@ -69,7 +57,7 @@ Jupp (1998) compared Mirror speech lengths against contemporaneous timings:
 
 </div>
 
-<div style='font-size: 80%; text-align: right; font-style: italic;'>Jupp 1998: 236</div>
+<p class="md-source">Jupp 1998: 236</p>
 
 ~6,000 words an hour is the pace of a lecture carefully delivered from a text
 
@@ -88,35 +76,26 @@ Jupp (1998) compared Mirror speech lengths against contemporaneous timings:
 
 ## The Competition
 
-<div class="two-grid">
-<div class="col-img">
-
-![A portrait of the elder Thomas Curson Hansard](./img/tc-hansard.png)
-
-</div>
-<div class="col-text">
+@image-left ./img/tc-hansard.png alt="A portrait of the elder Thomas Curson Hansard" split=38
 
 * 'I obtain them from the London newspapers, the country newspapers, and from the reports supplied by the Press Association. They are then passed into the hands of the collators...' – T.C. Hansard Jr, 1888
 * Often sent to speakers for correction or just used the speaker's manuscript
 * '...no more the speech uttered by them in the House of Commons than it is a Welsh ballad. [...] We are duping the unborn generations. With open eyes we are sowing the seeds of dissension between historians of another age.' (*Daily News*, 8 August 1853)
 * 'I hold myself bound for the *bona fides* of the reports, not for their literal accuracy' – T.C. Hansard Jr, 1862
 
-</div>
-</div>
-
 --
 
-<!-- .slide: data-background-image="img/side-by-side1.png" data-background-size="contain" -->
-
---
-
-<!-- .slide: data-background-image="img/speechlengthdistribution.png" data-background-size="contain" -->
+<!-- JUDGEMENT: these two background-image slides previously had no alt text.
+     The alt strings below are newly written; Marc to verify they match the figures. -->
+@image-seq
+  ./img/side-by-side1.png alt="Side-by-side comparison of a Mirror of Parliament report and the Hansard report of the same speech" caption="Mirror vs Hansard, same speech"
+  ./img/speechlengthdistribution.png alt="Histogram comparing the distribution of speech lengths in the Mirror and in Hansard" caption="Distribution of speech lengths"
 
 ---
 
 ## 203-Day Pilot Mirror Corpus
 
-<div style='font-size: 70%; margin: 0px auto;'>
+<div class="md-small">
 
 | | *Mirror of Parliament* | *Hansard* |
 | --- | --- | --- |
@@ -137,20 +116,11 @@ Jupp (1998) compared Mirror speech lengths against contemporaneous timings:
 
 ## Building the Pilot Mirror Corpus
 
-<div class="two-img">
-<div class="col-img">
-
-<img class='fragment' src="./img/MistralCost.png" alt="A screenshot of the cost of Mistral, showing the charge of €6.05 for this project">
-
-</div>
-<div class="col-text">
+@image-left ./img/MistralCost.png fragment alt="A screenshot of the cost of Mistral, showing the charge of €6.05 for this project" split=45
 
 * 6,300 pages of *Mirror* scans
 * OCR via Mistral's vision language model API (mistral-ocr-2505, late November 2025)
 * Total OCR cost for 8.5 million tokens of nineteenth-century parliamentary text: **€6.05**
-
-</div>
-</div>
 
 --
 
@@ -165,52 +135,37 @@ Jupp (1998) compared Mirror speech lengths against contemporaneous timings:
 
 --
 
+<!-- JUDGEMENT: the two duplicated "Mistral vs Tesseract" slides (a manual
+     pseudo-morph) are now a hold pair: the image holds via auto-animate
+     while the heading and OCR text swap Tesseract -> Mistral. -->
 ## Mistral vs Tesseract
 
-<div class="two-grid">
-<div class="col-img">
+@image-left ./img/mirror1834-06-03close.png hold id=ocr alt="Excerpt from left column of the Mirror of Parliament, 3 June 1834" split=42
 
-![Excerpt from left column of the Mirror of Parliament, 3 June 1834](./img/mirror1834-06-03close.png)
+#### Tesseract
 
-</div>
-<div class="col-text">
-<h4>Tesseract</h4>
+<div class="md-small">
 
-<div style='font-size: 70%; text-align: left'>
-Mr. BARRON.—Why should not Ireland be included
-iu. this inquiry? It is true that we have the new system
-of education at work there; but I know many districts in
-which there are not above ten or a dozen schools, but
-which require 800 or 4v0. The sums granted by Parlia-
-ment are totally inadequate to meet the wants of a poor
-country like Ireland, where much greater means are re-
-quired, than in a rich country like t is, inhabited by a re-
-srdent gentry, and fostered by a resident Legislature ——
+Mr. BARRON.—Why should not Ireland be included iu. this inquiry? It is true that we have the new system of education at work there; but I know many districts in which there are not above ten or a dozen schools, but which require 800 or 4v0. The sums granted by Parliament are totally inadequate to meet the wants of a poor country like Ireland, where much greater means are required, than in a rich country like t is, inhabited by a re-srdent gentry, and fostered by a resident Legislature ——
 
 ” Several Honounasie Mempers.—Oh! Oh! Oh!
-</div>
-</div>
+
 </div>
 
 --
 
 ## Mistral vs Tesseract
 
-<div class="two-grid">
-<div class="col-img">
+@image-left ./img/mirror1834-06-03close.png hold id=ocr alt="Excerpt from left column of the Mirror of Parliament, 3 June 1834" split=42
 
-![Excerpt from left column of the Mirror of Parliament, 3 June 1834](./img/mirror1834-06-03close.png)
+#### Mistral
 
-</div>
-<div class="col-text">
-<h4>Mistral</h4>
+<div class="md-small">
 
-<div style='font-size: 70%; text-align: left'>
 Why should not Ireland be included in this inquiry? It is true that we have the new system of education at work there; but I know many districts in which there are not above ten or a dozen schools, but which require 300 or 400. The sums granted by Parliament are totally inadequate to meet the wants of a poor country like Ireland, where much greater means are required, than in a rich country like this, inhabited by a resident gentry, and fostered by a resident Legislature—
 
 Several Honourable Members.—Oh! Oh! Oh!
-</div>
-</div>
+
 </div>
 
 --
@@ -232,15 +187,12 @@ Several Honourable Members.—Oh! Oh! Oh!
 
 --
 
-<!-- .slide: data-background-image="img/paralinguistic.png" data-background-size="contain" -->
-
---
-
-<!-- .slide: data-background-image="img/laughter.png" data-background-size="contain" -->
-
---
-
-<!-- .slide: data-background-image="img/laughter-where.png" data-background-size="contain" -->
+<!-- JUDGEMENT: these three background-image slides previously had no alt text.
+     The alt strings below are newly written; Marc to verify. -->
+@image-seq
+  ./img/paralinguistic.png alt="Chart of paralinguistic markers grouped by category across the three pilot periods" caption="Paralinguistic markers by category"
+  ./img/laughter.png alt="Chart of laughter markers counted across the pilot corpus" caption="Laughter markers"
+  ./img/laughter-where.png alt="Chart showing where in debates laughter markers occur" caption="Where laughter falls"
 
 --
 
@@ -301,7 +253,7 @@ Several Honourable Members.—Oh! Oh! Oh!
 
 ## References
 
-<div style='font-size: 70%;'>
+<div class="md-small">
 
 Alexander, Marc. 2023. 'Speech in the British *Hansard*'. In Korhonen, Kotze & Tyrkkö (eds.) *Exploring Language and Society with Big Data*. Amsterdam: John Benjamins. 17–53.
 
@@ -335,4 +287,3 @@ Vice, John & Stephen Farrell. 2017. *The History of Hansard*. London: House of L
 * Full 1828–1841 corpus (all surviving Mirror volumes)
 * Systematic comparison with newspaper sources (*Times*, *Morning Chronicle*)
 * Analysis of editorial overlap and plagiarism
-

@@ -1,0 +1,332 @@
+@import url('base.css');
+@import url('light.css');
+/* Margin voice: Bild (self-hosted variable, @font-face in fonts.css),
+   set condensed via font-stretch, against Century Supra's text face. */
+
+/* ===========================================================
+   Marginalia — a Tufte-inspired margin layout, light theme.
+   Ground: warm white paper. Ink: warm near-black. Headings move
+   into the margin, set small against a hairline rule; body text
+   keeps to a readable measure in the main column. Madder red is
+   the one accent, reserved for links.
+   =========================================================== */
+
+:root {
+    --r-background-color: #FBF9F4;
+
+    --marginalia-ink: #1F1C17;
+    --marginalia-rule: #D8D2C4;
+    --marginalia-red: #A03D2D;
+}
+
+.reveal {
+    /* Body text and headings both set in Century Supra (base.css's
+       defaults are Concourse/Equity; the UI font — menu, overlays —
+       stays pinned to Concourse there and is untouched by this). */
+    --r-main-font: 'Century Supra', 'Noto Serif', 'Georgia', serif !important;
+    --r-heading-font: 'Century Supra', 'Noto Serif', 'Georgia', serif !important;
+    --r-heading-bold-font: 'Century Supra', 'Noto Serif', 'Georgia', serif !important;
+    --r-serif-font: 'Century Supra', 'Noto Serif', 'Georgia', serif !important;
+
+    --r-font-color: var(--marginalia-ink);
+    --r-link-color: var(--marginalia-red);
+    --r-subtle-color: rgba(31, 28, 23, 0.55);
+    --r-border-color: rgba(31, 28, 23, 0.28);
+
+    background-color: #FBF9F4 !important;
+}
+
+.reveal a {
+    color: var(--r-link-color);
+}
+
+/* ---------------------------------------------------------
+   The margin layout: applied to ordinary content slides only.
+   .title-slide and .md-fill (image-directive slides) are left
+   alone below.
+   --------------------------------------------------------- */
+
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack) {
+    /* reveal.js core sets section { width: 100% } with content-box
+       sizing, so padding here must be taken out of that 100% rather
+       than added on top of it (which pushed slides ~36% too wide).
+       No position here: reveal.js core already sets position:absolute
+       on every section (including nested vertical-stack leaves), which
+       is required for its stacking/transform math and already gives
+       our ::before/h2 an absolute-positioning containing block. Setting
+       position:relative here would override that to a normal in-flow
+       box, which breaks vertical-slide stacking (later slides in the
+       same stack render translated far below the viewport). */
+    box-sizing: border-box;
+    padding-left: 30%;
+    padding-right: 6%;
+    min-height: 100%;
+}
+
+/* Vertical hairline down the slide at the 27% mark. top/bottom insets
+   (rather than a fixed height) keep the rule inside the section's own
+   box exactly — a fixed height taller than a slide's actual content
+   was found to inflate the section's scrollHeight, which throws off
+   reveal.js's vertical-stack offset math and pushes later slides in
+   the same stack out of view. */
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack)::before {
+    content: '';
+    position: absolute;
+    left: 27%;
+    top: 0.5em;
+    bottom: 0.5em;
+    width: 0;
+    border-left: 1.5px solid var(--marginalia-rule);
+}
+
+/* Headings sit in the margin: small, right-aligned against the rule,
+   roughly level with the first line of the main column. */
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack) h2,
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack) h3 {
+    position: absolute;
+    left: 0;
+    width: 24%;
+    top: 0.6em;
+    text-align: right;
+    font-family: 'Bild', 'Concourse', sans-serif;
+    font-stretch: 72%;
+    font-size: 1.0em;
+    line-height: 1.12;
+    font-weight: 580;
+    font-variant: normal;
+    letter-spacing: 0.015em;
+    border-bottom: none;
+    margin: 0;
+    color: var(--marginalia-ink);
+}
+
+/* A plain markdown slide whose only content is an image (charts pasted
+   with ![...](...)): full-bleed, no margin apparatus. */
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack):has(> p > img:only-child):not(:has(ul)):not(:has(ol)):not(:has(table)):not(:has(blockquote)) {
+    padding-left: 2%;
+    padding-right: 2%;
+}
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack):has(> p > img:only-child):not(:has(ul)):not(:has(ol)):not(:has(table)):not(:has(blockquote))::before {
+    content: none;
+}
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack):has(> p > img:only-child):not(:has(ul)):not(:has(ol)):not(:has(table)):not(:has(blockquote)) h2,
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack):has(> p > img:only-child):not(:has(ul)):not(:has(ol)):not(:has(table)):not(:has(blockquote)) h3 {
+    position: static;
+    width: auto;
+    text-align: left;
+    font-size: 1.1em;
+}
+
+/* Cap the measure in the main column: paragraphs, lists, blockquotes. */
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack) p,
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack) ul,
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack) ol,
+.reveal .slides section:not(.title-slide):not(.md-fill):not(.stack) blockquote {
+    max-width: 30em;
+    text-align: left;
+}
+
+/* ---------------------------------------------------------
+   Title slide: the margin system carries it — the signature
+   hairline, everything in the main column hung left, and a
+   sentence-case title (Century Supra has real small caps, and
+   font-feature-settings outranks the inline font-variant that
+   the generated title carries, so 'smcp' 0 disables them).
+   --------------------------------------------------------- */
+
+.reveal .slides section.title-slide {
+    box-sizing: border-box;
+    padding-left: 30%;
+    padding-right: 5%;
+    text-align: left;
+}
+
+.reveal .slides section.title-slide::before {
+    content: '';
+    position: absolute;
+    left: 27%;
+    top: 0.5em;
+    bottom: 0.5em;
+    width: 0;
+    border-left: 1.5px solid var(--marginalia-rule);
+}
+
+.reveal .slides section.title-slide,
+.reveal .slides section.title-slide * {
+    font-feature-settings: 'smcp' 0, 'c2sc' 0;
+}
+
+.reveal .slides section.title-slide h1 {
+    text-align: left !important;
+    margin-top: 1.4em;
+}
+
+.reveal .slides section.title-slide p {
+    text-align: left !important;
+}
+
+/* The metadata lives IN the margin: bottom-left, right-aligned against
+   the rule, set in Bild — the margin voice. The main column keeps only
+   the title and subtitle. (The table is absolutely positioned, so the
+   section padding never touched it anyway.) */
+.reveal .slides section.title-slide .titlebr {
+    left: 0;
+    width: 24%;
+    bottom: 4%;
+}
+
+.reveal .slides section.title-slide .titlebr tr,
+.reveal .slides section.title-slide .titlebr td {
+    display: block;
+    width: 100% !important;
+    text-align: right !important;
+}
+
+.reveal .slides section.title-slide .titlebr td {
+    font-family: 'Bild', 'Concourse', sans-serif;
+    font-stretch: 86%;
+    font-weight: 420;
+    font-size: 0.92em;
+    line-height: 1.32;
+    color: var(--marginalia-ink);
+    padding: 0;
+    margin-top: 0.9em;
+}
+
+/* Bild has no small caps, so acronym small-caps spans would synthesise
+   as spaced-out capitals; render them as written instead, with
+   proportional figures */
+.reveal .slides section.title-slide .titlebr td,
+.reveal .slides section.title-slide .titlebr td * {
+    font-variant-caps: normal !important;
+    font-variant-numeric: proportional-nums;
+    font-synthesis: weight style;
+}
+
+.reveal .slides section.title-slide .titlebr .subtle {
+    color: var(--r-subtle-color) !important;
+}
+
+.reveal .slides section.title-slide .titlebr tr:has(hr),
+.reveal .slides section.title-slide .titlebr hr {
+    display: none;
+}
+
+/* Logos live at the bottom of the MAIN column, under the subtitle, on
+   the other side of the rule from the text. Their cells are absolutely
+   positioned out of the margin box (the metadata table is the containing
+   block; the main column starts 58px right of its right edge and ends
+   1364px beyond it, in slide coordinates). */
+.reveal .slides section.title-slide .titlebr td:has(img),
+.reveal .slides section.title-slide .titlebr td:has(canvas) {
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    width: auto !important;
+    line-height: 0;   /* image bottoms sit on the box bottom, level with
+                         the last line of the margin text */
+}
+
+.reveal .slides section.title-slide .titlebr td.tpa4-l:has(img) {
+    left: calc(100% + 115px);   /* where the main-column text starts */
+    text-align: left !important;
+}
+
+.reveal .slides section.title-slide .titlebr td.tpa4-r:has(img),
+.reveal .slides section.title-slide .titlebr td.tpa4-r:has(canvas) {
+    right: -1364px;
+    text-align: right !important;
+}
+
+/* Logos keep their standard sizes (the height attributes every other
+   theme uses); a hairline above them echoes the standard title design */
+.reveal .slides section.title-slide:has(.titlebr img)::after,
+.reveal .slides section.title-slide:has(.titlebr canvas)::after {
+    content: '';
+    position: absolute;
+    left: 30%;
+    right: 5%;
+    bottom: calc(4% + 150px);
+    border-top: 1px solid var(--r-border-color);
+}
+
+/* ---------------------------------------------------------
+   .md-fill image-directive sections. Split slides (@image-left,
+   @image-right) get the full margin treatment: the heading moves
+   into the margin (it sits inside .md-fill-inner, whose nearest
+   positioned ancestor is the section itself, so the same absolute
+   placement works) and the split grid lives in the main column.
+   Full-bleed slides (@image, @zoom, @compare) stay full-width:
+   the image is the point — their headings just take the margin
+   voice where they exist.
+   --------------------------------------------------------- */
+
+.reveal .slides section.md-fill:has(.md-split) {
+    box-sizing: border-box;
+    padding-left: 30%;
+    padding-right: 4%;
+}
+
+.reveal .slides section.md-fill:has(.md-split)::before {
+    content: '';
+    position: absolute;
+    left: 27%;
+    top: 0.5em;
+    bottom: 0.5em;
+    width: 0;
+    border-left: 1.5px solid var(--marginalia-rule);
+}
+
+.reveal .slides section.md-fill:has(.md-split) .md-fill-inner > h2,
+.reveal .slides section.md-fill:has(.md-split) .md-fill-inner > h3 {
+    position: absolute;
+    left: 0;
+    width: 24%;
+    top: 0.6em;
+    text-align: right;
+    font-size: 1.0em;
+    line-height: 1.12;
+    margin: 0;
+}
+
+/* All md-fill headings take the margin voice (Bild, condensed) */
+.reveal .slides section.md-fill h2,
+.reveal .slides section.md-fill h3,
+.reveal .md-fill-inner > h2,
+.reveal .md-fill-inner > h3 {
+    font-family: 'Bild', 'Concourse', sans-serif;
+    font-stretch: 72%;
+    font-weight: 580;
+    font-variant: normal;
+    letter-spacing: 0.015em;
+    border-bottom: none;
+    color: var(--marginalia-ink);
+}
+
+/* Captions and source lines share the documentary voice, gently
+   wider than the headings */
+.reveal .md-source,
+.reveal .bg-caption,
+.reveal figcaption,
+.reveal .md-frame-caption {
+    font-family: 'Bild', 'Concourse', sans-serif;
+    font-stretch: 86%;
+    font-weight: 420;
+    font-style: normal;
+}
+
+/* @slide contrast: this theme's ground for full-colour slides */
+:root {
+    --r-contrast-bg: #1F1C17;
+    --r-contrast-ink: #FBF9F4;
+    --r-contrast-border: rgba(251,249,244,0.4);
+}
+
+/* @section dividers speak with the full margin voice */
+.reveal .slides section.md-section h1 {
+    font-family: 'Bild', 'Concourse', sans-serif;
+    font-stretch: 68%;
+    font-weight: 640;
+    letter-spacing: 0.01em;
+    font-variant: normal;
+}

@@ -421,3 +421,18 @@
         background-position: 0% 50% !important;
     }
 }
+
+/* ========== Ken Burns family for @kenburns (extends ken-burns above) ========== */
+@keyframes kb-out   { from { transform: scale(1.12); } to { transform: scale(1); } }
+@keyframes kb-left  { from { transform: scale(1.12) translateX(3%); }  to { transform: scale(1.12) translateX(-3%); } }
+@keyframes kb-right { from { transform: scale(1.12) translateX(-3%); } to { transform: scale(1.12) translateX(3%); } }
+@keyframes kb-up    { from { transform: scale(1.12) translateY(3%); }  to { transform: scale(1.12) translateY(-3%); } }
+@keyframes kb-down  { from { transform: scale(1.12) translateY(-3%); } to { transform: scale(1.12) translateY(3%); } }
+
+.reveal .md-kenburns img { width: 100%; height: 100%; object-fit: cover; transform-origin: center;
+  animation-timing-function: ease-in-out; animation-fill-mode: both;
+  animation-iteration-count: infinite; animation-direction: alternate; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal .md-kenburns img { animation: none !important; transform: none !important; }
+}

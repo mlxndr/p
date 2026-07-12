@@ -16,6 +16,34 @@ document.addEventListener('DOMContentLoaded', async function() {
         return;
     }
 
+    // Fill the header from meta.json (merged over ../inc/site.json), so the
+    // handout never hand-copies the title. A hand-written <h1> in the page
+    // wins; the generated one only appears if #handout-title exists.
+    try {
+        const [site, meta] = await Promise.all([
+            fetch('../inc/site.json').then(r => r.ok ? r.json() : {}).catch(() => ({})),
+            fetch('./meta.json').then(r => r.ok ? r.json() : null).catch(() => null)
+        ]);
+        if (meta) {
+            const m = Object.assign({}, site, meta);
+            const full = m.title + (m.subtitle ? ': ' + m.subtitle : '');
+            document.title = full.replace(/\*/g, '');
+            const h1 = document.getElementById('handout-title');
+            if (h1) h1.innerHTML = full.replace(/\*([^*]+)\*/g, '<i>$1</i>');
+            const header = document.getElementById('handout-header');
+            if (header && !header.innerHTML.trim()) {
+                const authors = (m.authors && m.authors.length)
+                    ? m.authors.map(a => a.name).join(' and ')
+                    : m.author;
+                header.innerHTML = '<p class="handout-meta">' + [authors,
+                    [m.event, m.location].filter(Boolean).join(', '), m.date]
+                    .filter(Boolean).join(' · ') + '</p>';
+            }
+        }
+    } catch (e) {
+        console.warn('handout meta:', e);
+    }
+
     try {
         // Configure marked for academic content
         marked.setOptions({
@@ -29,7 +57,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (!mdResponse.ok) {
             throw new Error(`Failed to load content.md: ${mdResponse.status} ${mdResponse.statusText}`);
         }
-        const mdContent = await mdResponse.text();
+        let mdContent = await mdResponse.text();
+
+        // Expand @-directives into markup if the expander is loaded
+        // (add <script src="../inc/directives.js"></script> before this file)
+        if (typeof expandDirectives === 'function') {
+            mdContent = expandDirectives(mdContent, { name: 'content.md' }).markdown;
+        }
 
         // Process the markdown content
         // Remove slide separators (--- and --) and convert to section breaks

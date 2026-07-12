@@ -9,8 +9,10 @@
     --r-serif-font: 'Century Supra', Georgia, serif;
 
     /* Theme colors */
-    --terracotta: #D65F3D;
+    --terracotta: #D65F3D;          /* bright: title-slide ground */
+    --terracotta-ink: #C2502F;      /* deepened: headings and emphasis on paper */
     --cream-bg: #FBF8F5;
+    --r-background-color: #FBF8F5;   /* for translucent surfaces (captions) */
     --title-subtitle-color: #FDEDD7D0;
     --subject-color: #8B1538;
     --object-color: #D4A017;
@@ -30,7 +32,7 @@
 .reveal h2,
 .reveal h3,
 .reveal h4 {
-    color: var(--terracotta);
+    color: var(--terracotta-ink);
     font-weight: bold;
     font-variant-numeric: oldstyle-nums;
     font-variant-ligatures: common-ligatures contextual;
@@ -125,10 +127,17 @@
 /* Bold emphasis styling */
 .reveal strong,
 .reveal b {
-    color: var(--terracotta);
+    color: var(--terracotta-ink);
 }
 
 .reveal section.title-slide strong,
 .reveal section.title-slide b {
     color: #FFFFFF;
+}
+
+/* @slide contrast: this theme's ground for full-colour slides */
+:root {
+    --r-contrast-bg: #D65F3D;
+    --r-contrast-ink: #F7EFE7;
+    --r-contrast-border: rgba(247,239,231,0.5);
 }

@@ -1,6 +1,23 @@
 {
-  "title": "'up yours at the end of life’: Opposition, Emotion, and Overlap in a Corpus of Scottish Debates on Assisted Dying",
-  "date": "2025-05",
-  "event": "16th International Conference on Corpus Linguistics",
-  "location": "Salamanca, Spain"
+  "title": "‘up yours at the end of life’",
+  "subtitle": "Opposition, Emotion, and Overlap in a | Corpus of Scottish Debates on Assisted Dying",
+  "date": "May 2025",
+  "event": "^^CILC16^^",
+  "location": "Salamanca",
+  "logos": [
+    "leverhulme",
+    "uog"
+  ],
+  "authors": [
+    {
+      "name": "Marc Alexander",
+      "affiliation": "University of Glasgow",
+      "email": "marc.alexander@glasgow.ac.uk"
+    },
+    {
+      "name": "James Balfour",
+      "affiliation": "University of Glasgow",
+      "email": "james.balfour@glasgow.ac.uk"
+    }
+  ]
 }

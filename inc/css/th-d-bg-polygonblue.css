@@ -1,7 +1,0 @@
-@import url('base.css');
-@import url('dark.css');
-
-.reveal {
-    background-image: url('bg/d-polygonblue.jpg');
-    background-size: cover;
-}

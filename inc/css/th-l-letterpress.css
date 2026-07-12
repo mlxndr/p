@@ -1,0 +1,129 @@
+@import url('base.css');
+@import url('light.css');
+/* EB Garamond is self-hosted (variable woff2, @font-face in fonts.css),
+   so real small caps and oldstyle figures are guaranteed. */
+/* ===========================================================
+   Letterpress — fine-press book typography, light theme.
+   A plaster paper ground, EB Garamond throughout, and one idea
+   borrowed from the hand-press era: rubrication. Headings are
+   the red; everything else is ink. No ornaments, no apparatus.
+   =========================================================== */
+
+:root {
+    --r-background-color: #EAE9E7;   /* plaster tone, for caption surfaces */
+
+    --letterpress-ink: #2B2620;
+    --letterpress-rubric: #8A2B20;
+}
+
+.reveal {
+    background-color: #EAE9E7;
+    background-image: url('bg/l-paper-fine.jpg');  /* swap back to bg/l-plaster-par.jpg to compare */
+    background-size: cover;
+
+    --r-main-font: 'EB Garamond', 'Equity', 'Georgia', serif !important;
+    --r-heading-font: 'EB Garamond', 'Equity', 'Georgia', serif !important;
+    --r-heading-bold-font: 'EB Garamond', 'Equity', 'Georgia', serif !important;
+    --r-serif-font: 'EB Garamond', 'Equity', 'Georgia', serif !important;
+
+    --r-font-color: var(--letterpress-ink);
+    --r-link-color: var(--letterpress-rubric);
+    --r-subtle-color: rgba(43, 38, 32, 0.55);
+    --r-border-color: rgba(43, 38, 32, 0.3);
+
+    color: var(--letterpress-ink);
+    /* Garamond wants a touch more air than the default */
+    line-height: 1.3;
+    /* never synthesise small caps or weights the font doesn't have */
+    font-synthesis: weight style;
+}
+
+/* Rubricated headings: red does the structural work, so no hairline
+   rule underneath — the colour is the rule. Garamond reads best at a
+   medium weight and generous size, not bold. Slide headings take real
+   small caps (the self-hosted build guarantees smcp). */
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+    color: var(--letterpress-rubric);
+    font-weight: 500;
+    font-variant: normal;
+    letter-spacing: 0;
+}
+
+.reveal h2, .reveal h3, .reveal h4 {
+    font-variant-caps: small-caps;
+    letter-spacing: 0.015em;
+}
+
+.reveal h2, .reveal h3 {
+    border-bottom: none;
+}
+
+/* Emphasis stays ink: bold and italic, never a second colour. */
+.reveal strong, .reveal b {
+    color: var(--letterpress-ink);
+    font-weight: 700;
+}
+
+/* Lists: quiet ink markers */
+.reveal li::marker {
+    color: rgba(43, 38, 32, 0.55);
+}
+
+/* Blockquotes inherit the base hanging rule and marker via
+   --r-border-color (neutral ink, not red: quotations are text,
+   not structure). */
+
+/* Tables: hairlines only, a fine-press ruled table */
+.reveal table th {
+    background: none;
+    color: var(--letterpress-ink);
+    font-weight: 700;
+    border-top: 1.5px solid var(--letterpress-ink);
+    border-bottom: 1px solid var(--letterpress-ink);
+    padding: 0.25em 0.6em;
+}
+
+.reveal table td {
+    border-bottom: 1px solid rgba(43, 38, 32, 0.18);
+    padding: 0.25em 0.6em;
+}
+
+.reveal table tr:last-child td {
+    border-bottom: 1.5px solid var(--letterpress-ink);
+}
+
+.reveal hr {
+    border: none;
+    border-top: 1px solid rgba(43, 38, 32, 0.3);
+}
+
+.reveal .progress {
+    color: var(--letterpress-rubric);
+}
+
+/* Title slide: the standard centred layout carries it; the title takes
+   the rubric with a single short rule beneath — the one flourish. */
+.reveal section.title-slide h1 {
+    color: var(--letterpress-rubric);
+    font-weight: 500;
+}
+
+.reveal section.title-slide h1::after {
+    content: '';
+    display: block;
+    width: 4.5em;
+    margin: 0.32em auto 0;
+    border-top: 1px solid var(--letterpress-rubric);
+    font-size: 0.4em;
+}
+
+.reveal section.title-slide hr {
+    border-top: 1px solid rgba(43, 38, 32, 0.3);
+}
+
+/* @slide contrast: this theme's ground for full-colour slides */
+:root {
+    --r-contrast-bg: #8A2B20;
+    --r-contrast-ink: #EFEAE2;
+    --r-contrast-border: rgba(239, 234, 226, 0.45);
+}

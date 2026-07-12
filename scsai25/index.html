@@ -1,7 +1,8 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>SCS - Some AI updates</title>
+    <meta charset="utf-8">
+    <title>Presentation</title>
     <script>
         fetch('../inc/pres-head.html')
             .then(response => response.text())
@@ -9,22 +10,21 @@
                        document.head.insertAdjacentHTML('afterbegin', html);
                    });
     </script>
+    <script src="../inc/qr.js"></script>
 </head>
 <body>
     <div class="reveal">
         <div class="slides"  style="height:100%;width:100%;">
-            <!-- Title slide - use HTML for complex formatting -->
-            <section class="title-slide">
-                <br><br><br><br><br>
-                <h1 class="pres-title-headingfont">Some AI updates</h1>
-                <div class="titlebr">
-                    <p>SCS School Collective<br><span class="subtle">March 2025<br>Marc Alexander</span></p>
-            </section>
-            
+            <!-- Title slide - generated from meta.json + inc/site.json -->
+            <section data-meta="title"></section>
+
             <!-- Content slides -->
             <section data-markdown="./content.md" data-separator="^\n---\n" data-separator-vertical="^\n--\n" data-separator-notes="^notes:" data-charset="utf-8"></section>
+
+            <!-- Closing slide - generated from meta.json (QR from the folder URL) -->
+            <section data-meta="closing"></section>
         </div>
-    </div>    
+    </div>
 
     <script src="../inc/scripts-config.js"></script>
     <script src="../inc/script-loader.js"></script>

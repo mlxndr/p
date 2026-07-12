@@ -1,6 +1,11 @@
 {
-  "title": "Folk/Lore: The Question of the 'Intelligent Average Individual'",
-  "date": "2026-01",
-  "event": "WAW-ME Workshop 'Identifying and Classifying Middle English Technical Terms'",
-  "location": "Zürich, Switzerland"
+  "title": "Folk/Lore",
+  "subtitle": "The Question of the ‘Intelligent Average Individual’",
+  "date": "January 2026",
+  "event": "^^WAW-ME^^",
+  "location": "Zürich",
+  "logos": [
+    "ht",
+    "uog"
+  ]
 }

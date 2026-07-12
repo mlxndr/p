@@ -1,6 +1,10 @@
 {
-  "title": "University of Glasgow: Academic Quality Processes",
-  "date": "2025-07",
-  "event": "Glasgow-Mainz Standards",
-  "location": "Mainz"
+  "title": "University of Glasgow: | Academic Quality Processes",
+  "authors": [
+    { "name": "Professor Marc Alexander" },
+    { "name": "Dr Andrew Struan" }
+  ],
+  "event": "University of Mainz",
+  "date": "7 July 2025",
+  "logos": ["uog"]
 }

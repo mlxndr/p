@@ -6,6 +6,7 @@
     --r-heading-font: 'Luciole', sans-serif !important;
     --r-heading-bold-font: 'Luciole', sans-serif !important;
     --r-serif-font: 'Luciole', serif !important;
+    --r-background-color: #EDD1B0;   /* for translucent surfaces (captions) */
 }
 
 .reveal {

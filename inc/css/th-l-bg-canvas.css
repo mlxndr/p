@@ -1,8 +1,0 @@
-@import url('base.css');
-@import url('light.css');
-
-.reveal {
-    background-color: #F2F2EA;
-    background-image: url('bg/l-canvas.jpg');
-    background-size: cover;
-}

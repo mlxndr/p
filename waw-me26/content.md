@@ -15,8 +15,8 @@
 * Based on 'accidental rather than inherent properties'
 * Classification reflects human functional perspective, not philosophical taxonomy
 * Example: *writing desk*
-  * Not: <span style='font-variant: small-caps;'>furniture and fittings > desk > writing desk</span>
-  * But: <span style='font-variant: small-caps;'>communication > writing > writing materials > <span class='subtle'>[...]</span> > writing desk</span>
+  * Not: ^^furniture and fittings > desk > writing desk^^
+  * But: ^^communication > writing > writing materials > <span class='subtle'>[...]</span> > writing desk^^
 * (This is easier to explain for the concrete domains...)
 
 --
@@ -25,15 +25,15 @@
 
 * Place items in the narrowest, most specific category that fits
 * Maintains semantic precision and keeps related vocabulary together
-* But creates questions for compounds: *sea salt* under <span style='font-variant: small-caps;'>salt</span> or <span style='font-variant: small-caps;'>sea</span>?
-* *Lava* classified with <span style='font-variant: small-caps;'>volcano</span>, *and* with <span style='font-variant: small-caps;'>igneous rock</span>
-* *Blasphemy* classified with <span style='font-variant: small-caps;'>worship</span>, not <span style='font-variant: small-caps;'>sin</span> or <span style='font-variant: small-caps;'>law</span>
+* But creates questions for compounds: *sea salt* under ^^salt^^ or ^^sea^^?
+* *Lava* classified with ^^volcano^^, *and* with ^^igneous rock^^
+* *Blasphemy* classified with ^^worship^^, not ^^sin^^ or ^^law^^
 
 --
 
 ## 3: Concrete to Abstract, General to Particular
 
-* <span style='font-variant: small-caps;'>External World → Mental World → Social World</span>
+* ^^External World → Mental World → Social World^^
 * Rationale: concrete terms likely preceded abstract; metaphors for mental concepts derive from physical world
 * Within categories: 'Begin with the most general and familiar, work through to the most specific and technical'
 
@@ -63,7 +63,7 @@
 
 ## Medieval Complications
 
-* WAW-ME's four domains: <span style='font-variant: small-caps;'>Education, Law, Medicine, Religion</span>
+* WAW-ME's four domains: ^^Education, Law, Medicine, Religion^^
 * In this time period, these are not sealed professional spheres
   * Education primarily conducted by religious institutions
   * Law intertwined with religious authority
@@ -90,8 +90,8 @@
 ### Too Many Examples
 
 * HT separates two related areas:
-  * 01.17 <span style='font-variant: small-caps;'>The supernatural</span> → <span style='font-variant: small-caps;'>External World</span> (explaining phenomena)
-  * 03.07 <span style='font-variant: small-caps;'>Faith</span> → <span style='font-variant: small-caps;'>Social World</span> (organised religion as institution)
+  * 01.17 ^^The supernatural^^ → ^^External World^^ (explaining phenomena)
+  * 03.07 ^^Faith^^ → ^^Social World^^ (organised religion as institution)
 * Rationale: supernatural beings/manifestations vs social practice
 * Works tolerably for Modern English, where many (?) speakers distinguish 'believing in vampires' from 'going to church'
 
@@ -105,9 +105,9 @@
   * Liturgical observation? (prayer, blessing, invocation)
   * All three simultaneously?
 * Where does *blessing* go?
-  * Priestly function (<span style='font-variant: small-caps;'>Social World, Faith</span>)
-  * Curative power (<span style='font-variant: small-caps;'>External World? Medicine?</span>)
-  * State of being blessed (<span style='font-variant: small-caps;'>Mental World?</span>)
+  * Priestly function (^^Social World, Faith^^)
+  * Curative power (^^External World? Medicine?^^)
+  * State of being blessed (^^Mental World?^^)
 * The split assumes a modern separation of domains
 
 ---
@@ -115,12 +115,12 @@
 ## The Body and Its Humours
 
 * HT classifies body parts functionally
-* *Tooth/teeth* → <span style='font-variant: small-caps;'>digestive organs</span> (what they're for)
+* *Tooth/teeth* → ^^digestive organs^^ (what they're for)
 * But medieval medicine thought in terms of:
   * Humours (choler, melancholy, phlegm, blood)
   * Elements (hot/cold, wet/dry)
   * Correspondences (planets, seasons, temperaments)
-* *Melancholy* in HT sits in <span style='font-variant: small-caps;'>Mental World</span> (<span style='font-variant: small-caps;'>emotion/temperament</span>)
+* *Melancholy* in HT sits in ^^Mental World^^ (^^emotion/temperament^^)
 * But for medieval physicians, it's equally physical: black bile, spleen, digestion (Autumn, Saturn)
 * When and whose 'folk' understanding governs?
 
@@ -131,9 +131,9 @@
 * *Choler*: a bodily fluid? a temperament? a disease? a sin (wrath)?
 * *Phlegmatic*: describing what? body? personality? moral character?
 * Modern categories separate:
-  * Physical substance (<span style='font-variant: small-caps;'>External World</span>)
-  * Psychological disposition (<span style='font-variant: small-caps;'>Mental World</span>)
-  * Moral evaluation (<span style='font-variant: small-caps;'>Social World</span>)
+  * Physical substance (^^External World^^)
+  * Psychological disposition (^^Mental World^^)
+  * Moral evaluation (^^Social World^^)
 * Does medieval usage separate these?
 * Chaucer, *Nun’s Priest’s Tale:* 'the greete superfluytee/of youre rede colera' – the passage has a unified semantic concept (although complex), should all the concepts of these be really scattered around a thesaurus?
 
@@ -143,18 +143,18 @@
 ## Legal-Religious Boundaries
 
 * *Sanctuary*
-  * A sacred place (<span style='font-variant: small-caps;'>Faith</span>)
-  * A legal status (<span style='font-variant: small-caps;'>Law</span>)
-  * A physical location (<span style='font-variant: small-caps;'>Architecture/Buildings</span>)
+  * A sacred place (^^Faith^^)
+  * A legal status (^^Law^^)
+  * A physical location (^^Architecture/Buildings^^)
 * *Benefit of clergy*
   * A legal privilege
   * Defined by religious status
-  * Tested by reading ability eg Ps. 51:1 (<span style='font-variant: small-caps;'>Education</span>)
+  * Tested by reading ability eg Ps. 51:1 (^^Education^^)
 * *Heresy*
-  * A belief (<span style='font-variant: small-caps;'>Mental World</span>)
-  * A sin (<span style='font-variant: small-caps;'>Faith</span>)
-  * A crime (<span style='font-variant: small-caps;'>Law</span>)
-  * An institutional category (<span style='font-variant: small-caps;'>Social World</span>)
+  * A belief (^^Mental World^^)
+  * A sin (^^Faith^^)
+  * A crime (^^Law^^)
+  * An institutional category (^^Social World^^)
 
 --
 
@@ -164,17 +164,17 @@
 * Legal remedy (in ecclesiastical courts?)
 * Medical treatment (for spiritual sickness?)
 * Educational process (moral correction?)
-* HT places it in 12 places, many under <span style='font-variant: small-caps;'>Worship</span> but also <span style='font-variant: small-caps;'>Suffering</span>, <span style='font-variant: small-caps;'>Punishment</span>, <span style='font-variant: small-caps;'>Virtue</span>, <span style='font-variant: small-caps;'>Food</span>, and <span style='font-variant: small-caps;'>Deity</span>
+* HT places it in 12 places, many under ^^Worship^^ but also ^^Suffering^^, ^^Punishment^^, ^^Virtue^^, ^^Food^^, and ^^Deity^^
 
 --
 
 ## Other Headaches You've Probably Already Had
 
-* Blasphemy (<span style='font-variant: small-caps;'>Sin</span>? <span style='font-variant: small-caps;'>Law</span>? <span style='font-variant: small-caps;'>Wrongdoing</span>?)
-* Heresy (<span style='font-variant: small-caps;'>Worship</span>? <span style='font-variant: small-caps;'>Law</span>? <span style='font-variant: small-caps;'>Sin</span>?)
-* Usury (<span style='font-variant: small-caps;'>Sin</span>? <span style='font-variant: small-caps;'>Trade</span>?)
-* Simony (<span style='font-variant: small-caps;'>Commerce</span>? <span style='font-variant: small-caps;'>Worship</span>? <span style='font-variant: small-caps;'>Sin</span>? <span style='font-variant: small-caps;'>Law</span>? <span style='font-variant: small-caps;'>Corruption</span>?)
-* Tithe (<span style='font-variant: small-caps;'>Tax</span>? <span style='font-variant: small-caps;'>Religious administration</span>? <span style='font-variant: small-caps;'>Agriculture</span>? <span style='font-variant: small-caps;'>Proportion</span>?)
+* Blasphemy (^^Sin^^? ^^Law^^? ^^Wrongdoing^^?)
+* Heresy (^^Worship^^? ^^Law^^? ^^Sin^^?)
+* Usury (^^Sin^^? ^^Trade^^?)
+* Simony (^^Commerce^^? ^^Worship^^? ^^Sin^^? ^^Law^^? ^^Corruption^^?)
+* Tithe (^^Tax^^? ^^Religious administration^^? ^^Agriculture^^? ^^Proportion^^?)
 
 ---
 
@@ -198,7 +198,7 @@
 * Spiritual sense: care of souls (*cura animarum*)
 * Medical sense: treatment of disease
 * These are etymologically and conceptually linked
-* Splitting them across <span style='font-variant: small-caps;'>Faith</span> and <span style='font-variant: small-caps;'>Medicine</span> loses something
+* Splitting them across ^^Faith^^ and ^^Medicine^^ loses something
 * Keeping them together distorts both categories
 
 --

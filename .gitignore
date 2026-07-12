@@ -35,3 +35,6 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+# scratch area for files awaiting review; never synced
+_to_delete/
+.DS_Store

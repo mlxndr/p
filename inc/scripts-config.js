@@ -26,12 +26,12 @@ const scriptConfig = {
       path: "../inc/reveal.js/plugin/onetimer/onetimer.js",
       enabled: true
     },
-    effects: {
-      path: "../inc/effects.js",
+    directives: {
+      path: "../inc/directives.js",
       enabled: true
     },
-    interactive: {
-      path: "../inc/interactive.js",
+    meta: {
+      path: "../inc/meta.js",
       enabled: true
     }
   },

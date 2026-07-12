@@ -52,7 +52,7 @@ img.r-stretch {
     font-family: var(--r-main-font);
     font-size: var(--r-main-font-size);
     font-weight: 300;
-    line-height: 1.15;
+    line-height: 1.25;
     text-align: left;
 }
 
@@ -72,7 +72,7 @@ img.r-stretch {
 }
 
 .reveal h2, .reveal h3 {
-    border-bottom: 2.35px solid var(--r-border-color);
+    border-bottom: 1.5px solid var(--r-border-color);
     text-align: left;
 }
 
@@ -96,7 +96,7 @@ img.r-stretch {
     text-align: left;
     list-style-type: "\2014";
     margin: 10px 0;
-    line-height: 1;
+    line-height: 1.18;
 }
 
 .reveal ol {
@@ -137,6 +137,8 @@ li::marker {
     margin-left: 0;
     margin-right: auto;
     margin-bottom: 20px;
+    /* Columns of figures align, in oldstyle (never lining) */
+    font-variant-numeric: oldstyle-nums tabular-nums;
 }
 
 .reveal table th {
@@ -273,10 +275,34 @@ li::marker {
     font-family: var(--r-code-font);
 }
 
-/* Blockquotes */
+/* Blockquotes: upright serif (never italic), hanging hairline rule,
+   a quiet quote marker in the margin. Authored with markdown '>' */
 .reveal blockquote {
     font-style: normal;
     font-family: var(--r-serif-font);
+    position: relative;
+    margin: 0.7em 0 0.7em 0.9em;
+    padding: 0.15em 0.5em 0.15em 0.9em;
+    border-left: 1.5px solid var(--r-border-color);
+    text-align: left;
+}
+
+/* No dead air inside the quote box: the first and last paragraphs shed
+   their outer margins, so the rule hugs the text in every theme */
+.reveal blockquote > p:first-child { margin-top: 0; }
+.reveal blockquote > p:last-child { margin-bottom: 0; }
+
+.reveal blockquote::before {
+    content: '\201C';
+    position: absolute;
+    left: -0.62em;
+    top: -0.18em;
+    font-family: var(--r-serif-font);
+    font-size: 1.9em;
+    line-height: 1;
+    color: var(--r-border-color);
+    /* no background: it never overlaps the rule, and a solid knockout
+       shows as a box on themes with background images */
 }
 
 .predicator { color: #D32F2F; }  /* Deep red for predicators */
@@ -287,27 +313,6 @@ li::marker {
 
 
 
-
-/* Menu info box */
-.slide-menu-info {
-    padding: 0;
-    margin: 0px 10px 2px 10px;
-    text-align: left;
-    font-family: var(--r-main-font);
-}
-
-.slide-menu-info p {
-    margin-bottom: 9px;
-}
-
-.slide-menu-info i {
-    margin-right: 3px;
-}
-
-.slide-menu-info small {
-    font-size: 0.85em;
-    line-height: 1.4;
-}
 
 /* Accessibility: Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
@@ -322,6 +327,13 @@ li::marker {
         transition: none !important;
     }
 }
+
+/* ===========================================
+   Icon font: Font Awesome 5 Duotone (self-hosted subset)
+   Available for slide content (e.g. <i class="fad fa-code"></i>).
+   Only the icons listed below are in the subset; to add one, add its
+   codepoint pair here (find codes at fontawesome.com).
+   =========================================== */
 
 .fad,
 .fas,
@@ -451,294 +463,414 @@ li::marker {
 .fa-paragraph::before { content: '\f1dd'; }
 .fa-paragraph::after { content: '\10f1dd'; }
 
-/* ========================================
-   Menu Visual Enhancements
-   ======================================== */
+/* ===========================================
+   Menu — "Contents"
+   A presenter's table of contents, not chrome.
+   Warm paper object (#FAF7F0, its own material, constant across themes)
+   with a single terracotta-ink accent that only ever answers "where am
+   I". Slide list set like a book's contents page: Equity chapter titles,
+   oldstyle slide numbers, indented Concourse sub-entries, whitespace
+   rhythm instead of ruled lines. Settings live in a small-caps footer;
+   Close is an x in the top corner.
+   =========================================== */
 
-/* Refined Dark colour scheme - use highest specificity */
+/* The menu keeps its own typography regardless of the active theme: the
+   plugin's stylesheet resolves var(--r-main-font) in several places, so
+   the variable itself is pinned here, scoped to the menu only */
+html body .slide-menu-wrapper {
+    --r-main-font: 'Century Supra', 'Georgia', serif;
+}
+
+/* A quiet band across the top of the panel, mirroring the footer
+   toolbar but with no rule: solid ground so scrolling content passes
+   beneath, the jackdaw at home on the left (a link to the directory
+   page; both injected in revconfig.js's menu-ready handler), the
+   corner close on the right */
+html body .slide-menu-wrapper .menu-topbar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 58px;
+    background: var(--menu-bg, #FAF7F0);
+    z-index: 205;
+    pointer-events: none;   /* only the jackdaw inside is interactive */
+}
+
+html body .slide-menu-wrapper .menu-jackdaw {
+    position: absolute;
+    top: 9px;
+    left: 18px;
+    width: 42px;
+    height: 39px;
+    background: url('../../img/jackdaw2.png') no-repeat center / contain;
+    opacity: 0.9;
+    pointer-events: auto;
+}
+
+html body .slide-menu-wrapper .menu-jackdaw:hover {
+    opacity: 1;
+}
+
 html body .slide-menu-wrapper .slide-menu {
-    /* Test with obvious gradient first */
-    background: linear-gradient(180deg, #0d0d0d 0%, #2a2a2a 100%) !important;
-    background-color: #1a1a1a !important;
+    background: #FAF7F0 !important;
 
     /* Colour system */
-    --menu-bg: #1e1e1e;
-    --menu-text: #e0e0e0;
-    --menu-text-muted: #a0a0a0;
-    --menu-accent: #5fa8d3;
-    --menu-past-color: #7cb987;
-    --menu-active-color: #5fa8d3;
-    --menu-future-color: #9a9a9a;
-    --menu-hover-bg: rgba(255,255,255,0.08);
-    --menu-selected-bg: rgba(95,168,211,0.2);
-    --menu-divider-color: rgba(255,255,255,0.08);
-    --menu-border: rgba(255,255,255,0.05);
+    --menu-bg: #FAF7F0;
+    --menu-text: #1B1815;
+    --menu-text-muted: rgba(27, 24, 21, 0.52);
+    --menu-accent: #C2502F;                 /* terracotta ink: the one colour */
+    --menu-hover-bg: rgba(27, 24, 21, 0.045);
+    --menu-divider-color: rgba(27, 24, 21, 0.10);
+    --menu-border: rgba(27, 24, 21, 0.16);
+
+    color: var(--menu-text);
+    font-family: 'Concourse', 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-variant-numeric: oldstyle-nums;
+    border-right: 1px solid var(--menu-border);
+    box-shadow: 10px 0 40px rgba(0, 0, 0, 0.14);
 }
 
-/* Refined toolbar styling */
-.slide-menu-toolbar {
-    background: rgba(0,0,0,0.2) !important;
-    border-bottom: 1px solid var(--menu-border) !important;
+/* ---------- regions: panels above, settings footer below ---------- */
+
+html body .slide-menu-wrapper .slide-menu-panel {
+    top: 0;
+    bottom: 52px;
+    height: auto !important;
+    padding-top: 66px;             /* room for the top band (jackdaw + close) */
 }
 
-/* Menu items text color */
-.slide-menu-items li {
+html body .slide-menu-wrapper .slide-menu-toolbar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 52px !important; min-height: 0 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    box-sizing: border-box;   /* the plugin sets an explicit width */
+    padding: 0 13px;   /* SLIDES' text lines up with the list inset;
+                          INFO gets the same breathing room at the right */
+    background: transparent !important;
+    border-top: 1px solid var(--menu-divider-color);
+    border-bottom: none !important;
+}
+
+html body .slide-menu-wrapper .slide-menu-toolbar > li {
+    position: relative;
+    flex: 0 1 auto; width: auto !important; height: auto !important;
+    padding: 8px 3px;
+    font-family: 'Concourse', 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: 0.7em !important; font-weight: 400;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em; line-height: 1;
+    color: var(--menu-text-muted) !important;
+    background: transparent !important;
+    text-decoration: none !important; text-shadow: none !important;
+    white-space: nowrap;
+}
+.slide-menu-toolbar li i, .slide-menu-toolbar li br { display: none !important; }
+
+html body .slide-menu-wrapper .slide-menu-toolbar > li:hover {
+    color: var(--menu-text) !important;
+    background: transparent !important;
+}
+
+html body .slide-menu-wrapper .slide-menu-toolbar li.active-toolbar-button {
+    color: var(--menu-text) !important;
+    background: transparent !important;
+    text-decoration: none !important; text-shadow: none !important;
+}
+html body .slide-menu-wrapper .slide-menu-toolbar li.active-toolbar-button::after {
+    content: ''; position: absolute;
+    left: 50%; transform: translateX(-50%);
+    bottom: -1px;
+    width: 14px; height: 2px;
+    background: var(--menu-accent);
+}
+
+/* Close: the top corner, where hands expect it */
+html body .slide-menu-wrapper .slide-menu-toolbar > li#close {
+    position: fixed;
+    top: 12px; right: 10px;
+    font-size: 0 !important;
+    padding: 6px 8px;
+    z-index: 210;   /* above the top band */
+}
+html body .slide-menu-wrapper .slide-menu-toolbar > li#close .slide-menu-toolbar-label {
+    display: none !important;
+}
+html body .slide-menu-wrapper .slide-menu-toolbar > li#close::before {
+    content: '\00D7';
+    font-family: inherit;
+    font-size: 22px; line-height: 1;
+    color: var(--menu-text-muted);
+}
+html body .slide-menu-wrapper .slide-menu-toolbar > li#close:hover::before {
     color: var(--menu-text);
 }
+html body .slide-menu-wrapper .slide-menu-toolbar > li#close::after { display: none; }
 
-/* Make anchors inherit color from parent li (overrides plugin's #ccc) */
-.slide-menu-item a,
-.slide-menu-item-vertical a {
+/* ---------- the contents list ---------- */
+
+html body .slide-menu-wrapper .slide-menu-item,
+html body .slide-menu-wrapper .slide-menu-item-vertical {
+    border: none !important;
+    border-left: 3px solid transparent !important;
+    display: block;
+    text-align: left;
+    cursor: pointer;
+}
+
+html body .slide-menu-wrapper .slide-menu-item a,
+html body .slide-menu-wrapper .slide-menu-item-vertical a {
+    color: inherit !important;
+}
+html body .slide-menu-wrapper .slide-menu-item a:hover,
+html body .slide-menu-wrapper .slide-menu-item-vertical a:hover,
+html body .slide-menu-wrapper .slide-menu-panel a:hover {
     color: inherit !important;
 }
 
-/* Menu title */
-.slide-menu-title {
-    font-family: var(--r-main-font);
-    font-size: 0.9em;
-    font-feature-settings: "smcp", "c2sc";
-    letter-spacing: 0.08em;
-    text-align: center;
-    padding: 12px 18px 8px;
-    color: var(--menu-text);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-    border-bottom: 1px solid var(--menu-border);
+/* Number and title in a two-column grid, so wrapped title lines return
+   to the title's own indent (a hanging indent, as in a book's contents) */
+html body .slide-menu-wrapper .slide-menu-item {
+    font-family: 'Century Supra', 'Georgia', serif;
+    font-size: 1.02em;
+    line-height: 1.3;
+    padding: 9px 18px 9px 17px;
+    margin-top: 7px;
+    color: var(--menu-text) !important;
+    display: grid;
+    grid-template-columns: 1.7em 1fr;
+    align-items: baseline;
+    column-gap: 0.15em;
+}
+html body .slide-menu-wrapper .slide-menu-item:first-child { margin-top: 0; }
+
+/* The contents page earns its air; the settings panels stay compact */
+html body .slide-menu-wrapper .slide-menu-panel[data-panel="Slides"] .slide-menu-item {
+    margin-top: 16px;
 }
 
-/* Colourful toolbar icons */
-.slide-menu-toolbar li[data-panel="Slides"] i {
-    --fa-primary-color: #74b9ff;
-    --fa-secondary-color: #a29bfe;
+html body .slide-menu-wrapper .slide-menu-item-vertical {
+    font-family: 'Century Supra', 'Georgia', serif;
+    font-size: 0.82em;
+    line-height: 1.4;
+    padding: 5px 18px 5px 26px !important;
+    margin-top: 0;
+    color: var(--menu-text) !important;
+    display: grid;
+    grid-template-columns: 2.1em 1fr;
+    align-items: baseline;
+    column-gap: 0.15em;
 }
 
-/* Custom0 = Fonts panel */
-.slide-menu-toolbar li[data-panel="Custom0"] i {
-    --fa-primary-color: #fca5a5;
-    --fa-secondary-color: #f87171;
+/* Slide numbers: small, muted, oldstyle */
+html body .slide-menu-wrapper .slide-menu-item-number {
+    font-family: 'Concourse', 'Helvetica Neue', sans-serif;
+    font-size: 0.68em;
+    color: var(--menu-text-muted);
+    font-variant-numeric: oldstyle-nums;
+    white-space: nowrap;
 }
 
-/* Custom1 = Info panel */
-.slide-menu-toolbar li[data-panel="Custom1"] i {
-    --fa-primary-color: #55efc4;
-    --fa-secondary-color: #00b894;
-}
-
-.slide-menu-toolbar li[data-panel="Themes"] i {
-    --fa-primary-color: #ffeaa7;
-    --fa-secondary-color: #fdcb6e;
-}
-
-.slide-menu-toolbar li[data-panel="Transitions"] i {
-    --fa-primary-color: #dfe6e9;
-    --fa-secondary-color: #b2bec3;
-}
-
-.slide-menu-toolbar li.slide-menu-toolbar-button i {
-    --fa-primary-color: #ff7675;
-    --fa-secondary-color: #d63031;
-}
-
-/* Sub-slides: smaller, lighter, more indented */
-.slide-menu-item-vertical {
-    font-size: 0.85em;
-    padding-left: 40px !important;
-}
-
-.slide-menu-item-vertical .slide-menu-item-vertical {
-    font-size: 0.8em;
-    padding-left: 55px !important;
-}
-
-/* Slide state colors */
-.slide-menu-item.past {
-    color: var(--menu-past-color) !important;
-    opacity: 0.85;
-}
-
-.slide-menu-item.active {
-    color: #fff !important;
+/* States: position carried by ink strength; place by the accent rule */
+html body .slide-menu-wrapper .slide-menu-item.past,
+html body .slide-menu-wrapper .slide-menu-item-vertical.past {
+    color: var(--menu-text-muted) !important;
     opacity: 1;
-    font-weight: bold;
+    font-weight: normal;
+}
+html body .slide-menu-wrapper .slide-menu-item.future,
+html body .slide-menu-wrapper .slide-menu-item-vertical.future {
+    color: rgba(27, 24, 21, 0.80) !important;
+    opacity: 1;
+}
+html body .slide-menu-wrapper .slide-menu-item.active,
+html body .slide-menu-wrapper .slide-menu-item-vertical.active {
+    color: var(--menu-text) !important;
+    opacity: 1;
+    font-weight: normal;
+    border-left-color: var(--menu-accent) !important;
+    background: transparent !important;
+    background-image: none !important;
 }
 
-.slide-menu-item.future {
-    color: var(--menu-future-color) !important;
-    opacity: 0.7;
-}
-
-/* Vertical slide states inherit from parent */
-.slide-menu-item-vertical.past {
-    color: var(--menu-past-color) !important;
-    opacity: 0.75;
-}
-
-.slide-menu-item-vertical.active {
-    color: #fff !important;
-    opacity: 0.95;
-    font-weight: bold;
-}
-
-.slide-menu-item-vertical.future {
-    color: var(--menu-future-color) !important;
-    opacity: 0.6;
-}
-
-/* Hover effects */
-.slide-menu-item:hover,
-.slide-menu-item-vertical:hover {
+html body .slide-menu-wrapper .slide-menu-item:hover,
+html body .slide-menu-wrapper .slide-menu-item-vertical:hover {
     background-color: var(--menu-hover-bg);
     transition: background-color 0.15s ease;
 }
 
-/* Keep anchor color on hover (overrides plugin's white hover) */
-.slide-menu-item a:hover,
-.slide-menu-item-vertical a:hover,
-.slide-menu-panel[data-panel="Themes"] a:hover,
-.slide-menu-panel[data-panel="Transitions"] a:hover {
-    color: inherit !important;
+/* Selected entries (Themes/Transitions): same accent-rule language */
+html body .slide-menu-wrapper .active-menu-panel li.selected {
+    border-left: 3px solid var(--menu-accent) !important;
+    background: transparent !important;
+    background-image: none !important;
+    font-weight: normal;
+    color: var(--menu-text) !important;
 }
 
-/* Selected item highlight */
-.active-menu-panel li.selected {
-    background-color: var(--menu-selected-bg);
-    border-left: 3px solid var(--menu-active-color);
-    font-weight: bold;
-    color: #fff !important;
-}
-
-/* Toolbar button hover */
-.slide-menu-toolbar li:hover {
-    background-color: rgba(255,255,255,0.1);
-    transition: background-color 0.15s ease;
-}
-
-/* Active panel indicator */
-.slide-menu-toolbar li.active-toolbar-button {
-    border-bottom: 2px solid var(--menu-active-color);
-}
-
-/* Panel transitions and height fix for added Menu title */
-.slide-menu-panel {
-    transition: opacity 0.2s ease;
-    /* Plugin uses calc(100% - 60px) for toolbar only.
-       We added a ~40px Menu title, so need calc(100% - 100px) */
-    height: calc(100% - 100px) !important;
-}
-
-.slide-menu-panel.active-menu-panel {
-    animation: menuFadeIn 0.2s ease;
-}
-
-@keyframes menuFadeIn {
-    from { opacity: 0; transform: translateY(-5px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-/* Scroll shadows */
-.slide-menu-items {
-    background:
-        linear-gradient(#1e1e1e 30%, transparent),
-        linear-gradient(transparent, #1e1e1e 70%) bottom,
-        radial-gradient(farthest-side at 50% 0, rgba(0,0,0,0.3), transparent),
-        radial-gradient(farthest-side at 50% 100%, rgba(0,0,0,0.3), transparent) bottom;
-    background-repeat: no-repeat;
-    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
-    background-attachment: local, local, scroll, scroll;
-    padding-bottom: 80px;
-}
-
-/* Section headers in theme list */
+/* Section headers in the Themes panel: lines kept here, they group */
 .slide-menu-panel[data-panel="Themes"] .theme-section-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    font-family: var(--r-main-font);
-    font-size: 0.85em;
+    display: block !important;
+    font-family: 'Concourse', 'Helvetica Neue', 'Helvetica', sans-serif !important;
+    font-size: 0.72em;
     font-feature-settings: "smcp", "c2sc";
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     color: var(--menu-text-muted);
-    padding: 15px 18px 8px !important;
+    padding: 18px 18px 8px !important;
     border-top: 1px solid var(--menu-divider-color);
-    margin-top: 8px;
+    margin-top: 12px;
     cursor: default !important;
     pointer-events: none;
 }
-
 .slide-menu-panel[data-panel="Themes"] .theme-section-header:first-of-type {
     border-top: none;
     margin-top: 0;
 }
 
-.theme-section-header span {
-    flex: 1;
+/* Panel change animation */
+.slide-menu-panel {
+    transition: opacity 0.2s ease;
+}
+.slide-menu-panel.active-menu-panel {
+    animation: menuFadeIn 0.2s ease;
+}
+@keyframes menuFadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.theme-section-header i {
-    font-size: 1em;
-    opacity: 0.6;
-    margin-left: auto;
+/* Scroll shadows on the new paper */
+.slide-menu-items {
+    background:
+        linear-gradient(#FAF7F0 30%, transparent),
+        linear-gradient(transparent, #FAF7F0 70%) bottom,
+        radial-gradient(farthest-side at 50% 0, rgba(27,24,21,0.10), transparent),
+        radial-gradient(farthest-side at 50% 100%, rgba(27,24,21,0.10), transparent) bottom;
+    background-repeat: no-repeat;
+    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
+    background-attachment: local, local, scroll, scroll;
+    border-bottom: none !important;
+    padding-bottom: 30px;
 }
 
-/* Transition list icons */
-.slide-menu-panel[data-panel="Transitions"] li {
+/* Info panel: full ink, monochrome duotone icons, accent on link hover */
+html body .slide-menu-wrapper .slide-menu-info {
+    padding: 0;
+    margin: 0px 12px 2px 12px;
+    text-align: left;
+    font-family: inherit;
+    color: var(--menu-text);
+}
+html body .slide-menu-wrapper .slide-menu-info a {
+    color: var(--menu-text) !important;
+    text-decoration: underline;
+    text-decoration-color: rgba(27, 24, 21, 0.35);
+    text-underline-offset: 0.15em;
+}
+html body .slide-menu-wrapper .slide-menu-info a:hover {
+    text-decoration-color: var(--menu-accent);
+}
+.slide-menu-info p { margin-bottom: 9px; }
+.slide-menu-info i { margin-right: 3px; }
+.slide-menu-info small { font-size: 0.85em; line-height: 1.4; }
+
+/* Transition list icons: same ink duotone as the Info panel */
+html body .slide-menu-wrapper .transition-icon {
+    font-size: 0.9em;
+    min-width: 1.5em;
+    margin-right: 8px;
+    text-align: center;
+    --fa-primary-color: var(--menu-text);
+    --fa-secondary-color: var(--menu-text);
+    --fa-primary-opacity: 1;
+    --fa-secondary-opacity: 0.3;
+}
+html body .slide-menu-wrapper .transition-icon.concave {
+    /* inverted layers to tell Concave from Convex */
+    --fa-primary-opacity: 0.3;
+    --fa-secondary-opacity: 1;
+}
+html body .slide-menu-wrapper .slide-menu-panel[data-panel="Transitions"] li {
     display: flex;
     align-items: center;
 }
 
-.transition-icon {
-    font-size: 0.95em;
-    opacity: 0.9;
-    min-width: 1.4em;
-    margin-right: 10px;
-    text-align: center;
-    flex-shrink: 0;
+/* Keyboard focus, in the accent */
+html body .slide-menu-wrapper .slide-menu-item:focus-visible,
+html body .slide-menu-wrapper .slide-menu-item-vertical:focus-visible,
+html body .slide-menu-wrapper .slide-menu-toolbar > li:focus-visible {
+    outline: 2px solid var(--menu-accent);
+    outline-offset: -2px;
 }
 
-/* Transition icon colors - brighter */
-.transition-icon.fa-transporter-2 {
-    --fa-primary-color: #c4b5fd;
-    --fa-secondary-color: #a78bfa;
+/* ===========================================
+   Touch access: the menu has no keyboard on
+   touch devices, so show an open button there.
+   Hidden entirely on fine-pointer devices.
+   =========================================== */
+
+html body .slide-menu-button {
+    display: none;
 }
 
-.transition-icon.fa-eye-slash {
-    --fa-primary-color: #9ca3af;
-    --fa-secondary-color: #d1d5db;
-}
+@media (hover: none), (pointer: coarse) {
+    /* Barely-there: the speaker knows it is here; the audience should
+       not notice it. A small translucent disc, no border, no shadow. */
+    html body .slide-menu-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        left: 12px;
+        bottom: 12px;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(128, 128, 128, 0.07);
+        border: none;
+        box-shadow: none;
+        z-index: 30;
+        font-size: 0; /* suppress any plugin icon text fallback */
+    }
 
-.transition-icon.fa-arrows {
-    --fa-primary-color: #93c5fd;
-    --fa-secondary-color: #60a5fa;
-}
+    /* A plain disc: the speaker knows what it is; nobody else looks twice */
+    html body .slide-menu-button a {
+        position: relative;
+        display: block;
+        width: 14px;
+        height: 10px;
+        opacity: 0.15;
+    }
 
-.transition-icon.fa-circle-notch {
-    --fa-primary-color: #fde68a;
-    --fa-secondary-color: #fbbf24;
-}
+    html body .slide-menu-button a i {
+        display: none !important;
+    }
 
-.transition-icon.fa-circle-notch.concave {
-    /* Inverted: secondary becomes light, primary becomes dark */
-    --fa-primary-color: #92400e;
-    --fa-secondary-color: #fef3c7;
-}
-
-.transition-icon.fa-search-plus {
-    --fa-primary-color: #6ee7b7;
-    --fa-secondary-color: #34d399;
+    html body .slide-menu-button a::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            linear-gradient(#1a1a1a, #1a1a1a) 0 0 / 100% 1.5px no-repeat,
+            linear-gradient(#1a1a1a, #1a1a1a) 0 4.5px / 100% 1.5px no-repeat,
+            linear-gradient(#1a1a1a, #1a1a1a) 0 9px / 100% 1.5px no-repeat;
+    }
 }
 
 /* ===========================================
    Keyboard Shortcuts Overlay (? key)
-   Styled to match menu design
+   Same quiet editorial treatment as the menu
    =========================================== */
 
 .reveal > .overlay.overlay-help {
-    background: linear-gradient(180deg, rgba(13,13,13,0.97) 0%, rgba(42,42,42,0.97) 100%);
+    background: rgba(250, 247, 240, 0.97);
     backdrop-filter: blur(8px);
 }
 
 .reveal > .overlay.overlay-help header {
-    background: rgba(0,0,0,0.3);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: transparent;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.12);
     padding: 10px 15px;
 }
 
@@ -752,7 +884,7 @@ html body .slide-menu-wrapper .slide-menu {
 }
 
 .reveal > .overlay.overlay-help .viewport {
-    color: var(--menu-text, #e0e0e0);
+    color: #1a1a1a;
 }
 
 .reveal > .overlay.overlay-help .viewport .viewport-inner {
@@ -761,18 +893,15 @@ html body .slide-menu-wrapper .slide-menu {
     padding: 30px 25px 60px;
 }
 
-/* Title styling - matches menu title */
 .reveal > .overlay.overlay-help .viewport .viewport-inner .title {
-    font-family: var(--r-main-font);
-    font-size: 0.95em;
-    font-feature-settings: "smcp", "c2sc";
+    font-family: var(--r-heading-font);
+    font-variant: small-caps;
+    font-size: 1em;
     letter-spacing: 0.08em;
-    color: var(--menu-text, #e0e0e0);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    color: #1a1a1a;
     margin-bottom: 20px;
 }
 
-/* Table styling - elegant, matches menu items */
 .reveal > .overlay.overlay-help .viewport .viewport-inner table {
     width: 100%;
     border: none;
@@ -780,21 +909,19 @@ html body .slide-menu-wrapper .slide-menu {
     border-spacing: 0;
     font-family: var(--r-main-font);
     font-size: 15px;
-    background: rgba(0,0,0,0.2);
-    border-radius: 8px;
-    overflow: hidden;
+    background: transparent;
 }
 
 .reveal > .overlay.overlay-help .viewport .viewport-inner table th {
-    background: rgba(0,0,0,0.3);
+    background: transparent;
     border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    padding: 14px 18px;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.35);
+    padding: 12px 18px;
     font-weight: 500;
     font-size: 0.85em;
     font-feature-settings: "smcp", "c2sc";
     letter-spacing: 0.06em;
-    color: var(--menu-text-muted, #a0a0a0);
+    color: rgba(26, 26, 26, 0.55);
     text-align: left;
 }
 
@@ -804,109 +931,24 @@ html body .slide-menu-wrapper .slide-menu {
 
 .reveal > .overlay.overlay-help .viewport .viewport-inner table td {
     border: none;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    padding: 12px 18px;
+    border-bottom: 1px solid rgba(26, 26, 26, 0.1);
+    padding: 11px 18px;
     vertical-align: middle;
-    color: var(--menu-text, #e0e0e0);
+    color: #1a1a1a;
 }
 
 .reveal > .overlay.overlay-help .viewport .viewport-inner table tr:last-child td {
     border-bottom: none;
 }
 
-/* Hover effect on rows */
 .reveal > .overlay.overlay-help .viewport .viewport-inner table tr:hover td {
-    background: rgba(255,255,255,0.05);
+    background: rgba(26, 26, 26, 0.05);
 }
 
-/* Key column - monospace styling */
 .reveal > .overlay.overlay-help .viewport .viewport-inner table td:first-child {
-    font-size: 0.9em;
-    color: #93c5fd;
-    letter-spacing: 0.02em;
-}
-
-/* Action column */
-.reveal > .overlay.overlay-help .viewport .viewport-inner table td:last-child {
-    color: var(--menu-text, #e0e0e0);
-    opacity: 0.9;
-}
-
-/* ===========================================
-   Font Chooser - Heading Font Overrides
-   =========================================== */
-.reveal.heading-equity {
-    --r-heading-font: 'Equity', 'Constantia', 'Georgia', serif;
-    --r-heading-bold-font: 'Equity', 'Constantia', 'Georgia', serif;
-}
-.reveal.heading-concourse {
-    --r-heading-font: 'Concourse', 'Aptos', 'Corbel', sans-serif;
-    --r-heading-bold-font: 'Concourse', 'Aptos', 'Corbel', sans-serif;
-}
-.reveal.heading-century {
-    --r-heading-font: 'Century Supra', 'Georgia', serif;
-    --r-heading-bold-font: 'Century Supra', 'Georgia', serif;
-}
-.reveal.heading-luciole {
-    --r-heading-font: 'Luciole', sans-serif;
-    --r-heading-bold-font: 'Luciole', sans-serif;
-}
-.reveal.heading-mono {
-    --r-heading-font: 'Monaspace Neon', monospace;
-    --r-heading-bold-font: 'Monaspace Neon', monospace;
-}
-
-/* ===========================================
-   Font Chooser - Body Font Overrides
-   =========================================== */
-.reveal.body-concourse {
-    --r-main-font: 'Concourse', 'Aptos', 'Corbel', sans-serif;
-}
-.reveal.body-equity {
-    --r-main-font: 'Equity', 'Constantia', 'Georgia', serif;
-}
-.reveal.body-luciole {
-    --r-main-font: 'Luciole', sans-serif;
-}
-.reveal.body-mono {
-    --r-main-font: 'Monaspace Neon', monospace;
-}
-.reveal.body-century {
-    --r-main-font: 'Century Supra', 'Georgia', serif;
-}
-
-/* ===========================================
-   Font Panel Section Headers
-   =========================================== */
-.font-section-header {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    font-family: var(--r-main-font);
+    font-family: var(--r-code-font);
     font-size: 0.85em;
-    font-feature-settings: "smcp", "c2sc";
-    letter-spacing: 0.08em;
-    color: var(--menu-text-muted);
-    padding: 15px 18px 8px !important;
-    border-top: 1px solid var(--menu-divider-color);
-    margin-top: 8px;
-    cursor: default !important;
-    pointer-events: none;
-}
-
-.font-section-header:first-child {
-    border-top: none;
-    margin-top: 0;
-}
-
-.font-section-header span {
-    flex: 1;
-}
-
-.font-section-header i {
-    font-size: 1em;
-    opacity: 0.6;
-    margin-left: auto;
+    letter-spacing: 0.02em;
 }
 
 /* ===========================================
@@ -1072,3 +1114,250 @@ html body .slide-menu-wrapper .slide-menu {
 
 .two-col.align-bottom,
 .two-grid.align-bottom { align-items: end; }
+
+/* ===========================================
+   Directive layout system (@image-left, @compare, @zoom, ...)
+   Fills the 1920x1080 stage via height:100% against .slides — reveal
+   sizes .slides to 1080, so 100% resolves in slide coordinates. This is
+   the fix for the old vh-vs-slide-coordinates problem and replaces the
+   fixed 800px .two-img heights.
+   =========================================== */
+
+/* Reveal sets display:block inline on visible sections (its `display`
+   config), so the flex column lives one level down in .md-fill-inner,
+   which the expander wraps around each generated md-fill slide */
+.reveal .slides section.md-fill { height: 100%; }
+.reveal .md-fill-inner { height: 100%; display: flex; flex-direction: column; min-height: 0; }
+.reveal .md-fill-inner > h1,
+.reveal .md-fill-inner > h2,
+.reveal .md-fill-inner > h3 { flex: 0 0 auto; margin-bottom: 0.4em; }
+
+.reveal .md-split { flex: 1 1 auto; min-height: 0; display: grid;
+  grid-template-columns: var(--split, 42%) 1fr; grid-template-rows: minmax(0, 1fr);
+  column-gap: 1.5em; align-items: center; width: 100%; }
+.reveal .md-split.img-right { grid-template-columns: 1fr var(--split, 42%); }
+.reveal .md-split.img-right .md-split-img { order: 2; }
+.reveal .md-split-img { margin: 0; min-width: 0; min-height: 0; height: 100%; width: 100%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; }
+/* scale-down: large images are contained within the column, small images
+   keep their natural size — never upscaled, never overflowing */
+.reveal .md-split-img img { width: 100%; height: 100%; min-height: 0; object-fit: scale-down;
+  margin: 0 !important; border: none !important; background: none !important; box-shadow: none !important; }
+.reveal .md-split-body { min-width: 0; text-align: left; }
+
+.reveal .md-compare { flex: 1 1 auto; min-height: 0; display: grid;
+  grid-template-columns: 1fr 1fr; column-gap: 3em; width: 100%; }
+.reveal .md-compare > figure { margin: 0; min-width: 0; min-height: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.reveal .md-compare img { flex: 1 1 0; width: 100%; height: 100%; min-height: 0;
+  object-fit: scale-down; margin: 0 !important; border: none !important;
+  background: none !important; box-shadow: none !important; }
+
+.reveal .md-zoom-frame { position: relative; overflow: hidden;
+  /* flex-basis 0 (not height:100%): the frame takes exactly the space
+     remaining after the heading and any .md-frame-caption sibling */
+  flex: 1 1 0; min-height: 0; width: 100%;
+  display: flex; align-items: center; justify-content: center; }
+
+/* Contained zoom images ([data-md-fit]): sized by CSS so the element box
+   always equals the visible image (auto-animate interpolates boxes) */
+.reveal .md-zoom-frame img[data-md-fit] {
+  position: static !important;
+  width: auto !important; height: auto !important;
+  max-width: 100% !important; max-height: 100% !important;
+  margin: 0 !important; border: none !important;
+  background: none !important; box-shadow: none !important;
+}
+
+/* Enlarged zoom images ([data-md-zoom]) are pixel-positioned at runtime;
+   nothing may cap them */
+.reveal .md-zoom-frame img[data-md-zoom] {
+  position: absolute;
+  max-width: none !important; max-height: none !important;
+  margin: 0 !important; border: none !important;
+  background: none !important; box-shadow: none !important;
+}
+
+/* The global img 66vw/66vh cap must not apply inside directive layouts */
+.reveal .md-split img,
+.reveal .md-compare img {
+  max-width: none !important;
+}
+.reveal .md-kenburns img {
+  max-width: none !important;
+  max-height: none !important;
+}
+
+/* Caption below a zoom/kenburns frame: normal flow, so the frame shrinks
+   to make room and the image never touches the slide edge */
+.reveal .md-frame-caption {
+  flex: 0 0 auto;
+  width: 100%;
+  text-align: center;
+  margin-top: 0.5em;
+  font-size: 0.7em;
+  font-style: italic;
+  color: var(--r-subtle-color);
+  line-height: 1.3;
+}
+
+.reveal .md-split-img figcaption,
+.reveal .md-compare figcaption { width: 100%; text-align: center; margin-top: 0.6em;
+  font-size: 0.7em; font-style: italic; color: var(--r-subtle-color); line-height: 1.3; }
+.reveal .bg-caption { position: absolute; left: 0; right: 0; bottom: 0.6em; margin: 0;
+  padding: 0.3em 1em; text-align: center; font-size: 0.7em; font-style: italic;
+  color: var(--r-subtle-color); line-height: 1.3;
+  background: color-mix(in srgb, var(--r-background-color, #F2F2EA) 72%, transparent); }
+
+.visually-hidden { position: absolute !important; width: 1px; height: 1px; padding: 0;
+  margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+/* Typography utilities replacing inline font-size styles */
+.reveal .md-small  { font-size: 0.7em; }
+.reveal .md-source { font-size: 0.8em; font-style: italic; text-align: right; color: var(--r-subtle-color); }
+
+/* Directive error surfaces: visible in preview and in PDF export */
+.reveal img.md-broken { outline: 3px dashed #c0392b; min-width: 120px; min-height: 80px; }
+.reveal .md-missing-note { color: #c0392b; font-size: 0.6em; text-align: center; }
+.reveal .directive-error { color: #7a1c1c; background: #fdecea; border: 3px solid #c0392b;
+  border-radius: 10px; padding: 1.2em 1.6em; text-align: left; font-family: var(--r-main-font); }
+.reveal .directive-error h3 { color: #7a1c1c; border-bottom-color: #c0392b; }
+.reveal .md-alt-missing { position: absolute; top: 0.5em; right: 0.5em; z-index: 20;
+  background: #c0392b; color: #fff; font-size: 0.45em; padding: 0.3em 0.8em;
+  border-radius: 6px; font-family: var(--r-main-font); }
+
+/* ===========================================
+   Slide modifiers and text-slide directives
+   (@slide, @section, @quote, @refs — see inc/directives.js)
+   =========================================== */
+
+/* @slide smaller / smallest — em-based, so the measure cap tracks it */
+.reveal .slides section.md-smaller  { font-size: 85%; }
+.reveal .slides section.md-smallest { font-size: 72%; }
+
+/* @slide plain — no heading rule */
+.reveal .slides section.md-plain h2,
+.reveal .slides section.md-plain h3 { border-bottom: none; }
+
+/* @slide centred — vertically centre short content (reveal pins sections
+   with inline display:block and top:0; nudging with top/transform is safe
+   because reveal only transforms .slides, never sections, with center:false) */
+.reveal .slides section.md-centred {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+/* @section — a part-divider slide: one centred display heading with a
+   short accent rule beneath, no other furniture */
+.reveal .slides section.md-section { height: 100%; }
+.reveal .slides section.md-section h1 {
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    transform: translateY(-50%);
+    margin: 0;
+    text-align: center;
+    font-size: 2.4em;
+    border-bottom: none;
+}
+.reveal .slides section.md-section h1::after {
+    content: '';
+    display: block;
+    width: 3.2em;
+    margin: 0.4em auto 0;
+    border-top: 2.5px solid var(--r-border-color);
+    font-size: 0.4em;   /* narrows the rule relative to the heading */
+}
+
+/* @quote — a single displayed quotation, optically centred */
+.reveal .slides section.md-quote { height: 100%; }
+.reveal .md-quote-inner {
+    position: absolute;
+    top: 47%; left: 0; right: 0;
+    transform: translateY(-50%);
+    margin: 0 auto;
+    max-width: 30em;
+    font-size: 1.12em;
+}
+.reveal .md-quote-inner blockquote { margin-right: 0; }
+.reveal .md-quote-inner .md-source { margin-top: 0.5em; }
+
+/* Long quotations: the size flags widen the measure as they shrink the
+   text, so testimony-length quotes fill the slide sensibly */
+.reveal section.md-quote.md-smaller .md-quote-inner  { max-width: 36em; }
+.reveal section.md-quote.md-smallest .md-quote-inner { max-width: 40em; }
+
+/* A @quote slide with its own heading keeps the heading at the top and
+   flows the quotation beneath it instead of centring over it */
+.reveal section.md-quote:has(h2) .md-quote-inner,
+.reveal section.md-quote:has(h3) .md-quote-inner {
+    position: static;
+    transform: none;
+    margin: 0.5em auto 0;
+}
+
+/* @refs — hanging-indent reference list; the plugin's animateLists turns
+   list items into fragments, which is wrong for references, so force them
+   visible */
+.reveal .slides section.md-refs { font-size: 0.7em; }
+.reveal .slides section.md-refs ul {
+    list-style: none;
+    max-width: 44em;
+    padding-left: 1.6em;
+    text-indent: -1.6em;
+}
+.reveal .slides section.md-refs li { margin-bottom: 0.55em; line-height: 1.3; }
+.reveal .slides section.md-refs li.fragment {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* @slide contrast — the theme's title ground carries a content slide
+   (reveal copies the section's classes onto its .slide-background).
+   Each theme sets --r-contrast-bg/--r-contrast-ink; light.css and
+   dark.css provide the defaults. */
+.reveal .slide-background.md-contrast {
+    background-color: var(--r-contrast-bg, #183153);
+}
+.reveal .slides section.md-contrast {
+    color: var(--r-contrast-ink, #F2F2EA);
+    /* translucent surfaces (blockquote marker knockout, captions) must
+       match the contrast ground, and hairlines must read on it */
+    --r-background-color: var(--r-contrast-bg, #183153);
+    --r-border-color: var(--r-contrast-border, rgba(242,242,234,0.45));
+    --r-subtle-color: var(--r-contrast-subtle, rgba(242,242,234,0.7));
+}
+.reveal .slides section.md-contrast h1,
+.reveal .slides section.md-contrast h2,
+.reveal .slides section.md-contrast h3,
+.reveal .slides section.md-contrast h4,
+.reveal .slides section.md-contrast strong,
+.reveal .slides section.md-contrast b,
+.reveal .slides section.md-contrast li::marker {
+    color: var(--r-contrast-ink, #F2F2EA);
+}
+
+/* Inline small caps: ^^term^^ in markdown */
+.reveal .md-sc { font-variant-caps: small-caps; }
+
+/* Inline subtle colour: %%aside%% in markdown */
+.reveal .md-subtle { color: var(--r-subtle-color); }
+
+/* ===========================================
+   Prose measure cap — full slide width at 52px runs past 70 characters;
+   cap running text at a comfortable measure. Tables, images, directive
+   layouts and title slides keep the full width.
+   =========================================== */
+.reveal .slides section:not(.title-slide) > p,
+.reveal .slides section:not(.title-slide) > ul,
+.reveal .slides section:not(.title-slide) > ol,
+.reveal .slides section:not(.title-slide) > blockquote {
+    max-width: 33em;
+}
+
+/* Title-slide metadata tables are layout, not data: no theme's table
+   rules (row hairlines, header fills) may leak into them */
+.reveal section.title-slide .titlebr td,
+.reveal section.title-slide .titlebr th {
+    border: none;
+    background: none;
+}

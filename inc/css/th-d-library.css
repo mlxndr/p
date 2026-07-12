@@ -1,0 +1,101 @@
+@import url('base.css');
+@import url('dark.css');
+
+/* The Library — a warm dark theme: deep racing green ground, soft cream
+   text, old gold accents. Body in Premiera (@font-face in fonts.css),
+   headings in Concourse bold. */
+
+.reveal {
+    --r-main-font: 'Concourse', 'Noto Sans', 'Aptos', 'Corbel', 'Helvetica Neue', 'Helvetica', sans-serif !important;
+    --r-heading-font: 'Concourse', 'Noto Sans', 'Aptos', 'Corbel', 'Helvetica Neue', 'Helvetica', sans-serif !important;
+    --r-serif-font: 'Premiera', 'Equity', 'Noto Serif', 'Constantia', 'Georgia', serif !important;
+
+    --r-link-color: #D4B87A;
+    --r-subtle-color: rgba(239, 232, 216, 0.58);
+    --r-border-color: rgba(196, 161, 90, 0.5);
+}
+
+:root {
+    --r-background-color: #14251C;
+}
+
+.reveal {
+    background-color: #14251C;
+    color: #EFE8D8;
+}
+
+/* Body text in Premiera (serif), headings stay in Concourse (sans, set above) */
+.reveal p,
+.reveal li,
+.reveal td,
+.reveal .slidequote {
+    font-family: 'Premiera', 'Equity', 'Noto Serif', 'Constantia', 'Georgia', serif;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal .pres-title {
+    color: #EFE8D8;
+    font-weight: bold;
+}
+
+/* Gold accents used sparingly */
+.reveal hr {
+    border-color: #C4A15A;
+}
+
+.reveal .progress {
+    color: #C4A15A;
+}
+
+.reveal strong,
+.reveal b {
+    color: #D4B87A;
+}
+
+/* Photo captions blend into the ground */
+.reveal .img-caption,
+.reveal figcaption {
+    background-color: var(--r-background-color);
+}
+
+/* Tables */
+.reveal table th {
+    background: rgba(196, 161, 90, 0.14);
+    color: #EFE8D8;
+    border-bottom: 1.5px solid #C4A15A;
+}
+
+.reveal table td {
+    border-bottom: 1px solid rgba(239, 232, 216, 0.15);
+}
+
+/* Title slide bookplate frame */
+.reveal .slide-background.title-slide::after {
+    content: '';
+    position: absolute;
+    inset: 3.5%;
+    border: 1.5px solid #C4A15A;
+    pointer-events: none;
+}
+
+.reveal .slide-background.title-slide {
+    background-color: #14251C;
+}
+
+/* Keep title content clear of the bookplate frame. The metadata table
+   (.titlebr) is absolutely positioned, so section padding cannot inset
+   it; pin it between explicit offsets instead. */
+.reveal section.title-slide .titlebr {
+    left: 5.5%;
+    width: 89%;
+    bottom: 6.5%;
+}
+
+/* @slide contrast: this theme's ground for full-colour slides */
+:root {
+    --r-contrast-bg: #EFE8D8;
+    --r-contrast-ink: #14251C;
+    --r-contrast-border: rgba(20,37,28,0.35);
+}

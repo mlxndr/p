@@ -1,0 +1,132 @@
+@import url('base.css');
+@import url('light.css');
+
+/* ===========================================================
+   Petrol — Terracotta's structure in a petrol key, set in
+   Premiera (self-hosted, @font-face in fonts.css; real small
+   caps and oldstyle figures). Plum-white paper, deep damson
+   headings, a damson title ground with white and pale-rose
+   text.
+   =========================================================== */
+
+:root {
+    --r-main-font: 'Premiera', 'Equity', Georgia, serif;
+    --r-heading-font: 'Premiera', 'Equity', Georgia, serif;
+    --r-heading-bold-font: 'Premiera', 'Equity', Georgia, serif;
+    --r-serif-font: 'Premiera', 'Equity', Georgia, serif;
+
+    --petrol: #2F5D62;              /* title-slide ground */
+    --petrol-ink: #264D51;          /* deepened: headings and emphasis on paper */
+    --petrol-bg: #F5F9F8;
+    --r-background-color: #F5F9F8;   /* for translucent surfaces (captions) */
+    --title-subtitle-color: #E0E7E7D0;
+
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+}
+
+/* Content slide background (default) */
+.reveal {
+    background-color: var(--petrol-bg) !important;
+}
+
+/* Headings in petrol */
+.reveal h1,
+.reveal h2,
+.reveal h3,
+.reveal h4 {
+    color: var(--petrol-ink);
+    font-weight: bold;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+}
+
+.reveal h1, .reveal h2, .reveal .pres-title {
+    font-size: 2em;
+}
+
+.reveal section.title-slide .subtle {
+    color: var(--title-subtitle-color) !important;
+}
+
+.reveal section.title-slide hr {
+    border: 1px solid #E0E7E740;
+}
+
+/* Remove heading underlines */
+.reveal h2,
+.reveal h3 {
+    border-bottom: none;
+}
+
+/* Title slide styling */
+.reveal section.title-slide {
+    text-align: left;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+}
+
+.reveal .slide-background.title-slide {
+    background-color: var(--petrol);
+}
+
+/* Title slide - main title in white (Premiera has real small caps,
+   so the inline small-caps styling from title generation is honoured) */
+.reveal section.title-slide h1,
+.reveal section.title-slide .pres-title-headingfont,
+.reveal section.title-slide .pres-title-mainfont {
+    color: #FFFFFF !important;
+    font-weight: bold !important;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+}
+
+/* Title slide - subtitle in pale rose */
+.reveal section.title-slide h2,
+.reveal section.title-slide .pres-subtitle-mainfont,
+.reveal section.title-slide .subtle {
+    color: var(--title-subtitle-color);
+}
+
+/* Title slide - body text in white */
+.reveal section.title-slide p,
+.reveal section.title-slide td,
+.reveal section.title-slide span,
+.reveal section.title-slide .tpa4-l,
+.reveal section.title-slide .tpa4-r {
+    color: #FFFFFF;
+}
+
+/* Title slide - italic subtitle */
+.reveal section.title-slide .pres-subtitle-mainfont {
+    font-style: italic;
+    text-align: left !important;
+    font-variant-numeric: oldstyle-nums;
+    font-variant-ligatures: common-ligatures contextual;
+}
+
+.reveal section.title-slide table.titlebr {
+    text-align: left;
+}
+
+.reveal section.title-slide .tpa4-l {
+    text-align: left;
+}
+
+/* Bold emphasis styling */
+.reveal strong,
+.reveal b {
+    color: var(--petrol-ink);
+}
+
+.reveal section.title-slide strong,
+.reveal section.title-slide b {
+    color: #FFFFFF;
+}
+
+/* @slide contrast: this theme's ground for full-colour slides */
+:root {
+    --r-contrast-bg: #2F5D62;
+    --r-contrast-ink: #F5F7F7;
+    --r-contrast-border: #E0E7E780;
+}

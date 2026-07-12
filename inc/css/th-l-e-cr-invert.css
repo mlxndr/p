@@ -7,7 +7,15 @@
     font-feature-settings: "ss01" 1;
 }
 
+/* ss01 is Equity's stylistic set; font-feature-settings inherits, so
+   every Concourse-rendered element must reset it or Concourse's own
+   ss01 alternates (the odd single-story E) leak in */
+h1, h2, h3, .pres-title,
+.pres-title-headingfont, .pres-title-mainfont, .pres-subtitle-mainfont,
+.reveal .titlebr, .reveal .md-source, .reveal figcaption {
+    font-feature-settings: "ss01" 0;
+}
+
 h1, h2, h3, .pres-title {
     font-family: 'Concourse', sans-serif !important;
-    font-feature-settings: "ss01" 0;
 }

@@ -3,7 +3,7 @@
     {
       "dirName": "cilc25",
       "title": "‘up yours at the end of life’",
-      "subtitle": "Opposition, Emotion, and Overlap in a Corpus of Scottish Debates on Assisted Dying",
+      "subtitle": "Opposition, Emotion, and Overlap in a | Corpus of Scottish Debates on Assisted Dying",
       "date": "May 2025",
       "event": "^^CILC16^^",
       "location": "Salamanca",
@@ -59,14 +59,22 @@
       "date": "July 2025",
       "event": "^^OUP^^",
       "location": "Oxford",
-      "logos": []
+      "author": [],
+      "affiliation": [],
+      "email": [],
+      "logos": [],
+      "closing": false
     },
     {
       "dirName": "scsai25",
       "title": "Some AI updates",
       "date": "March 2025",
+      "author": [],
+      "affiliation": [],
+      "email": [],
       "event": "SCS School Collective",
-      "logos": []
+      "logos": [],
+      "closing": false
     },
     {
       "dirName": "waw-me26",

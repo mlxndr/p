@@ -46,7 +46,7 @@
 /* Headings: bare bold University Blue, no rule (per the brand template) */
 .reveal h1, .reveal h2, .reveal h3, .reveal h4 {
     color: var(--uog-blue);
-    font-variant: normal;
+    font-variant-caps: normal;
     font-weight: 700;
     letter-spacing: -0.03em;
 }

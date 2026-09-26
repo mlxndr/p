@@ -4,3 +4,10 @@
 .reveal {
     background-color: #F2F2EA;
 }
+/* Monochrome: @slide contrast and the layout bands (Spine, Masthead)
+   use a warm off-black that mirrors the off-white paper */
+:root {
+    --r-contrast-bg: #22211D;
+    --r-contrast-ink: #F2F2EA;
+    --r-contrast-border: rgba(242, 242, 234, 0.4);
+}

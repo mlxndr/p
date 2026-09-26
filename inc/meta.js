@@ -85,10 +85,10 @@
            title, names with the event+date as their subtle line, the one
            logo on the right, a full rule above. */
         var single = logos.length === 1;
-        var titleStyle = single
-            ? 'font-size: 2.2em !important; font-weight: 700'
-            : 'font-size: 2.2em !important; font-variant: small-caps !important; font-weight: 700';
-        html += '<br><br><h1 class="pres-title-headingfont" style="' + titleStyle + '">' + emph(meta.title) + '</h1>\n';
+        /* Small caps come from a class (base.css), not an inline style,
+           so a theme can turn them off */
+        var titleClass = single ? 'pres-title-headingfont' : 'pres-title-headingfont pres-title-sc';
+        html += '<br><br><h1 class="' + titleClass + '" style="font-size: 2.2em !important; font-weight: 700">' + emph(meta.title) + '</h1>\n';
         if (meta.subtitle) {
             html += '<p class="pres-subtitle-mainfont" style="font-size: 1.2em; text-align: center; padding-bottom: 1em; font-weight: 300;">' + emph(meta.subtitle) + '</p>\n';
         }
@@ -124,7 +124,7 @@
             ((meta.baseUrl || 'https://mga.is') + window.location.pathname);
         var logos = (meta.logos || []).map(logoImg).filter(Boolean);
         var html = '';
-        html += '<br><br><h1 class="pres-title-headingfont" style="font-size: 2.2em !important; font-variant: small-caps !important; font-weight: 700">' + emph(meta.title) + '</h1>\n';
+        html += '<br><br><h1 class="pres-title-headingfont pres-title-sc" style="font-size: 2.2em !important; font-weight: 700">' + emph(meta.title) + '</h1>\n';
         if (meta.subtitle) {
             html += '<p class="pres-subtitle-mainfont" style="font-size: 1.2em; text-align: center; padding-bottom: 1em; font-weight: 300;">' + emph(meta.subtitle) + '</p>\n';
         }

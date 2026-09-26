@@ -3,13 +3,10 @@
 <head>
     <meta charset="utf-8">
     <title>Presentation</title>
-    <script>
-        fetch('../inc/pres-head.html')
-            .then(response => response.text())
-            .then(html => {
-                       document.head.insertAdjacentHTML('afterbegin', html);
-                   });
-    </script>
+    <!-- Shared head (stylesheets, theme, icons), written synchronously so
+         the right theme is in place before the first paint. Optional:
+         <html lang="en" data-theme="slate"> sets this deck's own default. -->
+    <script src="../inc/head.js"></script>
     <script src="../inc/qr.js"></script>
 </head>
 <body>

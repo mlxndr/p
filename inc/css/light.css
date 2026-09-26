@@ -12,3 +12,8 @@
     --r-contrast-bg: #183153;
     --r-contrast-ink: #F2F2EA;
 }
+
+:root {
+    /* title and closing slides: mono logos and QR on paper */
+    --title-logos: mono;
+}

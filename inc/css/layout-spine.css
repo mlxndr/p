@@ -1,0 +1,54 @@
+/* ===========================================================
+   Spine — a full-height band in the palette's ground colour
+   down the left of every slide that has a heading, with the
+   heading set in it; the content sits on paper to the right.
+   The band bleeds to the edge of the screen. Slides without a
+   heading (full-bleed images, bare quotations) are unchanged.
+   Long words in a heading shrink the heading to fit the band.
+   =========================================================== */
+
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack):is(:has(> h2), :has(> .md-fill-inner > h2)) {
+    box-sizing: border-box;
+    padding-left: 27%;
+    padding-top: 0.45em;
+}
+
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack):is(:has(> h2), :has(> .md-fill-inner > h2))::before {
+    content: '';
+    position: absolute;
+    top: -600px; bottom: -600px;
+    left: -2000px;
+    width: calc(2000px + 23.5%);
+    background: var(--L-ground);
+}
+
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack) > h2,
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack) > .md-fill-inner > h2 {
+    position: absolute;
+    left: 0;
+    top: 0.25em;
+    width: 20.5%;
+    margin: 0;
+    font-size: 1.25em;
+    line-height: 1.08;
+    color: var(--L-on-ground);
+    border: none;
+    text-wrap: balance;
+    hyphens: manual;
+    -webkit-hyphens: manual;
+    overflow-wrap: normal;
+    /* fitColumnHeadings() (directives.js) shrinks a heading whose longest
+       word would not fit the band */
+    --L-fit-heading: 1;
+}
+
+/* A quotation slide with a heading keeps its quote in the paper column */
+.reveal .slides section.md-quote:has(> h2) .md-quote-inner {
+    margin-left: 0;
+}
+
+/* On a slide that already stands on the ground colour (@slide contrast),
+   the band darkens so it still reads as a band */
+.reveal .slides section.md-contrast::before {
+    background: color-mix(in srgb, var(--L-ground) 78%, black) !important;
+}

@@ -1,0 +1,41 @@
+/* ===========================================================
+   Classical — symmetrical, after the book title page: centred
+   headings over a small ornament (a point between two rules),
+   and the text block centred at a book measure, justified and
+   hyphenated. Lists stay ranged left inside the centred block.
+   =========================================================== */
+
+.reveal .slides section:not(.title-slide):not(.md-section) > h2,
+.reveal .slides section:not(.title-slide):not(.md-section) > .md-fill-inner > h2 {
+    text-align: center;
+    border: none;
+}
+
+.reveal .slides section:not(.title-slide):not(.md-section) > h2::after,
+.reveal .slides section:not(.title-slide):not(.md-section) > .md-fill-inner > h2::after {
+    /* three spaced points */
+    content: '\00B7\00B7\00B7';
+    display: block;
+    margin: 0.3em auto 0;
+    padding-left: 0.9em;   /* balances the trailing letterspace */
+    font-size: 0.5em;
+    line-height: 1;
+    letter-spacing: 0.9em;
+    text-align: center;
+    color: var(--L-accent);
+}
+
+.reveal .slides section:not(.title-slide):not(.md-section) > p,
+.reveal .slides section:not(.title-slide):not(.md-section) > ul,
+.reveal .slides section:not(.title-slide):not(.md-section) > ol,
+.reveal .slides section:not(.title-slide):not(.md-section) > blockquote,
+.reveal .slides section:not(.title-slide):not(.md-section) > .md-note,
+.reveal .slides section:not(.title-slide):not(.md-section) table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.reveal .slides section:not(.title-slide):not(.md-section) > p:not(.md-source) {
+    text-align: justify;
+    hyphens: auto;
+}

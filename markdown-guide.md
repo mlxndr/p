@@ -27,6 +27,7 @@ One line anywhere in the slide; flags combine (`@slide smaller centred`):
 @slide smaller       85% text          @slide centred   vertically centre
 @slide smallest      72% text          @slide plain     no heading rule
 @slide contrast      the theme's title ground carries the slide
+@slide spare         a spare: moved after the closing slide, uncounted
 @slide bg=#183153    arbitrary background colour (prefer contrast)
 ```
 
@@ -130,9 +131,39 @@ names, the logo alone on the right. For a co-authored deck, replace
 ]
 ```
 
-Add `"closing": false` to suppress the generated closing slide. A deck
+Add `"closing": false` to suppress the generated closing slide,
+`"theme"` and `"layout"` to choose the deck's defaults, and
+`"unlisted": true` to keep it off the landing page. A deck
 wanting a bespoke opening keeps a `title.md` section in its index.html
 instead of the `data-meta="title"` placeholder.
+
+## Fitting and themes
+
+A slide that runs off the bottom shrinks its text to fit automatically
+(down to 72%); past that, it shows a red dashed outline in local preview
+and needs splitting. `<!-- .slide: data-autofit="off" -->` opts a slide
+out.
+
+Add `?theme=slate` to a deck's URL to open it in a particular theme for
+that visit (keys: terracotta, burgundy, slate, petrol, cream, cream-sans,
+manuscript, twilight, accessible, uog, ht, ht-cream). A deck
+can set its own default in meta.json: `"theme": "burgundy"`. Otherwise decks open in Terracotta, or in whatever the
+visitor last chose from the menu.
+
+## Notes and layouts
+
+```
+@note Barrow employed his own shorthand writers.
+```
+A sidenote, on its own line after the text it annotates: a small,
+quiet line with a hairline beside it.
+
+The layout icons at the top of the menu's Themes panel (or
+`?layout=masthead` in the URL, or keys 1-4 with that panel open)
+rearrange any deck: Standard, Spine, Masthead, Classical. A deck can set
+its own in meta.json: `"layout": "masthead"`. Spine puts the
+heading in a narrow band, so keep titles short there; `&shy;` marks
+where a long word may break.
 
 ## New deck in three steps
 

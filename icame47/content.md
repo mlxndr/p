@@ -204,8 +204,6 @@ Several Honourable Members.—Oh! Oh! Oh!
 | Markers | 76 | 192 | 517 |
 | Per speech | 0.004 | 0.105 | 0.110 |
 
-<hr>
-
 * Marker density increases nearly 20× between 1834 and 1839
 * The *Mirror* may be emphasising its verbatim-interpolation conventions?
   * Differentiation in the market?
@@ -234,8 +232,8 @@ Several Honourable Members.—Oh! Oh! Oh!
   * *Hansard*: 'The Hon. Member said *he* believed...'
   * *Mirror*: '*I* believe...'
 * Grammatically:
-  * *Mirror* has more INTJ (+22%), PRON (+3.8%)
-  * *Hansard* has more PROPN (+4.9%)
+  * *Mirror* has more ^^INTJ^^ (+22%), ^^PRON^^ (+3.8%)
+  * *Hansard* has more ^^PROPN^^ (+4.9%)
   * The interjection and pronoun profile is a bit of a spontaneous-speech indicator
   * The proper noun excess in *Hansard*: third-person re-introducing speakers by name where *Mirror* leaves a pronoun
 
@@ -271,6 +269,7 @@ Vice, John & Stephen Farrell. 2017. *The History of Hansard*. London: House of L
 
 ---
 
+@slide spare
 ## Spare: Vision Language Model OCR
 
 * Traditional OCR (Tesseract): character recognition → text
@@ -282,6 +281,7 @@ Vice, John & Stephen Farrell. 2017. *The History of Hansard*. London: House of L
 
 ---
 
+@slide spare
 ## Spare: What Next
 
 * Full 1828–1841 corpus (all surviving Mirror volumes)

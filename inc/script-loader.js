@@ -48,189 +48,206 @@ function loadScripts() {
       return loadScript(scriptConfig.config);
     })
     .then(() => {
-      // Setup theme-based elements after config is loaded
+      return new Promise(resolve => {
+        if (Reveal.isReady()) resolve(); else Reveal.on('ready', resolve);
+      });
+    })
+    .then(() => {
+      if (typeof syncNoteFragments === 'function') syncNoteFragments();
       setupThemeBasedElements();
-      // Position @zoom detail images now Reveal has initialised
-      if (typeof positionZoomImages === 'function') {
-        positionZoomImages();
+      // Fit and position once now, again when webfonts settle (metrics
+      // shift), and whenever the window changes size
+      refitSlides();
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(refitSlides);
       }
-      // Autofit overflowing split-slide text columns (re-run once webfonts
-      // settle, since metrics shift)
-      if (typeof autofitFillSlides === 'function') {
-        autofitFillSlides();
-        if (document.fonts && document.fonts.ready) {
-          document.fonts.ready.then(autofitFillSlides);
-        }
+      window.addEventListener('load', refitSlides);
+      Reveal.on('overviewhidden', refitSlides);
+      // Any webfont arriving later (a theme switch, a face first used on a
+      // later slide) changes metrics: refit once each batch has loaded
+      if (document.fonts && document.fonts.addEventListener) {
+        let fontTimer = null;
+        document.fonts.addEventListener('loadingdone', () => {
+          clearTimeout(fontTimer);
+          fontTimer = setTimeout(refitSlides, 50);
+        });
       }
+      let resizeTimer = null;
+      window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(refitSlides, 150);
+      });
+      // Offer the whole deck to the offline cache (see /sw.js)
+      if (typeof cacheDeckForOffline === 'function') cacheDeckForOffline();
     })
     .catch(error => {
       showError(error.message);
     });
 }
 
-// Function to set up theme-based elements (logos and QR codes)
+// Everything that depends on measured layout: @zoom boxes, the split-column
+// autofit, and the text-slide autofit. Each pass resets before measuring,
+// so running it again is always safe.
+function refitSlides() {
+  // In overview mode every slide is scaled and laid out differently, so
+  // measurements would be wrong; overviewhidden (below) refits on exit
+  if (window.Reveal && Reveal.isOverview && Reveal.isOverview()) return;
+  // Measure final sizes, not mid-transition ones: reveal gives fragments
+  // (every animated list item) 'transition: all', so after a theme change
+  // their font size is still animating. Suspending transitions snaps
+  // everything to its end state for the measurement.
+  const root = document.documentElement;
+  root.classList.add('mga-measuring');
+  void root.offsetHeight;
+  try {
+    if (typeof positionZoomImages === 'function') positionZoomImages();
+    if (typeof fitColumnHeadings === 'function') fitColumnHeadings();
+    if (typeof autofitFillSlides === 'function') autofitFillSlides();
+    if (typeof autofitTextSlides === 'function') autofitTextSlides();
+    if (typeof alignSources === 'function') alignSources();
+  } finally {
+    root.classList.remove('mga-measuring');
+  }
+}
+
+// Theme-dependent elements: logos (mono/white variants) and QR codes.
+// Each theme says what its title and closing slides need with one CSS
+// variable, --title-logos: white (dark or coloured grounds) or mono.
+// light.css and dark.css set the defaults.
 function setupThemeBasedElements() {
-  // Get the current theme state
-  function getThemeState() {
-    const themeLink = document.getElementById('theme');
-    const themeHref = themeLink ? themeLink.getAttribute('href') : '';
-    const isDarkTheme = themeHref && (themeHref.includes('th-d') || themeHref.includes('dark.css') ||
-      // light themes whose title/closing grounds need white logos and QR
-      themeHref.includes('th-l-terracotta') || themeHref.includes('th-l-burgundy') ||
-      themeHref.includes('th-l-slate') || themeHref.includes('th-l-petrol'));
-    return { themeLink, isDarkTheme };
+  function wantsWhite() {
+    const v = getComputedStyle(document.documentElement)
+      .getPropertyValue('--title-logos').trim().replace(/['"]/g, '');
+    return v === 'white';
   }
 
-  // Function to switch logos based on theme
-  function switchLogos() {
-    const { isDarkTheme } = getThemeState();
-    
-    // Get all UoG logos
-    const uogLogos = document.querySelectorAll('.uog-logo');
-    uogLogos.forEach(function(logo) {
-      const imgSrc = logo.getAttribute('src');
-      if (isDarkTheme) {
-        logo.setAttribute('src', imgSrc.replace('uog_mono.png', 'uog_white.png'));
-      } else {
-        logo.setAttribute('src', imgSrc.replace('uog_white.png', 'uog_mono.png'));
-      }
-    });
+  const LOGO_PAIRS = [
+    ['.uog-logo', 'uog_mono.png', 'uog_white.png'],
+    ['.ht-logo', 'ht-black-colour.png', 'ht-white.png'],
+    ['.leverhulme-logo', 'leverhulme_cmyk_black2.png', 'leverhulme_cmyk_white2.png']
+  ];
 
-    // Get all HT logos
-    const htLogos = document.querySelectorAll('.ht-logo');
-    htLogos.forEach(function(logo) {
-      const imgSrc = logo.getAttribute('src');
-      if (isDarkTheme) {
-        logo.setAttribute('src', imgSrc.replace('ht-black-colour.png', 'ht-white.png'));
-      } else {
-        logo.setAttribute('src', imgSrc.replace('ht-white.png', 'ht-black-colour.png'));
-      }
-    });    
-
-    // Get all Leverhulme logos
-    const leverhulmeLogos = document.querySelectorAll('.leverhulme-logo');
-    leverhulmeLogos.forEach(function(logo) {
-      const imgSrc = logo.getAttribute('src');
-      if (isDarkTheme) {
-        logo.setAttribute('src', imgSrc.replace('leverhulme_cmyk_black2.png', 'leverhulme_cmyk_white2.png'));
-      } else {
-        logo.setAttribute('src', imgSrc.replace('leverhulme_cmyk_white2.png', 'leverhulme_cmyk_black2.png'));
-      }
+  function switchLogos(white) {
+    LOGO_PAIRS.forEach(function ([sel, mono, whiteFile]) {
+      document.querySelectorAll(sel).forEach(function (logo) {
+        const src = logo.getAttribute('src');
+        logo.setAttribute('src', white ? src.replace(mono, whiteFile) : src.replace(whiteFile, mono));
+      });
     });
   }
-  
-  // Store QR code instances
-  const qrInstances = {};
-  
-  // Function to update QR codes based on theme
-  function updateQRCodes() {
-    const { isDarkTheme } = getThemeState();
-    
-    // Find all QR code canvases with class 'qr-code'
-    const qrCodes = document.querySelectorAll('canvas.qr-code');
-    qrCodes.forEach(function(canvas) {
-      const canvasId = canvas.id;
+
+  function updateQRCodes(white) {
+    if (typeof QRCode === 'undefined') return;
+    document.querySelectorAll('canvas.qr-code').forEach(function (canvas) {
       const url = canvas.getAttribute('data-url') || 'https://mga.is/';
       const size = parseInt(canvas.getAttribute('width') || '140');
-      
-      // If we need to recreate the QR code due to theme change
-      // First clear the canvas and remove the old instance
-      if (qrInstances[canvasId]) {
-        // Clear the canvas
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Remove any child elements that might have been added by the QR library
-        while (canvas.firstChild) {
-          canvas.removeChild(canvas.firstChild);
-        }
-        
-        // Delete the instance
-        delete qrInstances[canvasId];
-      }
-      
-      // Create/update QR code with appropriate color based on theme
-      if (typeof QRCode !== 'undefined' && !qrInstances[canvasId]) {
-        // Create new QR code instance
-        qrInstances[canvasId] = new QRCode(canvasId, {
-          text: url,
-          size: size,
-          background: "transparent",
-          foreground: isDarkTheme ? "#ffffff" : "#000000",
-          typeNumber: 4,
-          errorCorrectLevel: 'H'
-        });
-      }
+      canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      while (canvas.firstChild) canvas.removeChild(canvas.firstChild);
+      new QRCode(canvas.id, {
+        text: url,
+        size: size,
+        background: 'transparent',
+        foreground: white ? '#ffffff' : '#000000',
+        typeNumber: 4,
+        errorCorrectLevel: 'H'
+      });
     });
   }
-  
-  // Function to update all theme-dependent elements
-  function updateThemeElements() {
-    switchLogos();
-    updateQRCodes();
-    // Themes change font metrics, so re-fit overflowing split columns and
-    // re-position zoom boxes. The fit resets before measuring, so late
-    // passes correct any early pass that measured mid-load.
-    function refit() {
-      if (typeof autofitFillSlides === 'function') autofitFillSlides();
-      if (typeof positionZoomImages === 'function') positionZoomImages();
-    }
-    const themeLink = document.getElementById('theme');
-    if (themeLink) {
-      themeLink.addEventListener('load', function() { setTimeout(refit, 60); }, { once: true });
-    }
-    setTimeout(refit, 350);
-    setTimeout(refit, 1100);
-  }
 
-  // Make updateThemeElements available globally for other scripts
+  function updateThemeElements() {
+    const white = wantsWhite();
+    switchLogos(white);
+    updateQRCodes(white);
+    // Themes change font metrics. A new theme's faces only start loading
+    // once its styles are applied, so fit now (which also triggers those
+    // loads) and again when they have arrived.
+    refitSlides();
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(refitSlides);
+    }
+  }
   window.updateThemeElements = updateThemeElements;
 
-  // Initial update with delay to ensure theme is loaded
-  setTimeout(updateThemeElements, 500);
+  // Run once the given theme stylesheet has loaded (its @imports included).
+  // A stylesheet that has already loaded exposes its rules; otherwise wait
+  // for the load event, with a late fallback in case it never fires.
+  function whenLoaded(link) {
+    let done = false;
+    const run = () => { if (!done) { done = true; updateThemeElements(); } };
+    let ready = false;
+    try { ready = !!(link.sheet && link.sheet.cssRules); } catch (e) {}
+    if (ready) { run(); return; }
+    link.addEventListener('load', run, { once: true });
+    setTimeout(run, 2000);
+  }
 
-  // Watch for theme changes via attribute changes on theme link
-  let currentThemeLink = null;
+  function saveChoice(link) {
+    try { localStorage.setItem('theme', link.getAttribute('href')); } catch (e) {}
+  }
 
-  function observeThemeLink(themeLink) {
-    if (!themeLink || themeLink === currentThemeLink) return;
-    currentThemeLink = themeLink;
+  // Watch the theme link: the menu either changes its href or replaces
+  // the element outright. Only genuine changes are saved (the opening
+  // theme, including a ?theme= override, is never written back).
+  let current = null;
+  function observe(link) {
+    if (!link || link === current) return;
+    current = link;
+    new MutationObserver(function (mutations) {
+      mutations.forEach(function (m) {
+        if (m.attributeName === 'href') { saveChoice(link); whenLoaded(link); }
+      });
+    }).observe(link, { attributes: true, attributeFilter: ['href'] });
+  }
 
-    const attrObserver = new MutationObserver(function(mutations) {
-      mutations.forEach(function(mutation) {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'href') {
-          // Persist the choice (observers attach after the initial theme
-          // is applied, so only genuine changes are saved)
-          try { localStorage.setItem('theme', themeLink.getAttribute('href')); } catch (e) {}
-          updateThemeElements();
+  const initial = document.getElementById('theme');
+  observe(initial);
+  if (initial) whenLoaded(initial);
+
+  new MutationObserver(function (mutations) {
+    mutations.forEach(function (m) {
+      m.addedNodes.forEach(function (node) {
+        if (node.nodeName === 'LINK' && node.id === 'theme') {
+          saveChoice(node);
+          observe(node);
+          whenLoaded(node);
         }
       });
     });
-    attrObserver.observe(themeLink, { attributes: true });
-  }
+  }).observe(document.head, { childList: true });
+}
 
-  // Start observing the initial theme link
-  const { themeLink } = getThemeState();
-  if (themeLink) {
-    observeThemeLink(themeLink);
-  }
-
-  // Also watch document.head for new theme links being added
-  // (reveal.js-menu removes and replaces the theme link element)
-  const headObserver = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      if (mutation.type === 'childList') {
-        mutation.addedNodes.forEach(function(node) {
-          if (node.nodeName === 'LINK' && node.id === 'theme') {
-            // New theme link added (the menu plugin replaces the element):
-            // persist the choice, observe it, and trigger update
-            try { localStorage.setItem('theme', node.getAttribute('href')); } catch (e) {}
-            observeThemeLink(node);
-            setTimeout(updateThemeElements, 100);
-          }
-        });
-      }
+// Offline: hand the service worker (see /sw.js, registered in head.js) the
+// full list of files this deck uses, so one visit while online is enough
+// to present it later without a connection: every image in the deck (not
+// only those on slides already shown), everything loaded so far (scripts,
+// stylesheets, fonts), and the stylesheets and faces of the Colourful
+// themes so the menu can still switch between them offline.
+function cacheDeckForOffline() {
+  if (!('serviceWorker' in navigator) || window.MGA_LOCAL_PREVIEW) return;
+  navigator.serviceWorker.ready.then(function (reg) {
+    const urls = new Set();
+    const add = function (u) {
+      if (!u || u.startsWith('data:')) return;
+      try { urls.add(new URL(u, location.href).href.split('#')[0]); } catch (e) {}
+    };
+    add(location.pathname);
+    add('./content.md'); add('./meta.json'); add('./title.md');
+    add('../inc/site.json');
+    document.querySelectorAll('img[src]').forEach(function (i) { add(i.getAttribute('src')); });
+    document.querySelectorAll('[data-background-image]').forEach(function (e) { add(e.getAttribute('data-background-image')); });
+    document.querySelectorAll('[data-src]').forEach(function (e) { add(e.getAttribute('data-src')); });
+    performance.getEntriesByType('resource').forEach(function (r) { add(r.name); });
+    (window.MGA_THEMES || []).forEach(function (s) {
+      s.themes.forEach(function (t) { add(t.href); });
     });
-  });
-  headObserver.observe(document.head, { childList: true });
+    (window.MGA_LAYOUTS || []).forEach(function (l) { add(l.href); });
+    ['colourful.css', 'light.css', 'dark.css',
+     'woff2/century_supra_ot_b_regular.woff2', 'woff2/century_supra_ot_b_italic.woff2',
+     'woff2/century_supra_ot_b_bold.woff2', 'woff2/century_supra_ot_b_bold_italic.woff2',
+     'woff2/Premiera-Book.woff2', 'woff2/Premiera-Italic.woff2', 'woff2/Premiera-Bold.woff2',
+     'woff2/Bitter[wght].woff2', 'woff2/Bitter-Italic[wght].woff2'
+    ].forEach(function (f) { add('../inc/css/' + f); });
+    const worker = reg.active || navigator.serviceWorker.controller;
+    if (worker) worker.postMessage({ type: 'precache', urls: Array.from(urls) });
+  }).catch(function () {});
 }

@@ -1,19 +1,30 @@
 @import url('base.css');
 @import url('light.css');
+@import url('colourful.css');
 
+/* High Accessibility — the Colourful layout in Luciole (designed with
+   low-vision readers; real small caps and oldstyle figures), on soft
+   cream paper rather than white (less glare; the British Dyslexia
+   Association recommends cream or pastel over white), with a deep navy
+   for headings and the title ground (about 14:1 against white).
+   Sizes and spacing are the same as every other theme, so a deck reads
+   identically, slide for slide, when a viewer switches to it. */
 :root {
-    --r-main-font: 'Luciole', sans-serif !important;
-    --r-heading-font: 'Luciole', sans-serif !important;
-    --r-heading-bold-font: 'Luciole', sans-serif !important;
-    --r-serif-font: 'Luciole', serif !important;
-    --r-background-color: #EDD1B0;   /* for translucent surfaces (captions) */
+    --r-main-font: 'Luciole', 'Noto Sans', sans-serif;
+    --r-heading-font: 'Luciole', 'Noto Sans', sans-serif;
+    --r-heading-bold-font: 'Luciole', 'Noto Sans', sans-serif;
+    --r-serif-font: 'Luciole', 'Noto Sans', sans-serif;
+
+    --c-ground: #1C2B4A;
+    --c-ink: #1C2B4A;
+    --c-paper: #FBF5E6;
+    --c-title-sub: #E8EDF5;
+    --c-title-rule: #FFFFFF55;
+    --c-contrast-ink: #FFFFFF;
 }
 
-.reveal {
-    background-color: #EDD1B0;
-}
-
-h1, h2, h3, .pres-title {
+/* Headings set upright and strong, as before */
+.reveal h1, .reveal h2, .reveal h3, .reveal .pres-title {
     font-weight: 600 !important;
-    font-variant: normal !important;
+    font-variant-caps: normal !important;
 }

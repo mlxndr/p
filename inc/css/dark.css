@@ -12,3 +12,17 @@
     --r-contrast-bg: #F2F2EA;
     --r-contrast-ink: #183153;
 }
+
+:root {
+    /* title and closing slides: white logos and QR on the dark ground */
+    --title-logos: white;
+}
+
+:root {
+    /* grammatical functions, lightened for dark grounds (see base.css) */
+    --g-subject: #3F95D7;
+    --g-predicator: #F1731C;
+    --g-object: #33B588;
+    --g-complement: #FFBEEF;
+    --g-adverbial: #FFE250;
+}

@@ -6,3 +6,9 @@
     background-image: url('bg/d-colours.jpg');
     background-size: cover;
 }
+/* Layout bands (Spine, Masthead): the deep plum from the background
+   image rather than the cream of @slide contrast */
+:root {
+    --L-ground: #4A0D46;
+    --L-on-ground: #F2F2EA;
+}

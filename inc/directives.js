@@ -61,7 +61,7 @@
         'quote':      ['attrib', 'id'],
         'refs':       ['title', 'id']
     };
-    const KNOWN_FLAGS = ['fragment', 'hold', 'natural',
+    const KNOWN_FLAGS = ['fragment', 'hold', 'natural', 'spare',
         'smaller', 'smallest', 'centred', 'centered', 'plain', 'contrast'];
 
     function esc(s) {
@@ -355,14 +355,14 @@
        Expands to a reveal slide-attributes comment; flags become classes
        that base.css and the themes style. */
     function emitSlideMods(opts, srcLine, lineNo, name) {
-        const classMap = { smaller: 'md-smaller', smallest: 'md-smallest',
+        const classMap = { smaller: 'md-smaller', smallest: 'md-smallest', spare: 'md-spare',
             centred: 'md-centred', centered: 'md-centred',
             plain: 'md-plain', contrast: 'md-contrast' };
         const classes = [];
         for (const f of opts._flags) {
             if (!classMap[f]) {
                 return { md: errorSlide(name, lineNo, srcLine,
-                    'Unknown @slide flag `' + esc(f) + '`. Available: smaller, smallest, centred, plain, contrast (plus bg=&lt;colour&gt;).'), isError: true };
+                    'Unknown @slide flag `' + esc(f) + '`. Available: smaller, smallest, centred, plain, contrast, spare (plus bg=&lt;colour&gt;).'), isError: true };
             }
             classes.push(classMap[f]);
         }
@@ -372,10 +372,11 @@
         }
         if (!classes.length && !opts.bg) {
             return { md: errorSlide(name, lineNo, srcLine,
-                '@slide needs at least one flag (smaller, smallest, centred, plain, contrast) or bg=&lt;colour&gt;.'), isError: true };
+                '@slide needs at least one flag (smaller, smallest, centred, plain, contrast, spare) or bg=&lt;colour&gt;.'), isError: true };
         }
         let attrs = '';
         if (classes.length) attrs += ' class="' + classes.join(' ') + '"';
+        if (classes.indexOf('md-spare') !== -1) attrs += ' data-visibility="uncounted"';
         if (opts.bg) attrs += ' data-background-color="' + esc(opts.bg) + '"';
         if (opts.id) attrs += ' id="' + esc(opts.id) + '"';
         return { md: '<!-- .slide:' + attrs + ' -->', isError: false };
@@ -449,6 +450,11 @@
             let r;
             if (kind === 'slide') {
                 r = emitSlideMods(opts, line, lineNo, name);
+            } else if (kind === 'note') {
+                const text = dm[2].trim();
+                r = text
+                    ? { md: '\n<div class="md-note">\n\n' + text + '\n\n</div>\n', isError: false }
+                    : { md: errorSlide(name, lineNo, line, '@note needs its text on the same line, e.g. `@note Hansard reports in the third person.`'), isError: true };
             } else if (kind === 'section') {
                 r = emitSection(dm[2].trim(), line, lineNo, name);
             } else if (kind === 'quote' || kind === 'refs') {
@@ -500,7 +506,7 @@
                 }
             } else {
                 r = { md: errorSlide(name, lineNo, line,
-                    'Unknown directive `@' + esc(kind) + '`. Available: @image, @image-seq, @image-left, @image-right, @compare, @zoom, @kenburns, @slide, @section, @quote, @refs. (Escape a literal @ with @@.)'), isError: true };
+                    'Unknown directive `@' + esc(kind) + '`. Available: @image, @image-seq, @image-left, @image-right, @compare, @zoom, @kenburns, @slide, @section, @quote, @refs, @note. (Escape a literal @ with @@.)'), isError: true };
             }
             out.push(r.md);
             if (r.isError) hadError = true;
@@ -538,6 +544,31 @@
         return { markdown: out.join(''), hadError: hadError };
     }
 
+
+    /* Separate slides flagged @slide spare from the rest of a deck's
+       expanded markdown. Works on reveal's own separators (blank line then
+       --- for horizontal, -- for vertical); a spare vertical slide leaves
+       its stack and becomes a horizontal slide among the spares. */
+    function extractSpares(md) {
+        if (md.indexOf('md-spare') === -1) return { main: md, spares: '' };
+        const spares = [];
+        const hParts = md.split(/(^\n---\n)/m);
+        const keptH = [];
+        for (let i = 0; i < hParts.length; i += 2) {
+            const vParts = hParts[i].split(/(^\n--\n)/m);
+            const keptV = [];
+            for (let j = 0; j < vParts.length; j += 2) {
+                if (vParts[j].indexOf('md-spare') !== -1) spares.push(vParts[j].trim());
+                else keptV.push(vParts[j]);
+            }
+            if (keptV.length) keptH.push(keptV.join('\n--\n'));
+        }
+        return {
+            main: keptH.join('\n---\n'),
+            spares: spares.join('\n\n---\n\n')
+        };
+    }
+
     /* DOM pass: fetch external data-markdown sections, expand, inline them.
        Runs after plugins load, before revconfig.js calls Reveal.initialize,
        so RevealMarkdown never fetches the raw files itself. */
@@ -553,12 +584,24 @@
                 })
                 .then(function (src) {
                     const result = expandDirectives(src, { name: url });
+                    const split = extractSpares(result.markdown);
                     const tpl = document.createElement('script');
                     tpl.type = 'text/template';
-                    tpl.textContent = result.markdown;
+                    tpl.textContent = split.main;
                     sec.setAttribute('data-markdown', '');
                     sec.textContent = '';
                     sec.appendChild(tpl);
+                    // @slide spare: move those slides to a section of their
+                    // own at the very end, after the closing slide, where
+                    // reveal leaves them out of the count and progress bar
+                    if (split.spares) {
+                        const spare = sec.cloneNode(false);
+                        const stpl = document.createElement('script');
+                        stpl.type = 'text/template';
+                        stpl.textContent = split.spares;
+                        spare.appendChild(stpl);
+                        sec.parentNode.appendChild(spare);
+                    }
                     if (result.hadError) {
                         console.warn('[directives] ' + url + ' contains directive errors — see the red error slide(s).');
                     }
@@ -570,6 +613,30 @@
        slide coordinates, once natural dimensions are known. Runs after
        Reveal.initialize (called from script-loader.js). Auto-animate then
        interpolates between the differing boxes, producing the zoom. */
+
+    /* Measuring a slide that reveal has hidden (display:none on distant
+       slides, and on the whole vertical stack that contains them) needs
+       the slide and every hidden ancestor section shown, invisibly, for
+       the moment of measurement. Returns a function that undoes it. */
+    function unhideForMeasuring(el) {
+        const changed = [];
+        let node = el && el.closest ? el.closest('section') : null;
+        while (node && node.tagName === 'SECTION') {
+            if (getComputedStyle(node).display === 'none') {
+                changed.push([node, node.style.display, node.style.visibility]);
+                node.style.display = 'block';
+                node.style.visibility = 'hidden';
+            }
+            node = node.parentElement && node.parentElement.closest('section');
+        }
+        return function restore() {
+            for (let i = changed.length - 1; i >= 0; i--) {
+                changed[i][0].style.display = changed[i][1];
+                changed[i][0].style.visibility = changed[i][2];
+            }
+        };
+    }
+
     function positionZoomImages() {
         function positionAll() {
             document.querySelectorAll('img[data-md-zoom]').forEach(function (img) {
@@ -577,15 +644,7 @@
                 const fx = spec[0], fy = spec[1], k = spec[2];
                 function apply() {
                     const frame = img.parentElement;
-                    const section = img.closest('section');
-                    const wasHidden = section && getComputedStyle(section).display === 'none';
-                    let prevDisplay, prevVisibility;
-                    if (wasHidden) {
-                        prevDisplay = section.style.display;
-                        prevVisibility = section.style.visibility;
-                        section.style.visibility = 'hidden';
-                        section.style.display = 'block';
-                    }
+                    const restore = unhideForMeasuring(img);
                     const W = frame.clientWidth, H = frame.clientHeight;
                     const nw = img.naturalWidth, nh = img.naturalHeight;
                     if (W && H && nw && nh) {
@@ -599,22 +658,15 @@
                         img.style.left = (W / 2 - k * fx * cw) + 'px';
                         img.style.top = (H / 2 - k * fy * ch) + 'px';
                     }
-                    if (wasHidden) {
-                        section.style.display = prevDisplay;
-                        section.style.visibility = prevVisibility;
-                    }
+                    restore();
                 }
                 if (img.complete && img.naturalWidth) { apply(); }
                 else { img.addEventListener('load', apply); }
             });
         }
+        // (script-loader.js re-runs this when fonts settle, the theme
+        // changes or the window resizes)
         positionAll();
-        // Re-run after webfonts settle: late reflow changes heading heights
-        // and therefore frame sizes, which would leave stale pixel boxes
-        if (document.fonts && document.fonts.ready) {
-            document.fonts.ready.then(positionAll);
-        }
-        window.addEventListener('load', positionAll);
     }
 
     /* Autofit overflowing split-slide text columns: when a .md-split-body
@@ -629,14 +681,7 @@
             const split = section.querySelector('.md-split');
             const body = section.querySelector('.md-split-body');
             if (!split || !body) return;
-            const wasHidden = getComputedStyle(section).display === 'none';
-            let prevDisplay, prevVisibility;
-            if (wasHidden) {
-                prevDisplay = section.style.display;
-                prevVisibility = section.style.visibility;
-                section.style.visibility = 'hidden';
-                section.style.display = 'block';
-            }
+            const restore = unhideForMeasuring(section);
             body.style.transform = '';
             body.style.width = '';
             body.style.transformOrigin = 'left center';
@@ -648,14 +693,150 @@
                 body.style.width = (100 / scale).toFixed(2) + '%';
                 body.style.transform = 'scale(' + scale.toFixed(2) + ')';
             }
-            if (wasHidden) {
-                section.style.display = prevDisplay;
-                section.style.visibility = prevVisibility;
-            }
+            restore();
         });
     }
 
     window.autofitFillSlides = autofitFillSlides;
+
+    /* Autofit text slides: when an ordinary slide's content runs past the
+       bottom of the 1920x1080 stage, shrink everything except the heading
+       (so headings never jump between slides) until it fits. Uses CSS
+       zoom, which changes layout size as well as appearance, so the fit
+       can be measured directly and em-based sizes inside (md-small,
+       @refs, nested lists) keep their proportions. Steps of 4%, floor at
+       72%: past that the slide needs splitting, so it is flagged instead
+       (a console warning, and a visible note in local preview).
+       Skips title/closing slides, image layouts (autofitFillSlides handles
+       split columns), @section dividers, and any slide marked
+       <!-- .slide: data-autofit="off" -->. */
+    function autofitTextSlides() {
+        const H = (window.Reveal && Reveal.getConfig) ? Reveal.getConfig().height : 1080;
+        const STEP = 0.04, FLOOR = 0.72;
+        const skip = '.title-slide, .md-fill, .md-section, .directive-error-slide, [data-autofit="off"]';
+        document.querySelectorAll('.reveal .slides section').forEach(function (section) {
+            if (section.querySelector('section')) return;          // a vertical stack
+            if (section.matches(skip)) return;
+            if (!section.children.length) return;
+            const restore = unhideForMeasuring(section);
+            section.classList.remove('md-fit', 'md-overflow');
+            section.style.removeProperty('--fit');
+            // Content height = the lowest bottom edge among the slide's own
+            // elements (plus its bottom padding), in slide coordinates. Not
+            // scrollHeight: layouts draw bleeding decorations (bands, margin
+            // columns) as pseudo-elements that extend far past the slide.
+            const over = function () {
+                const sr = section.getBoundingClientRect();
+                const scale = section.offsetWidth ? sr.width / section.offsetWidth : 1;
+                let bottom = 0;
+                for (const c of section.children) {
+                    if (c.tagName === 'ASIDE') continue;
+                    const r = c.getBoundingClientRect();
+                    if (r.height) bottom = Math.max(bottom, r.bottom);
+                }
+                const pad = parseFloat(getComputedStyle(section).paddingBottom) || 0;
+                return ((bottom - sr.top) / scale + pad) > H + 2;
+            };
+            if (over()) {
+                let fit = 1;
+                section.classList.add('md-fit');
+                while (fit - STEP >= FLOOR - 1e-6 && over()) {
+                    fit = Math.round((fit - STEP) * 100) / 100;
+                    section.style.setProperty('--fit', fit);
+                }
+                if (over()) {
+                    section.classList.add('md-overflow');
+                    const h = section.querySelector('h1, h2, h3');
+                    const theme = (document.getElementById('theme') || {}).href || '';
+                    const key = theme + '|' + (h ? h.textContent : '');
+                    if (!autofitWarned[key]) autofitWarned[key] = true; else return restore();
+                    console.warn('[autofit] still overflows at ' + Math.round(FLOOR * 100) +
+                        '%: "' + (h ? h.textContent.trim() : '(untitled slide)') +
+                        '" — consider splitting it or @slide smaller');
+                }
+            }
+            restore();
+        });
+    }
+    const autofitWarned = {};
+
+
+    /* A source line after a table sits flush with the table's right edge
+       rather than the text column's */
+    function alignSources() {
+        document.querySelectorAll('.reveal .slides section .md-source').forEach(function (src) {
+            src.style.removeProperty('max-width');
+            const prev = src.previousElementSibling;
+            if (!prev) return;
+            const table = prev.matches('table') ? prev : prev.querySelector(':scope > table');
+            if (!table) return;
+            const section = src.closest('section');
+            const restore = unhideForMeasuring(src);
+            const sr = section.getBoundingClientRect();
+            const scale = section.offsetWidth ? sr.width / section.offsetWidth : 1;
+            const fit = parseFloat(getComputedStyle(section).getPropertyValue('--fit')) || 1;
+            const right = (table.getBoundingClientRect().right - src.getBoundingClientRect().left) / scale / fit;
+            if (right > 0) src.style.maxWidth = right + 'px';
+            restore();
+        });
+    }
+    window.alignSources = alignSources;
+
+    /* A @note belongs to the text just before it. When that text is
+       revealed step by step (animated list items), the note joins the
+       same step as the last item before it instead of showing from the
+       start. Runs once after Reveal.initialize (fragment indices exist by
+       then); Reveal.sync() makes reveal take the new fragments on board. */
+    function syncNoteFragments() {
+        let changed = false;
+        document.querySelectorAll('.reveal .slides section .md-note').forEach(function (note) {
+            if (note.classList.contains('fragment')) return;
+            let prev = note.previousElementSibling;
+            while (prev && !prev.querySelector('.fragment') && !prev.classList.contains('fragment')) {
+                prev = prev.previousElementSibling;
+            }
+            if (!prev) return;
+            const frags = prev.classList.contains('fragment') ? [prev] : prev.querySelectorAll('.fragment');
+            const last = frags[frags.length - 1];
+            const idx = last && last.getAttribute('data-fragment-index');
+            if (idx === null || idx === undefined) return;
+            note.classList.add('fragment');
+            note.setAttribute('data-fragment-index', idx);
+            changed = true;
+        });
+        if (changed && window.Reveal && Reveal.sync) {
+            const i = Reveal.getIndices();
+            Reveal.sync();
+            Reveal.slide(i.h, i.v, i.f);
+        }
+    }
+    window.syncNoteFragments = syncNoteFragments;
+
+    /* Headings in a narrow column (the Spine layout's band, which sets
+       --L-fit-heading: 1 on them) shrink until their longest word fits
+       the column and the heading stays under half the slide's height.
+       (Safari and Chrome both declined to hyphenate a capitalised heading
+       word, so shrinking is the automatic fix; &shy; in the heading marks
+       a break by hand.) */
+    function fitColumnHeadings() {
+        document.querySelectorAll('.reveal .slides section h2').forEach(function (h) {
+            h.style.removeProperty('font-size');
+            if (getComputedStyle(h).getPropertyValue('--L-fit-heading').trim() !== '1') return;
+            const restore = unhideForMeasuring(h);
+            const base = parseFloat(getComputedStyle(h).fontSize);
+            const tooBig = function () { return h.scrollWidth > h.clientWidth + 1 || h.offsetHeight > 520; };
+            let scale = 1;
+            while (scale > 0.55 && tooBig()) {
+                scale -= 0.05;
+                h.style.fontSize = (base * scale).toFixed(1) + 'px';
+            }
+            restore();
+        });
+    }
+    window.fitColumnHeadings = fitColumnHeadings;
+
+
+    window.autofitTextSlides = autofitTextSlides;
 
     window.expandDirectives = expandDirectives;
     window.expandMarkdownSections = expandMarkdownSections;

@@ -3,70 +3,20 @@
     // Determine transition based on reduced motion preference
     const transition = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'slide';
 
-    // Check if user prefers dark theme and no theme is saved
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = !savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-    // If user prefers dark and no saved theme, switch to dark theme on load
-    if (prefersDark) {
-        const themeLink = document.getElementById('theme');
-        if (themeLink) {
-            themeLink.setAttribute('href', '../inc/css/th-d-bg-twilight.css');
-        }
-    } else if (savedTheme && /^\.\.\/inc\/css\/[\w-]+\.css$/.test(savedTheme)) {
-        // Restore the visitor's saved theme (script-loader.js saves it on
-        // every change). If the file has since been retired, fall back to
-        // the default and forget the preference.
-        const themeLink = document.getElementById('theme');
-        if (themeLink && themeLink.getAttribute('href') !== savedTheme) {
-            themeLink.addEventListener('error', function () {
-                themeLink.setAttribute('href', '../inc/css/th-l-cr.css');
-                try { localStorage.removeItem('theme'); } catch (e) {}
-            }, { once: true });
-            themeLink.setAttribute('href', savedTheme);
-        }
-    }
-
-    // Theme catalogue for the menu, grouped into sections. Section headers
-    // in the menu are generated from this structure, so adding, removing or
-    // reordering entries here is safe: no indices to keep in sync by hand.
-    // The curated set (2026-07): retired themes live in inc/css/retired/.
-    // Display names are free to change; filenames stay fixed because saved
-    // preferences in visitors' localStorage point at them.
-    const themeSections = [
-        { name: '', themes: [
-            { name: 'Cream', theme: '../inc/css/th-l-cr.css' },
-        ]},
-        { name: 'Colours', themes: [
-            { name: 'Terracotta', theme: '../inc/css/th-l-terracotta.css' },
-            { name: 'Burgundy', theme: '../inc/css/th-l-burgundy.css' },
-            { name: 'Slate', theme: '../inc/css/th-l-slate.css' },
-            { name: 'Petrol', theme: '../inc/css/th-l-petrol.css' },
-            { name: 'Racing Green', theme: '../inc/css/th-d-library.css' },
-            { name: 'Twilight', theme: '../inc/css/th-d-bg-twilight.css' },
-            { name: 'Midnight', theme: '../inc/css/th-d-bu-invert.css' },
-        ]},
-        { name: 'Light', themes: [
-            { name: 'Marginalia', theme: '../inc/css/th-l-marginalia.css' },
-            { name: 'Letterpress', theme: '../inc/css/th-l-letterpress.css' },
-            { name: 'High Accessibility', theme: '../inc/css/th-l-acc.css' },
-        ]},
-        { name: 'Institutional', themes: [
-            { name: 'University of Glasgow', theme: '../inc/css/th-l-uog.css' },
-            { name: 'Historical Thesaurus', theme: '../inc/css/th-l-ht.css' },
-            { name: 'Historical Thesaurus Cream', theme: '../inc/css/th-l-bg-ht-cr.css' },
-        ]},
-        { name: 'Variants', themes: [
-            { name: 'Manuscript', theme: '../inc/css/th-l-e-cr-invert.css' },
-            { name: 'Cream Sans', theme: '../inc/css/th-l-cr-m-thin.css' },
-        ]},
-    ];
+    // Theme catalogue for the menu: owned by inc/head.js (which also chose
+    // the opening theme before first paint), grouped into sections whose
+    // headers are generated below, so nothing here needs keeping in sync.
+    const themeSections = (window.MGA_THEMES || []).map(function (s) {
+        return { name: s.name, themes: s.themes.map(function (t) {
+            return { name: t.name, theme: t.href };
+        }) };
+    });
 
     Reveal.initialize({
     plugins: [ RevealMarkdown, RevealMenu, RevealNotes, PdfExport, Appearance, OneTimer ],
     width: 1920,
     height: 1080,
-    margin: 0.04,
+    margin: 0.08,         // about 4% clear on each side: projectors often crop the edges
     minScale: 0.2,       // minimum scaling
     maxScale: 2.0,        // maximum scaling
     navigationMode: 'linear',
@@ -85,14 +35,6 @@
         animateLists: true
     },
     menu: {
-        // Function to get metadata
-        getMetadata: function() {
-            return {
-                author: document.querySelector('meta[name="author"]').getAttribute('content'),
-                technologies: document.querySelector('meta[name="technologies"]').getAttribute('content'),
-                lastUpdated: document.querySelector('meta[name="last-updated"]').getAttribute('content')
-            };
-        },
         side: 'left',
         width: 'normal',
         numbers: true,
@@ -156,6 +98,94 @@
                     });
                 }
             }, 50);
+        }
+
+        // Layout picker: a row of icons at the top of the Themes panel.
+        // Mouse: click. Keyboard: with the Themes panel open, the number
+        // keys 1-4 choose a layout directly; or Tab to the icons, move
+        // with the arrow keys and choose with Enter or Space.
+        const layoutLink = document.getElementById('layout');
+        const layouts = window.MGA_LAYOUTS || [];
+        const themesPanel = document.querySelector('.slide-menu-panel[data-panel="Themes"]');
+        let picker = null;
+        // Refit once the new layout stylesheet is really in force. The load
+        // event alone proved unreliable for a stylesheet the browser has
+        // cached, so also watch for the sheet itself to change over, and
+        // refit once more shortly after for good measure.
+        function refitWhenApplied(link, href) {
+            let done = false;
+            const want = new URL(href, location.href).href;
+            function refit() {
+                if (done) return;
+                done = true;
+                if (window.updateThemeElements) window.updateThemeElements();
+                setTimeout(function () {
+                    if (window.refitSlides) window.refitSlides();
+                }, 400);
+            }
+            link.addEventListener('load', refit, { once: true });
+            const t0 = performance.now();
+            (function poll() {
+                let ready = false;
+                try { ready = !!(link.sheet && link.sheet.href === want && link.sheet.cssRules); } catch (e) {}
+                if (ready) { requestAnimationFrame(refit); return; }
+                if (performance.now() - t0 < 3000) requestAnimationFrame(poll); else refit();
+            })();
+        }
+        function chooseLayout(key) {
+            const l = layouts.filter(function (x) { return x.key === key; })[0];
+            if (!l || !layoutLink) return;
+            if (layoutLink.getAttribute('href') !== l.href) {
+                layoutLink.setAttribute('href', l.href);
+                refitWhenApplied(layoutLink, l.href);
+            }
+            window.MGA_LAYOUT = key;
+            try { localStorage.setItem('layout', key); } catch (e) {}
+            picker.querySelectorAll('button').forEach(function (b) {
+                const on = b.getAttribute('data-layout') === key;
+                b.classList.toggle('active', on);
+                b.setAttribute('aria-checked', on ? 'true' : 'false');
+                b.tabIndex = on ? 0 : -1;
+            });
+        }
+        if (themesPanel && layouts.length && !themesPanel.querySelector('.mga-layout-picker')) {
+            picker = document.createElement('div');
+            picker.className = 'mga-layout-picker';
+            picker.setAttribute('role', 'radiogroup');
+            picker.setAttribute('aria-label', 'Layout');
+            picker.innerHTML = '<span class="mga-layout-label">Layout</span>' +
+                layouts.map(function (l, n) {
+                    return '<button type="button" role="radio" data-layout="' + l.key + '"' +
+                        ' title="' + l.name + ' (' + (n + 1) + ')" aria-label="' + l.name + '">' +
+                        l.icon + '</button>';
+                }).join('');
+            themesPanel.insertBefore(picker, themesPanel.firstChild);
+            picker.addEventListener('click', function (e) {
+                const b = e.target.closest('button[data-layout]');
+                if (b) chooseLayout(b.getAttribute('data-layout'));
+            });
+            chooseLayout(window.MGA_LAYOUT);
+
+            // Keys, taken before the menu plugin sees them
+            window.addEventListener('keydown', function (e) {
+                const menuOpen = document.querySelector('.slide-menu.active');
+                if (!menuOpen) return;
+                const buttons = Array.prototype.slice.call(picker.querySelectorAll('button'));
+                const onPicker = buttons.indexOf(document.activeElement);
+                const themesActive = themesPanel.classList.contains('active-menu-panel');
+                if (themesActive && /^[1-9]$/.test(e.key) && layouts[+e.key - 1]) {
+                    chooseLayout(layouts[+e.key - 1].key);
+                } else if (onPicker !== -1 && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
+                    const next = (onPicker + (e.key === 'ArrowRight' ? 1 : buttons.length - 1)) % buttons.length;
+                    buttons[next].focus();
+                } else if (onPicker !== -1 && (e.key === 'Enter' || e.key === ' ')) {
+                    chooseLayout(buttons[onPicker].getAttribute('data-layout'));
+                } else {
+                    return;
+                }
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }, true);
         }
 
         // Transition list icons (monochrome duotone, matching the Info panel)

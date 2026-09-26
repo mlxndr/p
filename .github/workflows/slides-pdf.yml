@@ -1,0 +1,95 @@
+name: Slides PDFs
+
+# Exports each deck to <deck>/slides.pdf: one full-size (1920x1080) page
+# per slide, fragments shown, in the deck's own default theme and layout.
+#
+# - On push to main: rebuilds only the decks whose content, metadata or
+#   images changed in that push.
+# - Run by hand (Actions tab > Slides PDFs > Run workflow): rebuilds every
+#   deck; use this after changing anything in inc/ (themes, layouts).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*/content.md'
+      - '*/title.md'
+      - '*/meta.json'
+      - '*/img/**'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: slides-pdf
+  cancel-in-progress: false
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the site
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install DeckTape (uses the runner's own Chrome)
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: 'true'
+        run: npm install -g decktape@3
+
+      - name: Work out which decks to export
+        id: decks
+        run: |
+          is_deck() { [ -f "$1/index.html" ] && [ -f "$1/content.md" ] && [ "$1" != "specimen" ]; }
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
+            candidates=$(ls -d */ | tr -d '/')
+          else
+            candidates=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" | cut -d/ -f1 | sort -u)
+          fi
+          decks=""
+          for d in $candidates; do is_deck "$d" && decks="$decks $d"; done
+          echo "list=$decks" >> "$GITHUB_OUTPUT"
+          echo "Decks to export:$decks"
+
+      - name: Serve the site locally
+        if: steps.decks.outputs.list != ''
+        run: |
+          python3 -m http.server 8000 >/dev/null 2>&1 &
+          sleep 2
+
+      - name: Export PDFs
+        if: steps.decks.outputs.list != ''
+        run: |
+          for d in ${{ steps.decks.outputs.list }}; do
+            echo "::group::$d"
+            decktape reveal \
+              --size 1920x1080 \
+              --load-pause 4000 \
+              --pause 800 \
+              --chrome-path "$(which google-chrome)" \
+              --chrome-arg=--no-sandbox \
+              "http://localhost:8000/$d/?fragments=false" \
+              "$d/slides.pdf"
+            echo "::endgroup::"
+          done
+
+      - name: Commit the PDFs
+        if: steps.decks.outputs.list != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add */slides.pdf
+          if git diff --staged --quiet; then
+            echo "No PDFs changed"
+          else
+            git commit -m "Update slides PDFs"
+            git pull --rebase
+            git push
+          fi

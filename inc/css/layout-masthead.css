@@ -1,0 +1,29 @@
+/* ===========================================================
+   Masthead — each slide heading sits in a bar of the
+   palette's ground colour running across the top of the
+   screen, like a journal masthead; content below on paper.
+   The bar bleeds to the screen edges (a spread box-shadow,
+   clipped so it never falls below the heading).
+   =========================================================== */
+
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack) > h2,
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack) > .md-fill-inner > h2 {
+    position: relative;
+    margin: 0 0 0.7em;
+    padding: 0.3em 0 0.32em;
+    font-size: 1.45em;
+    line-height: 1.1;
+    color: var(--L-on-ground);
+    background: var(--L-ground);
+    border: none;
+    box-shadow: 0 0 0 2000px var(--L-ground);
+    clip-path: inset(-2000px -2000px 0 -2000px);
+}
+
+/* On a slide that already stands on the ground colour (@slide contrast),
+   the bar darkens so it still reads as a bar */
+.reveal .slides section.md-contrast > h2,
+.reveal .slides section.md-contrast > .md-fill-inner > h2 {
+    background: color-mix(in srgb, var(--L-ground) 78%, black);
+    box-shadow: 0 0 0 2000px color-mix(in srgb, var(--L-ground) 78%, black);
+}

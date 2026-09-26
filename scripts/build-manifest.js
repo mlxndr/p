@@ -23,7 +23,10 @@ const presentations = fs.readdirSync(rootDir, { withFileTypes: true })
             dirName: entry.name,
             ...meta
         };
-    });
+    })
+    // "unlisted": true in meta.json keeps a deck (e.g. specimen) off the
+    // landing page while leaving it reachable by URL
+    .filter(p => !p.unlisted);
 
 fs.writeFileSync('manifest.json', JSON.stringify({ presentations }, null, 2));
 console.log(`Generated manifest.json with ${presentations.length} presentations`);

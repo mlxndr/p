@@ -136,9 +136,10 @@ li::marker {
     border-spacing: 0;
     margin-left: 0;
     margin-right: auto;
-    margin-bottom: 20px;
-    /* Columns of figures align, in oldstyle (never lining) */
-    font-variant-numeric: oldstyle-nums tabular-nums;
+    margin-bottom: 0.9em;
+    /* Data tables: lining tabular figures, so columns align and read as
+       figures (running text stays oldstyle) */
+    font-variant-numeric: lining-nums tabular-nums;
 }
 
 .reveal table th {
@@ -203,9 +204,13 @@ li::marker {
     font-family: var(--r-main-font);
     font-size: 1.8em !important;
     font-weight: 400;
-    font-variant: normal !important;
+    font-variant-caps: normal !important;
     margin: 0em; 
     padding: 0em;
+}
+
+.reveal .pres-title-headingfont.pres-title-sc {
+    font-variant-caps: small-caps !important;
 }
 
 .reveal .pres-subtitle-headingfont {
@@ -305,11 +310,24 @@ li::marker {
        shows as a box on themes with background images */
 }
 
-.predicator { color: #D32F2F; }  /* Deep red for predicators */
-.subject { color: #2E7D32; }     /* Deep green for subjects */
-.object { color: #7B1FA2; }      /* Deep purple for objects */
-.complement { color: #1976D2; }  /* Deep blue for complements */
-.adverbial { color: #E65100; }   /* Orange for adverbials */
+/* Grammatical functions: one colour each, everywhere, from the Okabe-Ito
+   palette (designed to stay distinct under red-green colour blindness),
+   darkened just enough to read at 3:1 or better on every light paper.
+   Minimum separation between any two, simulated for protan and deutan
+   vision as well as normal, is about three times the old set's.
+   dark.css supplies lightened versions for dark grounds. */
+:root {
+    --g-subject: #005D9C;      /* blue */
+    --g-predicator: #963100;   /* vermillion, deepened */
+    --g-object: #00744D;       /* bluish green */
+    --g-complement: #C16F9D;   /* reddish purple */
+    --g-adverbial: #B67600;    /* orange */
+}
+.subject { color: var(--g-subject); }
+.predicator { color: var(--g-predicator); }
+.object { color: var(--g-object); }
+.complement { color: var(--g-complement); }
+.adverbial { color: var(--g-adverbial); }
 
 
 
@@ -517,7 +535,7 @@ html body .slide-menu-wrapper .slide-menu {
     --menu-bg: #FAF7F0;
     --menu-text: #1B1815;
     --menu-text-muted: rgba(27, 24, 21, 0.52);
-    --menu-accent: #C2502F;                 /* terracotta ink: the one colour */
+    --menu-accent: var(--r-accent, #C2502F); /* the theme accent (terracotta ink by default): the one colour */
     --menu-hover-bg: rgba(27, 24, 21, 0.045);
     --menu-divider-color: rgba(27, 24, 21, 0.10);
     --menu-border: rgba(27, 24, 21, 0.16);
@@ -1214,7 +1232,7 @@ html body .slide-menu-button {
 
 /* Typography utilities replacing inline font-size styles */
 .reveal .md-small  { font-size: 0.7em; }
-.reveal .md-source { font-size: 0.8em; font-style: italic; text-align: right; color: var(--r-subtle-color); }
+.reveal .md-source { font-size: 0.72em; font-style: normal; text-align: right; color: var(--r-subtle-color); }
 
 /* Directive error surfaces: visible in preview and in PDF export */
 .reveal img.md-broken { outline: 3px dashed #c0392b; min-width: 120px; min-height: 80px; }
@@ -1336,8 +1354,10 @@ html body .slide-menu-button {
     color: var(--r-contrast-ink, #F2F2EA);
 }
 
-/* Inline small caps: ^^term^^ in markdown */
-.reveal .md-sc { font-variant-caps: small-caps; }
+/* Inline small caps: ^^INTJ^^ or ^^oed^^ in markdown. all-small-caps
+   turns capitals into small caps too (plain small-caps leaves them
+   full size), so acronyms and tags set properly */
+.reveal .md-sc { font-variant-caps: all-small-caps; letter-spacing: var(--sc-tracking, 0); }
 
 /* Inline subtle colour: %%aside%% in markdown */
 .reveal .md-subtle { color: var(--r-subtle-color); }
@@ -1355,9 +1375,146 @@ html body .slide-menu-button {
 }
 
 /* Title-slide metadata tables are layout, not data: no theme's table
-   rules (row hairlines, header fills) may leak into them */
+   rules (row hairlines, header fills) may leak into them, and they keep
+   oldstyle figures like running text */
+.reveal section.title-slide .titlebr {
+    font-variant-numeric: oldstyle-nums proportional-nums;
+}
 .reveal section.title-slide .titlebr td,
 .reveal section.title-slide .titlebr th {
     border: none;
     background: none;
+}
+
+/* ===========================================
+   Autofit (autofitTextSlides in directives.js): a slide whose content
+   overflows the stage shrinks everything but its heading by --fit.
+   zoom (not transform) so layout, and therefore the measurement,
+   shrinks too.
+   =========================================== */
+.reveal .slides section.md-fit > :not(h1):not(h2):not(h3):not(aside) {
+    zoom: var(--fit, 1);
+}
+
+/* zoom shrinks the element's own em too, so the 33em prose measure
+   would narrow with the text; widen it by the same factor so shrunk
+   text keeps the full measure on screen (and needs less shrinking) */
+.reveal .slides section.md-fit:not(.title-slide) > p,
+.reveal .slides section.md-fit:not(.title-slide) > ul,
+.reveal .slides section.md-fit:not(.title-slide) > ol,
+.reveal .slides section.md-fit:not(.title-slide) > blockquote {
+    max-width: calc(33em / var(--fit, 1));
+}
+
+/* Still overflowing at the floor: flagged in local preview only */
+html.mga-preview .reveal .slides section.md-overflow {
+    outline: 3px dashed #c0392b;
+    outline-offset: -6px;
+}
+
+/* refitSlides (script-loader.js) suspends transitions while it measures */
+html.mga-measuring *,
+html.mga-measuring *::before,
+html.mga-measuring *::after {
+    transition: none !important;
+}
+
+/* .md-source is set smaller than the text it follows, so the 33em prose
+   measure (which is in its own, smaller ems) would stop short and leave
+   it floating mid-slide. Give it the same measure in the parent's terms,
+   so it sits flush with the right edge of the text column; after a
+   table, alignSources() (directives.js) pulls it in to the table's edge. */
+.reveal .slides section:not(.title-slide) > p.md-source {
+    max-width: calc(33em / 0.72 / var(--fit, 1));
+    margin-left: 0;
+}
+
+/* @note — a sidenote. In the standard layouts a small, quiet paragraph
+   with a hairline; the Marginalia layout moves it into the margin */
+.reveal .md-note {
+    font-size: 0.72em;
+    color: var(--r-subtle-color);
+    border-left: 2px solid var(--r-border-color);
+    padding-left: 0.6em;
+    margin: 0.5em 0;
+    max-width: calc(33em / 0.72);
+}
+.reveal .md-note > p { margin: 0; }
+
+/* Shared by the layout stylesheets (layout-*.css): the palette they
+   draw on, taken from whichever theme is active. The contrast pair is
+   defined by every theme (Colourful themes: their title ground). */
+:root {
+    --L-ground: var(--r-contrast-bg, #183153);
+    --L-on-ground: var(--r-contrast-ink, #F2F2EA);
+    --L-accent: var(--c-ink, var(--r-link-color));
+}
+
+/* Layout picker: a row of icons at the top of the Themes panel
+   (built in revconfig.js) */
+html body .slide-menu-wrapper .mga-layout-picker {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px 14px 18px;
+    border-bottom: 1px solid var(--menu-divider-color);
+    margin-bottom: 4px;
+}
+html body .slide-menu-wrapper .mga-layout-label {
+    font-family: 'Concourse', 'Helvetica Neue', sans-serif;
+    font-size: 0.72em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.12em;
+    color: var(--menu-text-muted);
+    margin-right: auto;
+}
+html body .slide-menu-wrapper .mga-layout-picker button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    width: 42px;
+    height: 38px;
+    padding: 0;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--menu-text);
+    opacity: 0.5;
+}
+html body .slide-menu-wrapper .mga-layout-picker svg {
+    width: 26px;
+    height: 19px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.2;
+    vertical-align: middle;
+}
+html body .slide-menu-wrapper .mga-layout-picker svg .fill {
+    fill: currentColor;
+    stroke: none;
+    opacity: 0.22;
+}
+html body .slide-menu-wrapper .mga-layout-picker svg .dot {
+    fill: currentColor;
+    stroke: none;
+}
+html body .slide-menu-wrapper .mga-layout-picker button:hover {
+    opacity: 0.8;
+}
+html body .slide-menu-wrapper .mga-layout-picker button.active {
+    border-bottom-color: var(--menu-accent);
+    opacity: 1;
+}
+html body .slide-menu-wrapper .mga-layout-picker button:focus-visible {
+    outline: 2px solid var(--menu-accent);
+    outline-offset: 1px;
+}
+
+/* Info (and any custom) panel: the menu's own typography, never the
+   presentation's font */
+html body .slide-menu-wrapper .slide-menu-custom-panel,
+html body .slide-menu-wrapper .slide-menu-custom-panel .slide-menu-info,
+html body .slide-menu-wrapper .slide-menu-custom-panel small,
+html body .slide-menu-wrapper .slide-menu-custom-panel p {
+    font-family: 'Century Supra', 'Georgia', serif !important;
+    font-variant-numeric: oldstyle-nums;
 }

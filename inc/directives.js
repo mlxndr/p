@@ -399,6 +399,12 @@
         s = s.replace(/\]\((?:[^()\s]|\([^()\s]*\))*(?:\s+(?:"[^"]*"|'[^']*'))?\)/g,
             function (m) { return ']' + hold(m.slice(1), 'dest'); });
 
+        // ## Heading | subtitle: the bar starts a smaller second line
+        // (a literal bar is written \|, held back above)
+        s = s.replace(/^( {0,3}#{1,6}[ \t]+)([^|]*?\S)[ \t]*\|[ \t]*(\S.*)$/, function (m, hashes, head, sub) {
+            return hashes + head + ' ' + tag('<span class="md-head-sub">') + sub + tag('</span>');
+        });
+
         // 2. Click marks (they do not nest in each other)
         const click = function (cls, inner) {
             return tag('<span class="fragment custom ' + cls + '"><span>') + inner + tag('</span></span>');
@@ -490,7 +496,7 @@
     }
 
     function inlineMarks(md, ctx) {
-        if (!/[\^%=\[{:]/.test(md)) return md;
+        if (!/[\^%=\[{:|]/.test(md)) return md;
         // multi-line HTML comments (slide attributes, md-raw guards) are
         // held back whole so the line pass never sees inside them
         const blocks = [];
@@ -585,33 +591,85 @@
     /* @slide smaller|smallest|centred|plain|contrast [bg=#colour]
        Expands to a reveal slide-attributes comment; flags become classes
        that base.css and the themes style. */
+    /* @slide flags (SPEC 6.1). Flags combine freely; classes from several
+       directives on one slide are merged by mergeSlideComments.
+         smaller smallest centred plain contrast spare   (layout, existing)
+         fade cut              transition into this slide
+         hidden                kept in the source, skipped in show and PDF
+         nohandout             shown, but left out of the student version
+         static                nothing builds unless marked
+         build, build=auto     lists build even in a listBuild:false deck;
+                               auto runs the slide's builds without clicks
+         statement             one large centred sentence or quotation
+         activity              room activity: lighter ground, accent bar
+         text=N placeholder textbox   corporate decks (phase 4) */
+    const SLIDE_FLAGS = ['smaller', 'smallest', 'centred', 'centered', 'plain', 'contrast', 'spare',
+        'fade', 'cut', 'hidden', 'nohandout', 'static', 'build', 'statement', 'activity',
+        'placeholder', 'textbox'];
     function emitSlideMods(opts, srcLine, lineNo, name) {
         const classMap = { smaller: 'md-smaller', smallest: 'md-smallest', spare: 'md-spare',
             centred: 'md-centred', centered: 'md-centred',
-            plain: 'md-plain', contrast: 'md-contrast' };
+            plain: 'md-plain', contrast: 'md-contrast',
+            hidden: 'md-hidden', nohandout: 'md-nohandout', static: 'md-static', build: 'md-build',
+            statement: 'md-statement', activity: 'md-activity',
+            placeholder: 'md-corp-placeholder', textbox: 'md-corp-textbox' };
+        const err = function (m) { return { md: errorSlide(name, lineNo, srcLine, m), isError: true }; };
         const classes = [];
+        let transition = null;
         for (const f of opts._flags) {
-            if (!classMap[f]) {
-                return { md: errorSlide(name, lineNo, srcLine,
-                    'Unknown @slide flag `' + esc(f) + '`. Available: smaller, smallest, centred, plain, contrast, spare (plus bg=&lt;colour&gt;).'), isError: true };
+            if (SLIDE_FLAGS.indexOf(f) === -1) {
+                return err('Unknown @slide flag `' + esc(f) + '`. Available: ' + SLIDE_FLAGS.filter(function (x) { return x !== 'centered'; }).join(', ') +
+                    ' (plus bg=&lt;colour&gt;, build=auto, text=N).');
             }
-            classes.push(classMap[f]);
+            if (f === 'fade' || f === 'cut') {
+                if (transition) return err('`fade` and `cut` cannot both be set: a slide has one transition.');
+                transition = f === 'fade' ? 'fade' : 'none';
+                continue;
+            }
+            if (classes.indexOf(classMap[f]) === -1) classes.push(classMap[f]);
+        }
+        for (const k of Object.keys(opts)) {
+            if (k.charAt(0) === '_') continue;
+            if (['bg', 'id', 'build', 'text'].indexOf(k) === -1) {
+                return err('Unknown @slide option `' + esc(k) + '`. Valid: bg=, id=, build=auto, text=N.');
+            }
+        }
+        if (opts.build !== undefined) {
+            if (opts.build !== 'auto') return err('`build=' + esc(opts.build) + '`: the only build order for a slide is build=auto (or a bare build).');
+            if (classes.indexOf('md-build') === -1) classes.push('md-build');
+            classes.push('md-build-auto');
+        }
+        if (opts.text !== undefined && !/^\d+(\.\d+)?$/.test(opts.text)) {
+            return err('`text=` takes a size in points, e.g. text=24.');
+        }
+        if (classes.indexOf('md-static') !== -1 && classes.indexOf('md-build') !== -1) {
+            return err('`static` and `build` contradict each other: choose one.');
         }
         if (opts.bg && !/^[#\w][\w#(),.%\- ]*$/.test(opts.bg)) {
-            return { md: errorSlide(name, lineNo, srcLine,
-                'bg= does not look like a CSS colour.'), isError: true };
+            return err('bg= does not look like a CSS colour.');
         }
-        if (!classes.length && !opts.bg) {
-            return { md: errorSlide(name, lineNo, srcLine,
-                '@slide needs at least one flag (smaller, smallest, centred, plain, contrast, spare) or bg=&lt;colour&gt;.'), isError: true };
+        if (!classes.length && !opts.bg && !transition && opts.text === undefined) {
+            return err('@slide needs at least one flag (' + SLIDE_FLAGS.filter(function (x) { return x !== 'centered'; }).join(', ') + ') or bg=&lt;colour&gt;.');
         }
         let attrs = '';
         if (classes.length) attrs += ' class="' + classes.join(' ') + '"';
         if (classes.indexOf('md-spare') !== -1) attrs += ' data-visibility="uncounted"';
+        if (classes.indexOf('md-hidden') !== -1) attrs += ' data-visibility="hidden"';
+        if (transition) attrs += ' data-transition="' + transition + '"';
+        if (opts.text !== undefined) attrs += ' data-corp-text="' + esc(opts.text) + '"';
         if (opts.bg) attrs += ' data-background-color="' + esc(opts.bg) + '"';
         if (opts.id) attrs += ' id="' + esc(opts.id) + '"';
         return { md: '<!-- .slide:' + attrs + ' -->', isError: false };
     }
+
+    /* "series": "English Words | history, meaning, and structure": the
+       name in small caps, after | a smaller second line */
+    function seriesHtml(series, cls) {
+        const sp = String(series).split('|');
+        return '<div class="md-series ' + cls + '"><span class="md-series-name">' + esc(sp[0].trim()) + '</span>' +
+            (sp.length > 1 ? '<span class="md-series-sub">' + esc(sp.slice(1).join('|').trim()) + '</span>' : '') + '</div>';
+    }
+    window.mgaSeriesHtml = seriesHtml;
 
     /* @section Some Part Title — a styled divider slide */
     function emitSection(text, srcLine, lineNo, name) {
@@ -619,7 +677,11 @@
             return { md: errorSlide(name, lineNo, srcLine,
                 '@section needs the section title on the same line, e.g. `@section Part Two: The Corpus`.'), isError: true };
         }
-        return { md: '<!-- .slide: class="md-section" -->\n# ' + text, isError: false };
+        // the deck's series line (meta.json "series"), as on the title slide
+        const series = window.MGA_META && window.MGA_META.series;
+        return { md: '<!-- .slide: class="md-section" -->\n' +
+            (series ? seriesHtml(series, 'md-section-series') + '\n\n' : '') +
+            '# ' + text, isError: false };
     }
 
     /* @quote attrib="Source, details" [contrast] [smaller|smallest]
@@ -693,17 +755,25 @@
     function parseDirectiveLine(rest, spec) {
         const d = { text: null, positional: [], opts: {}, flags: [], build: null };
         let optStr = rest;
+        const keys = (spec.keys || []).concat(spec.body !== 'line' ? ['name'] : []);
+        const flags = spec.flags || [];
+        const buildModes = spec.build || [];
+        const allowsBuild = spec.body !== 'line' || spec.build;
         if (spec.text) {
             const padded = ' ' + rest + ' ';
             const k = padded.lastIndexOf(' :: ');
             d.text = (k === -1 ? rest : padded.slice(0, k)).trim();
             optStr = k === -1 ? '' : padded.slice(k + 4).trim();
+            // A ' :: ' that is not followed by options alone belongs to
+            // the text (a gloss such as "brunch :: breakfast + lunch")
+            const looksLikeOptions = optStr && optStr.split(/\s+/).every(function (t) {
+                const kv = /^([\w-]+)=/.exec(t);
+                if (kv) return keys.indexOf(kv[1]) !== -1 || (kv[1] === 'build' && allowsBuild);
+                return flags.indexOf(t) !== -1 || (t === 'build' && allowsBuild);
+            });
+            if (k !== -1 && !looksLikeOptions && d.text) { d.text = rest.trim(); optStr = ''; }
             if (!d.text) throw new DirectiveError('needs its text on the same line, before any ` :: ` options.');
         }
-        const keys = (spec.keys || []).concat(spec.body !== 'line' ? ['name'] : []);
-        const flags = spec.flags || [];
-        const buildModes = spec.build || [];
-        const allowsBuild = spec.body !== 'line' || spec.build;
         const re = /([\w-]+)=(?:"([^"]*)"|(\S+))|"([^"]*)"|(\S+)/g;
         let m, seenOption = false;
         while ((m = re.exec(optStr)) !== null) {
@@ -902,6 +972,37 @@
         }
     }
 
+    /* ---------- one-line directives built on the shared parser ---------- */
+
+    /* @note text [:: top build] — a sidenote. top places it straight after
+       the slide's heading (placeSlideNotes, at runtime); build gives it a
+       click of its own instead of joining the list item before it. */
+    registerDirective('note', {
+        body: 'line', text: true, flags: ['top'], build: [],
+        emit: function (d) {
+            const cls = 'md-note' + (d.flags.indexOf('top') !== -1 ? ' md-note-top' : '') + (d.build ? ' fragment' : '');
+            return '\n<div class="' + cls + '">\n\n' + d.text + '\n\n</div>\n';
+        }
+    });
+
+    /* @source text — a small, upright, subtle, right-aligned line at the
+       foot of what it follows (replaces <p class="md-source">, which still
+       works). Markdown inside is rendered (*Book Title*). */
+    registerDirective('source', {
+        body: 'line', text: true,
+        emit: function (d) { return '\n<div class="md-source">\n\n' + d.text + '\n\n</div>\n'; }
+    });
+
+    /* @pause — everything after it, up to the next @pause or the end of
+       the slide, appears on one click as one piece (applyBuilds) */
+    registerDirective('pause', {
+        body: 'line',
+        emit: function (d, api) {
+            if (d.positional.length) api.fail('takes nothing after it: everything below it on the slide is what appears.');
+            return '\n<div class="md-pause" aria-hidden="true"></div>\n';
+        }
+    });
+
     /* ---------- chunk-level expansion ---------- */
 
     function expandChunk(chunk, deck, lineOffset) {
@@ -929,11 +1030,6 @@
             let r;
             if (kind === 'slide') {
                 r = emitSlideMods(opts, line, lineNo, name);
-            } else if (kind === 'note') {
-                const text = dm[2].trim();
-                r = text
-                    ? { md: '\n<div class="md-note">\n\n' + text + '\n\n</div>\n', isError: false }
-                    : { md: errorSlide(name, lineNo, line, '@note needs its text on the same line, e.g. `@note Hansard reports in the third person.`'), isError: true };
             } else if (kind === 'section') {
                 r = emitSection(dm[2].trim(), line, lineNo, name);
             } else if (kind === 'quote' || kind === 'refs') {
@@ -1011,11 +1107,59 @@
 
     /* ---------- top-level API ---------- */
 
+    /* @include PATH — another markdown file inserted at that point before
+       anything else is expanded: whole slides, or definitions. Paths are
+       relative to the file that includes them; includes nest; a cycle or
+       a missing file becomes an error slide. Fetched synchronously (local,
+       small files) so expansion stays one pass; every included file is
+       listed in window.MGA_INCLUDES for the offline cache. */
+    function readTextSync(url) {
+        if (window.MGA_DIRECTIVES && window.MGA_DIRECTIVES.readText) return window.MGA_DIRECTIVES.readText(url);
+        const x = new XMLHttpRequest();
+        x.open('GET', url, false);
+        x.send(null);
+        if ((x.status >= 200 && x.status < 300) || (x.status === 0 && x.responseText)) return x.responseText;
+        throw new Error('HTTP ' + x.status);
+    }
+    function resolveIncludes(src, fileUrl, stack, state) {
+        if (src.indexOf('@include') === -1) return src;
+        let fence = null;
+        return src.split('\n').map(function (line, i) {
+            const f = /^\s*(`{3,}|~{3,})/.exec(line);
+            if (fence) { if (f && f[1].charAt(0) === fence.charAt(0)) fence = null; return line; }
+            if (f) { fence = f[1]; return line; }
+            const m = /^@include(?:\s+(.*))?$/.exec(line);
+            if (!m) return line;
+            const shortName = stack.length > 1 ? fileUrl.split('/').pop() : state.name;
+            const fail = function (msg) { state.hadError = true; return errorSlide(shortName, i + 1, line, '@include: ' + msg); };
+            const p = (m[1] || '').trim();
+            if (!p || /\s/.test(p)) return fail('needs one path after it, e.g. `@include ../shared/sets.md` (no spaces in the path).');
+            let url;
+            try { url = new URL(p, fileUrl).href; } catch (e) { return fail('`' + esc(p) + '` is not a usable path.'); }
+            if (stack.indexOf(url) !== -1) {
+                return fail('`' + esc(p) + '` includes itself (' + stack.concat(url).map(function (u) { return u.split('/').pop(); }).join(' → ') + ').');
+            }
+            let text;
+            try { text = readTextSync(url); } catch (e) { return fail('could not read `' + esc(p) + '` (' + esc(e.message) + ').'); }
+            state.includes.push(url);
+            return resolveIncludes(text.replace(/\r\n/g, '\n').replace(/\n+$/, ''), url, stack.concat(url), state);
+        }).join('\n');
+    }
+
     function expandDirectives(src, meta) {
         const name = (meta && meta.name) || 'markdown';
+        // @include first, so included slides and definitions expand with
+        // the rest of the deck
+        const inc = { name: name, includes: [], hadError: false };
+        if (src.indexOf('@include') !== -1) {
+            const here = (typeof location !== 'undefined' && location.href) || 'http://localhost/deck/';
+            const self = new URL(name, here).href;
+            src = resolveIncludes(src, self, [self], inc);
+            window.MGA_INCLUDES = (window.MGA_INCLUDES || []).concat(inc.includes);
+        }
         // short-circuit only when there is nothing at all to expand
         // (inline marks must expand even in directive-free decks)
-        if (!/[@^%=\[{:]/.test(src)) {
+        if (!/[@^%=\[{:|]/.test(src)) {
             return { markdown: src, hadError: false, warnings: [] };
         }
         // Split on reveal's separators (blank-line anchored, matching the
@@ -1023,7 +1167,7 @@
         const parts = src.split(/(^\n---\n|^\n--\n)/m);
         // one deck: ids, named blocks and warnings are shared by its slides
         const deck = { name: name, allocId: makeIdAllocator(), named: {}, warnings: [] };
-        let hadError = false;
+        let hadError = inc.hadError;
         let lineOffset = 0;
         const out = parts.map(function (part) {
             if (part === '\n---\n' || part === '\n--\n') {
@@ -1334,6 +1478,117 @@
 
 
     window.autofitTextSlides = autofitTextSlides;
+
+    /* ---------- builds (SPEC 6.2) ----------
+
+       Runs as a reveal plugin registered straight after RevealMarkdown
+       (revconfig.js), so the slides are rendered but reveal has not yet
+       counted their fragments.
+
+       1. Lists: a deck builds lists item by item when "listBuild" is true
+          (the default; revconfig.js passes it to animateLists). @slide
+          static removes list builds from one slide; @slide build adds them
+          on a slide of a listBuild:false deck. Marked builds (click marks,
+          @note build, @pause) are kept either way.
+       2. @pause: the elements after each marker, up to the next marker,
+          become one fragment group; lists inside appear whole.
+       3. Order: on slides with groups or stepped blocks ([data-md-steps]
+          holding [data-md-step="k"]), every fragment gets an explicit
+          index in reading order, so a block's steps come after the list
+          items before it and before those after it.
+       4. @note top moves to straight after the slide's heading. */
+    function ownedBy(sec) { return function (el) { return el.closest('section') === sec; }; }
+    function applyBuilds() {
+        const meta = window.MGA_META || {};
+        const listBuild = meta.listBuild !== undefined ? meta.listBuild !== false : !meta.corporate;
+        document.querySelectorAll('.reveal .slides section').forEach(function (sec) {
+            if (sec.querySelector('section')) return;
+            const own = ownedBy(sec);
+            const lis = Array.prototype.filter.call(sec.querySelectorAll('li'), own);
+            const isStatic = sec.classList.contains('md-static');
+            if (isStatic || (!listBuild && !sec.classList.contains('md-build'))) {
+                lis.forEach(function (li) { li.classList.remove('fragment'); });
+            } else if (sec.classList.contains('md-build') && !sec.classList.contains('md-refs')) {
+                lis.forEach(function (li) { li.classList.add('fragment'); });
+            }
+
+            // @note top
+            Array.prototype.filter.call(sec.querySelectorAll('.md-note-top'), own).forEach(function (note) {
+                const scope = note.parentElement;
+                const h = scope && scope.querySelector(':scope > h1, :scope > h2, :scope > h3');
+                if (h) h.after(note); else if (scope) scope.insertBefore(note, scope.firstChild);
+            });
+
+            // @pause groups
+            const markers = Array.prototype.filter.call(sec.querySelectorAll('.md-pause'), own);
+            let group = 0;
+            markers.forEach(function (m) {
+                group++;
+                let el = m.nextElementSibling;
+                while (el && !el.classList.contains('md-pause')) {
+                    if (/^(UL|OL)$/.test(el.tagName)) {
+                        el.querySelectorAll('li.fragment').forEach(function (li) { li.classList.remove('fragment'); });
+                    }
+                    el.classList.add('fragment');
+                    el.setAttribute('data-md-group', 'pause-' + group);
+                    el = el.nextElementSibling;
+                }
+            });
+
+            // explicit order where needed
+            const stepped = Array.prototype.filter.call(sec.querySelectorAll('[data-md-step]'), own);
+            if (!markers.length && !stepped.length) return;
+            const frags = Array.prototype.filter.call(sec.querySelectorAll('.fragment'), own);
+            const groups = {}, blocks = new Map();
+            let next = 0;
+            frags.forEach(function (f) {
+                const g = f.getAttribute('data-md-group');
+                const block = f.closest('[data-md-steps]');
+                if (g) {
+                    if (groups[g] === undefined) groups[g] = next++;
+                    f.setAttribute('data-fragment-index', groups[g]);
+                } else if (block && own(block)) {
+                    if (!blocks.has(block)) {
+                        const steps = Array.prototype.map.call(block.querySelectorAll('[data-md-step]'),
+                            function (e) { return parseInt(e.getAttribute('data-md-step'), 10) || 0; });
+                        blocks.set(block, next);
+                        next += (steps.length ? Math.max.apply(null, steps) : 0) + 1;
+                    }
+                    f.setAttribute('data-fragment-index', blocks.get(block) + (parseInt(f.getAttribute('data-md-step'), 10) || 0));
+                } else {
+                    f.setAttribute('data-fragment-index', next++);
+                }
+            });
+        });
+    }
+
+    /* @slide build=auto: on arriving at the slide, its builds run one after
+       another without clicks; leaving the slide stops them */
+    const AUTO_BUILD_STEP = 900;
+    function wireAutoBuilds(deck) {
+        let timer = null;
+        function run() {
+            clearTimeout(timer);
+            const slide = deck.getCurrentSlide();
+            if (!slide || !slide.classList.contains('md-build-auto') ||
+                document.documentElement.classList.contains('mga-final')) return;
+            const step = function () {
+                if (deck.getCurrentSlide() !== slide) return;
+                if (deck.availableFragments().next) {
+                    deck.nextFragment();
+                    timer = setTimeout(step, AUTO_BUILD_STEP);
+                }
+            };
+            timer = setTimeout(step, AUTO_BUILD_STEP * 0.6);
+        }
+        deck.on('ready', run);
+        deck.on('slidechanged', run);
+    }
+
+    window.MgaBuilds = {
+        id: 'mga-builds',
+        init: function (deck) { applyBuilds(); wireAutoBuilds(deck); }
+    };
 
     /* Local preview: an icon name with no glyph in the self-hosted subset
        (base.css lists the codepoint pairs) draws nothing, so say so */

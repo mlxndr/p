@@ -261,6 +261,91 @@ brunch: {answer breakfast + lunch}
 
 ---
 
+@section Part Six: Slide Control
+
+---
+
+## Silly | from 'blessed' to 'foolish'
+
+@note Each step is a sense attested in the *OED*. :: top
+* Old English *sǣlig*: happy, blessed
+* Middle English: innocent, deserving of pity
+* Early Modern English: feeble; then foolish
+@note A worked case of pejoration. :: build
+@source *OED Online*, s.v. *silly*, adj.
+
+--
+
+@slide statement
+'The limits of my language mean the limits of my world.'
+
+@source Ludwig Wittgenstein, *Tractatus Logico-Philosophicus* 5.6
+
+--
+
+@slide activity
+## In Pairs | five minutes
+
+* List three words English has borrowed from French since 1900
+* For each, say whether the spelling has changed
+
+--
+
+## Pause
+
+The *Mirror of Parliament* reported debates at length.
+
+@pause
+* 1828 to 1841
+* Edited by John Henry Barrow
+
+@pause
+Its reporters included the young Dickens.
+
+--
+
+@slide static
+## A Static Slide
+
+* `@slide static`: this list appears all at once
+* Click marks still work: a {==highlight==} on the first click
+
+--
+
+@slide build=auto
+## Builds Without Clicks
+
+* `@slide build=auto` runs the slide's builds one after another
+* No clicks are needed
+* Leaving the slide stops them
+
+--
+
+@slide fade
+## A Fade Into This Slide
+
+* `@slide fade`; `@slide cut` gives no transition at all
+
+--
+
+@slide hidden
+## A Hidden Slide
+
+* `@slide hidden`: kept in the source, skipped in the show and the PDF
+
+--
+
+@slide nohandout
+## Presenter Only
+
+* `@slide nohandout`: shown when presenting, left out of the student version
+
+---
+
+@include included.md
+
+---
+
 @refs title="References"
 * Jupp, Peter. 1998. *British Politics on the Eve of Reform*. Basingstoke: Macmillan.
 * Vice, John & Stephen Farrell. 2017. *The History of Hansard*. London: House of Lords Library.

@@ -1,7 +1,17 @@
 // Build config with user preference support
 (function() {
-    // Determine transition based on reduced motion preference
-    const transition = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : 'slide';
+    // Deck defaults from meta.json (read by head.js): "transition" between
+    // slides (corporate decks: none), "listBuild" (lists build item by
+    // item; default true, corporate false). Reduced motion: no transition.
+    const meta = window.MGA_META || {};
+    const TRANSITIONS = ['none', 'fade', 'slide', 'convex', 'concave', 'zoom'];
+    let deckTransition = meta.corporate ? 'none' : (meta.transition || 'slide');
+    if (TRANSITIONS.indexOf(deckTransition) === -1) {
+        console.warn('[meta] "transition" must be one of ' + TRANSITIONS.join(', ') + '; using slide');
+        deckTransition = 'slide';
+    }
+    const transition = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : deckTransition;
+    const listBuild = meta.listBuild !== undefined ? meta.listBuild !== false : !meta.corporate;
 
     // Theme catalogue for the menu: owned by inc/head.js (which also chose
     // the opening theme before first paint), grouped into sections whose
@@ -13,7 +23,10 @@
     });
 
     Reveal.initialize({
-    plugins: [ RevealMarkdown, RevealMenu, RevealNotes, PdfExport, Appearance, OneTimer ],
+    // MgaBuilds (directives.js) must follow RevealMarkdown: it adjusts the
+    // rendered slides' builds before reveal counts their fragments
+    plugins: [ RevealMarkdown ].concat(window.MgaBuilds ? [ window.MgaBuilds ] : [],
+        [ RevealMenu, RevealNotes, PdfExport, Appearance, OneTimer ]),
     width: 1920,
     height: 1080,
     margin: 0.08,         // about 4% clear on each side: projectors often crop the edges
@@ -31,8 +44,8 @@
         smartypants: true,
         gfm: true,
         breaks: true,
-        // Optionally animate Markdown lists
-        animateLists: true
+        // Lists build item by item unless the deck says otherwise
+        animateLists: listBuild
     },
     menu: {
         side: 'left',

@@ -137,8 +137,38 @@ Slide modifiers (expand to classes; combine flags freely):
   @slide contrast           the theme's title ground carries the slide
                             (cream text on Terracotta, white on Slate,
                             etc.); bg=#hex overrides
-Part divider (one centred display heading):
+  @slide fade | cut         transition into this slide (cut = none)
+  @slide hidden             kept in the source; not in the show, PDF or
+                            handout (reveal's data-visibility="hidden")
+  @slide nohandout          shown, but left out of the student version
+                            and the handout
+  @slide static             nothing builds unless marked (click marks,
+                            @pause, @note build still do)
+  @slide build              lists build here even in a listBuild:false deck
+  @slide build=auto         the slide's builds run without clicks (0.9 s
+                            apart), stopping when the slide is left
+  @slide statement          one large centred sentence or quotation
+  @slide activity           room activity: lighter ground, accent bar at
+                            the screen edge
+  @slide text=N, placeholder, textbox   corporate decks (phase 4)
+Part divider (one centred display heading; shows the deck's series
+line above it when meta.json has "series"):
   @section Part Two: The Corpus
+Heading with a smaller second line:
+  ## Silly | from 'blessed' to 'foolish'      (\| for a literal bar)
+Sidenote options (after ` :: ` at the end; a ` :: ` followed by anything
+other than these stays part of the text, so glosses are safe):
+  @note Each step is a sense attested in the OED. :: top build
+  (top: straight after the heading; build: a click of its own)
+Source line (small, upright, subtle, right-aligned; markdown allowed;
+replaces <p class="md-source">, which still works):
+  @source *OED Online*, s.v. *silly*, adj.
+Group builds: everything after @pause, up to the next @pause or the end
+of the slide, appears on one click as one piece (lists included):
+  @pause
+Insert another markdown file (relative to the including file; nests;
+a cycle or missing file is an error slide; cached for offline use):
+  @include ../shared/sets.md
 Displayed quotation (body of the chunk = the quote, markdown allowed):
   @quote attrib="W. E. Gladstone, HC Deb 20 April 1877" [contrast]
   '...the primary record, and not *Hansard's Debates*...'
@@ -252,7 +282,17 @@ baseUrl). Fields:
 
 `*...*` italicises, `|` forces a line break in title/subtitle,
 `^^...^^` sets small caps (acronym events); `"closing": false`
-suppresses the generated closing slide. A deck with exactly ONE logo
+suppresses the generated closing slide, `"closing": "title"` repeats
+the title slide instead. Further keys: `"series": "English Words |
+history, meaning, and structure"` (a small-caps series line above the
+title, on @section slides and in the handout header); `"advisory":
+["Swearing and taboo words %%(quoted data)%%"]` (an advisory slide after
+the title and a note on the landing page; none unless asked);
+`"listBuild": false` (lists appear whole; default true, corporate
+false); `"buildStyle": "appear"` (builds arrive instantly; default
+fade, corporate appear); `"transition": "fade"` (deck default: none,
+fade, slide, convex, concave, zoom; corporate none); `"lockTheme"` and
+`"pdfTheme"` (see Theming). A deck with exactly ONE logo
 takes a restrained title variant automatically: sentence-case title,
 event and date as the subtle line beneath the names, the logo alone
 on the right. Use
@@ -282,7 +322,10 @@ with sources, md-small, @note, @section, @quote (plain and contrast),
 blockquote, @slide contrast/centred/plain/smaller, every image
 directive, stress tests (single long word, long heading, autofit,
 overflow beyond autofit), code, icons, every inline mark and the
-palette (Part Five), @refs, @slide spare. Open it in
+palette (Part Five), slide control: heading subtitle, @note top and
+build, @source, @slide statement, activity, static, build=auto, fade,
+hidden, nohandout, @pause and @include (Part Six; included.md is the
+included file), @refs, @slide spare. Its meta.json sets a series line. Open it in
 each theme and layout after any change to inc/. Keep it current when
 adding a directive.
 
@@ -313,7 +356,12 @@ so there is no flash of a default theme. Opening theme, in order: a
 saved choice (localStorage `theme`, written by script-loader.js whenever
 the menu changes theme, shared across all decks); the deck's `"theme"`
 in meta.json (or `<html data-theme="KEY">`); the default, Terracotta. A saved theme that is
-no longer in the catalogue is forgotten. Filenames stay fixed because
+no longer in the catalogue is forgotten. `"lockTheme": true` (with a
+`"theme"`) skips the saved choice, High Accessibility included: the
+deck always opens in its own theme, and a theme picked from the menu
+there lasts for the visit only (script-loader.js does not save it).
+`"pdfTheme": "cream"` replaces the deck's theme in export
+(`?fragments=false`, `?print-pdf`) unless the URL names a theme. Filenames stay fixed because
 saved choices point at them.
 
 Each theme file @imports base.css plus light.css or dark.css and sets
@@ -355,8 +403,12 @@ with lightened versions in dark.css. Themes never override them, so each
 function keeps one colour everywhere. Colour is the only cue, by design.
 
 Menu sections: Colourful (Terracotta, Burgundy, Slate, Petrol); Classic
-(Cream, Cream Sans, Cream Serif, Manuscript, Twilight; Cream Serif is
-Cream with Equity body text, made for the 1A Meaning and Structure lectures); Other (High Accessibility); Institutional (University of Glasgow, Historical
+(Cream, Cream Sans, Cream Serif, Manuscript, Twilight, Charcoal; Cream
+Serif is Cream with Equity body text, made for the 1A Meaning and
+Structure lectures; Charcoal is dark, for Story of Linguistics: the
+2026-27 decks' charcoal, off-white, coral and pale gold, with Equity
+small-caps headings, Concourse Book body, small-caps table heads, and
+==x== drawn as gold words rather than a highlight ground); Other (High Accessibility); Institutional (University of Glasgow, Historical
 Thesaurus, Historical Thesaurus Cream). Racing Green, Midnight and
 Letterpress were retired 2026-09 (files in _to_delete/retired/).
 
@@ -404,6 +456,19 @@ tried and retired 2026-09 (files in _to_delete/retired/).
 hairline. After a list that animates in, it joins the step of the list
 item before it (syncNoteFragments, directives.js) rather than showing
 from the start.
+
+### Builds
+
+The MgaBuilds plugin (directives.js), registered in revconfig.js
+straight after RevealMarkdown, adjusts the rendered slides before reveal
+first counts their fragments: list builds per `listBuild`, `@slide
+static` and `@slide build`; `@pause` groups; `@note top` placement; and,
+on slides with groups or stepped blocks (`[data-md-steps]` holding
+`[data-md-step="k"]`, for directives from phase 2), explicit fragment
+indices in reading order, so a block's steps come after the list items
+before it. `@slide build=auto` steps through the slide's builds on a
+timer. `html.mga-build-appear` (from `"buildStyle": "appear"`) turns off
+fragment transitions.
 
 ### Offline
 

@@ -35,7 +35,7 @@
     margin-right: auto;
 }
 
-.reveal .slides section:not(.title-slide):not(.md-section) > p:not(.md-source) {
+.reveal .slides section:not(.title-slide):not(.md-section):not(.md-statement) > p:not(.md-source) {
     text-align: justify;
     hyphens: auto;
 }

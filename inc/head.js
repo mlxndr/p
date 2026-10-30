@@ -13,6 +13,13 @@
                                             <html data-theme> also works)
      4. DEFAULT_THEME below                (Terracotta)
 
+   "lockTheme": true in meta.json skips step 2: the deck always opens in
+   its own theme, whatever the visitor chose elsewhere (High Accessibility
+   included). A visitor can still pick another theme from the menu for
+   that visit; script-loader.js does not save it. "pdfTheme" replaces the
+   deck's theme in export (?fragments=false or ?print-pdf), unless the
+   URL names a theme.
+
    Theme keys are the short names in the catalogue. Filenames stay fixed
    because saved choices in visitors' browsers point at them; a saved
    theme that is no longer in the catalogue is forgotten. */
@@ -36,7 +43,8 @@
             { key: 'cream-sans', name: 'Cream Sans', file: 'th-l-cr-m-thin.css' },
             { key: 'cream-serif', name: 'Cream Serif', file: 'th-l-cr-serif.css' },
             { key: 'manuscript', name: 'Manuscript', file: 'th-l-e-cr-invert.css' },
-            { key: 'twilight',   name: 'Twilight',   file: 'th-d-bg-twilight.css' }
+            { key: 'twilight',   name: 'Twilight',   file: 'th-d-bg-twilight.css' },
+            { key: 'charcoal',   name: 'Charcoal',   file: 'th-d-charcoal.css' }
         ]},
         { name: 'Other', themes: [
             { key: 'accessible',    name: 'High Accessibility', file: 'th-l-acc.css' }
@@ -111,7 +119,13 @@
         }
     } catch (e) {}
     var deck = byKey(meta.theme) || byKey(document.documentElement.getAttribute('data-theme'));
-    var chosen = fromUrl || saved || deck || byKey(DEFAULT_THEME);
+    var locked = meta.lockTheme === true && !!deck;
+    var exporting = /[?&](fragments=false|print-pdf)\b/.test(location.search);
+    var forPdf = exporting ? byKey(meta.pdfTheme) : null;
+    var chosen = fromUrl || forPdf || (locked ? deck : saved || deck) || byKey(DEFAULT_THEME);
+    if (meta.lockTheme === true && !deck) {
+        console.warn('[theme] "lockTheme" needs a "theme" in meta.json to lock to');
+    }
 
     /* Same order for the layout: ?layout=, saved, <html data-layout>, default */
     var layoutUrl = null, layoutSaved = null;
@@ -128,7 +142,14 @@
         layoutByKey(document.documentElement.getAttribute('data-layout')) ||
         layoutByKey(DEFAULT_LAYOUT);
 
+    window.MGA_META = meta;
+    window.MGA_THEME_LOCKED = locked;
     window.MGA_THEMES = THEMES;
+    /* Builds appear with a fade (teaching) or instantly ("buildStyle":
+       "appear"; the corporate default) */
+    var buildStyle = meta.buildStyle || (meta.corporate ? 'appear' : 'fade');
+    if (buildStyle === 'appear') document.documentElement.classList.add('mga-build-appear');
+    else if (buildStyle !== 'fade') console.warn('[meta] "buildStyle" is "fade" or "appear", not "' + buildStyle + '"');
     window.MGA_LAYOUTS = LAYOUTS;
     window.MGA_LAYOUT = layout.key;
     window.MGA_THEME_FROM_URL = !!fromUrl;

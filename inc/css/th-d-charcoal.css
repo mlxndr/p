@@ -1,0 +1,60 @@
+@import url('base.css');
+@import url('dark.css');
+
+/* Charcoal: the Story of Linguistics lectures. The palette of the 2026-27
+   decks (charcoal ground, warm off-white text, a coral accent, pale gold
+   for highlighted words) with the framework's own type: Equity headings
+   in small caps, Concourse body, true small caps for hierarchy (table
+   heads), oldstyle figures from base.css.
+   Contrast on the ground #191718: text 12.4:1, headings 13.9:1, subtle
+   7.2:1, coral 5.7:1, gold 12.8:1; the light palette colours (which
+   dark.css uses for colour marks) 11:1 or better. */
+:root {
+    --r-background-color: #191718;
+    --r-font-color: #DDD6D1;
+    --r-border-color: #3A3334;
+    --r-subtle-color: #ABA39F;
+    --r-link-color: #F65F62;
+    --r-accent: #F65F62;
+    --r-contrast-bg: #241F20;
+    --r-contrast-ink: #E8E2DE;
+    --r-contrast-border: #3A3334;
+    --r-activity-bg: #2C2627;   /* a step above the bands, so Spine and Masthead stay visible */
+    --L-ground: #241F20;
+    --L-on-ground: #E8E2DE;
+    --title-logos: white;
+    --progress-color: #F65F62;
+    /* ==x== in the decks' pale gold: coloured words, no ground */
+    --r-highlight: transparent;
+    --r-highlight-ink: #F2D98A;
+}
+
+.reveal {
+    background-color: #191718;
+    font-weight: 400;   /* Concourse Book reads better than the light weight on a dark ground */
+}
+.reveal h1, .reveal h2, .reveal h3,
+.reveal .pres-title-headingfont { color: #E8E2DE; }
+.reveal strong, .reveal b { color: #E8E2DE; font-weight: 600; }
+.reveal li::marker { color: #F65F62; }
+
+/* Tables: head in true small caps over a coral rule, hairline rows */
+.reveal .slides section:not(.title-slide) table th {
+    color: #ABA39F;
+    font-weight: 400;
+    font-variant-caps: all-small-caps;
+    border-bottom: 1.5px solid #F65F62;
+}
+.reveal .slides section:not(.title-slide) table td { border-bottom: 1px solid #3A3334; }
+
+/* Quotations: the rule and the mark in the accent */
+.reveal blockquote { border-left-color: #F65F62; }
+.reveal blockquote::before { color: #F65F62; }
+
+/* Title and closing slides: a short coral rule */
+.reveal section.title-slide hr { border: none; border-top: 3px solid #F65F62; }
+.reveal section.title-slide .subtle { color: #ABA39F; }
+
+/* @section dividers on the raised ground, coral rule */
+.reveal .slide-background.md-section { background-color: #241F20; }
+.reveal .slides section.md-section h1::after { border-top-color: #F65F62; }

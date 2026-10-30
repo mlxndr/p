@@ -14,7 +14,15 @@
  *   event, location, date  e.g. "ICAME47", "Koblenz", "May 2026"
  *   logos                  e.g. ["leverhulme", "uog"], ["uog"], or []
  *   url                    QR target; defaults to baseUrl + current path
- *   closing                false suppresses the generated closing slide
+ *   closing                false suppresses the generated closing slide;
+ *                          "title" repeats the title slide as the closing slide
+ *   series                 "English Words | history, meaning, and structure":
+ *                          a series line in small caps above the title (after
+ *                          | a smaller second line); also on @section slides
+ *                          and the handout header
+ *   advisory               ["Swearing and taboo words %%(quoted data)%%"]:
+ *                          an advisory slide after the title (and a note on
+ *                          the landing page); none unless the deck asks
  *
  * A deck that wants a bespoke opening keeps a title.md section instead of
  * the placeholder; the two mechanisms coexist.
@@ -36,11 +44,25 @@
                         .replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
 
-    /* *italics*, | line breaks, and ^^small caps^^ in metadata strings */
+    /* *italics*, | line breaks, ^^small caps^^ and %%subtle%% in metadata strings */
     function emph(s) {
         return esc(s).replace(/\*([^*]+)\*/g, '<i>$1</i>')
                      .replace(/\s*\|\s*/g, '<br>')
-                     .replace(/\^\^([^^]+)\^\^/g, '<span style="font-variant-caps: all-small-caps;">$1</span>');
+                     .replace(/\^\^([^^]+)\^\^/g, '<span style="font-variant-caps: all-small-caps;">$1</span>')
+                     .replace(/%%([^%]+)%%/g, '<span class="subtle">$1</span>');
+    }
+
+    /* The series line: name in small caps, after | a smaller second line */
+    function seriesHtml(series) {
+        var sp = String(series).split('|');
+        return '<div class="md-series pres-series"><span class="md-series-name">' + emph(sp[0].trim()) + '</span>' +
+            (sp.length > 1 ? '<span class="md-series-sub">' + emph(sp.slice(1).join('|').trim()) + '</span>' : '') + '</div>\n';
+    }
+
+    function advisoryHtml(meta) {
+        var items = [].concat(meta.advisory);
+        return '<h2>Content advisory</h2>\n<ul class="md-advisory-list">' +
+            items.map(function (a) { return '<li>' + emph(a) + '</li>'; }).join('') + '</ul>';
     }
 
     function logoImg(key) {
@@ -88,7 +110,8 @@
         /* Small caps come from a class (base.css), not an inline style,
            so a theme can turn them off */
         var titleClass = single ? 'pres-title-headingfont' : 'pres-title-headingfont pres-title-sc';
-        html += '<br><br><h1 class="' + titleClass + '" style="font-size: 2.2em !important; font-weight: 700">' + emph(meta.title) + '</h1>\n';
+        html += (meta.series ? seriesHtml(meta.series) : '<br><br>') +
+            '<h1 class="' + titleClass + '" style="font-size: 2.2em !important; font-weight: 700">' + emph(meta.title) + '</h1>\n';
         if (meta.subtitle) {
             html += '<p class="pres-subtitle-mainfont" style="font-size: 1.2em; text-align: center; padding-bottom: 1em; font-weight: 300;">' + emph(meta.subtitle) + '</p>\n';
         }
@@ -174,7 +197,17 @@
                 }
                 sec.classList.add('title-slide');
                 if (kind === 'title') sec.innerHTML = titleSlideHtml(meta);
-                if (kind === 'closing') sec.innerHTML = closingSlideHtml(meta);
+                if (kind === 'closing') {
+                    sec.innerHTML = meta.closing === 'title' ? titleSlideHtml(meta) : closingSlideHtml(meta);
+                }
+                /* "advisory": a slide of its own straight after the title */
+                if (kind === 'title' && meta.advisory && [].concat(meta.advisory).length) {
+                    var adv = document.createElement('section');
+                    adv.className = 'md-advisory md-centred';
+                    adv.id = 'advisory';
+                    adv.innerHTML = advisoryHtml(meta);
+                    sec.parentNode.insertBefore(adv, sec.nextSibling);
+                }
             });
         });
     }

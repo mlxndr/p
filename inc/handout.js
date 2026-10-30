@@ -26,17 +26,25 @@ document.addEventListener('DOMContentLoaded', async function() {
         ]);
         if (meta) {
             const m = Object.assign({}, site, meta);
+            // metadata markup: | is a line break on slides, a space here;
+            // *italics* and ^^small caps^^ as on the title slide
+            const inline = s => String(s).replace(/\s*\|\s*/g, ' ')
+                .replace(/\*([^*]+)\*/g, '<i>$1</i>')
+                .replace(/\^\^([^^]+)\^\^/g, '<span class="md-sc">$1</span>');
             const full = m.title + (m.subtitle ? ': ' + m.subtitle : '');
-            document.title = full.replace(/\*/g, '');
+            document.title = full.replace(/\*|\^\^/g, '').replace(/\s*\|\s*/g, ' ');
             const h1 = document.getElementById('handout-title');
-            if (h1) h1.innerHTML = full.replace(/\*([^*]+)\*/g, '<i>$1</i>');
+            if (h1) h1.innerHTML = inline(full);
             const header = document.getElementById('handout-header');
             if (header && !header.innerHTML.trim()) {
+                if (m.series && typeof mgaSeriesHtml === 'function') {
+                    header.innerHTML = mgaSeriesHtml(m.series, 'handout-series');
+                }
                 const authors = (m.authors && m.authors.length)
                     ? m.authors.map(a => a.name).join(' and ')
                     : m.author;
-                header.innerHTML = '<p class="handout-meta">' + [authors,
-                    [m.event, m.location].filter(Boolean).join(', '), m.date]
+                header.innerHTML += '<p class="handout-meta">' + [authors,
+                    [m.event, m.location].filter(Boolean).map(inline).join(', '), m.date]
                     .filter(Boolean).join(' · ') + '</p>';
             }
         }
@@ -64,6 +72,12 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (typeof expandDirectives === 'function') {
             mdContent = expandDirectives(mdContent, { name: 'content.md' }).markdown;
         }
+
+        // Slides marked @slide hidden or nohandout are not in the handout
+        mdContent = mdContent.split(/(^\n---?\n)/m).filter(function (part, i, all) {
+            if (/^\n---?\n$/.test(part)) return true;
+            return !/<!--\s*\.slide:[^>]*\bmd-(hidden|nohandout)\b/.test(part);
+        }).join('').replace(/(\n---?\n){2,}/g, '$1');
 
         // Process the markdown content
         // Remove slide separators (--- and --) and convert to section breaks

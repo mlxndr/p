@@ -182,7 +182,11 @@ function setupThemeBasedElements() {
     setTimeout(run, 2000);
   }
 
+  // A locked deck ("lockTheme": true) lets the visitor try another theme
+  // for this visit but never saves it, so it cannot follow them to other
+  // decks or override this one next time
   function saveChoice(link) {
+    if (window.MGA_THEME_LOCKED) return;
     try { localStorage.setItem('theme', link.getAttribute('href')); } catch (e) {}
   }
 
@@ -234,6 +238,7 @@ function cacheDeckForOffline() {
     add(location.pathname);
     add('./content.md'); add('./meta.json'); add('./title.md');
     add('../inc/site.json');
+    (window.MGA_INCLUDES || []).forEach(add);          // @include files
     document.querySelectorAll('img[src]').forEach(function (i) { add(i.getAttribute('src')); });
     document.querySelectorAll('[data-background-image]').forEach(function (e) { add(e.getAttribute('data-background-image')); });
     document.querySelectorAll('[data-src]').forEach(function (e) { add(e.getAttribute('data-src')); });

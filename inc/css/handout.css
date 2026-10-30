@@ -212,3 +212,9 @@ blockquote {
 .md-del, .md-sub-a { text-decoration: line-through; }
 .md-ins, .md-sub-b { color: #2F5A8C; }
 .md-sub-b { margin-left: 0.25em; }
+
+/* Phase 1b: the series line in the header, heading subtitles, @source */
+.md-series-name { display: block; font-variant-caps: all-small-caps; letter-spacing: 0.05em; }
+.md-series-sub { display: block; font-size: 0.85em; opacity: 0.7; }
+.md-head-sub { display: block; font-size: 0.65em; font-variant-caps: normal; opacity: 0.7; }
+div.md-source > p { margin: 0; }

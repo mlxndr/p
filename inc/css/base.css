@@ -468,9 +468,9 @@ li::marker {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
 }
-.reveal .md-hl { background-color: var(--r-highlight); }
-.reveal .md-hl-in { transition: background-color 0.35s ease; }
-.reveal .md-hl-in.visible { background-color: var(--r-highlight); }
+.reveal .md-hl { background-color: var(--r-highlight); color: var(--r-highlight-ink, inherit); }
+.reveal .md-hl-in { transition: background-color 0.35s ease, color 0.35s ease; }
+.reveal .md-hl-in.visible { background-color: var(--r-highlight); color: var(--r-highlight-ink, inherit); }
 
 /* Inserted, removed and replaced text ({++x++} {--x--} {~~a~>b~~}): each
    piece is a one-column inline grid whose column grows from 0fr to 1fr
@@ -1452,8 +1452,12 @@ html body .slide-menu-button {
 
 /* @slide centred — vertically centre short content (reveal pins sections
    with inline display:block and top:0; nudging with top/transform is safe
-   because reveal only transforms .slides, never sections, with center:false) */
-.reveal .slides section.md-centred {
+   because reveal only transforms .slides, never sections, with center:false).
+   The section must shrink to its content (height: auto), or the move down
+   by half the stage and back by half its own height cancel out. */
+.reveal .slides section.md-centred,
+.reveal .slides section.md-statement {
+    height: auto;
     top: 50%;
     transform: translateY(-50%);
 }
@@ -1617,7 +1621,8 @@ html.mga-measuring *::after {
    it floating mid-slide. Give it the same measure in the parent's terms,
    so it sits flush with the right edge of the text column; after a
    table, alignSources() (directives.js) pulls it in to the table's edge. */
-.reveal .slides section:not(.title-slide) > p.md-source {
+.reveal .slides section:not(.title-slide) > p.md-source,
+.reveal .slides section:not(.title-slide) > div.md-source {
     max-width: calc(33em / 0.72 / var(--fit, 1));
     margin-left: 0;
 }
@@ -1711,3 +1716,98 @@ html body .slide-menu-wrapper .slide-menu-custom-panel p {
     font-family: 'Century Supra', 'Georgia', serif !important;
     font-variant-numeric: oldstyle-nums;
 }
+
+/* ===========================================
+   Phase 1b: slide flags, deck keys and small directives
+   (directives.js, meta.js; SPEC 6 and 7)
+   =========================================== */
+
+/* @source: the directive wraps its line in a div so markdown inside
+   (*Book Title*) is rendered; the paragraph takes no margin of its own */
+.reveal div.md-source > p { margin: 0; text-align: inherit; }
+.reveal .slides section:not(.title-slide) > div.md-source { margin: 0.3em 0 0; }
+
+/* ## Heading | subtitle: a smaller second line, upright, in the body
+   colour's subtle tone and in ordinary case (headings set small caps) */
+.reveal .md-head-sub {
+    display: block;
+    font-family: var(--r-main-font);
+    font-size: 0.5em;
+    font-weight: 400;
+    font-variant-caps: normal;
+    letter-spacing: 0;
+    line-height: 1.3;
+    margin: 0.2em 0 0.35em;
+    color: var(--r-subtle-color);
+}
+
+/* @note top: placed straight after the heading (directives.js) */
+.reveal .md-note.md-note-top { margin: 0 0 0.6em; }
+
+/* "buildStyle": "appear": builds arrive instantly */
+html.mga-build-appear .reveal .slides section .fragment { transition: none !important; }
+
+/* @slide statement: one large centred sentence or quotation */
+.reveal .slides section.md-statement { text-align: center; }
+.reveal .slides section.md-statement > p,
+.reveal .slides section.md-statement > blockquote {
+    max-width: 22em;
+    margin: 0.3em auto;
+    text-align: center;
+    font-size: 1.7em;
+    line-height: 1.2;
+}
+.reveal .slides section.md-statement > blockquote { border-left: none; padding-left: 0; }
+.reveal .slides section.md-statement > blockquote::before { display: none; }
+.reveal .slides section.md-statement > blockquote p { text-align: center; }
+.reveal .slides section.md-statement > h2,
+.reveal .slides section.md-statement > h3 { text-align: center; border-bottom: none; }
+.reveal .slides section.md-statement > .md-source { text-align: center; max-width: none; }
+
+/* @slide activity: a room activity. A slightly lighter (or, on dark
+   themes, lighter-than-ground) background and an accent bar at the
+   screen edge; both are painted on the slide background, which reveal
+   gives the slide's classes, so they reach the edge of any screen */
+.reveal .slide-background.md-activity {
+    background-color: var(--r-activity-bg, color-mix(in srgb, var(--r-font-color) 4%, var(--r-background-color, #fff)));
+    background-image: linear-gradient(to right, var(--L-accent) 0 16px, transparent 16px);
+}
+
+/* The series line: "series" in meta.json. On the title slide above the
+   title; on @section slides above the part title */
+.reveal .md-series { line-height: 1.1; }
+.reveal .md-series-name {
+    display: block;
+    font-family: var(--r-heading-font);
+    font-variant-caps: all-small-caps;
+    letter-spacing: var(--sc-tracking, 0.04em);
+    font-size: 1.1em;
+}
+.reveal .md-series-sub {
+    display: block;
+    font-family: var(--r-main-font);
+    font-size: 0.72em;
+    color: var(--r-subtle-color);
+    margin-top: 0.15em;
+}
+.reveal section.title-slide .pres-series { margin: 1.2em 0 1em; text-align: center; }
+.reveal .slides section.md-section .md-section-series {
+    position: absolute;
+    left: 0; right: 0;
+    top: 22%;
+    text-align: center;
+    font-size: 0.8em;
+}
+.reveal .slides section.md-section .md-section-series .md-series-sub { color: inherit; opacity: 0.75; }
+
+/* "advisory": the slide after the title */
+.reveal .slides section.md-advisory h2 { border-bottom: none; text-align: center; }
+.reveal .slides section.md-advisory .md-advisory-list {
+    list-style: none;
+    margin: 0.4em auto 0;
+    padding: 0;
+    max-width: 26em;
+    text-align: center;
+}
+.reveal .slides section.md-advisory .md-advisory-list li { margin: 0.3em 0; }
+.reveal .slides section.md-advisory .md-advisory-list li::before { content: none; }

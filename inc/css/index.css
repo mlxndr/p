@@ -211,6 +211,14 @@ h2 {
     text-transform: none;
 }
 
+/* "advisory" in a deck's meta.json */
+.presentation-advisory {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--color-ink-light);
+    margin-top: 0.1rem;
+}
+
 .presentation-meta {
     display: block;
     font-size: 0.85rem;

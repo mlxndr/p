@@ -161,6 +161,7 @@
                         li.innerHTML = `
                             <a href="/${pres.dirName}" class="presentation-rich">${fmt(pres.title)}</a>
                             ${metaParts.length > 0 ? `<span class="presentation-meta">${metaParts.join(', ')}</span>` : ''}
+                            ${pres.advisory && [].concat(pres.advisory).length ? `<span class="presentation-advisory">Content advisory: ${[].concat(pres.advisory).map(fmt).join('; ')}</span>` : ''}
                         `;
                     } else {
                         // Fallback: directory name in small caps

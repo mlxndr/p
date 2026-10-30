@@ -2691,3 +2691,167 @@ html.mga-coords .reveal .md-marks-box { cursor: crosshair; }
     background: transparent;
 }
 .reveal .md-video-split .md-split-img video { flex: 1 1 0; }
+
+
+/* ===========================================
+   Phase 3: grammar (SPEC 4.10, 4.11)
+   =========================================== */
+
+/* ---------- @parse ----------
+   Every word and every bracket is a three-row column: label above, the
+   word or bracket, label below. A word and the brackets glued to it
+   form a cluster with no gap inside, so brackets hug their words and
+   the gap falls between clusters. An opening bracket's labels align to
+   its right edge, so a phrase type (NP) sits under and to the left of
+   "(", as in the handwritten convention. Labels are set in the theme's
+   serif (--pz-label-font), where MCl cannot read as MCI. Word-level
+   labels are a mid tone, phrase-level labels lighter, as in MandS 4. */
+.reveal .pz {
+    --pz-label-font: var(--r-serif-font, 'Equity', Georgia, serif);
+    --pz-word-label: color-mix(in srgb, var(--r-font-color, #111) 72%, transparent);
+    --pz-phrase-label: color-mix(in srgb, var(--r-font-color, #111) 52%, transparent);
+    --pz-gap: 0.45em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 0.9em;
+    margin: 0.8em 0;
+    font-size: 1.35em;
+    line-height: 1.1;
+    text-align: left;
+    isolation: isolate;
+}
+.reveal .pz.pz-left { align-items: flex-start; }
+.reveal .pz.pz-over { align-items: flex-start; }
+.reveal .pz-ex { display: flex; flex-direction: column; align-items: inherit; gap: 0.35em; }
+.reveal .pz-line { display: flex; flex-wrap: nowrap; align-items: flex-start; column-gap: var(--pz-gap); }
+.reveal .pz-k { display: inline-flex; align-items: stretch; }
+.reveal .pz-c { position: relative; display: inline-flex; flex-direction: column; align-items: center; }
+.reveal .pz-open { align-items: flex-end; }
+.reveal .pz-close { align-items: flex-start; }
+.reveal .pz-t,
+.reveal .pz-b {
+    font-family: var(--pz-label-font);
+    font-size: 0.55em;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.45;
+    min-height: 1.45em;
+    white-space: nowrap;
+    color: var(--pz-word-label);
+    letter-spacing: 0.02em;
+    font-variant-caps: normal;
+}
+.reveal .pz-open .pz-t,
+.reveal .pz-open .pz-b { color: var(--pz-phrase-label); padding-right: 0.15em; }
+.reveal .pz-m { white-space: nowrap; }
+.reveal .pz-br { font-weight: 300; }
+.reveal .pz-cl { color: var(--pz-phrase-label); }
+.reveal .pz-inl { font-family: var(--pz-label-font); font-size: 0.55em; letter-spacing: 0.02em; margin-right: 0.08em; }
+.reveal .pz-dim { color: var(--r-subtle-color); }
+/* clause functions: underlined (the course convention), in the grammar
+   colours, semibold so the paler hues still read */
+.reveal .pz .pz-fn {
+    text-decoration: underline;
+    text-underline-offset: 0.18em;
+    text-decoration-thickness: 0.07em;
+    font-weight: 600;
+}
+.reveal .pz .pz-fn.subject { color: var(--g-subject); }
+.reveal .pz .pz-fn.predicator { color: var(--g-predicator); }
+.reveal .pz .pz-fn.object { color: var(--g-object); }
+.reveal .pz .pz-fn.complement { color: var(--g-complement); }
+.reveal .pz .pz-fn.adverbial { color: var(--g-adverbial); }
+/* the highlight band behind phrases marked with ! */
+.reveal .pz-band {
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: calc(-1 * var(--pz-gap));
+    top: 0.62em;
+    height: 1.32em;
+    background: var(--r-highlight, #F3E3A2);
+}
+.reveal .pz-band-start { border-radius: 0.3em 0 0 0.3em; }
+.reveal .pz-band-end { right: -0.08em; border-radius: 0 0.3em 0.3em 0; }
+.reveal .pz-band-start.pz-band-end { border-radius: 0.3em; }
+/* layout=leech (Leech, Deuchar and Hoogenraad; Marc's \gra): labels at
+   the top left and bottom left of each word, function labels italic,
+   the functions of phrases underlined, tighter spacing */
+.reveal .pz-leech { --pz-gap: 0.3em; }
+.reveal .pz-leech .pz-word { align-items: flex-start; }
+.reveal .pz-leech .pz-open { align-items: flex-end; }
+.reveal .pz-leech .pz-open .pz-t,
+.reveal .pz-leech .pz-open .pz-b { padding-right: 0.45em; }
+.reveal .pz-leech .pz-t { font-style: italic; }
+.reveal .pz-leech .pz-mh { text-decoration: none; }
+
+/* ---------- @passage ----------
+   Until its step, a function keeps the running text's colour (and a
+   conjunction its weight); with find it is bold for one step first. */
+.reveal .md-pmarks { display: none; }
+.reveal .md-passage:has(.md-ps-c-subject:not(.visible)) .md-g.subject { color: inherit; }
+.reveal .md-passage:has(.md-ps-c-predicator:not(.visible)) .md-g.predicator { color: inherit; }
+.reveal .md-passage:has(.md-ps-c-object:not(.visible)) .md-g.object { color: inherit; }
+.reveal .md-passage:has(.md-ps-c-complement:not(.visible)) .md-g.complement { color: inherit; }
+.reveal .md-passage:has(.md-ps-c-adverbial:not(.visible)) .md-g.adverbial { color: inherit; }
+.reveal .md-passage:has(.md-ps-c-conjunction:not(.visible)) .md-g.conjunction { font-weight: inherit; }
+.reveal .md-passage:has(.md-ps-b-subject.visible):has(.md-ps-c-subject:not(.visible)) .md-g.subject { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-b-predicator.visible):has(.md-ps-c-predicator:not(.visible)) .md-g.predicator { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-b-object.visible):has(.md-ps-c-object:not(.visible)) .md-g.object { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-b-complement.visible):has(.md-ps-c-complement:not(.visible)) .md-g.complement { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-b-adverbial.visible):has(.md-ps-c-adverbial:not(.visible)) .md-g.adverbial { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-red:not(.visible)) .md-c-red { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-red.visible):has(.md-ps-c-c-red:not(.visible)) .md-c-red { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-orange:not(.visible)) .md-c-orange { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-orange.visible):has(.md-ps-c-c-orange:not(.visible)) .md-c-orange { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-gold:not(.visible)) .md-c-gold { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-gold.visible):has(.md-ps-c-c-gold:not(.visible)) .md-c-gold { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-green:not(.visible)) .md-c-green { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-green.visible):has(.md-ps-c-c-green:not(.visible)) .md-c-green { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-teal:not(.visible)) .md-c-teal { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-teal.visible):has(.md-ps-c-c-teal:not(.visible)) .md-c-teal { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-blue:not(.visible)) .md-c-blue { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-blue.visible):has(.md-ps-c-c-blue:not(.visible)) .md-c-blue { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-navy:not(.visible)) .md-c-navy { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-navy.visible):has(.md-ps-c-c-navy:not(.visible)) .md-c-navy { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-purple:not(.visible)) .md-c-purple { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-purple.visible):has(.md-ps-c-c-purple:not(.visible)) .md-c-purple { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-pink:not(.visible)) .md-c-pink { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-pink.visible):has(.md-ps-c-c-pink:not(.visible)) .md-c-pink { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-grey:not(.visible)) .md-c-grey { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-grey.visible):has(.md-ps-c-c-grey:not(.visible)) .md-c-grey { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-red:not(.visible)) .md-c-light-red { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-red.visible):has(.md-ps-c-c-light-red:not(.visible)) .md-c-light-red { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-orange:not(.visible)) .md-c-light-orange { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-orange.visible):has(.md-ps-c-c-light-orange:not(.visible)) .md-c-light-orange { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-gold:not(.visible)) .md-c-light-gold { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-gold.visible):has(.md-ps-c-c-light-gold:not(.visible)) .md-c-light-gold { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-green:not(.visible)) .md-c-light-green { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-green.visible):has(.md-ps-c-c-light-green:not(.visible)) .md-c-light-green { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-teal:not(.visible)) .md-c-light-teal { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-teal.visible):has(.md-ps-c-c-light-teal:not(.visible)) .md-c-light-teal { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-blue:not(.visible)) .md-c-light-blue { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-blue.visible):has(.md-ps-c-c-light-blue:not(.visible)) .md-c-light-blue { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-navy:not(.visible)) .md-c-light-navy { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-navy.visible):has(.md-ps-c-c-light-navy:not(.visible)) .md-c-light-navy { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-purple:not(.visible)) .md-c-light-purple { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-purple.visible):has(.md-ps-c-c-light-purple:not(.visible)) .md-c-light-purple { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-pink:not(.visible)) .md-c-light-pink { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-pink.visible):has(.md-ps-c-c-light-pink:not(.visible)) .md-c-light-pink { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-light-grey:not(.visible)) .md-c-light-grey { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-light-grey.visible):has(.md-ps-c-c-light-grey:not(.visible)) .md-c-light-grey { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-white:not(.visible)) .md-c-white { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-white.visible):has(.md-ps-c-c-white:not(.visible)) .md-c-white { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-black:not(.visible)) .md-c-black { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-black.visible):has(.md-ps-c-c-black:not(.visible)) .md-c-black { font-weight: 700; }
+.reveal .md-passage:has(.md-ps-c-c-accent:not(.visible)) .md-c-accent { color: inherit; }
+.reveal .md-passage:has(.md-ps-b-c-accent.visible):has(.md-ps-c-c-accent:not(.visible)) .md-c-accent { font-weight: 700; }
+.reveal .md-passage .md-g,
+.reveal .md-passage .md-c { transition: color 0.4s ease; }
+html.mga-final .reveal .md-passage .md-g,
+html.mga-final .reveal .md-passage .md-c { transition: none; }
+/* a theme whose highlight is coloured words rather than a ground
+   (Charcoal) colours the banded words instead */
+.reveal .pz-c:has(> .pz-band.visible) > .pz-m { color: var(--r-highlight-ink, inherit); }

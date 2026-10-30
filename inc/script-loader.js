@@ -106,6 +106,7 @@ function refitSlides() {
     if (typeof positionMenuHeads === 'function') positionMenuHeads();
     if (typeof fitColumnHeadings === 'function') fitColumnHeadings();
     if (typeof alignTranscripts === 'function') alignTranscripts();
+    if (typeof fitParses === 'function') fitParses();
     if (typeof fillCardHeights === 'function') fillCardHeights();
     if (typeof autofitFillSlides === 'function') autofitFillSlides();
     if (typeof autofitTextSlides === 'function') autofitTextSlides();

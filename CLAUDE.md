@@ -38,7 +38,7 @@ inc/
   script-loader.js          Loads core → plugins → expands directives →
                             config → theme-sync (logos, QR codes) →
                             refitSlides (zoom boxes, menu headings,
-                            autofit) → offline list
+                            @parse widths, autofit) → offline list
   directives.js             @-directive expander, builds, morph, @zoom
                             positioner, autofit
   revconfig.js              Reveal.initialize + menu config
@@ -370,6 +370,62 @@ Transcripts (conversation analysis):
   that share lines.
 ```
 
+### Grammar (@parse and @passage)
+
+Registered in directives.js ("phase 3: grammar"); styles in the
+"Phase 3: grammar" section of base.css, compact versions at the end of
+handout.css.
+
+```
+Clause and phrase analysis (one item line per analysed line):
+  @parse [steps="class mh brackets+form function clauses highlight"]
+         [paired] [layout=leech] [left]
+    [MCl (^S_NP His^M_d family^H_N) (^P_VP bought^H_V) (^O_NP a^M_d house^H_N)]
+  word^A_B          A above the word, B below it (either may be empty:
+                    has^_a, Bob^H_)
+  (^S_NP ... )      a phrase: function above, form below, at the bracket;
+                    (^P_VP! ...) also takes the highlight band
+  [MCl ... ]        a clause, its label inline before the bracket
+  {Se ... }         (MCl SCl NCl CCl RCl ACl Cl Se); [^A_ACl ...] puts
+                    a function above and the type below instead
+  <^S_SCl ... >     a rank-shifted clause (angle brackets shown as typed)
+  (the house (on the corner))   brackets with no labels nest freely
+  //                breaks the line; a line ending in // carries on in
+                    the next item line
+  %%Bob%%           a dim word (context, not analysed)
+  Closers may be glued to a word: eyes.)]]}
+  Tiers: class (below words), mh (above words), brackets, form (below
+  brackets), function (above brackets), clauses (clause brackets and
+  labels), highlight (the ! bands). steps= gives one click per group,
+  a+b sharing a click; tiers not named show from the start; a tier with
+  nothing in it takes no click. paired: the list just before the block
+  builds with it, item k arriving with step k (the extra items take
+  the last step). layout=leech: Leech, Deuchar and Hoogenraad's
+  layout (labels at the top left and bottom left of each word, function
+  labels italic). left: start at the left margin. A line that is too
+  wide shrinks to 70% (fitParses, run by refitSlides), then starts at
+  the left edge with a console warning in local preview: break it
+  with //. An unmatched or mismatched bracket is an error slide.
+Colour-coded passage (prefix for the paragraph after it):
+  @passage steps="P S O C A cj" [find]
+  [S Tam] [P regards] [O me] [A sardonically] [cj as] ...
+  The paragraph uses the ordinary grammar marks ([S x], [Od x], ...) or
+  palette marks ([x]{gold}). Until its step a function is in the
+  running text's colour; each step colours one function (S P O C A,
+  Od/Oi with O, Cs/Co with C, cj in bold) or one palette name. find:
+  each function goes bold for a click before it takes its colour
+  (cj: one click). Steps for things not in the paragraph are dropped;
+  an unknown step, or find with no steps, is an error slide.
+  A key line before the passage ([P Predicators], [S Subjects], ...)
+  stays coloured throughout.
+```
+
+Labels are set in --pz-label-font (the theme's serif: Equity in most
+themes, Luciole in High Accessibility) so MCl cannot read as MCI.
+Function labels are underlined, semibold and in the grammar colours.
+The highlight band uses --r-highlight; where a theme's highlight is
+coloured words (Charcoal), the banded words take --r-highlight-ink.
+
 ### Inline marks
 
 One pass in directives.js (inlineMarks) turns these into spans before
@@ -520,7 +576,10 @@ stats, examples, tables, concordance, trees, transcripts), sets, tags
 and motion (Part Eight: @set, tags and a ribbon heading, @menu in every
 style and state, @slide morph with pieces and words, morpheme words in
 every state, @marks, over= in each style, bleed, hold on @image-seq,
-@video; media/specimen.mp4 is its test video), @refs, @slide spare. Its meta.json sets a series line. Open it in
+@video; media/specimen.mp4 is its test video), grammar (Part Nine:
+@parse with each tier, steps, paired, a rank-shifted clause, brackets
+only, layout=leech; @passage with find and with palette colours),
+@refs, @slide spare. Its meta.json sets a series line. Open it in
 each theme and layout after any change to inc/. Keep it current when
 adding a directive.
 

@@ -317,3 +317,27 @@ video.md-video { display: block; max-width: 60%; height: auto; margin: 0.5em 0; 
     --p-white: #FFFFFF; --p-black: #111111; --p-light-red: #FFCAC7; --p-light-orange: #FBD5B0; --p-light-gold: #F3E3A2;
     --p-light-green: #CAE9BB; --p-light-teal: #B3E9E5; --p-light-blue: #D2DAFF; --p-light-navy: #BBCEE7;
     --p-light-purple: #E6CFF7; --p-light-pink: #FCCBDE; --p-light-grey: #D3D2D0; }
+
+/* Phase 3: @parse and @passage in their final state */
+.pz { display: flex; flex-direction: column; align-items: center; gap: 0.6em; margin: 0.6em 0; font-size: 1.1em; line-height: 1.1;
+    --pz-gap: 0.4em; isolation: isolate; }
+.pz.pz-left { align-items: flex-start; }
+.pz-ex { display: flex; flex-direction: column; align-items: inherit; gap: 0.3em; }
+.pz-line { display: flex; flex-wrap: wrap; align-items: flex-start; column-gap: var(--pz-gap); row-gap: 0.3em; }
+.pz-k { display: inline-flex; align-items: stretch; }
+.pz-c { position: relative; display: inline-flex; flex-direction: column; align-items: center; }
+.pz-open { align-items: flex-end; }
+.pz-close { align-items: flex-start; }
+.pz-t, .pz-b { font-family: 'Equity', Georgia, serif; font-size: 0.6em; line-height: 1.45; min-height: 1.45em; white-space: nowrap; color: #555; }
+.pz-open .pz-t, .pz-open .pz-b { color: #888; padding-right: 0.15em; }
+.pz-m { white-space: nowrap; }
+.pz-cl { color: #888; }
+.pz-inl { font-family: 'Equity', Georgia, serif; font-size: 0.6em; }
+.pz-dim { opacity: 0.55; }
+.pz .pz-fn { text-decoration: underline; font-weight: 600; }
+.pz-band { position: absolute; z-index: -1; left: 0; right: calc(-1 * var(--pz-gap)); top: 0.62em; height: 1.32em; background: #F3E3A2; }
+.pz-band-end { right: 0; }
+.pz-leech .pz-word { align-items: flex-start; }
+.pz-leech .pz-open .pz-b, .pz-leech .pz-open .pz-t { padding-right: 0.4em; }
+.pz-leech .pz-t { font-style: italic; }
+.md-pmarks { display: none; }

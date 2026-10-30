@@ -638,7 +638,8 @@
                 const name = brace[1];
                 const c = name === 'accent' ? 'accent' : resolveColour(name);
                 if (c && content.trim()) {
-                    s = before + tag('<span class="md-c md-c-' + c + '">') + content + tag('</span>') +
+                    s = before + tag('<span class="md-c md-c-' + c + '">') +
+                        content.replace(/^'(?=(s|re|ve|m|ll|d|t)\b)/i, '\u2019') + tag('</span>') +
                         after.slice(brace[0].length);
                     continue;
                 }
@@ -646,10 +647,17 @@
                 literal();
                 continue;
             }
-            const isLink = (nextKind && nextKind.kind === 'dest') || /^[\[(:]/.test(after) ||
-                (prevLiteral && store[+prevLiteral[1]].kind === 'rb');
-            const g = !isLink && /^(Od|Oi|Cs|Co|cj|S|P|O|C|A) (\S[\s\S]*)$/.exec(content);
+            // [S You][P 're saying]: a grammar mark straight after another
+            // is a mark, not a reference link
+            const gramRe = /^(Od|Oi|Cs|Co|cj|S|P|O|C|A) (\S[\s\S]*)$/;
+            const pairedMark = gramRe.test(content) && /^\[(Od|Oi|Cs|Co|cj|S|P|O|C|A) \S[^\[\]]*\]/.test(after);
+            const isLink = !pairedMark && ((nextKind && nextKind.kind === 'dest') || /^[\[(:]/.test(after) ||
+                (prevLiteral && store[+prevLiteral[1]].kind === 'rb'));
+            const g = !isLink && gramRe.exec(content);
             if (g) {
+                // a contraction at the start of a mark ('s, 're, 've, 'm, 'll, 'd, 't)
+                // is an apostrophe; smartypants would make it an opening quote
+                g[2] = g[2].replace(/^'(?=(s|re|ve|m|ll|d|t)\b)/i, '\u2019');
                 const words = g[2].replace(/\u0000\d+\u0000/g, ' ').trim().split(/\s+/).length;
                 if (words > 8) ctx.warn('grammar mark of ' + words + ' words, is it prose? [' + g[1] + ' ' + g[2].slice(0, 40) + '…] (write \\[ for a literal bracket)');
                 s = before + tag('<span class="md-g ' + GRAMMAR_CODES[g[1]] + '" data-g="' + g[1] + '">') +
@@ -2025,6 +2033,292 @@
         return '--zx:' + z.x + ';--zy:' + z.y + ';--zk:' + z.k + ';';
     }
 
+    /* ---------- grammar: @parse and @passage (SPEC 4.10, 4.11, phase 3) ----------
+
+       @parse [steps="class mh brackets form function clauses highlight"]
+              [layout=leech] [paired] [left]
+         [MCl (^S_NP His^M_d family^H_N) (^P_VP bought^H_V) (^A_AvP there.^H_Av)]
+
+       One analysis per indented line; a line ending in // goes on with
+       the next line (the break shown there), and // inside a line breaks
+       it. Tokens, separated by spaces:
+         word^A_B   a word, A above it (M, H, x), B below it (d, N, Aj);
+                    either may be left out; \^ \_ \( ... are literal
+         (^S_NP     opens a phrase: function above, type below the bracket;
+                    ! marks it for the highlight band. A bracket glued to a
+                    word with no ^ _ ! after it is just a bracket: (the
+         [MCl {Se   open a clause or sentence, its label set small and
+                    inline before the bracket (MCl SCl NCl CCl RCl ACl Cl
+                    Se); anything else glued to [ { is a word: [that
+         <^S_SCl    opens a rank-shifted clause: function above, label
+                    below; <SCl sets the label inline, as [ does
+         ) ] } >    close, alone or glued to the end of a word: house^H_N)]
+         %%...%%    words set in the subtle colour (may span words)
+       Every tier not named in steps= shows from the start; tiers named
+       there arrive one per click (+ joins two into one click), after any
+       builds above the block, and keep their space while hidden, so the
+       words never move. A tier with nothing in it takes no click. paired:
+       the list just before the analysis names the steps, item k arriving
+       with step k (applyBuilds). The whole block is held back from the
+       inline pass (md-raw), so its brackets are never read as marks. */
+    const PZ_TIERS = ['class', 'mh', 'brackets', 'form', 'function', 'clauses', 'highlight'];
+    const PZ_FN = { S: 'subject', P: 'predicator', O: 'object', Od: 'object', Oi: 'object',
+        C: 'complement', Cs: 'complement', Co: 'complement', A: 'adverbial' };
+    const PZ_CLAUSE = /^(MCl|SCl|NCl|CCl|RCl|ACl|Cl|Se)(?=$|[\^_!])/;
+    const PZ_PAIRS = { '(': ')', '[': ']', '{': '}', '<': '>' };
+
+    function pzLabels(spec) {
+        // "^S_NP!" -> { above: 'S', below: 'NP', hl: true }; ^ and _ in any order
+        const out = { above: '', below: '', hl: false };
+        if (/!/.test(spec)) { out.hl = true; spec = spec.replace(/!/g, ''); }
+        const re = /([\^_])((?:\\.|[^\^_])*)/g;
+        let m;
+        while ((m = re.exec(spec)) !== null) {
+            const v = m[2].replace(/\\(.)/g, '$1');
+            if (m[1] === '^') out.above = v; else out.below = v;
+        }
+        return out;
+    }
+    function pzWord(text) {
+        return inlineHtml(esc(text).replace(/'/g, '’'));
+    }
+
+    /* one analysis -> lines of columns: { kind: open|word|close, ... } */
+    function parseAnalysis(text, fail) {
+        const lines = [[]];
+        const stack = [];
+        let hlCount = 0, dim = false;
+        const cur = function () { return lines[lines.length - 1]; };
+        const hls = function () { return stack.filter(function (o) { return o.hl; }).map(function (o) { return o.hl; }); };
+        text.trim().split(/\s+/).forEach(function (tok) {
+            if (tok === '//') { lines.push([]); return; }
+            // opening brackets at the start of the token
+            while (/^[(\[{<]/.test(tok)) {
+                const ch = tok.charAt(0);
+                let rest = tok.slice(1), col;
+                if (ch === '(') {
+                    if (/^[\^_!]/.test(rest)) {
+                        const l = pzLabels(rest);
+                        col = { kind: 'open', ch: ch, above: l.above, below: l.below, hl: l.hl ? ++hlCount : 0 };
+                        rest = '';
+                    } else col = { kind: 'open', ch: ch, above: '', below: '', hl: 0 };
+                } else {
+                    const cm = PZ_CLAUSE.exec(rest);
+                    let inline = '';
+                    if (cm) { inline = cm[1]; rest = rest.slice(cm[1].length); }
+                    let l = { above: '', below: '', hl: false };
+                    if (/^[\^_!]/.test(rest)) { l = pzLabels(rest); rest = ''; }
+                    col = { kind: 'open', ch: ch, inline: inline, above: l.above, below: l.below, hl: l.hl ? ++hlCount : 0 };
+                }
+                col.hls = hls();
+                stack.push(col);
+                cur().push(col);
+                tok = rest;
+            }
+            if (!tok) return;
+            // closing brackets glued to the end
+            let closers = '';
+            while (/[)\]}>]$/.test(tok) && !/\\[)\]}>]$/.test(tok)) { closers = tok.slice(-1) + closers; tok = tok.slice(0, -1); }
+            if (tok) {
+                let dimHere = dim;
+                if (/^%%/.test(tok)) { tok = tok.slice(2); dimHere = dim = true; }
+                if (/%%$/.test(tok) && tok.length > 2) { tok = tok.slice(0, -2); dim = false; }
+                else if (tok === '%%') { dim = false; tok = ''; }
+                const lm = /^((?:\\.|[^\^_])*)(.*)$/.exec(tok);
+                const l = pzLabels(lm[2]);
+                if (lm[1] || l.above || l.below) {
+                    cur().push({ kind: 'word', text: lm[1], above: l.above, below: l.below, dim: dimHere, hls: hls() });
+                }
+            }
+            for (const c of closers) {
+                const open = stack.pop();
+                if (!open) fail('`' + c + '` closes a bracket that was never opened.');
+                if (PZ_PAIRS[open.ch] !== c) fail('`' + open.ch + '` is closed by `' + c + '`; it needs `' + PZ_PAIRS[open.ch] + '`.');
+                cur().push({ kind: 'close', ch: c, hls: hls().concat(open.hl ? [open.hl] : []) });
+            }
+        });
+        if (stack.length) fail(stack.length + ' bracket' + (stack.length > 1 ? 's are' : ' is') + ' left open (`' + stack.map(function (o) { return o.ch; }).join(' ') + '`).');
+        return lines.filter(function (l) { return l.length; });
+    }
+
+    registerDirective('parse', {
+        body: 'items', keys: ['steps', 'layout'], sequences: ['steps'], flags: ['paired', 'left'],
+        emit: function (d, api) {
+            if (d.opts.layout !== undefined && d.opts.layout !== 'leech') api.fail('`layout=` takes leech (labels at the left of each word); the default is the centred Corbett and Kay layout.');
+            const groups = d.opts.steps || [];
+            groups.forEach(function (g) {
+                g.forEach(function (t) {
+                    if (PZ_TIERS.indexOf(t) === -1) api.fail('`' + esc(t) + '` is not a tier. Tiers: ' + PZ_TIERS.join(', ') + ' (+ joins two into one click).');
+                });
+            });
+            if (d.flags.indexOf('paired') !== -1 && !groups.length) api.fail('`paired` brings in the list before the analysis with its steps, so it needs steps="...".');
+            // a line ending in // goes on with the next line
+            const analyses = [];
+            d.items.forEach(function (it) {
+                const prev = analyses[analyses.length - 1];
+                if (prev && /(^|\s)\/\/$/.test(prev.text)) prev.text += ' ' + it.text;
+                else analyses.push({ text: it.text, item: it });
+            });
+            const parsed = analyses.map(function (a) {
+                if (/(^|\s)\/\/$/.test(a.text)) a.text = a.text.replace(/\s*\/\/$/, '');
+                return parseAnalysis(a.text, function (m) { api.fail(m, a.item); });
+            });
+            // which tiers have anything in them: an empty tier takes no click
+            const used = {};
+            parsed.forEach(function (lines) {
+                lines.forEach(function (line) {
+                    line.forEach(function (c) {
+                        if (c.kind === 'word') { if (c.below) used['class'] = 1; if (c.above) used.mh = 1; }
+                        else if (c.ch === '(' || c.ch === ')') {
+                            used.brackets = 1;
+                            if (c.below) used.form = 1;
+                            if (c.above) used[PZ_FN[c.above] ? 'function' : 'mh'] = 1;
+                        } else {
+                            used.clauses = 1;
+                            if (c.above) used[PZ_FN[c.above] ? 'function' : 'mh'] = 1;
+                        }
+                        if (c.hl) used.highlight = 1;
+                    });
+                });
+            });
+            const stepOf = {};
+            let n = 0;
+            groups.forEach(function (g) {
+                const live = g.filter(function (t) { return used[t]; });
+                if (!live.length) return;
+                live.forEach(function (t) { stepOf[t] = n; });
+                n++;
+            });
+            const st = function (tier) { return tier in stepOf ? ' fragment" data-md-step="' + stepOf[tier] : ''; };
+            const lab = function (cls, tier, text) {
+                return text ? '<span class="' + cls + st(tier) + '">' + esc(text) + '</span>' : '<span class="' + cls + ' pz-empty"></span>';
+            };
+            const inHl = function (c) { return !!(c && ((c.hls || []).length || c.hl)); };
+            const band = function (c, next, prev) {
+                return inHl(c) ? '<span class="pz-band' + (inHl(prev) ? '' : ' pz-band-start') + (inHl(next) ? '' : ' pz-band-end') + st('highlight') + '"></span>' : '';
+            };
+            const above = function (c) {
+                if (!c.above) return lab('pz-t', 'mh', '');
+                const fn = PZ_FN[c.above];
+                return fn ? lab('pz-t pz-fn ' + fn, 'function', c.above) : lab('pz-t pz-mh', 'mh', c.above);
+            };
+            const cls = ['pz'];
+            if (d.opts.layout === 'leech') cls.push('pz-leech');
+            if (d.flags.indexOf('left') !== -1) cls.push('pz-left');
+            let html = '<div class="' + cls.join(' ') + '"' + (n ? ' data-md-steps' : '') +
+                (d.flags.indexOf('paired') !== -1 ? ' data-md-paired' : '') + '>';
+            parsed.forEach(function (lines) {
+                html += '<div class="pz-ex">';
+                lines.forEach(function (line) {
+                    html += '<div class="pz-line">';
+                    let cluster = '', prev = null;
+                    const flush = function () { if (cluster) html += '<span class="pz-k">' + cluster + '</span>'; cluster = ''; };
+                    line.forEach(function (c, ci) {
+                        const nx = line[ci + 1], pv = line[ci - 1];
+                        if ((c.kind === 'open' || c.kind === 'word') && prev && (prev.kind === 'word' || prev.kind === 'close')) flush();
+                        if (c.kind === 'open') {
+                            const round = c.ch === '(';
+                            const tier = round ? 'brackets' : 'clauses';
+                            const mid = '<span class="pz-m pz-br' + (round ? '' : ' pz-cl') + st(tier) + '">' +
+                                (c.inline ? '<span class="pz-inl">' + esc(c.inline) + '</span>' : '') + esc(c.ch) + '</span>';
+                            cluster += '<span class="pz-c pz-open' + (round ? '' : ' pz-sq') + '">' + above(c) + mid +
+                                lab('pz-b pz-form', round ? 'form' : 'clauses', c.below) + band(c, nx, pv) + '</span>';
+                        } else if (c.kind === 'word') {
+                            cluster += '<span class="pz-c pz-word">' + above(c) +
+                                '<span class="pz-m pz-w' + (c.dim ? ' pz-dim' : '') + '">' + (c.text ? pzWord(c.text) : '&nbsp;') + '</span>' +
+                                lab('pz-b pz-class', 'class', c.below) + band(c, nx, pv) + '</span>';
+                        } else {
+                            const round = c.ch === ')';
+                            cluster += '<span class="pz-c pz-close' + (round ? '' : ' pz-sq') + '"><span class="pz-t pz-empty"></span>' +
+                                '<span class="pz-m pz-br' + (round ? '' : ' pz-cl') + st(round ? 'brackets' : 'clauses') + '">' + esc(c.ch) + '</span>' +
+                                '<span class="pz-b pz-empty"></span>' + band(c, nx, pv) + '</span>';
+                        }
+                        prev = c;
+                    });
+                    flush();
+                    html += '</div>';
+                });
+                html += '</div>';
+            });
+            return '\n<!--md-raw-->' + html + '</div><!--/md-raw-->\n';
+        }
+    });
+
+    /* @passage steps="P S O C A cj" [find]  (SPEC 4.11)
+       Applies to the next paragraph, whose grammar marks ([S Tam]) or
+       colour marks ([defended]{gold}) take their colour one step at a
+       time: steps= names functions (S P O C A cj; O covers Od and Oi, C
+       covers Cs and Co) or palette names, + joining two into one click.
+       find: each function is first set in bold, then coloured on the next
+       click (a conjunction, already bold, takes one click). A step whose
+       marks are not in the passage takes no click. The colours wait on
+       hidden markers (CSS :has), so the export shows the final state. */
+    const PASSAGE_KEYS = { S: 'subject', P: 'predicator', O: 'object', Od: 'object', Oi: 'object',
+        C: 'complement', Cs: 'complement', Co: 'complement', A: 'adverbial', cj: 'conjunction' };
+    registerDirective('passage', {
+        body: 'prefix', keys: ['steps'], sequences: ['steps'], flags: ['find'],
+        emit: function (d, api) {
+            const text = d.block.join('\n');
+            if (/^\s*(\||>|#|[*+-]\s|\d+[.)]\s)/.test(d.block[0])) api.fail('applies to a paragraph of running text, and the next block is not one.');
+            const steps = d.opts.steps || [];
+            const find = d.flags.indexOf('find') !== -1;
+            if (find && !steps.length) api.fail('`find` sets each function in bold before its colour, so it needs steps="...".');
+            // what the passage holds
+            const present = {};
+            text.replace(/\[(Od|Oi|Cs|Co|cj|S|P|O|C|A) \S/g, function (m, g) { present[PASSAGE_KEYS[g]] = 1; return m; });
+            text.replace(/\]\{([A-Za-z][\w-]*)\}/g, function (m, c) { const r = c === 'accent' ? 'accent' : resolveColour(c); if (r) present['c-' + r] = 1; return m; });
+            let html = '', k = 0;
+            steps.forEach(function (group) {
+                const keys = group.map(function (t) {
+                    if (PASSAGE_KEYS[t]) return PASSAGE_KEYS[t];
+                    const c = t === 'accent' ? 'accent' : resolveColour(t);
+                    if (c) return 'c-' + c;
+                    api.fail('`' + esc(t) + '` is not a step: name a function (S P O C A cj) or a palette colour (' + PALETTE_HUES.join(', ') + ', light-…).');
+                }).filter(function (key) { return present[key]; });
+                if (!keys.length) return;
+                const bold = find ? keys.filter(function (key) { return key !== 'conjunction'; }) : [];
+                if (bold.length) {
+                    html += '<span class="md-pstep fragment ' + bold.map(function (key) { return 'md-ps-b-' + key; }).join(' ') + '" data-md-step="' + (k++) + '"></span>';
+                }
+                html += '<span class="md-pstep fragment ' + keys.map(function (key) { return 'md-ps-c-' + key; }).join(' ') + '" data-md-step="' + (k++) + '"></span>';
+            });
+            return '\n<div class="md-passage"' + (k ? ' data-md-steps' : '') + '>\n\n' + text + '\n\n' +
+                (html ? '<div class="md-pmarks" aria-hidden="true">' + html + '</div>\n' : '') + '</div>\n';
+        }
+    });
+
+    /* @parse and @passage fit their width: an analysis never wraps (a wrap
+       would part labels from their brackets), so a line wider than the
+       slide shrinks the whole analysis, to 70% at most; past that, break
+       the line by hand with // */
+    function fitParses() {
+        document.querySelectorAll('.reveal .slides .pz').forEach(function (pz) {
+            const restore = unhideForMeasuring(pz);
+            pz.style.removeProperty('font-size');
+            const base = parseFloat(getComputedStyle(pz).fontSize);
+            const lines = pz.querySelectorAll('.pz-line');
+            const tooWide = function () {
+                for (const l of lines) if (l.scrollWidth > pz.clientWidth + 1) return true;
+                return false;
+            };
+            let k = 1;
+            while (k > 0.7 + 1e-6 && tooWide()) {
+                k = Math.round((k - 0.05) * 100) / 100;
+                pz.style.fontSize = (base * k).toFixed(1) + 'px';
+            }
+            /* still too wide: start at the left edge, so only the end is cut */
+            const over = tooWide();
+            pz.classList.toggle('pz-over', over);
+            if (over && window.MGA_LOCAL_PREVIEW && !pz.dataset.pzWarned) {
+                pz.dataset.pzWarned = '1';
+                const h = pz.closest('section').querySelector('h1, h2, h3');
+                console.warn('[parse] an analysis is still too wide at 70%' + (h ? ': "' + h.textContent.trim() + '"' : '') + ' — break it with //');
+            }
+            restore();
+        });
+    }
+    window.fitParses = fitParses;
+
     /* ---------- chunk-level expansion ---------- */
 
     function expandChunk(chunk, deck, lineOffset) {
@@ -2612,10 +2906,24 @@
             // explicit order where needed
             const stepped = Array.prototype.filter.call(sec.querySelectorAll('[data-md-step]'), own);
             if (!markers.length && !stepped.length) return;
+            // @parse paired: the list just before the analysis names its
+            // steps; item k arrives with step k (the last step takes any
+            // items beyond the number of steps)
+            const paired = new Map();
+            Array.prototype.filter.call(sec.querySelectorAll('[data-md-paired]'), own).forEach(function (block) {
+                let list = block.previousElementSibling;
+                while (list && !/^(OL|UL)$/.test(list.tagName)) list = list.previousElementSibling;
+                if (!list) return;
+                list.querySelectorAll(':scope > li').forEach(function (li, k) {
+                    li.classList.add('fragment');
+                    paired.set(li, { block: block, k: k });
+                });
+            });
             const frags = Array.prototype.filter.call(sec.querySelectorAll('.fragment'), own);
             const groups = {}, blocks = new Map();
             let next = 0;
             frags.forEach(function (f) {
+                if (paired.has(f)) return;
                 const g = f.getAttribute('data-md-group');
                 const block = f.closest('[data-md-steps]');
                 if (g) {
@@ -2632,6 +2940,13 @@
                 } else {
                     f.setAttribute('data-fragment-index', next++);
                 }
+            });
+            paired.forEach(function (p, li) {
+                const steps = Array.prototype.map.call(p.block.querySelectorAll('[data-md-step]'),
+                    function (e) { return parseInt(e.getAttribute('data-md-step'), 10) || 0; });
+                const last = steps.length ? Math.max.apply(null, steps) : 0;
+                li.querySelectorAll('li.fragment').forEach(function (x) { x.classList.remove('fragment'); });
+                li.setAttribute('data-fragment-index', (blocks.has(p.block) ? blocks.get(p.block) : next) + Math.min(p.k, last));
             });
         });
     }

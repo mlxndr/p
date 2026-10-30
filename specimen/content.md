@@ -817,6 +817,108 @@ A reporter for the *Mirror of Parliament*
 
 ---
 
+@section Part Nine: Grammar
+
+---
+
+## Word Classes
+
+@parse steps="class"
+  Bob^_N has^_a taken^_V the^_d fluffy^_Aj // kittens^_N and^_c speaks^_V to^_pr them^_pn // like^_pr they^_pn were^_V his^_d children.^_N
+
+--
+
+## Notation
+
+* Write the word class underneath the word
+* Say if a word is a head (H), modifier (M), or neither (x) above it
+* Put brackets around each phrase, with the phrase type underneath and to the left of the bracket
+
+@parse steps="class mh brackets+form"
+  (_NP the^M_d huge^M_Aj cake^H_N)
+
+--
+
+## Phrases inside Phrases
+
+@parse
+  (_NP The^M_d (^M_AjP really^M_Av bright^H_Aj) sun^H_N) (_VP is^M_a //
+    shining^H_V) (_PP on^x_pr (^M_GP Ruth's^H_N) book.^H_N)
+
+--
+
+## Analysing a Clause, Step by Step
+
+1. Label the words
+2. Label heads and modifiers
+3. Bracket the phrases
+4. Label the phrases for form
+5. Label the phrases for function
+6. Label the clause
+
+@parse steps="class mh brackets form function clauses" paired
+  [MCl (^S_NP His^M_d family^H_N) (^P_VP bought^H_V) (^O_NP a^M_d house^H_N) (^A_AvP there.^H_Av)]
+
+--
+
+## Predicators
+
+@parse steps="highlight"
+  {Se [MCl (^S_NP He^H_pn) (^P_VP! felt^H_V) (^C_AjP dizzy^H_Aj) // [SCl when^x_c (^S_NP they^H_pn) (^P_VP! looked^H_V) (^A_PP in^x_pr his^M_d eyes.^H_N)]]}
+
+--
+
+## A Rank-Shifted Clause
+
+@parse
+  [MCl <^S [SCl That^x_cj (^S_NP the^M_d earth^H_N) (^P_VP is^H_V) (^C_AjP round^H_Aj)] and^x_cj //
+    [SCl that^x_cj (^S_NP it^H_pn) (^P_VP can^M_a be^M_a circumnavigated^H_V)]> //
+    (^P_VP was^M_a known^H_V) (^A_PP to^x_pr the^M_d ancient^M_Aj Greeks^H_N)]
+
+--
+
+## Subject and Predicator
+
+@parse left steps="form function"
+  (^S_NP The chickens) (^P_VP were chasing) me.
+  (^S_NP I) (^P_VP was being chased) by the chickens.
+
+--
+
+## Brackets Only
+
+@parse left
+  (the house (on the corner))
+  [that (the earth) (is) (round)]
+  %%Bob%% has^_a taken^_V %%the kittens%%
+
+--
+
+## The Leech Layout
+
+@parse layout=leech
+  [MCl (^S_NP His^M_d family^H_N) (^P_VP bought^H_V) (^O_NP a^M_d house^H_N) (^A_AvP there.^H_Av)]
+
+--
+
+## Identifying Clause Elements
+
+[P Predicators], [S Subjects], [O Objects], [C Complements], [A Adverbials]
+
+@passage steps="P S O C A cj" find
+[S Tam] [P regards] [O me] [A sardonically for a moment] [cj as] [S I] [P slam] [O the door], [cj but] [P remains] [C a very quiet fellow]. [S I] [P am becoming] [C very hungry]. [S Richie] [P is providing] [O the food] [A from the plastic lunch box], [cj and] [S he] [P gives] [Oi me] [Od a sandwich]. [S He] [P swigs] [O the Irn Bru] [cj and] [P hands] [O it] [A to Tam].
+
+--
+
+## Metaphor in a Passage
+
+[^^argument is war^^]{gold}, [^^argument is dance^^]{green}
+
+@passage steps="gold green"
+He **[defended]{gold}** his position at first, but she **[attacked]{gold}** his main points. She found her **[rhythm]{green}**, and he **[followed her lead]{green}**.
+
+---
+
 @refs title="References"
 * Jupp, Peter. 1998. *British Politics on the Eve of Reform*. Basingstoke: Macmillan.
 * Vice, John & Stephen Farrell. 2017. *The History of Hansard*. London: House of Lords Library.

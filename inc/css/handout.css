@@ -265,3 +265,55 @@ div.md-source > p { margin: 0; }
 .md-tr-num, .md-tr-label { font-size: 0.8em; opacity: 0.6; }
 .md-tr-pause { opacity: 0.6; }
 .md-overlay-under { display: none; }
+
+/* Phase 2b: sets, menus, morpheme words, marks, text over images, video,
+   in their final state */
+.md-tag-icon, .md-menu .md-icon, .md-menu-initial, .md-video-cue, .md-mark-step, .md-over-veil { display: none; }
+.md-tag-optional { opacity: 0.6; }
+.md-ribbon { font-size: 1em; border-radius: 0.15em; }
+.md-menu { display: flex; flex-wrap: wrap; align-items: center; gap: 0.3em 0.5em; margin: 0.4em 0; font-size: 0.85em; }
+.md-menu-item { display: inline-block; padding: 0 0.5em; border-radius: 999px; font-variant-caps: all-small-caps; }
+.md-menu-item.is-dim { background: #E4E3E0 !important; color: #666 !important; }
+.md-menu-item.md-menu-accent.is-lit { background: #2F5A8C; color: #fff; }
+.md-menu-label { display: inline; }
+.md-menu-arrow::before { content: '→'; opacity: 0.5; }
+.md-menu-arrow.is-lit::before { opacity: 1; font-weight: bold; }
+.md-mw { white-space: nowrap; }
+.md-mp-hy, .md-mp-gone { display: none; }
+.md-mw-split .md-mp-hy, .md-mw-bases .md-mp-hy, .md-mw-affixes .md-mp-hy { display: inline; }
+.md-mw-split .md-mp:not(.md-mp-last), .md-mw-apart .md-mp:not(.md-mp-last),
+.md-mw-bases .md-mp:not(.md-mp-last), .md-mw-affixes .md-mp:not(.md-mp-last) { margin-right: 0.3em; }
+.md-mw-bases .md-mp-affix, .md-mw-affixes .md-mp-base { opacity: 0.3; }
+.md-mw:not(.md-mw-jigsaw) .md-mp { background: none; }
+.md-mw:not(.md-mw-jigsaw) .md-c-red { color: #BB3339; } .md-mw:not(.md-mw-jigsaw) .md-c-green { color: #346704; }
+.md-mw:not(.md-mw-jigsaw) .md-c-teal { color: #005F5C; } .md-mw:not(.md-mw-jigsaw) .md-c-navy { color: #0D2F61; }
+.md-mw:not(.md-mw-jigsaw) .md-c-orange { color: #8C5300; } .md-mw:not(.md-mw-jigsaw) .md-c-purple { color: #8A50AE; }
+.md-mw:not(.md-mw-jigsaw) .md-c-gold { color: #7B6A00; } .md-mw:not(.md-mw-jigsaw) .md-c-blue { color: #333ECE; }
+.md-mw:not(.md-mw-jigsaw) .md-c-pink { color: #AA3B73; }
+.md-mw-jigsaw .md-mp { padding: 0 0.25em; margin-right: 0.12em; }
+.md-marks-frame { margin: 0.6em 0; }
+.md-marks-box { position: relative; display: inline-block; max-width: 100%; }
+.md-marks-box > img { display: block; max-width: 100%; }
+.md-mark { --mc: #BB3339; position: absolute; box-sizing: border-box; left: calc(var(--x) * 1%); top: calc(var(--y) * 1%); }
+.md-mark-ring, .md-mark-box { width: calc(var(--w) * 1%); height: calc(var(--h) * 1%); border: 2px solid var(--mc); }
+.md-mark-ring { aspect-ratio: 1; border-radius: 50%; transform: translate(-50%, -50%); }
+.md-mark-dim { left: 0; top: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.35);
+    clip-path: polygon(evenodd, 0 0, 100% 0, 100% 100%, 0 100%, 0 0,
+        calc(var(--x) * 1%) calc(var(--y) * 1%), calc((var(--x) + var(--w)) * 1%) calc(var(--y) * 1%),
+        calc((var(--x) + var(--w)) * 1%) calc((var(--y) + var(--h)) * 1%), calc(var(--x) * 1%) calc((var(--y) + var(--h)) * 1%),
+        calc(var(--x) * 1%) calc(var(--y) * 1%)); }
+.md-mark-label { --mc: #111; width: 0; height: 0; transform: rotate(var(--rot, 0deg)); }
+.md-mark-text { position: absolute; white-space: nowrap; font-size: 0.85em; font-weight: bold; color: var(--mc); }
+.md-mark-above { bottom: 100%; left: 50%; transform: translateX(-50%); }
+.md-mark-below { top: 100%; left: 50%; transform: translateX(-50%); }
+.md-mark-left { right: 100%; top: 50%; transform: translateY(-50%); }
+.md-mark-right { left: 100%; top: 50%; transform: translateY(-50%); }
+.md-mark-free { transform: translate(-50%, -50%); }
+.md-over-text { border-left: 2px solid #ccc; padding-left: 0.6em; }
+video.md-video { display: block; max-width: 60%; height: auto; margin: 0.5em 0; }
+/* palette values for marks drawn with var(--p-NAME) */
+:root { --p-red: #BB3339; --p-orange: #8C5300; --p-gold: #7B6A00; --p-green: #346704; --p-teal: #005F5C;
+    --p-blue: #333ECE; --p-navy: #0D2F61; --p-purple: #8A50AE; --p-pink: #AA3B73; --p-grey: #5F6061;
+    --p-white: #FFFFFF; --p-black: #111111; --p-light-red: #FFCAC7; --p-light-orange: #FBD5B0; --p-light-gold: #F3E3A2;
+    --p-light-green: #CAE9BB; --p-light-teal: #B3E9E5; --p-light-blue: #D2DAFF; --p-light-navy: #BBCEE7;
+    --p-light-purple: #E6CFF7; --p-light-pink: #FCCBDE; --p-light-grey: #D3D2D0; }

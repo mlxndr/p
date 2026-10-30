@@ -40,6 +40,12 @@
     center: false,
     hash: true,
     transition: transition,
+    // Morph (SPEC 6.3): builds on the new slide stay out of matching,
+    // words and morpheme pieces move without scaling (directives.js)
+    autoAnimateMatcher: window.mgaMorphMatcher || null,
+    // export (?fragments=false, print-pdf) shows each slide's final state,
+    // so nothing animates between slides
+    autoAnimate: !/[?&](fragments=false|print-pdf)\b/.test(location.search),
     markdown: {
         smartypants: true,
         gfm: true,

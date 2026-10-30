@@ -86,8 +86,8 @@ function loadScripts() {
     });
 }
 
-// Everything that depends on measured layout: @zoom boxes, the split-column
-// autofit, and the text-slide autofit. Each pass resets before measuring,
+// Everything that depends on measured layout: the bleed extents, @zoom
+// boxes, menu headings, the split-column autofit, and the text-slide autofit. Each pass resets before measuring,
 // so running it again is always safe.
 function refitSlides() {
   // In overview mode every slide is scaled and laid out differently, so
@@ -101,7 +101,9 @@ function refitSlides() {
   root.classList.add('mga-measuring');
   void root.offsetHeight;
   try {
+    if (typeof setBleedExtents === 'function') setBleedExtents();
     if (typeof positionZoomImages === 'function') positionZoomImages();
+    if (typeof positionMenuHeads === 'function') positionMenuHeads();
     if (typeof fitColumnHeadings === 'function') fitColumnHeadings();
     if (typeof alignTranscripts === 'function') alignTranscripts();
     if (typeof fillCardHeights === 'function') fillCardHeights();
@@ -244,6 +246,10 @@ function cacheDeckForOffline() {
     document.querySelectorAll('img[src]').forEach(function (i) { add(i.getAttribute('src')); });
     document.querySelectorAll('[data-background-image]').forEach(function (e) { add(e.getAttribute('data-background-image')); });
     document.querySelectorAll('[data-src]').forEach(function (e) { add(e.getAttribute('data-src')); });
+    // @video files and their posters
+    document.querySelectorAll('video[src], video[poster]').forEach(function (v) {
+      add(v.getAttribute('src')); add(v.getAttribute('poster'));
+    });
     performance.getEntriesByType('resource').forEach(function (r) { add(r.name); });
     (window.MGA_THEMES || []).forEach(function (s) {
       s.themes.forEach(function (t) { add(t.href); });

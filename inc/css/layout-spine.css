@@ -52,3 +52,21 @@
 .reveal .slides section.md-contrast::before {
     background: color-mix(in srgb, var(--L-ground) 78%, black) !important;
 }
+
+/* A ribbon heading (## [[Discovery]], a heading that is one tag) stays
+   on the paper as a ribbon: its slide has no band */
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack):has(> h2 > .md-ribbon) {
+    padding-left: 0;
+    padding-top: 0;
+}
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack):has(> h2 > .md-ribbon)::before {
+    content: none;
+}
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack) > h2:has(> .md-ribbon) {
+    position: relative;
+    top: 0;
+    width: auto;
+    font-size: 1.8em;
+    color: inherit;
+    --L-fit-heading: 0;
+}

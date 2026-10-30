@@ -50,10 +50,10 @@
     /* ---------- helpers ---------- */
 
     const KNOWN_KEYS = {
-        'image':      ['alt', 'caption', 'fit', 'focus', 'id'],
+        'image':      ['alt', 'caption', 'fit', 'focus', 'id', 'over'],
         'image-seq':  ['alt', 'caption', 'fit', 'focus', 'id'],
-        'image-left': ['alt', 'caption', 'split', 'fit', 'id'],
-        'image-right':['alt', 'caption', 'split', 'fit', 'id'],
+        'image-left': ['alt', 'caption', 'split', 'fit', 'id', 'focus'],
+        'image-right':['alt', 'caption', 'split', 'fit', 'id', 'focus'],
         'compare':    ['alt', 'caption', 'id'],
         'zoom':       ['alt', 'caption', 'caption-start', 'focus', 'scale', 'to', 'id'],
         'kenburns':   ['alt', 'caption', 'pan', 'dur', 'id'],
@@ -63,6 +63,13 @@
     };
     const KNOWN_FLAGS = ['fragment', 'hold', 'natural', 'spare',
         'smaller', 'smallest', 'centred', 'centered', 'plain', 'contrast'];
+    /* flags only some image directives take (phase 2b): over= styles and
+       build on @image, bleed on the split layouts */
+    const KIND_FLAGS = {
+        'image': ['band', 'bubble', 'dim', 'build'],
+        'image-left': ['bleed', 'build'],
+        'image-right': ['bleed', 'build']
+    };
 
     function esc(s) {
         return String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;')
@@ -122,10 +129,11 @@
                     ' Valid: ' + known.join(', ') + ', flags: ' + KNOWN_FLAGS.join(', '));
             }
         }
+        const flags = KNOWN_FLAGS.concat(KIND_FLAGS[kind] || []);
         for (const f of opts._flags) {
-            if (KNOWN_FLAGS.indexOf(f) === -1) {
+            if (flags.indexOf(f) === -1) {
                 return errorSlide(name, lineNo, srcLine,
-                    'Unknown flag `' + esc(f) + '`. Valid flags: ' + KNOWN_FLAGS.join(', ') +
+                    'Unknown flag `' + esc(f) + '`. Valid flags: ' + flags.join(', ') +
                     '. (Values with spaces need quotes: caption="like this".)');
             }
         }
@@ -141,17 +149,117 @@
        Each returns { md } or { md, isError }. Multi-slide emitters join
        their slides with the vertical separator themselves. */
 
-    function emitImage(opts, allocId, srcLine, lineNo, name) {
+    function focusPosition(focus) {
+        const f = String(focus || '50,50').split(',');
+        return (parseFloat(f[0]) || 50) + '% ' + (parseFloat(f[1]) || 50) + '%';
+    }
+
+    function emitImage(opts, allocId, srcLine, lineNo, name, inSeq) {
         const err = validateKeys('image', opts, srcLine, lineNo, name);
         if (err) return { md: err, isError: true };
-        const id = opts.id || allocId(slugify(opts._path));
+        const overFlags = ['band', 'bubble', 'dim', 'build'].filter(function (f) { return has(opts, f); });
+        if (inSeq && (opts.over || overFlags.length)) {
+            return { md: errorSlide(name, lineNo, srcLine, '`over=` and its styles belong to @image; an @image-seq line takes the image options only.'), isError: true };
+        }
+        if (!opts.over && overFlags.length) {
+            return { md: errorSlide(name, lineNo, srcLine, '`' + overFlags[0] + '` goes with over=POSITION (text laid over the image), e.g. over=top-right ' + overFlags[0] + '.'), isError: true };
+        }
         const fit = opts.fit === 'cover' ? 'cover' : 'contain';
+        // hold: drawn as an element (not a slide background) so the next
+        // slide holding the same id can move it by auto-animate
+        if (has(opts, 'hold')) {
+            const dataId = opts.id || 'held-image';
+            const sid = allocId(slugify(opts._path));
+            const alt = esc(opts.alt || opts.caption || '');
+            return { md: '<!-- .slide: data-auto-animate class="md-fill md-image-held" id="' + esc(sid) + '" -->\n' +
+                (opts.alt || opts.caption ? '' : altBlock(opts, '@image')) +
+                '<div class="md-zoom-frame' + (fit === 'cover' ? ' md-image-cover' : '') + '">\n' +
+                '<img data-id="' + esc(dataId) + '" data-md-fit src="' + esc(opts._path) + '" alt="' + alt + '"' +
+                (fit === 'cover' ? ' style="object-position:' + focusPosition(opts.focus) + '"' : '') +
+                ' onerror="' + IMG_ONERROR + '">\n</div>\n' +
+                (opts.caption ? '<figcaption class="md-frame-caption">' + esc(opts.caption) + '</figcaption>\n' : '') };
+        }
+        const id = opts.id || allocId(slugify(opts._path));
         let attrs = 'data-background-image="' + esc(opts._path) + '" data-background-size="' + fit + '" id="' + esc(id) + '"';
         if (opts.focus && fit === 'cover') {
             const f = String(opts.focus).split(',');
             attrs += ' data-background-position="' + esc((f[0] || '50').trim()) + '% ' + esc((f[1] || '50').trim()) + '%"';
         }
+        if (opts.over) attrs += ' class="md-over-slide"';
         return { md: '<!-- .slide: ' + attrs + ' -->\n' + altBlock(opts, '@image') + captionBlock(opts) };
+    }
+
+    /* @image ... over=POSITION [band|bubble|dim] [build]: the markdown that
+       follows (to @end or the end of the slide) is laid over the image.
+       dim lays a veil of the paper colour over the image behind the text;
+       build brings text (and veil) in on a click. */
+    const OVER_POSITIONS = ['top-left', 'top', 'top-right', 'left', 'centre', 'center', 'right',
+        'bottom-left', 'bottom', 'bottom-right'];
+    function emitOver(opts, bodyMd, srcLine, lineNo, name) {
+        const pos = opts.over === 'center' ? 'centre' : opts.over;
+        if (OVER_POSITIONS.indexOf(opts.over) === -1) {
+            return { md: errorSlide(name, lineNo, srcLine, '`over=' + esc(opts.over) + '`: positions are ' +
+                OVER_POSITIONS.filter(function (p) { return p !== 'center'; }).join(', ') + '.'), isError: true };
+        }
+        if (!bodyMd.trim()) {
+            return { md: errorSlide(name, lineNo, srcLine, 'over= lays the markdown that follows over the image, and nothing follows (end it with @end, or the end of the slide).'), isError: true };
+        }
+        const styles = ['band', 'bubble', 'dim'].filter(function (f) { return has(opts, f); });
+        if (styles.length > 1 && !(styles.length === 2 && styles.indexOf('dim') !== -1)) {
+            return { md: errorSlide(name, lineNo, srcLine, '`band` and `bubble` are two ways of setting the text: choose one (dim can go with either).'), isError: true };
+        }
+        const cls = ['md-over', 'md-over-' + pos].concat(styles.map(function (s) { return 'md-over-' + s; }));
+        if (!styles.length || (styles.length === 1 && styles[0] === 'dim')) cls.push('md-over-panel');
+        const build = has(opts, 'build');
+        if (build) cls.push('fragment');
+        return { md: '\n<div class="' + cls.join(' ') + '"' + (build ? ' data-md-whole' : '') + '>\n' +
+            (has(opts, 'dim') ? '<div class="md-over-veil"></div>\n' : '') +
+            '<div class="md-over-text">\n\n' + bodyMd.trim() + '\n\n</div>\n</div>\n', isError: false };
+    }
+
+    /* @video PATH poster=IMAGE alt="..." [split=N] [caption="..."]
+       [autoplay] [loop] [muted]  (SPEC 4.13)
+       A click plays the video once and it stops on its last frame (a
+       hidden fragment cues it: wireVideos); autoplay starts it when the
+       slide arrives instead. Markdown after the directive becomes a side
+       column, as with @image-left. The poster is what the PDF shows. */
+    const VIDEO_KEYS = ['alt', 'caption', 'poster', 'split', 'id'];
+    const VIDEO_FLAGS = ['autoplay', 'loop', 'muted'];
+    function emitVideo(opts, bodyLines, deck, srcLine, lineNo, name) {
+        const fail = function (m) { return { md: errorSlide(name, lineNo, srcLine, '@video: ' + m), isError: true }; };
+        for (const k of Object.keys(opts)) {
+            if (k.charAt(0) === '_') continue;
+            if (VIDEO_KEYS.indexOf(k) === -1) return fail('Unknown option `' + esc(k) + '`. Valid: ' + VIDEO_KEYS.join(', ') + '; flags: ' + VIDEO_FLAGS.join(', ') + '.');
+        }
+        for (const f of opts._flags) {
+            if (VIDEO_FLAGS.indexOf(f) === -1) return fail('Unknown flag `' + esc(f) + '`. Valid flags: ' + VIDEO_FLAGS.join(', ') + '. (Values with spaces need quotes: alt="like this".)');
+        }
+        if (!opts._path) return fail('needs the video file first, e.g. `@video ./media/clip.mp4 poster=./img/clip.png alt="..."`.');
+        if (!/\.(mp4|m4v|webm|mov)$/i.test(opts._path)) return fail('`' + esc(opts._path) + '` is not a video file (.mp4, .m4v, .webm or .mov).');
+        const split = opts.split ? parseFloat(opts.split) : null;
+        if (opts.split && (isNaN(split) || split <= 0 || split >= 100)) return fail('`split=` is a percentage between 1 and 99, e.g. split=66.');
+        const sid = opts.id || deck.allocId(slugify(opts._path));
+        const vid = 'mv-' + sid;
+        const auto = has(opts, 'autoplay');
+        const video = '<video class="md-video" data-md-video="' + esc(vid) + '" src="' + esc(opts._path) + '"' +
+            (opts.poster ? ' poster="' + esc(opts.poster) + '"' : '') +
+            ' preload="metadata" playsinline' + (has(opts, 'muted') ? ' muted' : '') + (has(opts, 'loop') ? ' loop' : '') +
+            (auto ? ' data-autoplay' : '') +
+            ' aria-label="' + esc(opts.alt || opts.caption || '') + '"></video>\n' +
+            (auto ? '' : '<span class="fragment md-video-cue" data-md-video="' + esc(vid) + '" aria-hidden="true"></span>\n');
+        const caption = opts.caption ? '<figcaption class="md-frame-caption">' + esc(opts.caption) + '</figcaption>\n' : '';
+        const alt = opts.alt || opts.caption ? '' : altBlock(opts, '@video');
+        const body = bodyLines.join('\n').trim();
+        let md = '<!-- .slide: class="md-fill md-video-slide" id="' + esc(sid) + '" -->\n' + alt;
+        if (body) {
+            const inner = expandChunk(body, deck, lineNo);
+            md += '<div class="md-split md-video-split"' + (split ? ' style="--split:' + split + '%"' : '') + '>\n' +
+                '<figure class="md-split-img">\n' + video + (opts.caption ? '<figcaption>' + esc(opts.caption) + '</figcaption>\n' : '') + '</figure>\n' +
+                '<div class="md-split-body">\n\n' + inner.md.trim() + '\n\n</div>\n</div>\n';
+            return { md: md, isError: inner.hadError };
+        }
+        md += '<div class="md-zoom-frame md-video-frame">\n' + video + '</div>\n' + caption;
+        return { md: md, isError: false };
     }
 
     function emitZoom(opts, allocId, srcLine, lineNo, name) {
@@ -242,17 +350,20 @@
             return { md: errorSlide(name, lineNo, srcLine, 'Malformed `split` — a bare percentage between 1 and 99, e.g. split=38.'), isError: true };
         }
         const hold = has(opts, 'hold');
+        const bleed = has(opts, 'bleed');
         const dataId = hold ? (opts.id || 'held-image') : null;
         const id = hold ? allocId(slugify(opts._path)) : (opts.id || allocId(slugify(opts._path)));
-        const slideAttrs = 'class="md-fill" id="' + esc(id) + '"' + (hold ? ' data-auto-animate' : '');
+        const slideAttrs = 'class="md-fill' + (bleed ? ' md-bleed-slide' : '') + '" id="' + esc(id) + '"' + (hold ? ' data-auto-animate' : '');
+        // build is the new name for fragment (SPEC 6.2); both work
         const imgAttrs =
-            (has(opts, 'fragment') ? 'class="fragment" ' : '') +
+            (has(opts, 'fragment') || has(opts, 'build') ? 'class="fragment" ' : '') +
             (dataId ? 'data-id="' + esc(dataId) + '" ' : '') +
+            (bleed || opts.focus ? 'style="object-position:' + focusPosition(opts.focus) + '" ' : '') +
             'src="' + esc(opts._path) + '" alt="' + esc(opts.alt || opts.caption || '') + '" onerror="' + IMG_ONERROR + '"';
         let md =
             '<!-- .slide: ' + slideAttrs + ' -->\n' +
             (opts.alt || opts.caption ? '' : altBlock(opts, '@' + kind)) +
-            '<div class="md-split' + side + '"' + (split ? ' style="--split:' + split + '%"' : '') + '>\n' +
+            '<div class="md-split' + side + (bleed ? ' md-bleed' : '') + '"' + (split ? ' style="--split:' + split + '%"' : '') + '>\n' +
             '<figure class="md-split-img">\n' +
             '<img ' + imgAttrs + '>\n' +
             (opts.caption ? '<figcaption>' + esc(opts.caption) + '</figcaption>\n' : '') +
@@ -281,7 +392,7 @@
         const slides = [];
         for (const item of items) {
             const opts = parseOptions(item);
-            const r = emitImage(opts, allocId, item, lineNo, name);
+            const r = emitImage(opts, allocId, item, lineNo, name, true);
             slides.push(r.md);
             if (r.isError) return { md: slides.join('\n--\n\n'), isError: true };
         }
@@ -366,6 +477,8 @@
         return n ? { name: n } : null;
     }
     const MORPHEME_STATES = ['plain', 'split', 'apart', 'jigsaw', 'bases', 'affixes'];
+    /* the colour cycle for the pieces of a morpheme word, by position */
+    const MORPHEME_COLOURS = ['red', 'green', 'teal', 'navy', 'orange', 'purple', 'gold', 'blue', 'pink'];
     const GRAMMAR_CODES = {
         S: 'subject', P: 'predicator', O: 'object', Od: 'object', Oi: 'object',
         C: 'complement', Cs: 'complement', Co: 'complement', A: 'adverbial',
@@ -399,11 +512,18 @@
         s = s.replace(/\]\((?:[^()\s]|\([^()\s]*\))*(?:\s+(?:"[^"]*"|'[^']*'))?\)/g,
             function (m) { return ']' + hold(m.slice(1), 'dest'); });
 
+        // ## [[Orthographic]] alone: the ribbon heading (a tag from a set,
+        // or [[x]]{colour}): the tag takes the class md-ribbon
+        const ribbon = /^ {0,3}#{1,6}[ \t]+\[\[(?:(?!\]\]).)+?\]\](?:\{[A-Za-z][\w-]*\})?[ \t]*$/.test(s);
+
         // ## Heading | subtitle: the bar starts a smaller second line
-        // (a literal bar is written \|, held back above)
-        s = s.replace(/^( {0,3}#{1,6}[ \t]+)([^|]*?\S)[ \t]*\|[ \t]*(\S.*)$/, function (m, hashes, head, sub) {
-            return hashes + head + ' ' + tag('<span class="md-head-sub">') + sub + tag('</span>');
-        });
+        // (a literal bar is written \|, held back above; a bar inside
+        // [[piece|id]] is not a subtitle bar)
+        if (!ribbon) {
+            s = s.replace(/^( {0,3}#{1,6}[ \t]+)((?:[^|\[]|\[(?!\[)|\[\[(?:(?!\]\]).)*\]\])*?\S)[ \t]*\|[ \t]*(\S.*)$/, function (m, hashes, head, sub) {
+                return hashes + head + ' ' + tag('<span class="md-head-sub">') + sub + tag('</span>');
+            });
+        }
 
         // 2. Click marks (they do not nest in each other)
         const click = function (cls, inner) {
@@ -422,21 +542,74 @@
             return tag('<span class="fragment md-answer">') + x + tag('</span>');
         });
 
-        // 3. Pieces and tags: [[x]], [[x|id]], [[x]]{name}
+        // 3. Pieces and tags: [[x]], [[x|id]], [[x]]{name}. A label from a
+        //    @set is that set's tag (pill with its colour and icon), or
+        //    coloured text for a text set; its id comes from the set, so
+        //    the same tag in a menu, a stack or a heading morphs.
         s = s.replace(/\[\[((?:(?!\]\]).)+?)\]\](?:\{([A-Za-z][\w-]*)\})?/g, function (m, body, name) {
             let text = body.trim(), id = null;
             const bar = /^(.*)\|([\w-]+)$/.exec(text);
             if (bar) { text = bar[1].trim(); id = bar[2]; }
             if (!text) return m;
-            id = id || ctx.allocPiece(pieceSlug(text));
-            let cls = 'md-piece', tail = '';
-            if (name) {
-                const c = resolveColour(name);
-                if (c) cls = 'md-piece md-tag md-bg-' + c;
-                else { tail = '{' + name + '}'; ctx.warn('unknown colour in ' + m + ' (palette: ' + PALETTE_HUES.join(', ') + ', light-…, white, black)'); }
+            const entry = ctx.tag ? ctx.tag(text) : null;
+            let cls = 'md-piece', tail = '', style = '', icon = '';
+            if (entry) {
+                id = id || ctx.allocPiece(entry.item.id);
+                const it = entry.item;
+                if (entry.set.text && !name) {
+                    if (it.colour && it.colour.name) cls += ' md-c md-c-' + it.colour.name;
+                    else if (it.colour) style = 'color:' + it.colour.hex;
+                    cls += ' md-settext';
+                } else {
+                    const f = fillOf(name ? colourValue(name) || it.colour : it.colour || { name: 'grey' });
+                    cls += ' md-tag md-settag' + f.cls + (it.optional ? ' md-tag-optional' : '');
+                    style = f.style;
+                    if (it.icon) icon = tag('<i class="fad fa-' + it.icon + ' md-icon md-tag-icon" aria-hidden="true"></i>');
+                    if (name && !colourValue(name)) ctx.warn('unknown colour in ' + m);
+                }
+            } else {
+                id = id || ctx.allocPiece(pieceSlug(text));
+                if (name) {
+                    const c = resolveColour(name);
+                    if (c) cls = 'md-piece md-tag md-bg-' + c;
+                    else { tail = '{' + name + '}'; ctx.warn('unknown colour in ' + m + ' (palette: ' + PALETTE_HUES.join(', ') + ', light-…, white, black)'); }
+                }
             }
-            return tag('<span class="' + cls + '" data-id="' + esc(id) + '">') + text + tag('</span>') + tail;
+            if (ribbon && cls.indexOf('md-tag') !== -1) cls += ' md-ribbon';
+            return tag('<span class="' + cls + '" data-id="' + esc(id) + '"' + (style ? ' style="' + style + '"' : '') + '>') +
+                text + icon + tag('</span>') + tail;
         });
+
+        // Morpheme words (SPEC 5.4): pieces split at " + ", a leading or
+        // trailing hyphen marks the affix side, ~ hides a piece but keeps
+        // its id. Colour by position from a cycle, id from word and piece,
+        // so the same word on two morph slides animates every change.
+        // @slide morphemes=STATE sets the state for the whole slide.
+        const morphemeWord = function (content, state) {
+            const st = ctx.morphemes || state;
+            const raw = content.split(/\s+\+\s+/).map(function (p) {
+                p = p.trim();
+                const gone = p.charAt(0) === '~';
+                if (gone) p = p.slice(1);
+                const pre = p.length > 1 && p.charAt(0) === '-', post = p.length > 1 && p.charAt(p.length - 1) === '-';
+                return { gone: gone, pre: pre, post: post, core: p.replace(/^-|-$/g, '') };
+            });
+            const slugOf = function (x) { return pieceSlug(x).slice(2); };
+            const word = slugOf(raw.map(function (r) { return r.core; }).join(''));
+            let last = -1;
+            raw.forEach(function (r, i) { if (!r.gone) last = i; });
+            const hy = tag('<span class="md-mp-hy">') + '-' + tag('</span>');
+            let html = tag('<span class="md-mw md-mw-' + st + '" data-word="' + esc(word) + '">');
+            raw.forEach(function (r, i) {
+                const c = MORPHEME_COLOURS[i % MORPHEME_COLOURS.length];
+                const id = ctx.allocPiece('m-' + word + '-' + slugOf(r.core));
+                html += tag('<span class="md-mp md-mp-' + (r.pre || r.post ? 'affix' : 'base') +
+                    (r.gone ? ' md-mp-gone' : '') + (i === last ? ' md-mp-last' : '') +
+                    ' md-c-' + c + ' md-bg-' + c + '" data-id="' + esc(id) + '">') +
+                    (r.pre ? hy : '') + r.core + (r.post ? hy : '') + tag('</span>');
+            });
+            return html + tag('</span>');
+        };
 
         // 4. Single brackets, innermost first: colour marks, grammar marks;
         //    anything else (links, references, prose brackets) stays literal
@@ -451,6 +624,16 @@
                 s = before + hold('[', 'lb') + content + hold(']', 'rb') + after;
             };
             const brace = /^\{([A-Za-z][\w-]*)\}/.exec(after);
+            if (brace && MORPHEME_STATES.indexOf(brace[1]) !== -1) {
+                // a morpheme word: [un- + help + -ful]{split} (SPEC 5.4)
+                if (/\s\+\s/.test(content)) {
+                    s = before + morphemeWord(content, brace[1]) + after.slice(brace[0].length);
+                    continue;
+                }
+                ctx.warn('a morpheme word puts " + " between its pieces, as in [un- + help + -ful]{' + brace[1] + '], and ' + m[0] + brace[0] + ' has none');
+                literal();
+                continue;
+            }
             if (brace) {
                 const name = brace[1];
                 const c = name === 'accent' ? 'accent' : resolveColour(name);
@@ -459,8 +642,7 @@
                         after.slice(brace[0].length);
                     continue;
                 }
-                if (MORPHEME_STATES.indexOf(name) !== -1) ctx.warn('morpheme words such as ' + m[0] + brace[0] + ' are not built yet (phase 2b)');
-                else ctx.warn('unknown colour in ' + m[0] + brace[0] + ' (palette: ' + PALETTE_HUES.join(', ') + ', light-…, white, black, accent)');
+                ctx.warn('unknown colour in ' + m[0] + brace[0] + ' (palette: ' + PALETTE_HUES.join(', ') + ', light-…, white, black, accent)');
                 literal();
                 continue;
             }
@@ -518,11 +700,17 @@
         return md.replace(/\u0001(\d+)\u0001/g, function (m, n) { return blocks[+n]; });
     }
 
-    function makeInlineCtx(warnings) {
+    /* deck (optional): set tags are looked up in deck.tagIndex;
+       morphemes: a state from @slide morphemes=STATE for this slide */
+    function makeInlineCtx(warnings, deck, morphemes) {
         const alloc = makeIdAllocator();
         return {
             warn: function (msg) { if (warnings) warnings.push(msg); },
-            allocPiece: alloc
+            allocPiece: alloc,
+            tag: deck && deck.tagIndex ? function (text) {
+                return deck.tagIndex[text.replace(/\u0000\d+\u0000/g, '').trim().toLowerCase()] || null;
+            } : null,
+            morphemes: morphemes || null
         };
     }
 
@@ -605,7 +793,7 @@
          text=N placeholder textbox   corporate decks (phase 4) */
     const SLIDE_FLAGS = ['smaller', 'smallest', 'centred', 'centered', 'plain', 'contrast', 'spare',
         'fade', 'cut', 'hidden', 'nohandout', 'static', 'build', 'statement', 'activity',
-        'placeholder', 'textbox'];
+        'placeholder', 'textbox', 'morph', 'words'];
     function emitSlideMods(opts, srcLine, lineNo, name) {
         const classMap = { smaller: 'md-smaller', smallest: 'md-smallest', spare: 'md-spare',
             centred: 'md-centred', centered: 'md-centred',
@@ -615,12 +803,14 @@
             placeholder: 'md-corp-placeholder', textbox: 'md-corp-textbox' };
         const err = function (m) { return { md: errorSlide(name, lineNo, srcLine, m), isError: true }; };
         const classes = [];
-        let transition = null;
+        let transition = null, morph = false, words = null;
         for (const f of opts._flags) {
             if (SLIDE_FLAGS.indexOf(f) === -1) {
                 return err('Unknown @slide flag `' + esc(f) + '`. Available: ' + SLIDE_FLAGS.filter(function (x) { return x !== 'centered'; }).join(', ') +
-                    ' (plus bg=&lt;colour&gt;, build=auto, text=N).');
+                    ' (plus bg=&lt;colour&gt;, build=auto, text=N, words=loose, duration=N, morphemes=STATE).');
             }
+            if (f === 'morph') { morph = true; continue; }
+            if (f === 'words') { words = 'exact'; continue; }
             if (f === 'fade' || f === 'cut') {
                 if (transition) return err('`fade` and `cut` cannot both be set: a slide has one transition.');
                 transition = f === 'fade' ? 'fade' : 'none';
@@ -630,10 +820,26 @@
         }
         for (const k of Object.keys(opts)) {
             if (k.charAt(0) === '_') continue;
-            if (['bg', 'id', 'build', 'text'].indexOf(k) === -1) {
-                return err('Unknown @slide option `' + esc(k) + '`. Valid: bg=, id=, build=auto, text=N.');
+            if (['bg', 'id', 'build', 'text', 'words', 'duration', 'morphemes'].indexOf(k) === -1) {
+                return err('Unknown @slide option `' + esc(k) + '`. Valid: bg=, id=, build=auto, text=N, words=loose, duration=N, morphemes=STATE.');
             }
         }
+        // @slide morph [words | words=loose] [duration=1.5] (SPEC 6.3):
+        // written on the incoming slide; linkMorphSlides marks the one before
+        if (opts.words !== undefined) {
+            if (opts.words !== 'loose') return err('`words=` takes only loose (ignore punctuation and case); a bare `words` matches exactly.');
+            words = 'loose';
+        }
+        if (words) morph = true;
+        if (opts.duration !== undefined) {
+            if (!/^\d+(\.\d+)?$/.test(opts.duration) || !(parseFloat(opts.duration) > 0)) return err('`duration=` takes seconds, e.g. duration=1.5.');
+            if (!morph) return err('`duration=` is the length of a morph: write it as `@slide morph duration=' + esc(opts.duration) + '`.');
+        }
+        if (opts.morphemes !== undefined && MORPHEME_STATES.indexOf(opts.morphemes) === -1) {
+            return err('`morphemes=' + esc(opts.morphemes) + '`: states are ' + MORPHEME_STATES.join(', ') + '.');
+        }
+        if (morph && transition) return err('`morph` is itself the transition into this slide, so it cannot take `' + (transition === 'fade' ? 'fade' : 'cut') + '` as well.');
+        if (morph) classes.push('md-morph');
         if (opts.build !== undefined) {
             if (opts.build !== 'auto') return err('`build=' + esc(opts.build) + '`: the only build order for a slide is build=auto (or a bare build).');
             if (classes.indexOf('md-build') === -1) classes.push('md-build');
@@ -648,7 +854,7 @@
         if (opts.bg && !/^[#\w][\w#(),.%\- ]*$/.test(opts.bg)) {
             return err('bg= does not look like a CSS colour.');
         }
-        if (!classes.length && !opts.bg && !transition && opts.text === undefined) {
+        if (!classes.length && !opts.bg && !transition && opts.text === undefined && opts.morphemes === undefined) {
             return err('@slide needs at least one flag (' + SLIDE_FLAGS.filter(function (x) { return x !== 'centered'; }).join(', ') + ') or bg=&lt;colour&gt;.');
         }
         let attrs = '';
@@ -656,6 +862,10 @@
         if (classes.indexOf('md-spare') !== -1) attrs += ' data-visibility="uncounted"';
         if (classes.indexOf('md-hidden') !== -1) attrs += ' data-visibility="hidden"';
         if (transition) attrs += ' data-transition="' + transition + '"';
+        if (morph) attrs += ' data-auto-animate';
+        if (words) attrs += ' data-md-words="' + words + '"';
+        if (opts.duration !== undefined) attrs += ' data-auto-animate-duration="' + parseFloat(opts.duration) + '"';
+        if (opts.morphemes !== undefined) attrs += ' data-md-morphemes="' + opts.morphemes + '"';
         if (opts.text !== undefined) attrs += ' data-corp-text="' + esc(opts.text) + '"';
         if (opts.bg) attrs += ' data-background-color="' + esc(opts.bg) + '"';
         if (opts.id) attrs += ' id="' + esc(opts.id) + '"';
@@ -1371,7 +1581,7 @@
                         const f = n.item.fields;
                         html += '<div class="md-to-row' + frag(stepOf(n)) + '" style="--d:' + n.depth + '">' +
                             (f.length > 1 ? '<span class="md-to-code">' + inlineHtml(f[0]) + '</span>' : '') +
-                            '<span class="md-to-label">' + inlineHtml(f[f.length - 1]) + '</span></div>\n';
+                            '<span class="md-to-label">' + colourSetNames(inlineHtml(f[f.length - 1]), api.state) + '</span></div>\n';
                         walk(n.kids);
                     });
                 })(roots);
@@ -1382,7 +1592,7 @@
                 html += '<div class="md-tn-list">\n';
                 list.forEach(function (n) {
                     html += '<div class="md-tn">' +
-                        '<div class="md-tn-label' + frag(stepOf(n)) + '">' + inlineHtml(n.item.text) + '</div>';
+                        '<div class="md-tn-label' + frag(stepOf(n)) + '">' + colourSetNames(inlineHtml(n.item.text), api.state) + '</div>';
                     if (n.kids.length) {
                         // the brace arrives with the first child (build, level)
                         // or with the parent (build=up)
@@ -1471,6 +1681,350 @@
         }
     });
 
+    /* ---------- sets, menus and marks (SPEC 4.6 to 4.8, phase 2b) ---------- */
+
+    /* @set NAME [text]: labelled items defined once per deck (or per
+       course, through @include), one per line: Label :: colour :: icon
+       :: optional. Aliases go comma-separated in the label field. A set
+       is not displayed where it is written: collectSets reads every set
+       in the deck before any slide expands, so [[Label]] anywhere is
+       that set's tag, and @menu draws the set. A text set colours names
+       in running text ([[Latin]] is blue text, not a pill). */
+    const SET_SPEC = { body: 'items', positional: 1, flags: ['text'] };
+    function setSlug(s) { return pieceSlug(s).slice(2); }
+    function buildSet(d, fail) {
+        const first = d.positional[0];
+        const name = first && first.value;
+        if (!name || !/^[\w-]+$/.test(name)) fail('needs a name first, e.g. `@set criteria` (letters, digits, - and _).');
+        const text = d.flags.indexOf('text') !== -1;
+        const seen = {};
+        const items = d.items.map(function (it, i) {
+            if (it.depth) fail('a set is one level: no line indented below another.', it);
+            const f = it.fields;
+            if (f.length > 4) fail('each line is Label :: colour :: icon :: optional (all but the label may be left out).', it);
+            const labels = f[0].split(/\s*,\s*/).filter(Boolean);
+            if (!labels.length) fail('every item needs a label.', it);
+            labels.forEach(function (l) {
+                const k = l.toLowerCase();
+                if (seen[k]) fail('`' + esc(l) + '` appears twice in this set.', it);
+                seen[k] = true;
+            });
+            let colour = null;
+            if (f[1]) {
+                colour = colourValue(f[1]);
+                if (!colour) fail('`' + esc(f[1]) + '` is not a colour: use a palette name (' + PALETTE_HUES.join(', ') + ', light-…) or #RRGGBB.', it);
+            }
+            const icon = f[2] ? f[2].replace(/^fa-/, '') : null;
+            if (icon && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(icon)) fail('`' + esc(f[2]) + '` is not an icon name: write the Font Awesome name, such as pen-nib.', it);
+            if (icon && text) fail('a text set colours names in running text, so its items take no icon.', it);
+            if (f[3] && f[3] !== 'optional') fail('the fourth field can only be `optional` (a paler stage).', it);
+            return { label: labels[0], aliases: labels.slice(1), colour: colour, icon: icon,
+                optional: f[3] === 'optional', index: i, id: 'tag-' + name + '-' + setSlug(labels[0]) };
+        });
+        return { name: name, text: text, items: items };
+    }
+    function collectSets(src, deck) {
+        deck.tagIndex = {};
+        if (src.indexOf('@set') === -1) return;
+        const lines = src.split('\n');
+        let fence = null;
+        for (let i = 0; i < lines.length; i++) {
+            const f = /^\s*(`{3,}|~{3,})/.exec(lines[i]);
+            if (fence) { if (f && f[1].charAt(0) === fence.charAt(0)) fence = null; continue; }
+            if (f) { fence = f[1]; continue; }
+            if (!/^@set(\s|$)/.test(lines[i])) continue;
+            try {
+                const d = parseDirectiveLine(lines[i].replace(/^@set/, '').trim(), SET_SPEC);
+                d.items = collectItems(lines, i + 1, 0).items;
+                const s = buildSet(d, function (m) { throw new DirectiveError(m); });
+                if (deck.sets[s.name]) continue;
+                deck.sets[s.name] = s;
+                s.items.forEach(function (it) {
+                    [it.label].concat(it.aliases).forEach(function (l) {
+                        const k = l.toLowerCase();
+                        if (!deck.tagIndex[k]) deck.tagIndex[k] = { set: s, item: it };
+                        else deck.warnings.push('@set ' + s.name + ': `' + l + '` is also in the set ' + deck.tagIndex[k].set.name + ', which wins for [[' + l + ']]');
+                    });
+                });
+            } catch (e) {
+                if (!(e instanceof DirectiveError)) throw e;
+                // reported where the @set is expanded
+            }
+        }
+    }
+    /* Names from a text set are coloured with no markup inside @tree
+       labels and @marks labels (SPEC 4.6): whole words only, outside
+       HTML tags and [[pieces]] (which the inline pass handles) */
+    function colourSetNames(html, deck) {
+        if (!deck || !deck.sets) return html;
+        if (!deck.nameRe) {
+            const names = [], byName = {};
+            Object.keys(deck.sets).forEach(function (k) {
+                const set = deck.sets[k];
+                if (!set.text) return;
+                set.items.forEach(function (it) {
+                    [it.label].concat(it.aliases).forEach(function (l) { if (!byName[l]) { byName[l] = it; names.push(l); } });
+                });
+            });
+            names.sort(function (a, b) { return b.length - a.length; });
+            deck.nameRe = names.length ? new RegExp('(^|[^\\p{L}\\p{N}])(' + names.map(function (n) {
+                return n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            }).join('|') + ')(?![\\p{L}\\p{N}])', 'gu') : false;
+            deck.nameItems = byName;
+        }
+        if (!deck.nameRe) return html;
+        return html.split(/(<[^>]*>|\[\[(?:(?!\]\]).)*\]\](?:\{[\w-]+\})?)/).map(function (part, i) {
+            if (i % 2) return part;
+            return part.replace(deck.nameRe, function (m, pre, name) {
+                const it = deck.nameItems[name];
+                const c = it.colour;
+                const open = c && c.name ? '<span class="md-c md-c-' + c.name + ' md-settext">'
+                    : '<span class="md-settext"' + (c ? ' style="color:' + c.hex + '"' : '') + '>';
+                return pre + open + name + '</span>';
+            });
+        }).join('');
+    }
+
+    registerDirective('set', Object.assign({
+        emit: function (d, api) {
+            const s = buildSet(d, api.fail);
+            if (api.state.setsEmitted[s.name]) api.fail('a set named `' + esc(s.name) + '` is already defined earlier in this deck.');
+            api.state.setsEmitted[s.name] = true;
+            return '';
+        }
+    }, SET_SPEC));
+
+    /* @menu SET STATE [style=strip|tabs|steps] [centre] [heading=build]
+       (SPEC 4.7). Draws a set as navigation that holds still across
+       slides: every item keeps its set id, and consecutive slides with a
+       menu of the same set morph (linkMorphSlides). States: N (item N
+       lit, the rest grey), 4,5, 2>3 (steps: the arrow between 2 and 3
+       lit, the steps themselves not), all, labels (strip: all lit, the
+       labels arrive on a click; labels=static shows them at once).
+       strip: circles with icons, the default when every item has an
+       icon; tabs: a stack of ribbon tabs; steps: step boxes with arrows,
+       the default otherwise. centre: at mid-slide. The heading after a
+       menu with one lit item sits under that item and moves along by
+       morph (heading=build: it builds in on a click instead). */
+    const MENU_STYLES = ['strip', 'tabs', 'steps'];
+    registerDirective('menu', {
+        body: 'line', positional: 2, keys: ['style', 'labels', 'heading'],
+        flags: ['all', 'labels', 'centre', 'center'],
+        emit: function (d, api) {
+            const first = d.positional[0];
+            if (!first || first.type !== 'name') api.fail('needs the name of a @set first, e.g. `@menu neologisms 2`.');
+            const set = api.state.sets[first.value];
+            const names = Object.keys(api.state.sets);
+            if (!set) api.fail('there is no @set named `' + esc(first.value) + '` in this deck' + (names.length ? ' (sets: ' + names.join(', ') + ').' : '.'));
+            if (set.text) api.fail('`' + esc(set.name) + '` is a text set (it colours names in running text); a menu draws a set of tags.');
+            const n = set.items.length;
+            const style = d.opts.style || (set.items.every(function (it) { return it.icon; }) ? 'strip' : 'steps');
+            if (MENU_STYLES.indexOf(style) === -1) api.fail('`style=' + esc(style) + '`: styles are ' + MENU_STYLES.join(', ') + '.');
+            if (d.opts.labels !== undefined && d.opts.labels !== 'static') api.fail('`labels=` takes only static (labels shown at once); a bare `labels` brings them in on a click.');
+            if (d.opts.heading !== undefined && ['morph', 'build'].indexOf(d.opts.heading) === -1) api.fail('`heading=` is morph (the default: the heading moves along under the lit item) or build (it builds in on a click).');
+            const labels = d.flags.indexOf('labels') !== -1 || d.opts.labels !== undefined;
+            const all = d.flags.indexOf('all') !== -1;
+            const tok = d.positional[1] && d.positional[1].value;
+            const given = [tok !== undefined, all, labels].filter(Boolean).length;
+            const STATES = 'a number (`2`), two numbers (`4,5`), the arrow between two steps (`2>3`), `all` or `labels`';
+            if (!given) api.fail('say which item is lit: ' + STATES + '.');
+            if (given > 1) api.fail('one state at a time: ' + STATES + '.');
+            if (labels && style !== 'strip') api.fail('`labels` puts labels under a strip of circles; tabs and steps always show their labels (use `all`).');
+            const lit = [];
+            let arrow = -1;
+            const inRange = function (k) {
+                if (k < 1 || k > n) api.fail('item ' + k + ': the set `' + esc(set.name) + '` has ' + n + ' items.');
+                return k - 1;
+            };
+            if (all || labels) { for (let k = 0; k < n; k++) lit.push(k); }
+            else if (/^\d+(,\d+)*$/.test(tok)) { tok.split(',').forEach(function (k) { lit.push(inRange(+k)); }); }
+            else if (/^\d+>\d+$/.test(tok)) {
+                const ab = tok.split('>').map(Number);
+                if (style !== 'steps') api.fail('`' + tok + '` lights the arrow between two steps, so it needs style=steps.');
+                inRange(ab[0]); inRange(ab[1]);
+                if (ab[1] !== ab[0] + 1) api.fail('`' + tok + '`: an arrow runs between neighbouring steps, e.g. ' + ab[0] + '>' + (ab[0] + 1) + '.');
+                arrow = ab[0] - 1;
+            } else api.fail('`' + esc(tok) + '` is not a state: write ' + STATES + '.');
+            const centre = d.flags.indexOf('centre') !== -1 || d.flags.indexOf('center') !== -1;
+            const cls = ['md-menu', 'md-menu-' + style];
+            if (centre) cls.push('md-menu-centre');
+            if (labels) cls.push('md-menu-labels' + (d.opts.labels === 'static' ? ' md-menu-labels-static' : ''));
+            const one = lit.length === 1 && !all && !labels;
+            let html = '\n<div class="' + cls.join(' ') + '" data-md-menu="' + esc(set.name) + '" role="list"' +
+                ' style="--n:' + n + '"' + (one ? ' data-md-lit="' + lit[0] + '"' : '') + (arrow !== -1 ? ' data-md-arrow="' + arrow + '"' : '') +
+                (d.opts.heading === 'build' ? ' data-md-heading="build"' : '') +
+                (labels && d.opts.labels !== 'static' ? ' data-md-steps' : '') + '>\n';
+            set.items.forEach(function (it, i) {
+                const f = fillOf(it.colour);
+                const on = lit.indexOf(i) !== -1;
+                const ic = ['md-menu-item', on ? 'is-lit' : 'is-dim'];
+                if (!it.colour) ic.push('md-menu-accent');
+                if (it.optional) ic.push('md-menu-optional');
+                if (style === 'tabs') ic.push('md-tag', 'md-settag');
+                const icon = it.icon ? '<i class="fad fa-' + it.icon + ' md-icon" aria-hidden="true"></i>' : '';
+                let inner;
+                if (style === 'strip') {
+                    inner = (icon || '<span class="md-menu-initial" aria-hidden="true">' + esc(it.label.charAt(0)) + '</span>') +
+                        '<span class="md-menu-label' + (labels && d.opts.labels !== 'static' ? ' fragment" data-md-step="0' : '') + '">' + esc(it.label) + '</span>';
+                } else {
+                    inner = '<span class="md-menu-text">' + esc(it.label) + '</span>' + (style === 'tabs' ? icon : '');
+                }
+                // spans, as the tags they morph with are (reveal matches
+                // data-id within one element name)
+                html += '<span class="' + ic.join(' ') + f.cls + '" data-id="' + esc(it.id) + '" role="listitem"' +
+                    (style === 'strip' ? ' title="' + esc(it.label) + '" aria-label="' + esc(it.label) + '"' : '') +
+                    ' style="' + f.style + '--i:' + i + '">' + inner + '</span>\n';
+                if (style === 'steps' && i < n - 1) {
+                    html += '<span class="md-menu-arrow' + (i === arrow ? ' is-lit' : '') + (set.items[i + 1].colour ? fillOf(set.items[i + 1].colour).cls : ' md-menu-accent') +
+                        '" data-id="md-menu-arrow-' + esc(set.name) + '-' + i + '" aria-hidden="true"></span>\n';
+                }
+            });
+            return html + '</div>\n\n';
+        }
+    });
+
+    /* @marks PATH alt="..." [caption="..."] [all] (SPEC 4.8): marks on an
+       image, one step per line, positions in percent of the image:
+         ring X,Y r=R [colour] ["label"] [pos=above|below|left|right]
+              (r: a percentage of the image width; w= h= for an ellipse)
+         box X,Y w=W h=H [colour] ["label"] [pos=...]   (X,Y top left)
+         label X,Y "text" [colour] [rot=DEG]
+         dim y=A,B | dim x=A,B | dim X,Y w=W h=H   (darkens the rest)
+         zoom X,Y SCALE                  (zoom into the image as a step)
+       A line starting + joins the step before; `all` shows every mark at
+       once; a later line reusing an id= moves that mark (applyMarks
+       moves it on the click). Every mark arrives on a click: the image
+       stands alone first. */
+    const MARK_KINDS = ['ring', 'box', 'label', 'dim', 'zoom'];
+    const MARK_KEYS = { ring: ['r', 'w', 'h', 'id', 'pos'], box: ['w', 'h', 'id', 'pos'], label: ['id', 'rot'],
+        dim: ['x', 'y', 'w', 'h', 'id'], zoom: ['scale'] };
+    function parseMark(it, fail) {
+        let text = it.raw.trim(), join = false;
+        if (/^\+\s/.test(text)) { join = true; text = text.replace(/^\+\s+/, ''); }
+        const km = /^(\w+)\s*(.*)$/.exec(text);
+        const kind = km && km[1];
+        if (MARK_KINDS.indexOf(kind) === -1) fail('each line starts with a kind of mark: ' + MARK_KINDS.join(', ') + ' (and + to join the step before).', it);
+        const m = { kind: kind, join: join, opts: {}, it: it };
+        const re = /([\w-]+)=(?:"([^"]*)"|(\S+))|"([^"]*)"|(\S+)/g;
+        let t;
+        while ((t = re.exec(km[2])) !== null) {
+            if (t[1] !== undefined) {
+                if (MARK_KEYS[kind].indexOf(t[1]) === -1) fail('`' + esc(t[1]) + '=` does not go with ' + kind + '. ' + kind + ' takes ' + MARK_KEYS[kind].map(function (k) { return k + '='; }).join(', ') + '.', it);
+                m.opts[t[1]] = t[2] !== undefined ? t[2] : t[3];
+            } else if (t[4] !== undefined) {
+                if (m.text !== undefined) fail('one quoted label per mark.', it);
+                m.text = t[4];
+            } else {
+                const b = t[5];
+                if (/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/.test(b) && !m.pos) { m.pos = b.split(',').map(parseFloat); continue; }
+                if (kind === 'zoom' && numberLike(b) && m.pos && m.opts.scale === undefined) { m.opts.scale = b; continue; }
+                const c = colourValue(b);
+                if (c && !m.colour && kind !== 'dim' && kind !== 'zoom') { m.colour = c; continue; }
+                fail('`' + esc(b) + '` is not understood here: positions are X,Y in percent of the image (47,52), colours palette names, labels "quoted".', it);
+            }
+        }
+        const num = function (k, need) {
+            const v = m.opts[k];
+            if (v === undefined) { if (need) fail(kind + ' needs ' + k + '=.', it); return null; }
+            if (!numberLike(v)) fail('`' + k + '=' + esc(v) + '` takes a number.', it);
+            return parseFloat(v);
+        };
+        const g = {};
+        if (kind === 'dim') {
+            if (m.opts.y !== undefined || m.opts.x !== undefined) {
+                const axis = m.opts.y !== undefined ? 'y' : 'x';
+                if (m.opts.x !== undefined && m.opts.y !== undefined) fail('dim takes a strip across (y=A,B) or down (x=A,B), not both; for a box write dim X,Y w= h=.', it);
+                const ab = String(m.opts[axis]).split(',').map(parseFloat);
+                if (ab.length !== 2 || ab.some(isNaN) || ab[1] <= ab[0]) fail('`' + axis + '=` takes the two edges of the strip in percent, e.g. ' + axis + '=40,55.', it);
+                if (axis === 'y') { g.x = 0; g.w = 100; g.y = ab[0]; g.h = ab[1] - ab[0]; }
+                else { g.y = 0; g.h = 100; g.x = ab[0]; g.w = ab[1] - ab[0]; }
+            } else {
+                if (!m.pos) fail('dim takes a strip (dim y=40,55 or dim x=10,30) or a box (dim X,Y w= h=).', it);
+                g.x = m.pos[0]; g.y = m.pos[1]; g.w = num('w', true); g.h = num('h', true);
+            }
+        } else {
+            if (!m.pos) fail(kind + ' needs its position first, X,Y in percent of the image, e.g. ' + kind + ' 47,52.', it);
+            g.x = m.pos[0]; g.y = m.pos[1];
+            if (kind === 'ring') {
+                const r = num('r'), w = num('w'), h = num('h');
+                if (r === null && (w === null || h === null)) fail('ring needs r= (a percentage of the image width), or w= and h= for an ellipse.', it);
+                if (r !== null) { g.w = 2 * r; g.h = null; } else { g.w = w; g.h = h; }
+            }
+            if (kind === 'box') { g.w = num('w', true); g.h = num('h', true); }
+            if (kind === 'label') {
+                if (m.text === undefined) fail('label needs its text in quotes, e.g. label 20,80 "Very frequent".', it);
+                g.rot = num('rot') || 0;
+            }
+            if (kind === 'zoom') {
+                g.k = num('scale', true);
+                if (!(g.k > 0)) fail('zoom needs a scale above 0, e.g. zoom 40,40 2.5 (1 is the whole image).', it);
+            }
+        }
+        if (m.opts.pos !== undefined && ['above', 'below', 'left', 'right'].indexOf(m.opts.pos) === -1) fail('`pos=` places the label: above, below, left or right.', it);
+        if (kind === 'dim' || kind === 'zoom') { if (m.text !== undefined) fail(kind + ' takes no label.', it); }
+        m.g = g;
+        return m;
+    }
+    registerDirective('marks', {
+        body: 'items', positional: 1, keys: ['alt', 'caption', 'id'], flags: ['all'],
+        emit: function (d, api) {
+            const p = d.positional[0];
+            if (!p || p.type !== 'path') api.fail('needs the image first, e.g. `@marks ./img/map.png alt="..."`.');
+            const all = d.flags.indexOf('all') !== -1;
+            const marks = [], zooms = [];
+            let step = -1;
+            d.items.forEach(function (it, i) {
+                const m = parseMark(it, api.fail);
+                if (m.join && i === 0) api.fail('`+` joins the step before, and this is the first line.', it);
+                if (!m.join) step++;
+                const s = all ? -1 : step;
+                if (m.kind === 'zoom') { zooms.push({ s: s, x: m.g.x, y: m.g.y, k: m.g.k }); return; }
+                const id = m.opts.id;
+                let mark = id ? marks.filter(function (x) { return x.id === id; })[0] : null;
+                if (mark && mark.kind !== m.kind) api.fail('id=' + esc(id) + ' is a ' + mark.kind + ' earlier, so it cannot become a ' + m.kind + '.', it);
+                if (!mark) { mark = { id: id || null, kind: m.kind, states: [] }; marks.push(mark); }
+                const c = m.colour || (mark.states.length ? null : null);
+                const prev = mark.states[mark.states.length - 1] || {};
+                mark.states.push({ s: s, x: m.g.x, y: m.g.y, w: m.g.w, h: m.g.h, rot: m.g.rot,
+                    c: c ? (c.name ? 'var(--p-' + c.name + ')' : c.hex) : (prev.c || null),
+                    t: m.text !== undefined ? colourSetNames(inlineHtml(m.text), api.state) : (prev.t || ''), pos: m.opts.pos || prev.pos || 'above' });
+            });
+            const steps = all ? 0 : step + 1;
+            const alt = d.opts.alt || d.opts.caption || '';
+            const sid = d.opts.id || api.state.allocId(slugify(p.value));
+            // each mark is drawn in its final state (what the handout and
+            // the export show); applyMarks sets the state for each click
+            const markHtml = marks.map(function (mk) {
+                const f = mk.states[mk.states.length - 1];
+                const style = markStyle(mk.kind, f);
+                return '<div class="md-mark md-mark-' + mk.kind + '" data-md-states="' + esc(JSON.stringify(mk.states)) + '" style="' + style + '">' +
+                    (mk.kind === 'dim' ? '' : '<span class="md-mark-text md-mark-' + (mk.kind === 'label' ? 'free' : f.pos) + '">' + f.t + '</span>') +
+                    '</div>';
+            }).join('\n');
+            const zf = zooms[zooms.length - 1];
+            let md = '<!-- .slide: class="md-fill md-marks-slide" id="' + esc(sid) + '" -->\n' +
+                (alt ? '' : '<div class="md-alt-missing">missing alt text — add alt="…" to the @marks directive</div>\n') +
+                '<div class="md-zoom-frame md-marks-frame"' + (steps ? ' data-md-steps' : '') + '>\n' +
+                '<div class="md-marks-box"' + (zooms.length ? ' data-md-zooms="' + esc(JSON.stringify(zooms)) + '" style="' + zoomStyle(zf) + '"' : '') + '>\n' +
+                '<img src="' + esc(p.value) + '" alt="' + esc(alt) + '" onload="this.parentNode.style.setProperty(\'--ar\', this.naturalWidth / this.naturalHeight)" onerror="' + IMG_ONERROR + '">\n' +
+                markHtml + '\n</div>\n';
+            for (let k = 0; k < steps; k++) md += '<span class="fragment md-mark-step" data-md-step="' + k + '"></span>';
+            md += '\n</div>\n' + (d.opts.caption ? '<figcaption class="md-frame-caption">' + esc(d.opts.caption) + '</figcaption>\n' : '');
+            return md;
+        }
+    });
+    function markStyle(kind, st) {
+        let s = '--x:' + st.x + ';--y:' + st.y + ';--w:' + (st.w === undefined ? 0 : st.w) + ';';
+        if (st.h !== null && st.h !== undefined) s += '--h:' + st.h + ';';
+        if (st.rot) s += '--rot:' + st.rot + 'deg;';
+        if (st.c) s += '--mc:' + st.c + ';';
+        return s;
+    }
+    function zoomStyle(z) {
+        if (!z) return '';
+        return '--zx:' + z.x + ';--zy:' + z.y + ';--zk:' + z.k + ';';
+    }
+
     /* ---------- chunk-level expansion ---------- */
 
     function expandChunk(chunk, deck, lineOffset) {
@@ -1520,6 +2074,35 @@
                 }
             } else if (kind === 'image') {
                 r = emitImage(opts, allocId, line, lineNo, name);
+                if (opts.over !== undefined) {
+                    // the markdown body laid over the image (SPEC 6.4)
+                    const c = collectMarkdown(lines, i + 1);
+                    if (!r.isError) {
+                        const inner = expandChunk(c.body.join('\n'), deck, lineOffset + i + 1);
+                        const ov = emitOver(opts, inner.md, line, lineNo, name);
+                        r = ov.isError ? ov : { md: r.md + ov.md, isError: inner.hadError };
+                    }
+                    out.push(r.md);
+                    if (r.isError) hadError = true;
+                    if (c.furniture.length) {
+                        const f = expandChunk(c.furniture.join('\n'), deck, lineOffset + c.next);
+                        out.push(f.md);
+                        if (f.hadError) hadError = true;
+                    }
+                    i = c.next;
+                    continue;
+                }
+            } else if (kind === 'video') {
+                // @video: a side column like @image-left when markdown follows
+                let bodyEnd = lines.length;
+                for (let j = i + 1; j < lines.length; j++) {
+                    if (/^notes:/.test(lines[j])) { bodyEnd = j; break; }
+                }
+                r = emitVideo(opts, lines.slice(i + 1, bodyEnd), deck, line, lineNo, name);
+                out.push(r.md);
+                if (r.isError) hadError = true;
+                for (let j = bodyEnd; j < lines.length; j++) out.push(lines[j]);
+                return { md: out.join('\n'), hadError: hadError };
             } else if (kind === 'zoom') {
                 r = emitZoom(opts, allocId, line, lineNo, name);
             } else if (kind === 'kenburns') {
@@ -1563,7 +2146,7 @@
                     '`@end` with no open block: it closes a markdown body (@cards, @columns, @quote ...) opened earlier on the same slide.'), isError: true };
             } else {
                 r = { md: errorSlide(name, lineNo, line,
-                    'Unknown directive `@' + esc(kind) + '`. Available: @image, @image-seq, @image-left, @image-right, @compare, @zoom, @kenburns, @slide, @section, @quote, @refs, @note' +
+                    'Unknown directive `@' + esc(kind) + '`. Available: @image, @image-seq, @image-left, @image-right, @compare, @zoom, @kenburns, @video, @slide, @section, @quote, @refs, @note' +
                     Object.keys(REGISTRY).map(function (k) { return ', @' + k; }).join('') + '. (Escape a literal @ with @@.)'), isError: true };
             }
             out.push(r.md);
@@ -1634,7 +2217,10 @@
         // data-separator regexes ^\n---\n and ^\n--\n), keeping delimiters
         const parts = src.split(/(^\n---\n|^\n--\n)/m);
         // one deck: ids, named blocks and warnings are shared by its slides
-        const deck = { name: name, allocId: makeIdAllocator(), named: {}, warnings: [] };
+        const deck = { name: name, allocId: makeIdAllocator(), named: {}, warnings: [], sets: {}, setsEmitted: {} };
+        // sets are collected from the whole deck before any slide expands,
+        // so a tag or menu may come before its @set
+        collectSets(src, deck);
         let hadError = inc.hadError;
         let lineOffset = 0;
         const out = parts.map(function (part) {
@@ -1645,9 +2231,23 @@
             const r = expandChunk(part, deck, lineOffset);
             lineOffset += part.split('\n').length - 1;
             if (r.hadError) hadError = true;
-            return inlineMarks(wrapFillSlides(mergeSlideComments(r.md)), makeInlineCtx(deck.warnings));
+            // a slide that held only definitions (@set) is not a slide
+            if (!r.md.trim() && /^@set\b/m.test(part)) return null;
+            const merged = mergeSlideComments(r.md);
+            const mstate = /data-md-morphemes="(\w+)"/.exec(merged);
+            return inlineMarks(wrapFillSlides(merged), makeInlineCtx(deck.warnings, deck, mstate && mstate[1]));
         });
-        return { markdown: out.join(''), hadError: hadError, warnings: deck.warnings };
+        // drop the emptied slides with one separator each
+        const kept = [];
+        out.forEach(function (p, i) {
+            if (p === null) {
+                if (kept.length && /^\n--?-?\n$/.test(kept[kept.length - 1])) kept.pop();
+                else if (i + 1 < out.length) out[i + 1] = '';
+                return;
+            }
+            kept.push(p);
+        });
+        return { markdown: kept.join(''), hadError: hadError, warnings: deck.warnings };
     }
 
     /* Separate slides flagged @slide spare from the rest of a deck's
@@ -2085,9 +2685,367 @@
         });
     }
 
+    /* ---------- morph (SPEC 6.3, phase 2b) ----------
+
+       Reveal's auto-animate does the moving; this adds what PowerPoint's
+       Morph does and reveal does not:
+       - linkMorphSlides: @slide morph is written on the incoming slide
+         only, so the slide before is marked here; slides with a menu of
+         the same set, or morpheme words sharing pieces, morph with no
+         markup. A slide newly marked here that would otherwise chain
+         into a neighbour it should not morph with gets
+         data-auto-animate-restart.
+       - @slide morph words: every word of both slides becomes a piece.
+       - mgaMorphMatcher (revconfig.js autoAnimateMatcher): an element
+         that builds in on the new slide is left out of matching (unless
+         its partner was itself a build, which reveal keeps shown);
+         words and morpheme pieces move without scaling.
+       - ghostUnmatched: elements of the old slide with no partner fade
+         out over the morph instead of vanishing. */
+    function leafSlides() {
+        return Array.prototype.filter.call(document.querySelectorAll('.reveal .slides section'), function (s) {
+            return !s.querySelector('section') && s.getAttribute('data-visibility') !== 'hidden';
+        });
+    }
+    const WORD_SKIP = '[data-id], .md-word, code, pre, svg, script, style, aside, .md-mark, .md-menu, ' +
+        '.md-overlay-under, .visually-hidden, .md-alt-missing, .md-video-cue, .md-pause, .directive-error';
+    function wrapWords(sec, mode) {
+        if (sec.getAttribute('data-md-wrapped') === mode) return;
+        sec.setAttribute('data-md-wrapped', mode);
+        const counts = {};
+        // a slide wrapped before (another mode) gets its words re-keyed
+        sec.querySelectorAll('.md-word').forEach(function (w) { w.setAttribute('data-id', wordId(w.textContent)); });
+        const nodes = [];
+        const walker = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT, null);
+        let n;
+        while ((n = walker.nextNode())) {
+            if (!n.nodeValue.trim()) continue;
+            if (n.parentElement.closest(WORD_SKIP)) continue;
+            nodes.push(n);
+        }
+        nodes.forEach(function (node) {
+            const frag = document.createDocumentFragment();
+            node.nodeValue.split(/(\s+)/).forEach(function (tok) {
+                if (!tok) return;
+                if (/^\s+$/.test(tok)) { frag.appendChild(document.createTextNode(tok)); return; }
+                const sp = document.createElement('span');
+                sp.className = 'md-word';
+                sp.textContent = tok;
+                sp.setAttribute('data-id', wordId(tok));
+                frag.appendChild(sp);
+            });
+            node.parentNode.replaceChild(frag, node);
+        });
+        function wordId(tok) {
+            let key = tok;
+            if (mode === 'loose') key = tok.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, '') || tok;
+            counts[key] = (counts[key] || 0) + 1;
+            return 'w:' + key + ':' + counts[key];
+        }
+    }
+    /* Text sitting beside pieces in the same element becomes a span, so
+       it can fade out (old slide) or in (new slide) like any element */
+    function wrapLoose(sec) {
+        sec.querySelectorAll('.md-piece, .md-mw').forEach(function (p) {
+            const parent = p.parentElement;
+            if (!parent || parent.hasAttribute('data-md-loose')) return;
+            parent.setAttribute('data-md-loose', '');
+            Array.prototype.slice.call(parent.childNodes).forEach(function (c) {
+                if (c.nodeType !== 3 || !c.nodeValue.trim()) return;
+                const sp = document.createElement('span');
+                sp.className = 'md-loose';
+                parent.replaceChild(sp, c);
+                sp.appendChild(c);
+            });
+        });
+    }
+    function linkMorphSlides() {
+        const leaves = leafSlides();
+        const orig = leaves.map(function (s) { return s.hasAttribute('data-auto-animate'); });
+        const linked = leaves.map(function () { return false; });
+        const menuOf = function (s) { const m = s.querySelector('.md-menu'); return m && m.getAttribute('data-md-menu'); };
+        const pieceIds = function (s) {
+            return Array.prototype.map.call(s.querySelectorAll('.md-mp[data-id]'), function (e) { return e.getAttribute('data-id'); });
+        };
+        for (let i = 1; i < leaves.length; i++) {
+            const prev = leaves[i - 1], cur = leaves[i];
+            let link = cur.classList.contains('md-morph');
+            // the automatic links give way to an explicit @slide fade or cut
+            const auto = !cur.hasAttribute('data-transition');
+            if (!link && auto && menuOf(cur) && menuOf(cur) === menuOf(prev)) link = true;
+            if (!link && auto && cur.querySelector('.md-mp')) {
+                const a = pieceIds(prev);
+                link = pieceIds(cur).some(function (id) { return a.indexOf(id) !== -1; });
+            }
+            const words = cur.getAttribute('data-md-words');
+            if (words) { wrapWords(prev, words); wrapWords(cur, words); }
+            if (!link) continue;
+            linked[i] = true;
+            prev.setAttribute('data-auto-animate', '');
+            cur.setAttribute('data-auto-animate', '');
+            cur.classList.add('md-morph-in');
+            wrapLoose(prev); wrapLoose(cur);
+        }
+        for (let i = 1; i < leaves.length; i++) {
+            if (linked[i] || !leaves[i].hasAttribute('data-auto-animate') || !leaves[i - 1].hasAttribute('data-auto-animate')) continue;
+            if (!orig[i] || !orig[i - 1]) leaves[i].setAttribute('data-auto-animate-restart', '');
+        }
+    }
+
+    let lastMorph = null;
+    function mgaMorphMatcher(from, to) {
+        const hiddenBuild = function (el, scope) {
+            const f = el.closest('.fragment');
+            return f && scope.contains(f) && !f.classList.contains('visible') ? f : null;
+        };
+        const inBuild = function (el, scope) { const f = el.closest('.fragment'); return f && scope.contains(f); };
+        const pairs = this.getAutoAnimatePairs(from, to).filter(function (p) {
+            if (p.to.closest('.md-mp-gone') || p.from.closest('.md-mp-gone')) return false;
+            if (hiddenBuild(p.to, to) && !inBuild(p.from, from)) return false;
+            return true;
+        });
+        pairs.forEach(function (p) {
+            if (p.to.matches('.md-word, .md-mp, .md-loose')) p.options = Object.assign({}, p.options, { scale: false });
+        });
+        lastMorph = { from: from, to: to, pairs: pairs };
+        return pairs;
+    }
+    window.mgaMorphMatcher = mgaMorphMatcher;
+
+    const GHOST_SKIP = '.md-pause, aside, .notes, .visually-hidden, .md-alt-missing, .md-video-cue, .md-mark-step, ' +
+        'script, style, .md-morph-ghosts, .fragment:not(.visible)';
+    const GHOST_STYLES = ['font-family', 'font-size', 'font-weight', 'font-style', 'font-variant-caps', 'line-height',
+        'letter-spacing', 'color', 'text-align', 'text-transform', 'background-color', 'border-radius'];
+    function clearGhosts() {
+        document.querySelectorAll('.reveal .md-morph-ghosts').forEach(function (g) { g.remove(); });
+    }
+    function ghostUnmatched(e) {
+        clearGhosts();
+        const from = e.fromSlide, to = e.toSlide;
+        if (!lastMorph || lastMorph.from !== from || lastMorph.to !== to) return;
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        const matched = lastMorph.pairs.map(function (p) { return p.from; });
+        const fr = from.getBoundingClientRect();
+        const scale = from.offsetWidth ? fr.width / from.offsetWidth : 1;
+        if (!fr.width) return;
+        const layer = document.createElement('div');
+        layer.className = 'md-morph-ghosts';
+        layer.setAttribute('aria-hidden', 'true');
+        (function walk(el) {
+            Array.prototype.forEach.call(el.children, function (c) {
+                if (matched.indexOf(c) !== -1) return;
+                if (matched.some(function (m) { return c.contains(m); })) { walk(c); return; }
+                if (c.matches(GHOST_SKIP)) return;
+                const r = c.getBoundingClientRect();
+                if (r.width < 2 || r.height < 2) return;
+                const cs = getComputedStyle(c);
+                if (cs.visibility === 'hidden' || parseFloat(cs.opacity) === 0) return;
+                const g = c.cloneNode(true);
+                g.removeAttribute('id');
+                g.querySelectorAll('[id]').forEach(function (x) { x.removeAttribute('id'); });
+                g.querySelectorAll('[data-id]').forEach(function (x) { x.removeAttribute('data-id'); });
+                g.removeAttribute('data-id');
+                g.querySelectorAll('.fragment:not(.visible)').forEach(function (x) { x.remove(); });
+                g.querySelectorAll('.fragment').forEach(function (x) { x.classList.remove('fragment'); });
+                g.classList.remove('fragment');
+                GHOST_STYLES.forEach(function (k) { g.style.setProperty(k, cs.getPropertyValue(k)); });
+                // the ancestors as shells with no box of their own, so
+                // rules that depend on them (a tab in a menu) still apply
+                let top = g;
+                for (let a = c.parentElement; a && a !== from; a = a.parentElement) {
+                    const shell = a.cloneNode(false);
+                    shell.removeAttribute('id');
+                    shell.removeAttribute('data-id');
+                    shell.classList.remove('fragment');
+                    shell.style.cssText = 'display: contents';
+                    shell.appendChild(top);
+                    top = shell;
+                }
+                g.style.position = 'absolute';
+                g.style.boxSizing = 'border-box';
+                g.style.margin = '0';
+                g.style.left = ((r.left - fr.left) / scale) + 'px';
+                g.style.top = ((r.top - fr.top) / scale) + 'px';
+                g.style.width = (r.width / scale) + 'px';
+                g.style.height = (r.height / scale) + 'px';
+                g.style.transform = 'none';
+                layer.appendChild(top);
+            });
+        })(from);
+        if (!layer.children.length) return;
+        to.appendChild(layer);
+        const dur = parseFloat(to.getAttribute('data-auto-animate-duration')) || (window.Reveal ? Reveal.getConfig().autoAnimateDuration : 1) || 1;
+        layer.style.transition = 'opacity ' + (dur * 0.6).toFixed(2) + 's ease';
+        requestAnimationFrame(function () { requestAnimationFrame(function () { layer.style.opacity = '0'; }); });
+        setTimeout(function () { layer.remove(); }, dur * 1000 + 150);
+    }
+
+    /* @menu: the heading after a menu with one lit item (or a lit arrow)
+       takes a stable id, so consecutive menu slides move it along by
+       morph, and sits under that item (positionMenuHeads, measured) */
+    function markMenuHeads() {
+        document.querySelectorAll('.reveal .slides .md-menu[data-md-lit], .reveal .slides .md-menu[data-md-arrow]').forEach(function (menu) {
+            if (menu.classList.contains('md-menu-centre')) return;
+            const h = menu.nextElementSibling;
+            if (!h || !/^H[1-3]$/.test(h.tagName)) return;
+            h.classList.add('md-menu-head');
+            h.setAttribute('data-id', 'md-menu-head-' + menu.getAttribute('data-md-menu'));
+            if (menu.getAttribute('data-md-heading') === 'build') h.classList.add('fragment');
+        });
+    }
+    function positionMenuHeads() {
+        document.querySelectorAll('.reveal .slides .md-menu-head').forEach(function (h) {
+            const menu = h.previousElementSibling;
+            if (!menu || !menu.matches('.md-menu')) return;
+            h.style.removeProperty('margin-left');
+            if (getComputedStyle(h).position === 'absolute') return;      // Spine: the heading lives in the band
+            const item = menu.hasAttribute('data-md-arrow')
+                ? menu.querySelectorAll('.md-menu-arrow')[+menu.getAttribute('data-md-arrow')]
+                : menu.querySelectorAll('.md-menu-item')[+menu.getAttribute('data-md-lit')];
+            if (!item) return;
+            const restore = unhideForMeasuring(h);
+            const sec = h.closest('section');
+            const scale = sec.offsetWidth ? sec.getBoundingClientRect().width / sec.offsetWidth : 1;
+            const hr = h.getBoundingClientRect(), ir = item.getBoundingClientRect();
+            const avail = h.parentElement.clientWidth -
+                (parseFloat(getComputedStyle(h.parentElement).paddingLeft) || 0) - (parseFloat(getComputedStyle(h.parentElement).paddingRight) || 0);
+            const hw = hr.width / scale;
+            const left = (ir.left - hr.left) / scale, right = (ir.right - hr.left) / scale;
+            const centre = (left + right) / 2;
+            let ml = centre < avail / 2 ? left : right - hw;
+            ml = Math.max(0, Math.min(avail - hw, ml));
+            h.style.marginLeft = ml.toFixed(1) + 'px';
+            restore();
+        });
+    }
+    window.positionMenuHeads = positionMenuHeads;
+
+    /* @marks: show each mark in its state for the slide's current click
+       (the steps are hidden fragments; a mark moved by a later line takes
+       that line's place and colour). The export shows the final state. */
+    function applyMarks(sec) {
+        if (!sec) return;
+        const final = document.documentElement.classList.contains('mga-final');
+        sec.querySelectorAll('.md-marks-frame').forEach(function (frame) {
+            let cur = -1;
+            frame.querySelectorAll('.md-mark-step').forEach(function (st) {
+                if (st.classList.contains('visible')) cur = Math.max(cur, +st.getAttribute('data-md-step'));
+            });
+            if (final) cur = Infinity;
+            frame.querySelectorAll('.md-mark').forEach(function (mk) {
+                const states = JSON.parse(mk.getAttribute('data-md-states'));
+                let st = null;
+                states.forEach(function (x) { if (x.s <= cur) st = x; });
+                mk.classList.toggle('is-off', !st);
+                const use = st || states[0];
+                mk.setAttribute('style', markStyle(mk.className.match(/md-mark-(\w+)/)[1], use));
+                const t = mk.querySelector('.md-mark-text');
+                if (t) {
+                    const html = use.t || '';
+                    if (t.innerHTML !== html) t.innerHTML = html;
+                    if (!t.classList.contains('md-mark-free')) t.className = 'md-mark-text md-mark-' + (use.pos || 'above');
+                }
+            });
+            const box = frame.querySelector('.md-marks-box[data-md-zooms]');
+            if (box) {
+                let z = null;
+                JSON.parse(box.getAttribute('data-md-zooms')).forEach(function (x) { if (x.s <= cur) z = x; });
+                if (z) box.style.cssText += ';' + zoomStyle(z);
+                else ['--zx', '--zy', '--zk'].forEach(function (k) { box.style.removeProperty(k); });
+            }
+        });
+    }
+    function wireMarks(deck) {
+        const sync = function (e) {
+            (e.fragments || [e.fragment]).forEach(function (f) {
+                if (f && f.classList.contains('md-mark-step')) applyMarks(f.closest('section'));
+            });
+        };
+        deck.on('fragmentshown', sync);
+        deck.on('fragmenthidden', sync);
+        deck.on('slidechanged', function (e) { applyMarks(e.currentSlide); });
+        deck.on('ready', function () {
+            document.querySelectorAll('.reveal .slides .md-marks-slide').forEach(applyMarks);
+        });
+        document.querySelectorAll('.reveal .slides .md-marks-slide').forEach(applyMarks);
+    }
+
+    /* @video: the hidden cue fragment plays the video once from the start
+       (it stops on its last frame); stepping back stops it and rewinds */
+    function wireVideos(deck) {
+        // export: every video shows its poster
+        if (document.documentElement.classList.contains('mga-final')) {
+            document.querySelectorAll('.reveal video[data-autoplay]').forEach(function (v) { v.removeAttribute('data-autoplay'); });
+            return;
+        }
+        const each = function (e, fn) {
+            (e.fragments || [e.fragment]).forEach(function (f) {
+                if (!f || !f.classList.contains('md-video-cue')) return;
+                const v = f.closest('section').querySelector('video[data-md-video="' + f.getAttribute('data-md-video') + '"]');
+                if (v) fn(v);
+            });
+        };
+        deck.on('fragmentshown', function (e) {
+            each(e, function (v) {
+                try { v.currentTime = 0; } catch (x) {}
+                const p = v.play();
+                if (p && p.catch) p.catch(function () {});
+            });
+        });
+        deck.on('fragmenthidden', function (e) {
+            each(e, function (v) { v.pause(); try { v.currentTime = 0; } catch (x) {} });
+        });
+    }
+
+    /* bleed on @image-left/right: how far the screen reaches past the
+       slide on each side, in slide pixels (refitSlides keeps it current) */
+    function setBleedExtents() {
+        const slides = document.querySelector('.reveal .slides');
+        if (!slides || !window.Reveal || !Reveal.getScale) return;
+        const s = Reveal.getScale() || 1;
+        const c = Reveal.getConfig();
+        const viewport = document.querySelector('.reveal').getBoundingClientRect();
+        slides.style.setProperty('--bleed-x', Math.max(0, (viewport.width / s - c.width) / 2).toFixed(1) + 'px');
+        slides.style.setProperty('--bleed-y', Math.max(0, (viewport.height / s - c.height) / 2).toFixed(1) + 'px');
+    }
+    window.setBleedExtents = setBleedExtents;
+
+    /* ?coords: clicking an image (or a @marks image) shows the point's
+       position in percent of the image, logs it and copies it, for
+       writing @marks lines and @zoom focus= */
+    if (/[?&]coords\b/.test(location.search) && typeof document.addEventListener === 'function') {
+        document.documentElement.classList.add('mga-coords');
+        document.addEventListener('click', function (e) {
+            const t = e.target.closest && (e.target.closest('.md-marks-box') ||
+                (e.target.tagName === 'IMG' && e.target.closest('.reveal .slides') ? e.target : null));
+            if (!t) return;
+            const r = t.getBoundingClientRect();
+            const fx = function (v) { return (Math.round(v * 10) / 10).toString(); };
+            const txt = fx((e.clientX - r.left) / r.width * 100) + ',' + fx((e.clientY - r.top) / r.height * 100);
+            let tip = document.getElementById('mga-coords-tip');
+            if (!tip) { tip = document.createElement('div'); tip.id = 'mga-coords-tip'; document.body.appendChild(tip); }
+            tip.textContent = txt;
+            tip.style.left = (e.clientX + 12) + 'px';
+            tip.style.top = (e.clientY + 12) + 'px';
+            console.log('[coords] ' + txt + '  (' + (t.getAttribute('src') || (t.querySelector('img') || {}).getAttribute && t.querySelector('img').getAttribute('src')) + ')');
+            if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).catch(function () {});
+            e.stopPropagation();
+        }, true);
+    }
+
     window.MgaBuilds = {
         id: 'mga-builds',
-        init: function (deck) { buildTranscriptOverlays(); applyBuilds(); wireAutoBuilds(deck); }
+        init: function (deck) {
+            buildTranscriptOverlays();
+            markMenuHeads();
+            linkMorphSlides();
+            applyBuilds();
+            wireAutoBuilds(deck);
+            wireMarks(deck);
+            wireVideos(deck);
+            deck.on('autoanimate', ghostUnmatched);
+            deck.on('slidechanged', function (e) { if (!e.currentSlide.hasAttribute('data-auto-animate')) clearGhosts(); });
+        }
     };
 
     /* @transcript: a line whose text starts with // is indented so its

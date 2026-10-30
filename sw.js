@@ -32,7 +32,8 @@ function isStatic(url) {
 }
 
 function store(request, response) {
-    if (response && (response.ok || response.type === 'opaque')) {
+    // whole responses only: a byte range (206) cannot be stored
+    if (response && (response.status === 200 || response.type === 'opaque')) {
         const copy = response.clone();
         caches.open(VERSION).then(function (c) { c.put(request, copy); });
     }
@@ -68,6 +69,32 @@ function networkFirst(request) {
     });
 }
 
+/* A video asks for byte ranges (Safari always does). Answer them from
+   the stored whole file when there is one, so @video plays offline;
+   otherwise the network answers. */
+function rangeFromStore(request) {
+    return caches.match(request.url).then(function (hit) {
+        if (!hit) return fetch(request);
+        return hit.arrayBuffer().then(function (buf) {
+            const size = buf.byteLength;
+            const m = /bytes=(\d*)-(\d*)/.exec(request.headers.get('range') || '');
+            let start = 0, end = size - 1;
+            if (m && m[1]) { start = parseInt(m[1], 10); if (m[2]) end = parseInt(m[2], 10); }
+            else if (m && m[2]) { start = Math.max(0, size - parseInt(m[2], 10)); }
+            end = Math.min(end, size - 1);
+            if (!m || start >= size || end < start) {
+                return new Response(null, { status: 416, headers: { 'Content-Range': 'bytes */' + size } });
+            }
+            return new Response(buf.slice(start, end + 1), { status: 206, headers: {
+                'Content-Type': hit.headers.get('Content-Type') || 'video/mp4',
+                'Content-Range': 'bytes ' + start + '-' + end + '/' + size,
+                'Content-Length': String(end - start + 1),
+                'Accept-Ranges': 'bytes'
+            } });
+        });
+    });
+}
+
 self.addEventListener('fetch', function (event) {
     const request = event.request;
     if (request.method !== 'GET') return;
@@ -75,6 +102,7 @@ self.addEventListener('fetch', function (event) {
     const ours = url.origin === self.location.origin;
     const googleFonts = url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com';
     if (!ours && !googleFonts) return;
+    if (ours && request.headers.has('range')) { event.respondWith(rangeFromStore(request)); return; }
     event.respondWith(isStatic(url) ? cacheFirst(request) : networkFirst(request));
 });
 

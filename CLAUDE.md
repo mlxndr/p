@@ -37,8 +37,10 @@ inc/
   scripts-config.js         Which scripts/plugins to load
   script-loader.js          Loads core → plugins → expands directives →
                             config → theme-sync (logos, QR codes) →
-                            refitSlides (zoom boxes, autofit) → offline list
-  directives.js             @-directive expander, @zoom positioner, autofit
+                            refitSlides (zoom boxes, menu headings,
+                            autofit) → offline list
+  directives.js             @-directive expander, builds, morph, @zoom
+                            positioner, autofit
   revconfig.js              Reveal.initialize + menu config
   qr.js                     QR code library
   handout.js, marked.min.js Handout rendering
@@ -67,6 +69,7 @@ inc/
                             instead of the data-meta="title" placeholder
   handout.html              Printable version (optional, generic)
   img/                      Presentation-specific images
+  media/                    Videos for @video (optional)
 archive/                    Old presentations (note: their ../inc/ paths
                             are broken one level deep — known issue)
 f/                          Binary file storage (PDF/PPTX exports)
@@ -92,6 +95,16 @@ Full-bleed image slide (contain by default, never crops charts):
   @image ./img/chart.png alt="Description" caption="Optional caption"
   @image ./img/photo.jpg alt="..." fit=cover focus=30,60
 
+Text over the image (the markdown after it, to @end or the end of the
+slide; positions top-left, top, top-right, left, centre, right,
+bottom-left, bottom, bottom-right; the body may hold @columns):
+  @image ./img/photo.jpg fit=cover alt="..." over=top-right [band|bubble] [dim] [build]
+  > *Te magister artium creamus*
+  @end
+  (no style: a paper panel; band: a dark band to the screen edges;
+  bubble: a speech bubble; dim: a veil of the paper colour over the
+  image; build: text and veil arrive on a click)
+
 A run of full-bleed slides (one indented line each):
   @image-seq
     ./img/chart1.png alt="..." caption="..."
@@ -103,7 +116,9 @@ split= sets the image column percentage, default 42):
   * first bullet
   * second bullet
 
-  (@image-right mirrors it; add `fragment` to reveal the image on click)
+  (@image-right mirrors it; add `build` (or the old `fragment`) to reveal
+  the image on click; `bleed` runs the image to the screen edge, cropped,
+  with focus=x,y choosing what the crop keeps)
 
 Two images side by side:
   @compare
@@ -111,7 +126,9 @@ Two images side by side:
     ./img/after.png alt="..." caption="After"
 
 Hold an image steady while the text swaps (auto-animate pair — put the
-same directive with the same id on two adjacent slides):
+same directive with the same id on two adjacent slides; works on @image
+and @image-seq lines too, which then draw the image in the slide frame,
+and the file may change between the two):
   @image-left ./img/scan.png hold id=ocr alt="..." split=42
 
 Zoom from a full image into a detail that fills the screen:
@@ -124,6 +141,25 @@ Ken Burns background (use sparingly — section dividers and image-only
 slides, never under content the audience should read):
   @kenburns ./img/photo.jpg alt="..." pan=in dur=24s
   pan: in, out, left, right, up, down. Honours prefers-reduced-motion.
+
+Marks on an image, one step (click) per line; positions in percent of
+the image; the image stands alone first:
+  @marks ./img/map.png alt="..." [caption="..."] [all]
+    ring 47,52 r=8 green "Dutch" [pos=above|below|left|right]
+    + ring 44,45 r=4 gold "West Frisian"     (+ joins the step before)
+    box 10,20 w=30 h=12 red id=b1             (x,y = top left)
+    box 40,20 w=30 h=12 id=b1                 (same id: the box moves there)
+    label 20,80 "Very frequently used" teal rot=-80
+    dim y=40,55 | dim x=10,30 | dim 10,20 w=30 h=12   (darkens the rest)
+    zoom 40,40 2.5                            (zooms in as a step)
+  r= is a percentage of the image width (w= h= instead for an ellipse);
+  all: every mark at once. Add ?coords to the address and click an image
+  to see (and copy) the position of the click in percent.
+
+Video (a click plays it once and it stops on its last frame; markdown
+after it becomes a side column as with @image-left; the poster is what
+the PDF shows; the file is kept for offline use):
+  @video ./media/clip.mp4 poster=./img/clip.png alt="..." [split=66] [caption="..."] [autoplay] [loop] [muted]
 ```
 
 ### Text-slide directives
@@ -147,6 +183,11 @@ Slide modifiers (expand to classes; combine flags freely):
   @slide build              lists build here even in a listBuild:false deck
   @slide build=auto         the slide's builds run without clicks (0.9 s
                             apart), stopping when the slide is left
+  @slide morph              auto-animate from the slide before (written on
+                            this slide only); words: every word a piece
+                            (words=loose ignores punctuation and case);
+                            duration=1.5 (seconds; default 1)
+  @slide morphemes=split    the state of every morpheme word on the slide
   @slide statement          one large centred sentence or quotation
   @slide activity           room activity: lighter ground, accent bar at
                             the screen edge
@@ -180,6 +221,77 @@ Inline styling in any markdown text:
   <span style="font-variant: small-caps;"> pattern)
   %%an aside%% renders in the theme's subtle text colour
 ```
+
+### Sets, tags and menus
+
+```
+Define labelled items once per deck (or per course, in a file pulled in
+with @include): Label :: colour :: icon :: optional. Aliases go
+comma-separated in the label; every field but the label may be left out.
+A set shows nothing where it is written, and a slide holding only sets
+is dropped.
+  @set criteria
+    Orthographic, Spelling :: green :: pen-nib
+    Phonological :: teal :: volume
+  @set languages text               (a text set: names in a colour)
+    Latin :: blue
+    Greek, Hellenic :: green
+
+Uses:
+  [[Orthographic]]      the set's tag: a pill in its colour with its icon
+  ## [[Orthographic]]   a heading that is one tag is a ribbon heading
+                        (on a morph slide the tag moves into it)
+  [[Latin]]             text set: coloured text, no pill; names from a
+                        text set are also coloured with no markup in
+                        @tree and @marks labels
+  [[GPA 9.0]]{grey}     a tag outside any set takes its colour in braces
+
+Navigation drawn from a set; it holds still across slides, and
+consecutive slides with a menu of the same set morph by themselves:
+  @menu neologisms all centre       every item lit, at mid-slide
+  @menu neologisms labels           all lit, labels arrive on a click
+                                    (labels=static: at once)
+  @menu neologisms 2                item 2 lit, the rest grey; also 4,5
+  ## Conversion                     the heading sits under the lit item
+                                    and moves along (heading=build on the
+                                    menu: it builds in on a click instead)
+  @menu honours 2>3                 steps: the arrow between 2 and 3 lit
+  style=strip (circles with icons; the default when every item has an
+  icon), tabs (a stack of ribbon tabs), steps (boxes with arrows; the
+  default otherwise). Icons must be in base.css's subset (add a
+  codepoint pair there).
+```
+
+### Morph
+
+`@slide morph` on a slide makes reveal's auto-animate run from the slide
+before (linkMorphSlides in directives.js marks that slide). Identical
+headings, paragraphs and images match with no markup; `[[pieces]]` match
+by text or id; `words` makes every word of both slides a piece. Menus,
+morpheme words sharing pieces, `@zoom`, `hold` and `@transcript
+morph`/`overlay` morph by themselves; an explicit `@slide fade` or `cut`
+stops the automatic links. The matcher (mgaMorphMatcher, passed to
+reveal as autoAnimateMatcher) leaves out of matching anything that builds
+in on the new slide, and moves words and morpheme pieces without scaling
+them; elements of the old slide with no partner fade out
+(ghostUnmatched). Export (`?fragments=false`, print) turns auto-animate
+off, so every slide is captured in its final state.
+
+Morpheme words are an inline mark: ` + ` between the pieces, a hyphen on
+the affix side, the state after the bracket.
+
+```
+  [un- + help + -ful + -ness]{plain}    the word, pieces coloured
+  [un- + help + -ful + -ness]{split}    pieces apart, with their hyphens
+                                        (also apart: no hyphens; bases,
+                                        affixes: the other kind dimmed)
+  [un- + help + -ful + ~-ness]{jigsaw}  puzzle pieces; ~ hides a piece
+                                        but keeps its id, so a morph
+                                        fades it out
+```
+
+Pieces are coloured by position from a cycle and take their id from the
+word and the piece, so the same word on adjacent slides morphs.
 
 ### Text blocks
 
@@ -282,6 +394,7 @@ straight after a closing bracket styles the bracketed text.
   {~~a~>b~~}       a replaced by b on a click
   {answer x}       a click step when presenting; hidden in the student
                    version (export page, phase 5)
+  [a- + b]{split}  a morpheme word (see Morph above)
 ```
 
 Every paired mark needs a non-space just inside each marker (`a == b`
@@ -403,8 +516,11 @@ palette (Part Five), slide control: heading subtitle, @note top and
 build, @source, @slide statement, activity, static, build=auto, fade,
 hidden, nohandout, @pause and @include (Part Six; included.md is the
 included file), the text blocks (Part Seven: cards, columns, terms,
-stats, examples, tables, concordance, trees, transcripts), @refs,
-@slide spare. Its meta.json sets a series line. Open it in
+stats, examples, tables, concordance, trees, transcripts), sets, tags
+and motion (Part Eight: @set, tags and a ribbon heading, @menu in every
+style and state, @slide morph with pieces and words, morpheme words in
+every state, @marks, over= in each style, bleed, hold on @image-seq,
+@video; media/specimen.mp4 is its test video), @refs, @slide spare. Its meta.json sets a series line. Open it in
 each theme and layout after any change to inc/. Keep it current when
 adding a directive.
 
@@ -554,9 +670,12 @@ fragment transitions.
 `sw.js` (registered by head.js, never on localhost) keeps copies of
 everything a deck uses: once a deck has been opened online, it works
 with no connection. Each deck posts its full file list to the worker
-when ready (every image in the deck, all loaded files, the Colourful
-themes' stylesheets and faces). Text files are network-first with a 4s
-timeout, so edits appear at once; images and fonts are cache-first.
+when ready (every image in the deck, every video and poster, all loaded
+files, the Colourful themes' stylesheets and faces). Text files are
+network-first with a 4s timeout, so edits appear at once; images, fonts
+and videos are cache-first, and a request for part of a stored video (a
+byte range, which Safari always asks for) is answered from the stored
+file.
 Change `VERSION` in sw.js to discard all stored copies.
 
 Fonts are self-hosted WOFF2 (Concourse, Equity, Century Supra by Matthew

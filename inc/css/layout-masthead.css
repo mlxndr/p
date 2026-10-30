@@ -36,3 +36,10 @@
     top: 0;
     transform: none;
 }
+
+/* The heading under a @menu: the bar runs across at the heading's own
+   height, so it does not cover the menu above it */
+.reveal .slides section:not(.title-slide):not(.md-section):not(.stack) > h2.md-menu-head {
+    clip-path: inset(0 -2000px 0 -2000px);
+    margin-top: 0.2em;
+}

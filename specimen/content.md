@@ -584,6 +584,239 @@ The course grade is the weighted mean of the component grades, rounded to the ne
 
 ---
 
+@section Part Eight: Sets, Motion and Images
+
+---
+
+@set criteria
+  Orthographic :: green :: pen-nib
+  Phonological :: teal :: volume
+  Grammatical :: light-gold :: brackets-curly
+  Semantic :: blue :: lightbulb
+
+@set why
+  Discovery :: green :: telescope
+  Prestige :: light-gold :: crown
+  Subjugation :: teal :: swords
+
+@set neologisms
+  Affixation :: red :: puzzle-piece
+  Conversion :: pink :: exchange-alt
+  Compounding :: gold :: cubes
+  Blending :: green :: compress-alt
+  Clipping :: teal :: cut
+  Back-formation :: blue :: undo
+  Abbreviation :: purple :: font-case
+
+@set honours
+  Year 1
+  Year 2
+  Junior Honours
+  Senior Honours
+  Year 5 MEng :: :: :: optional
+  Award :: navy
+
+@set languages text
+  Latin :: blue
+  French :: purple
+  Greek, Hellenic :: green
+
+---
+
+## Tags from a Set
+
+[[Orthographic]] [[Phonological]] [[Grammatical]] [[Semantic]]
+
+*occupy*, from [[French]] *occuper*, from [[Latin]] *occupāre*; *phone*, from [[Greek]] *phōnē*
+
+A tag outside any set: [[GPA 9.0]]{grey}; an optional stage: [[Year 5 MEng]]
+
+--
+
+@menu why all style=tabs centre
+
+--
+
+@slide morph
+## [[Discovery]]
+
+* A new thing or concept is met, and another language already has a word for it
+* *tomato*, *hurricane*, *chocolate*
+
+--
+
+@menu neologisms all centre
+
+--
+
+@menu neologisms labels
+
+--
+
+@menu neologisms 1
+## Affixation
+
+* English affixes make new words from existing ones
+* *graceful*, *disgraceful*
+
+--
+
+@menu neologisms 2
+## Conversion
+
+* A word form taken into another part of speech
+* *access*, *email*, *fish*
+
+--
+
+@menu neologisms 6
+## Back-formation
+
+* A new word made by removing what looks like an affix
+* *to burgle*, *to edit*
+
+--
+
+@menu honours 2>3
+## Honours Entry
+
+* The arrow between Year 2 and Junior Honours is lit
+* The stages come from `@set honours`; Year 5 MEng is an optional stage
+
+--
+
+@menu honours 4
+## Senior Honours
+
+* One stage lit: the heading moves along under it
+
+---
+
+## A Morph of Pieces
+
+The [[cat]] sat on the [[mat]].
+
+--
+
+@slide morph
+## A Morph of Pieces
+
+On the [[mat]] sat the [[cat]].
+
+--
+
+## Every Word a Piece
+
+Colourless green ideas sleep furiously.
+
+--
+
+@slide morph words=loose
+## Every Word a Piece
+
+Furiously sleep colourless green ideas.
+
+---
+
+## Morpheme Words
+
+@terms
+  plain :: [un- + help + -ful + -ness]{plain}
+  split :: [un- + help + -ful + -ness]{split}
+  apart :: [un- + help + -ful + -ness]{apart}
+  bases :: [un- + help + -ful + -ness]{bases}
+  affixes :: [un- + help + -ful + -ness]{affixes}
+  jigsaw :: [un- + help + -ful + -ness]{jigsaw}
+
+--
+
+@slide centred fade
+## Taking Words to Pieces
+
+[un- + help + -ful + -ness]{jigsaw}
+
+--
+
+@slide centred
+## Taking Words to Pieces
+
+[~un- + help + -ful + ~-ness]{jigsaw}
+
+--
+
+@slide centred morphemes=split
+## Taking Words to Pieces
+
+[un- + help + -ful + -ness]{plain}
+
+---
+
+## Marks on an Image
+
+@marks ./img/mirror1834-06-03close.png alt="A column of the Mirror of Parliament, 1834, with the interruption 'Oh! Oh! Oh!'" caption="Mirror of Parliament, 1834"
+  box 7.5,21 w=25 h=6.5 navy "Speaker" id=sp
+  ring 33.5,45.5 r=8 green "Figures" pos=below
+  dim y=68,81.5
+  + ring 76,75.5 r=11 red "Interruption" pos=above
+  box 8.5,79.5 w=27 h=7 id=sp
+  label 50,6 "One debate, three voices" teal
+  zoom 70,76 2.2
+
+--
+
+## Every Mark at Once
+
+@marks ./img/mirror1834-06-03close.png alt="The same column, every mark shown at once" all
+  box 7.5,21 w=25 h=6.5 navy "Speaker"
+  ring 76,75.5 r=11 red "Interruption"
+  label 4,62 "Several Honourable Members" purple rot=-90
+
+---
+
+@image ./img/mirror1834-06-03close.png fit=cover focus=50,60 alt="A column of the Mirror of Parliament" over=bottom band
+The *Mirror of Parliament* printed the interruptions as well as the speeches
+
+--
+
+@image ./img/youngdickens.png alt="A portrait of a young Charles Dickens" over=right bubble build
+### Charles Dickens
+A reporter for the *Mirror of Parliament*
+@end
+
+--
+
+@image ./img/speechlengthdistribution.png alt="Histogram of speech lengths in the Mirror and Hansard" over=centre dim build
+### A Veil over the Chart
+`dim` lays the paper colour over the image; `build` brings it in with the text
+
+--
+
+## Bleed
+
+@image-left ./img/tc-hansard.png alt="A portrait of Thomas Curson Hansard" bleed split=36 focus=50,30
+* `bleed` runs the image to the edge of the screen
+* `focus=50,30` sets what the crop keeps
+
+--
+
+@image-seq
+  ./img/speechlengthdistribution.png alt="Histogram of speech lengths" hold id=chart caption="hold id=chart"
+  ./img/laughter.png alt="Chart of laughter markers" hold id=chart caption="The same id: the image moves into place"
+
+--
+
+## Video
+
+@video ./media/specimen.mp4 poster=./img/specimen-video.png alt="A test pattern moving for four seconds" split=60
+* A click plays the video once; it stops on its last frame
+* The poster is what the PDF shows
+
+--
+
+@video ./media/specimen.mp4 poster=./img/specimen-video.png alt="A test pattern, looping" autoplay loop muted caption="autoplay loop muted"
+
+---
+
 @refs title="References"
 * Jupp, Peter. 1998. *British Politics on the Eve of Reform*. Basingstoke: Macmillan.
 * Vice, John & Stephen Farrell. 2017. *The History of Hansard*. London: House of Lords Library.

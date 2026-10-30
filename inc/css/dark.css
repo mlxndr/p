@@ -26,3 +26,19 @@
     --g-complement: #FFBEEF;
     --g-adverbial: #FFE250;
 }
+
+:root {
+    /* colour marks [x]{name}: the light versions read on dark grounds */
+    --pt-red: var(--p-light-red);
+    --pt-orange: var(--p-light-orange);
+    --pt-gold: var(--p-light-gold);
+    --pt-green: var(--p-light-green);
+    --pt-teal: var(--p-light-teal);
+    --pt-blue: var(--p-light-blue);
+    --pt-navy: var(--p-light-navy);
+    --pt-purple: var(--p-light-purple);
+    --pt-pink: var(--p-light-pink);
+    --pt-grey: var(--p-light-grey);
+    /* highlight: a dark gold, so light text keeps its contrast */
+    --r-highlight: color-mix(in srgb, var(--p-gold) 70%, transparent);
+}

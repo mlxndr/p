@@ -328,6 +328,193 @@ li::marker {
 .object { color: var(--g-object); }
 .complement { color: var(--g-complement); }
 .adverbial { color: var(--g-adverbial); }
+/* cj (conjunction, linker) has no hue of its own: the five hues belong to
+   the five functions, so a linker is marked by weight alone */
+.conjunction { color: inherit; }
+
+/* Grammar marks in prose: [S Tam] [P regards] [O me] (directives.js).
+   As in the MandS colour-coded passages: functions in their colour at
+   the text's own weight, conjunctions bold in the ink. Od and Oi take
+   the object colour, Cs and Co the complement colour (the passages'
+   key has five classes). **[S x]** makes a function bold as well. */
+.reveal .md-g.conjunction { font-weight: bold; }
+
+/* ===========================================
+   Palette (SPEC 5.3): one set of colour names for every theme, used by
+   colour marks [x]{name}, tags [[x]]{name} and every colour option.
+   Each hue comes as a strong colour and a light one (light-NAME).
+   Strong: white text on it and the colour as text on every light
+   theme's paper both read at 4.5:1 or better (4.6:1 on the darkest
+   paper, the Historical Thesaurus ground). Light: dark ink on it reads
+   at 12:1 or better, and the colour as text on Twilight at 8:1. Hues
+   were chosen to stay apart from each other (CIEDE2000 15 or more) and
+   from the five grammar colours (13 or more). --p-NAME-deep is the
+   darker partner for ribbon tails and tab edges.
+   =========================================== */
+:root {
+    --p-red: #BB3339;      --p-light-red: #FFCAC7;
+    --p-orange: #8C5300;   --p-light-orange: #FBD5B0;
+    --p-gold: #7B6A00;     --p-light-gold: #F3E3A2;
+    --p-green: #346704;    --p-light-green: #CAE9BB;
+    --p-teal: #005F5C;     --p-light-teal: #B3E9E5;
+    --p-blue: #333ECE;     --p-light-blue: #D2DAFF;
+    --p-navy: #0D2F61;     --p-light-navy: #BBCEE7;
+    --p-purple: #8A50AE;   --p-light-purple: #E6CFF7;
+    --p-pink: #AA3B73;     --p-light-pink: #FCCBDE;
+    --p-grey: #5F6061;     --p-light-grey: #D3D2D0;
+    --p-white: #FFFFFF;    --p-black: #111111;
+    /* ink on light fills (white goes on strong fills) */
+    --p-ink: #111111;
+    /* the theme's highlight, for ==x== and {==x==} */
+    --r-highlight: var(--p-light-gold);
+}
+:root {
+    --p-red-deep: color-mix(in oklab, var(--p-red) 72%, black);
+    --p-orange-deep: color-mix(in oklab, var(--p-orange) 72%, black);
+    --p-gold-deep: color-mix(in oklab, var(--p-gold) 72%, black);
+    --p-green-deep: color-mix(in oklab, var(--p-green) 72%, black);
+    --p-teal-deep: color-mix(in oklab, var(--p-teal) 72%, black);
+    --p-blue-deep: color-mix(in oklab, var(--p-blue) 72%, black);
+    --p-navy-deep: color-mix(in oklab, var(--p-navy) 72%, black);
+    --p-purple-deep: color-mix(in oklab, var(--p-purple) 72%, black);
+    --p-pink-deep: color-mix(in oklab, var(--p-pink) 72%, black);
+    --p-grey-deep: color-mix(in oklab, var(--p-grey) 72%, black);
+    --p-light-red-deep: color-mix(in oklab, var(--p-light-red) 82%, black);
+    --p-light-orange-deep: color-mix(in oklab, var(--p-light-orange) 82%, black);
+    --p-light-gold-deep: color-mix(in oklab, var(--p-light-gold) 82%, black);
+    --p-light-green-deep: color-mix(in oklab, var(--p-light-green) 82%, black);
+    --p-light-teal-deep: color-mix(in oklab, var(--p-light-teal) 82%, black);
+    --p-light-blue-deep: color-mix(in oklab, var(--p-light-blue) 82%, black);
+    --p-light-navy-deep: color-mix(in oklab, var(--p-light-navy) 82%, black);
+    --p-light-purple-deep: color-mix(in oklab, var(--p-light-purple) 82%, black);
+    --p-light-pink-deep: color-mix(in oklab, var(--p-light-pink) 82%, black);
+    --p-light-grey-deep: color-mix(in oklab, var(--p-light-grey) 82%, black);
+}
+
+/* Colour marks: [x]{name}. On dark grounds (dark.css) the strong names
+   are drawn in their light versions, which read there */
+.reveal .md-c-red { color: var(--pt-red, var(--p-red)); }
+.reveal .md-c-orange { color: var(--pt-orange, var(--p-orange)); }
+.reveal .md-c-gold { color: var(--pt-gold, var(--p-gold)); }
+.reveal .md-c-green { color: var(--pt-green, var(--p-green)); }
+.reveal .md-c-teal { color: var(--pt-teal, var(--p-teal)); }
+.reveal .md-c-blue { color: var(--pt-blue, var(--p-blue)); }
+.reveal .md-c-navy { color: var(--pt-navy, var(--p-navy)); }
+.reveal .md-c-purple { color: var(--pt-purple, var(--p-purple)); }
+.reveal .md-c-pink { color: var(--pt-pink, var(--p-pink)); }
+.reveal .md-c-grey { color: var(--pt-grey, var(--p-grey)); }
+.reveal .md-c-light-red { color: var(--p-light-red); }
+.reveal .md-c-light-orange { color: var(--p-light-orange); }
+.reveal .md-c-light-gold { color: var(--p-light-gold); }
+.reveal .md-c-light-green { color: var(--p-light-green); }
+.reveal .md-c-light-teal { color: var(--p-light-teal); }
+.reveal .md-c-light-blue { color: var(--p-light-blue); }
+.reveal .md-c-light-navy { color: var(--p-light-navy); }
+.reveal .md-c-light-purple { color: var(--p-light-purple); }
+.reveal .md-c-light-pink { color: var(--p-light-pink); }
+.reveal .md-c-light-grey { color: var(--p-light-grey); }
+.reveal .md-c-white { color: var(--p-white); }
+.reveal .md-c-black { color: var(--p-black); }
+.reveal .md-c-accent { color: var(--L-accent); }
+
+/* Tags: [[GPA 9.0]]{grey}, a pill in a palette colour, ink chosen for
+   contrast (white on strong fills, dark on light ones). Small caps for
+   hierarchy; a theme that does not use small caps sets --tag-caps: normal */
+.reveal .md-tag {
+    display: inline-block;
+    padding: 0.08em 0.6em 0.14em;
+    border-radius: 999px;
+    font-size: 0.8em;
+    line-height: 1.25;
+    font-variant-caps: var(--tag-caps, all-small-caps);
+    letter-spacing: var(--sc-tracking, 0);
+    background: var(--tag-bg);
+    color: var(--tag-ink, #FFFFFF);
+    vertical-align: 0.06em;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .md-bg-red { --tag-bg: var(--p-red); }
+.reveal .md-bg-orange { --tag-bg: var(--p-orange); }
+.reveal .md-bg-gold { --tag-bg: var(--p-gold); }
+.reveal .md-bg-green { --tag-bg: var(--p-green); }
+.reveal .md-bg-teal { --tag-bg: var(--p-teal); }
+.reveal .md-bg-blue { --tag-bg: var(--p-blue); }
+.reveal .md-bg-navy { --tag-bg: var(--p-navy); }
+.reveal .md-bg-purple { --tag-bg: var(--p-purple); }
+.reveal .md-bg-pink { --tag-bg: var(--p-pink); }
+.reveal .md-bg-grey { --tag-bg: var(--p-grey); }
+.reveal .md-bg-black { --tag-bg: var(--p-black); }
+.reveal .md-bg-light-red { --tag-bg: var(--p-light-red); --tag-ink: var(--p-ink); }
+.reveal .md-bg-light-orange { --tag-bg: var(--p-light-orange); --tag-ink: var(--p-ink); }
+.reveal .md-bg-light-gold { --tag-bg: var(--p-light-gold); --tag-ink: var(--p-ink); }
+.reveal .md-bg-light-green { --tag-bg: var(--p-light-green); --tag-ink: var(--p-ink); }
+.reveal .md-bg-light-teal { --tag-bg: var(--p-light-teal); --tag-ink: var(--p-ink); }
+.reveal .md-bg-light-blue { --tag-bg: var(--p-light-blue); --tag-ink: var(--p-ink); }
+.reveal .md-bg-light-navy { --tag-bg: var(--p-light-navy); --tag-ink: var(--p-ink); }
+.reveal .md-bg-light-purple { --tag-bg: var(--p-light-purple); --tag-ink: var(--p-ink); }
+.reveal .md-bg-light-pink { --tag-bg: var(--p-light-pink); --tag-ink: var(--p-ink); }
+.reveal .md-bg-light-grey { --tag-bg: var(--p-light-grey); --tag-ink: var(--p-ink); }
+.reveal .md-bg-white { --tag-bg: var(--p-white); --tag-ink: var(--p-ink); box-shadow: inset 0 0 0 1px var(--r-border-color); }
+
+/* Highlight: ==x== now, {==x==} on a click */
+.reveal .md-hl,
+.reveal .md-hl-in {
+    border-radius: 0.12em;
+    padding: 0 0.08em;
+    margin: 0 -0.08em;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .md-hl { background-color: var(--r-highlight); }
+.reveal .md-hl-in { transition: background-color 0.35s ease; }
+.reveal .md-hl-in.visible { background-color: var(--r-highlight); }
+
+/* Inserted, removed and replaced text ({++x++} {--x--} {~~a~>b~~}): each
+   piece is a one-column inline grid whose column grows from 0fr to 1fr
+   (or shrinks), so the line closes up or opens out around it with no
+   measuring. overflow: clip (not hidden) keeps the text's baseline. */
+.reveal .md-ins,
+.reveal .md-del,
+.reveal .md-sub-a,
+.reveal .md-sub-b {
+    display: inline-grid;
+    transition: grid-template-columns 0.5s ease, opacity 0.5s ease;
+}
+.reveal .md-ins > span,
+.reveal .md-del > span,
+.reveal .md-sub-a > span,
+.reveal .md-sub-b > span {
+    min-width: 0;
+    overflow: clip;
+    white-space: nowrap;
+}
+.reveal .md-ins,
+.reveal .md-sub-b { grid-template-columns: 0fr; opacity: 0; }
+.reveal .md-del,
+.reveal .md-sub-a { grid-template-columns: 1fr; opacity: 1; }
+.reveal .md-ins.visible,
+.reveal .md-sub.visible .md-sub-b { grid-template-columns: 1fr; opacity: 1; }
+.reveal .md-del.visible,
+.reveal .md-sub.visible .md-sub-a { grid-template-columns: 0fr; opacity: 0; }
+
+/* Export, final state (?fragments=false): the starting state stays
+   visible, removed text struck through and inserted text in the accent */
+html.mga-final .reveal .md-del,
+html.mga-final .reveal .md-sub .md-sub-a {
+    grid-template-columns: 1fr;
+    opacity: 1;
+    text-decoration: line-through;
+}
+html.mga-final .reveal .md-ins,
+html.mga-final .reveal .md-sub .md-sub-b {
+    grid-template-columns: 1fr;
+    opacity: 1;
+    color: var(--L-accent);
+}
+html.mga-final .reveal .md-sub .md-sub-b { margin-left: 0.25em; }
 
 
 

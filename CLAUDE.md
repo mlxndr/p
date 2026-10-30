@@ -3,7 +3,7 @@
 **Repository:** mlxndr/p
 **Purpose:** Academic presentation platform (mga.is)
 **Owner:** Marc Alexander, University of Glasgow
-**Last updated:** 2026-09-26
+**Last updated:** 2026-10-30
 
 ## Overview
 
@@ -151,6 +151,71 @@ Inline styling in any markdown text:
   %%an aside%% renders in the theme's subtle text colour
 ```
 
+### Inline marks
+
+One pass in directives.js (inlineMarks) turns these into spans before
+marked runs. The rule: a brace on its own happens on a click; a brace
+straight after a closing bracket styles the bracketed text.
+
+```
+  ==x==            highlight (--r-highlight; light-gold by default)
+  [x]{name}        text in a palette colour; {accent} = the theme accent
+  [S x]            grammar function: S P O Od Oi C Cs Co A cj, then a
+                   space. Colour at the text's own weight (bold with
+                   **[S x]**); Od/Oi take the object colour, Cs/Co the
+                   complement colour; cj is bold in the ink, no hue (as
+                   in the MandS colour-coded passages)
+  [[x]]            morph piece (span with a stable data-id from its text)
+  [[x|id]]         piece with a hand-set id
+  [[x]]{name}      tag pill in a palette colour (also a piece)
+  :fa-name:        Font Awesome icon (must be in base.css's subset)
+  {==x==}          highlight on a click
+  {++x++}          inserted on a click (the line opens out)
+  {--x--}          removed on a click (the line closes up)
+  {~~a~>b~~}       a replaced by b on a click
+  {answer x}       a click step when presenting; hidden in the student
+                   version (export page, phase 5)
+```
+
+Every paired mark needs a non-space just inside each marker (`a == b`
+stays literal). Static and colour marks nest (`==^^x^^==`,
+`[S [The army]{accent}]`); click marks do not nest in each other. Not
+read as marks: code spans and fences, HTML tags and comments, link
+destinations, backslash escapes (`\[A treatise ...]` for a prose bracket
+starting with a grammar code), and anything between `<!--md-raw-->` and
+`<!--/md-raw-->`. Unknown colour names stay as typed; local preview logs
+them, grammar marks longer than eight words, and icons missing from the
+subset. Export with `?fragments=false` adds `html.mga-final`: removed
+text shows struck through and inserted text in the accent, so the
+starting state stays visible.
+
+### Palette
+
+`--p-NAME` and `--p-light-NAME` in base.css for red, orange, gold, green,
+teal, blue, navy, purple, pink, grey, plus `--p-white`, `--p-black` and a
+darker partner `--p-NAME-deep` for each. One palette for every theme:
+white on each strong colour, and each strong colour as text on every
+light paper, read at 4.5:1 or better; dark ink on each light colour at
+12:1 or better. dark.css draws colour marks in the light versions. The
+UoG brand names (dark-red, dark-blue, light-yellow, university-blue
+...) are accepted as aliases. Grammar colours (--g-*) are separate and
+unchanged.
+
+### Directive parser for new directives
+
+New directives register with `registerDirective(kind, spec)` in
+directives.js instead of adding a branch to expandChunk. The spec gives
+the body kind (`line`, `items`, `markdown`, `prefix`) and the options;
+the shared parser checks the line (positional values, key=value,
+comma lists, colours, numbers, `steps="..."` sequences, flags, `build`
+and `build=`), collects the body (item lines with ` :: ` fields and
+depth; markdown up to `@end` or the end of the slide, with `@slide` and
+`@source` lifted out; the next block for prefixes), handles `name=` and
+repeats (`@terms blends answers` repeats the block named blends with
+merged options), and turns every failure into the red error slide. The
+comment above registerDirective documents the spec fields. A stray
+`@end` is an error slide.
+
 Escape a literal line-initial `@` with `@@`. Raw HTML and reveal's
 `<!-- .slide: ... -->` / `<!-- .element: ... -->` comments still work as
 an escape hatch. A malformed directive renders a self-describing red error
@@ -216,7 +281,8 @@ deprecation note about synchronous requests is expected).
 with sources, md-small, @note, @section, @quote (plain and contrast),
 blockquote, @slide contrast/centred/plain/smaller, every image
 directive, stress tests (single long word, long heading, autofit,
-overflow beyond autofit), code, icons, @refs, @slide spare. Open it in
+overflow beyond autofit), code, icons, every inline mark and the
+palette (Part Five), @refs, @slide spare. Open it in
 each theme and layout after any change to inc/. Keep it current when
 adding a directive.
 

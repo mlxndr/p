@@ -214,6 +214,53 @@ def markers_per_speech(markers, speeches):
 
 ---
 
+@section Part Five: Inline Marks
+
+---
+
+## Highlight, Colour, Small Caps
+
+* The city was ==bombed== overnight
+* He [defended]{red} every claim; she [attacked]{blue} his position: ==^^argument is war^^==
+* [The army]{accent} takes the theme's accent; %%an aside takes the subtle colour%%
+* Tags: [[AFTER]]{purple} [[GPA 9.0]]{grey} [[Draft]]{light-gold} and icons :fa-chalkboard-teacher: :fa-images:
+
+--
+
+## Grammar Marks
+
+[S Tam] [P regards] [O me] [A with suspicion].
+
+[S The army] [P seemed] [Cs tired].
+
+[S She] [P gave] [Oi him] [Od the book] [cj and] [S they] [P elected] [Od her] [Co chair].
+
+--
+
+## The Palette
+
+[[red]]{red} [[orange]]{orange} [[gold]]{gold} [[green]]{green} [[teal]]{teal} [[blue]]{blue} [[navy]]{navy} [[purple]]{purple} [[pink]]{pink} [[grey]]{grey}
+
+[[light-red]]{light-red} [[light-orange]]{light-orange} [[light-gold]]{light-gold} [[light-green]]{light-green} [[light-teal]]{light-teal} [[light-blue]]{light-blue} [[light-navy]]{light-navy} [[light-purple]]{light-purple} [[light-pink]]{light-pink} [[light-grey]]{light-grey}
+
+[red]{red} [orange]{orange} [gold]{gold} [green]{green} [teal]{teal} [blue]{blue} [navy]{navy} [purple]{purple} [pink]{pink} [grey]{grey}
+
+--
+
+## Marks on a Click
+
+A strong {==collocate==}
+
+{++dis++}graceful
+
+br{--eakfast + l--}unch
+
+We provide {~~comfort~>good things~~}
+
+brunch: {answer breakfast + lunch}
+
+---
+
 @refs title="References"
 * Jupp, Peter. 1998. *British Politics on the Eve of Reform*. Basingstoke: Macmillan.
 * Vice, John & Stephen Farrell. 2017. *The History of Hansard*. London: House of Lords Library.

@@ -54,6 +54,7 @@ function loadScripts() {
     })
     .then(() => {
       if (typeof syncNoteFragments === 'function') syncNoteFragments();
+      if (typeof checkInlineIcons === 'function') checkInlineIcons();
       setupThemeBasedElements();
       // Fit and position once now, again when webfonts settle (metrics
       // shift), and whenever the window changes size

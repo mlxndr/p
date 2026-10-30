@@ -187,3 +187,28 @@ blockquote {
 .md-sc { font-variant-caps: all-small-caps; }
 .md-subtle { opacity: 0.6; }
 .md-source { font-size: 0.85em; font-style: normal; text-align: right; opacity: 0.7; }
+
+/* Inline marks (SPEC 5): the handout shows each slide's final state.
+   Palette values as in base.css. */
+.md-g.conjunction { font-weight: bold; }
+.md-c-red { color: #BB3339; } .md-c-orange { color: #8C5300; } .md-c-gold { color: #7B6A00; }
+.md-c-green { color: #346704; } .md-c-teal { color: #005F5C; } .md-c-blue { color: #333ECE; }
+.md-c-navy { color: #0D2F61; } .md-c-purple { color: #8A50AE; } .md-c-pink { color: #AA3B73; }
+.md-c-grey { color: #5F6061; } .md-c-accent { color: #2F5A8C; }
+.md-hl, .md-hl-in { background: #F3E3A2; padding: 0 0.08em; }
+.md-tag { display: inline-block; padding: 0 0.5em; border-radius: 999px; font-size: 0.85em;
+    font-variant-caps: all-small-caps; background: #D3D2D0; color: #111; }
+.md-bg-red { background: #BB3339; color: #fff; } .md-bg-orange { background: #8C5300; color: #fff; }
+.md-bg-gold { background: #7B6A00; color: #fff; } .md-bg-green { background: #346704; color: #fff; }
+.md-bg-teal { background: #005F5C; color: #fff; } .md-bg-blue { background: #333ECE; color: #fff; }
+.md-bg-navy { background: #0D2F61; color: #fff; } .md-bg-purple { background: #8A50AE; color: #fff; }
+.md-bg-pink { background: #AA3B73; color: #fff; } .md-bg-grey { background: #5F6061; color: #fff; }
+.md-bg-black { background: #111; color: #fff; }
+.md-bg-light-red { background: #FFCAC7; } .md-bg-light-orange { background: #FBD5B0; }
+.md-bg-light-gold { background: #F3E3A2; } .md-bg-light-green { background: #CAE9BB; }
+.md-bg-light-teal { background: #B3E9E5; } .md-bg-light-blue { background: #D2DAFF; }
+.md-bg-light-navy { background: #BBCEE7; } .md-bg-light-purple { background: #E6CFF7; }
+.md-bg-light-pink { background: #FCCBDE; } .md-bg-light-grey { background: #D3D2D0; } .md-bg-white { background: #fff; border: 1px solid #ccc; }
+.md-del, .md-sub-a { text-decoration: line-through; }
+.md-ins, .md-sub-b { color: #2F5A8C; }
+.md-sub-b { margin-left: 0.25em; }

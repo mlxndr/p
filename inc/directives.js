@@ -320,12 +320,204 @@
        .slide: attribute comments stay outside; notes: lines stay after the
        wrapper so reveal's notes extraction can't unbalance the markup. */
 
-    /* Inline shorthand: ^^term^^ sets term in small caps (the decks hand-wrote
-       <span style="font-variant: small-caps;"> dozens of times), and
-       %%aside%% sets text in the theme's subtle colour. */
-    function smallCapsPass(md) {
-        return md.replace(/\^\^([^\^\n]+)\^\^/g, '<span class="md-sc">$1</span>')
-                 .replace(/%%([^%\n]+)%%/g, '<span class="md-subtle">$1</span>');
+    /* ---------- inline marks (SPEC 5) ----------
+
+       One pass over the expanded markdown of a chunk, line by line, before
+       reveal's markdown plugin sees it. Marks become HTML spans; marked
+       still parses the markdown inside them.
+
+         ^^x^^  small caps        %%x%%  subtle         ==x==  highlight
+         [x]{name}  palette colour (or accent)          [S x]  grammar function
+         [[x]]  morph piece   [[x|id]]  piece, own id   [[x]]{name}  tag pill
+         :fa-name:  Font Awesome icon
+         {==x==} {++x++} {--x--} {~~a~>b~~} {answer x}  on a click
+
+       A brace on its own happens on a click; a brace straight after a
+       closing bracket styles the bracketed text. Untouched: code spans and
+       fenced code, HTML tags and comments, link destinations, backslash
+       escapes (left for marked: \[ \{ \* \|), and any text between
+       <!--md-raw--> and <!--/md-raw--> (for directives with their own
+       notation, such as @parse). Every paired mark needs a non-space just
+       inside each marker, so a == b stays literal. */
+
+    const PALETTE_HUES = ['red', 'orange', 'gold', 'green', 'teal', 'blue',
+        'navy', 'purple', 'pink', 'grey'];
+    const PALETTE_NAMES = PALETTE_HUES
+        .concat(PALETTE_HUES.map(function (h) { return 'light-' + h; }))
+        .concat(['white', 'black']);
+    /* University of Glasgow brand names (and two spellings) accepted
+       everywhere; corporate mode (phase 4) maps the names to brand values */
+    const COLOUR_ALIASES = {
+        'dark-red': 'red', 'dark-pink': 'pink', 'dark-green': 'green',
+        'dark-blue': 'blue', 'dark-purple': 'purple',
+        'university-blue': 'navy', 'light-yellow': 'light-gold',
+        'gray': 'grey', 'light-gray': 'light-grey'
+    };
+    function resolveColour(name) {
+        if (!name) return null;
+        name = String(name).toLowerCase();
+        if (COLOUR_ALIASES[name]) name = COLOUR_ALIASES[name];
+        return PALETTE_NAMES.indexOf(name) !== -1 ? name : null;
+    }
+    /* A colour option on a directive: a palette name or #RRGGBB */
+    function colourValue(v) {
+        if (/^#[0-9a-fA-F]{6}$/.test(v || '')) return { hex: v.toUpperCase() };
+        const n = resolveColour(v);
+        return n ? { name: n } : null;
+    }
+    const MORPHEME_STATES = ['plain', 'split', 'apart', 'jigsaw', 'bases', 'affixes'];
+    const GRAMMAR_CODES = {
+        S: 'subject', P: 'predicator', O: 'object', Od: 'object', Oi: 'object',
+        C: 'complement', Cs: 'complement', Co: 'complement', A: 'adverbial',
+        cj: 'conjunction'
+    };
+
+    function pieceSlug(text) {
+        const s = text.replace(/\u0000\d+\u0000/g, '').replace(/\]\{[\w-]+\}/g, '').toLowerCase()
+            .replace(/[^\p{L}\p{N}]+/gu, '-').replace(/^-+|-+$/g, '');
+        return 'p-' + (s || 'piece');
+    }
+
+    /* ctx: { warn(msg), allocPiece(want) } */
+    function inlineLine(line, ctx) {
+        const store = [];
+        const hold = function (text, kind) {
+            store.push({ text: text, kind: kind || 'raw' });
+            return '\u0000' + (store.length - 1) + '\u0000';
+        };
+        const tag = function (html) { return hold(html, 'tag'); };
+        const kindAt = function (s, i) {
+            const m = /^\u0000(\d+)\u0000/.exec(s.slice(i));
+            return m ? store[+m[1]] : null;
+        };
+
+        // 1. Protect what must not be read as marks
+        let s = line.replace(
+            /\\[!-\/:-@\[-`{-~]|(`+)[^`][\s\S]*?\1|<!--[\s\S]*?-->|<\/?[A-Za-z][^<>]*>/g,
+            function (m) { return hold(m); });
+        // link destinations: keep the ], hide the (url "title")
+        s = s.replace(/\]\((?:[^()\s]|\([^()\s]*\))*(?:\s+(?:"[^"]*"|'[^']*'))?\)/g,
+            function (m) { return ']' + hold(m.slice(1), 'dest'); });
+
+        // 2. Click marks (they do not nest in each other)
+        const click = function (cls, inner) {
+            return tag('<span class="fragment custom ' + cls + '"><span>') + inner + tag('</span></span>');
+        };
+        s = s.replace(/\{==(\S(?:.*?\S)?)==\}/g, function (m, x) {
+            return tag('<span class="fragment custom md-hl-in">') + x + tag('</span>');
+        });
+        s = s.replace(/\{\+\+(\S(?:.*?\S)?)\+\+\}/g, function (m, x) { return click('md-ins', x); });
+        s = s.replace(/\{--(\S(?:.*?\S)?)--\}/g, function (m, x) { return click('md-del', x); });
+        s = s.replace(/\{~~(\S(?:.*?\S)?)~>(.*?)~~\}/g, function (m, a, b) {
+            return tag('<span class="fragment custom md-sub"><span class="md-sub-a"><span>') + a +
+                tag('</span></span><span class="md-sub-b"><span>') + b.trim() + tag('</span></span></span>');
+        });
+        s = s.replace(/\{answer (\S(?:[^{}]*?\S)?)\}/g, function (m, x) {
+            return tag('<span class="fragment md-answer">') + x + tag('</span>');
+        });
+
+        // 3. Pieces and tags: [[x]], [[x|id]], [[x]]{name}
+        s = s.replace(/\[\[((?:(?!\]\]).)+?)\]\](?:\{([A-Za-z][\w-]*)\})?/g, function (m, body, name) {
+            let text = body.trim(), id = null;
+            const bar = /^(.*)\|([\w-]+)$/.exec(text);
+            if (bar) { text = bar[1].trim(); id = bar[2]; }
+            if (!text) return m;
+            id = id || ctx.allocPiece(pieceSlug(text));
+            let cls = 'md-piece', tail = '';
+            if (name) {
+                const c = resolveColour(name);
+                if (c) cls = 'md-piece md-tag md-bg-' + c;
+                else { tail = '{' + name + '}'; ctx.warn('unknown colour in ' + m + ' (palette: ' + PALETTE_HUES.join(', ') + ', light-…, white, black)'); }
+            }
+            return tag('<span class="' + cls + '" data-id="' + esc(id) + '">') + text + tag('</span>') + tail;
+        });
+
+        // 4. Single brackets, innermost first: colour marks, grammar marks;
+        //    anything else (links, references, prose brackets) stays literal
+        const bracket = /\[([^\[\]]*)\]/;
+        let m, guard = 2000;
+        while (guard-- > 0 && (m = bracket.exec(s))) {
+            const start = m.index, end = start + m[0].length, content = m[1];
+            const after = s.slice(end), before = s.slice(0, start);
+            const nextKind = kindAt(s, end);
+            const prevLiteral = /\u0000(\d+)\u0000$/.exec(before);
+            const literal = function () {
+                s = before + hold('[', 'lb') + content + hold(']', 'rb') + after;
+            };
+            const brace = /^\{([A-Za-z][\w-]*)\}/.exec(after);
+            if (brace) {
+                const name = brace[1];
+                const c = name === 'accent' ? 'accent' : resolveColour(name);
+                if (c && content.trim()) {
+                    s = before + tag('<span class="md-c md-c-' + c + '">') + content + tag('</span>') +
+                        after.slice(brace[0].length);
+                    continue;
+                }
+                if (MORPHEME_STATES.indexOf(name) !== -1) ctx.warn('morpheme words such as ' + m[0] + brace[0] + ' are not built yet (phase 2b)');
+                else ctx.warn('unknown colour in ' + m[0] + brace[0] + ' (palette: ' + PALETTE_HUES.join(', ') + ', light-…, white, black, accent)');
+                literal();
+                continue;
+            }
+            const isLink = (nextKind && nextKind.kind === 'dest') || /^[\[(:]/.test(after) ||
+                (prevLiteral && store[+prevLiteral[1]].kind === 'rb');
+            const g = !isLink && /^(Od|Oi|Cs|Co|cj|S|P|O|C|A) (\S[\s\S]*)$/.exec(content);
+            if (g) {
+                const words = g[2].replace(/\u0000\d+\u0000/g, ' ').trim().split(/\s+/).length;
+                if (words > 8) ctx.warn('grammar mark of ' + words + ' words, is it prose? [' + g[1] + ' ' + g[2].slice(0, 40) + '…] (write \\[ for a literal bracket)');
+                s = before + tag('<span class="md-g ' + GRAMMAR_CODES[g[1]] + '" data-g="' + g[1] + '">') +
+                    g[2] + tag('</span>') + after;
+                continue;
+            }
+            literal();
+        }
+
+        // 5. Static marks
+        s = s.replace(/==([^\s=](?:.*?[^\s=])?)==/g, function (m, x) {
+            return tag('<span class="md-hl">') + x + tag('</span>');
+        });
+        s = s.replace(/\^\^([^\^\s](?:[^\^]*?[^\^\s])?)\^\^/g, function (m, x) {
+            return tag('<span class="md-sc">') + x + tag('</span>');
+        });
+        s = s.replace(/%%([^%\s](?:[^%]*?[^%\s])?)%%/g, function (m, x) {
+            return tag('<span class="md-subtle">') + x + tag('</span>');
+        });
+        s = s.replace(/:fa-([a-z0-9]+(?:-[a-z0-9]+)*):/g, function (m, n) {
+            return tag('<i class="fad fa-' + n + ' md-icon" aria-hidden="true"></i>');
+        });
+
+        // 6. Restore everything held back
+        return s.replace(/\u0000(\d+)\u0000/g, function (m, n) { return store[+n].text; });
+    }
+
+    function inlineMarks(md, ctx) {
+        if (!/[\^%=\[{:]/.test(md)) return md;
+        // multi-line HTML comments (slide attributes, md-raw guards) are
+        // held back whole so the line pass never sees inside them
+        const blocks = [];
+        md = md.replace(/<!--md-raw-->[\s\S]*?<!--\/md-raw-->|<!--[\s\S]*?-->/g, function (m) {
+            blocks.push(m);
+            return '\u0001' + (blocks.length - 1) + '\u0001';
+        });
+        let fence = null;
+        md = md.split('\n').map(function (line) {
+            const f = /^\s*(`{3,}|~{3,})/.exec(line);
+            if (fence) {
+                if (f && f[1].charAt(0) === fence.charAt(0) && f[1].length >= fence.length) fence = null;
+                return line;
+            }
+            if (f) { fence = f[1]; return line; }
+            if (/^\s*[=\-]+\s*$/.test(line)) return line;       // setext underlines, rules
+            return inlineLine(line, ctx);
+        }).join('\n');
+        return md.replace(/\u0001(\d+)\u0001/g, function (m, n) { return blocks[+n]; });
+    }
+
+    function makeInlineCtx(warnings) {
+        const alloc = makeIdAllocator();
+        return {
+            warn: function (msg) { if (warnings) warnings.push(msg); },
+            allocPiece: alloc
+        };
     }
 
     /* Several directives on one slide (@slide plus @section, @quote, an
@@ -463,9 +655,257 @@
             (opts.title || 'References') + '\n\n' + text, isError: false };
     }
 
+    /* ---------- the shared directive parser (SPEC 3) ----------
+
+       New directives register here rather than adding a branch to
+       expandChunk. A spec says which of the four kinds of body follows the
+       directive line and which options it takes; the parser checks the
+       line, collects the body, handles name= and repeats, and turns every
+       failure into the red error slide.
+
+         registerDirective('terms', {
+             body: 'items',            // 'line' | 'items' | 'markdown' | 'prefix'
+             text: false,              // true: rest of line is text, options after ' :: '
+             positional: 0,            // how many leading bare values it takes
+             keys: ['widths'],         // key=value options
+             flags: ['sc', 'answers'], // bare flags
+             lists: ['widths'],        // comma-separated, no spaces: widths=2,1
+             numbers: ['cols'],        // must be numbers
+             colours: ['head'],        // palette name or #RRGGBB
+             sequences: ['steps'],     // steps="a b+c" -> [['a'], ['b','c']]
+             build: ['level', 'up'],   // build=VALUE allowed (bare build always is)
+             emit: function (d, api) { return markdown; }
+         });
+
+       d: { kind, lineNo, srcLine, text, positional: [{value, type}], opts,
+            flags, build, items, body, block, named }. Items are
+            { raw, text, fields, depth, lineNo }. api.fail(message[, item])
+       stops with an error slide; api.expand(lines) expands directives
+       inside a markdown body; api.warn(message) logs in local preview. */
+
+    const REGISTRY = {};
+    function registerDirective(kind, spec) { REGISTRY[kind] = spec; }
+
+    function DirectiveError(message, item) { this.message = message; this.item = item; }
+
+    function numberLike(v) { return /^-?\d+(\.\d+)?$/.test(v); }
+
+    function parseDirectiveLine(rest, spec) {
+        const d = { text: null, positional: [], opts: {}, flags: [], build: null };
+        let optStr = rest;
+        if (spec.text) {
+            const padded = ' ' + rest + ' ';
+            const k = padded.lastIndexOf(' :: ');
+            d.text = (k === -1 ? rest : padded.slice(0, k)).trim();
+            optStr = k === -1 ? '' : padded.slice(k + 4).trim();
+            if (!d.text) throw new DirectiveError('needs its text on the same line, before any ` :: ` options.');
+        }
+        const keys = (spec.keys || []).concat(spec.body !== 'line' ? ['name'] : []);
+        const flags = spec.flags || [];
+        const buildModes = spec.build || [];
+        const allowsBuild = spec.body !== 'line' || spec.build;
+        const re = /([\w-]+)=(?:"([^"]*)"|(\S+))|"([^"]*)"|(\S+)/g;
+        let m, seenOption = false;
+        while ((m = re.exec(optStr)) !== null) {
+            if (m[1] !== undefined) {
+                seenOption = true;
+                const key = m[1];
+                let val = m[2] !== undefined ? m[2] : m[3];
+                if (key === 'build' && allowsBuild) {
+                    if (buildModes.indexOf(val) === -1) {
+                        throw new DirectiveError('Unknown build order `' + esc(val) + '`.' +
+                            (buildModes.length ? ' Valid: build, ' + buildModes.map(function (b) { return 'build=' + b; }).join(', ') + '.' : ' Only a bare `build` is valid here.'));
+                    }
+                    d.build = val;
+                    continue;
+                }
+                if (keys.indexOf(key) === -1) {
+                    const hint = keys.filter(function (x) { return x.charAt(0) === key.charAt(0); })[0];
+                    throw new DirectiveError('Unknown option `' + esc(key) + '`.' +
+                        (hint ? ' Did you mean `' + hint + '`?' : '') +
+                        (keys.length ? ' Valid options: ' + keys.join(', ') + '.' : ' This directive takes no key=value options.'));
+                }
+                if (d.opts[key] !== undefined) throw new DirectiveError('`' + esc(key) + '` is given twice.');
+                if ((spec.lists || []).indexOf(key) !== -1) {
+                    if (/\s/.test(val) || /^,|,,|,$/.test(val)) {
+                        throw new DirectiveError('`' + esc(key) + '` takes a comma-separated list with no spaces, e.g. ' + key + '=2,1.');
+                    }
+                    val = val.split(',');
+                    if ((spec.numbers || []).indexOf(key) !== -1) {
+                        if (!val.every(numberLike)) throw new DirectiveError('`' + esc(key) + '` takes numbers, e.g. ' + key + '=2,1.');
+                        val = val.map(parseFloat);
+                    }
+                } else if ((spec.numbers || []).indexOf(key) !== -1) {
+                    if (!numberLike(val)) throw new DirectiveError('`' + esc(key) + '` takes a number, e.g. ' + key + '=2.');
+                    val = parseFloat(val);
+                } else if ((spec.colours || []).indexOf(key) !== -1) {
+                    const c = colourValue(val);
+                    if (!c) throw new DirectiveError('`' + esc(key) + '=' + esc(val) + '` is not a colour: use a palette name (' + PALETTE_HUES.join(', ') + ', light-…, white, black) or #RRGGBB.');
+                    val = c;
+                } else if ((spec.sequences || []).indexOf(key) !== -1) {
+                    val = val.trim().split(/\s+/).filter(Boolean).map(function (st) { return st.split('+').filter(Boolean); });
+                    if (!val.length) throw new DirectiveError('`' + esc(key) + '` is empty: write ' + key + '="a b c", with + joining two steps into one click.');
+                }
+                d.opts[key] = val;
+            } else {
+                const bare = m[4] !== undefined ? m[4] : m[5];
+                if (bare === 'build' && allowsBuild) { d.build = d.build || true; seenOption = true; continue; }
+                if (!seenOption && d.positional.length < (spec.positional || 0) + (spec.body !== 'line' ? 1 : 0) &&
+                    flags.indexOf(bare) === -1) {
+                    d.positional.push({ value: bare,
+                        type: /[.\/]/.test(bare) && !numberLike(bare) ? 'path' : numberLike(bare) ? 'number' : 'name' });
+                    continue;
+                }
+                if (flags.indexOf(bare) === -1) {
+                    throw new DirectiveError('Unknown flag `' + esc(bare) + '`.' +
+                        (flags.length ? ' Valid flags: ' + flags.concat(allowsBuild ? ['build'] : []).join(', ') + '.' : '') +
+                        ' (Values with spaces need quotes: key="like this".)');
+                }
+                seenOption = true;
+                if (d.flags.indexOf(bare) === -1) d.flags.push(bare);
+            }
+        }
+        return d;
+    }
+
+    /* Item lines: indented lines up to the first blank or unindented line.
+       A leading list marker is dropped; ' :: ' splits fields; a line
+       indented further than the one above is its child (depth + 1). */
+    function collectItems(lines, start, lineOffset) {
+        const items = [], stack = [];
+        let i = start;
+        while (i < lines.length && /^[ \t]+\S/.test(lines[i])) {
+            const raw = lines[i];
+            const indent = raw.match(/^[ \t]*/)[0].replace(/\t/g, '    ').length;
+            while (stack.length && stack[stack.length - 1] > indent) stack.pop();
+            if (!stack.length || stack[stack.length - 1] < indent) stack.push(indent);
+            const text = raw.trim().replace(/^(?:[*+-]|\d+[.)])\s+/, '');
+            items.push({ raw: raw, text: text, fields: text.split(/\s::(?=\s|$)/).map(function (f) { return f.trim(); }),
+                depth: stack.length - 1, lineNo: lineOffset + i + 1 });
+            i++;
+        }
+        return { items: items, next: i };
+    }
+
+    /* Markdown body: up to a matching @end (nested markdown-body
+       directives need their own), else to the end of the slide or its
+       notes. Without @end, slide furniture lines (@slide, @source) are
+       lifted out of the body and handled where the slide is assembled. */
+    const FURNITURE = /^@(slide|source)\b/;
+    function collectMarkdown(lines, start) {
+        let depth = 0, j = start;
+        for (; j < lines.length; j++) {
+            const l = lines[j];
+            if (/^notes:/.test(l)) break;
+            if (/^@end\s*$/.test(l)) {
+                if (depth === 0) return { body: lines.slice(start, j), next: j + 1, closed: true, furniture: [] };
+                depth--;
+                continue;
+            }
+            const dm = /^@([\w-]+)/.exec(l);
+            if (dm && REGISTRY[dm[1]] && REGISTRY[dm[1]].body === 'markdown') depth++;
+        }
+        const body = [], furniture = [];
+        lines.slice(start, j).forEach(function (l) { (FURNITURE.test(l) ? furniture : body).push(l); });
+        return { body: body, next: j, closed: false, furniture: furniture };
+    }
+
+    /* Prefix: the next markdown block (blank lines before it are skipped;
+       it ends at the next blank line) */
+    function collectPrefix(lines, start) {
+        let i = start;
+        while (i < lines.length && !lines[i].trim()) i++;
+        const s = i;
+        while (i < lines.length && lines[i].trim() && !/^notes:/.test(lines[i])) i++;
+        return { block: lines.slice(s, i), next: i };
+    }
+
+    function runRegistered(kind, lines, i, deck, lineOffset) {
+        const spec = REGISTRY[kind];
+        const line = lines[i];
+        const lineNo = lineOffset + i + 1;
+        const rest = line.replace(/^@[\w-]+/, '').trim();
+        const fail = function (e, next) {
+            const src = e.item ? e.item.raw.trim() : line;
+            const no = e.item ? e.item.lineNo : lineNo;
+            return { md: errorSlide(deck.name, no, src, '@' + kind + ': ' + e.message), isError: true, next: next, furniture: [] };
+        };
+        let d, next = i + 1, furniture = [];
+        try {
+            d = parseDirectiveLine(rest, spec);
+        } catch (e) {
+            if (!(e instanceof DirectiveError)) throw e;
+            // skip the body so it does not render as stray text
+            if (spec.body === 'items') next = collectItems(lines, i + 1, lineOffset).next;
+            else if (spec.body === 'markdown') next = collectMarkdown(lines, i + 1).next;
+            return fail(e, next);
+        }
+        d.kind = kind; d.lineNo = lineNo; d.srcLine = line;
+        d.items = []; d.body = []; d.block = [];
+        const named = deck.named[kind] || (deck.named[kind] = {});
+        const first = d.positional[0];
+        const repeat = spec.body !== 'line' && first && first.type === 'name' && named[first.value];
+        try {
+            if (repeat) {
+                // a named block repeated: its body, the options merged over the original's
+                const orig = named[first.value];
+                if (spec.body === 'items' && /^[ \t]+\S/.test(lines[i + 1] || '')) {
+                    throw new DirectiveError('repeats the block named `' + esc(first.value) + '`, so it takes no item lines of its own.');
+                }
+                if (d.opts.name) throw new DirectiveError('a repeat cannot take name= (it repeats `' + esc(first.value) + '`).');
+                d.positional = orig.positional.slice();
+                d.opts = Object.assign({}, orig.opts, d.opts);
+                d.flags = orig.flags.concat(d.flags.filter(function (f) { return orig.flags.indexOf(f) === -1; }));
+                d.build = d.build !== null ? d.build : orig.build;
+                d.text = orig.text;
+                d.items = orig.items; d.body = orig.body; d.block = orig.block;
+                d.named = first.value;
+            } else {
+                if (spec.body !== 'line' && d.positional.length > (spec.positional || 0)) {
+                    const extra = d.positional[d.positional.length - 1].value;
+                    throw new DirectiveError(first.type === 'name' && !spec.positional
+                        ? 'there is no block named `' + esc(first.value) + '` earlier in this deck (define it first with name=' + esc(first.value) + ').'
+                        : 'unexpected value `' + esc(extra) + '`.');
+                }
+                if (spec.body === 'items') {
+                    const c = collectItems(lines, i + 1, lineOffset);
+                    d.items = c.items; next = c.next;
+                    if (!d.items.length) throw new DirectiveError('needs at least one indented item line below it.');
+                } else if (spec.body === 'markdown') {
+                    const c = collectMarkdown(lines, i + 1);
+                    d.body = c.body; next = c.next; furniture = c.furniture;
+                    if (!d.body.join('').trim()) throw new DirectiveError('needs markdown on the lines after it (ended by @end, or the end of the slide).');
+                } else if (spec.body === 'prefix') {
+                    const c = collectPrefix(lines, i + 1);
+                    d.block = c.block; next = c.next;
+                    if (!d.block.length) throw new DirectiveError('applies to the next markdown block, but nothing follows it on this slide.');
+                }
+                if (d.opts.name !== undefined) {
+                    if (!/^[\w-]+$/.test(d.opts.name)) throw new DirectiveError('`name=` takes letters, digits, - and _ only.');
+                    if (named[d.opts.name]) throw new DirectiveError('a block named `' + esc(d.opts.name) + '` already exists in this deck.');
+                    named[d.opts.name] = { positional: d.positional, opts: Object.assign({}, d.opts, { name: undefined }),
+                        flags: d.flags.slice(), build: d.build, text: d.text, items: d.items, body: d.body, block: d.block };
+                    delete named[d.opts.name].opts.name;
+                    d.named = d.opts.name;
+                }
+            }
+            const api = {
+                fail: function (message, item) { throw new DirectiveError(message, item); },
+                warn: function (message) { deck.warnings.push('@' + kind + ', line ' + lineNo + ': ' + message); },
+                expand: function (bodyLines) { return expandChunk(bodyLines.join('\n'), deck, lineNo).md; }
+            };
+            const md = spec.emit(d, api);
+            return { md: md, isError: false, next: next, furniture: furniture };
+        } catch (e) {
+            if (!(e instanceof DirectiveError)) throw e;
+            return fail(e, next);
+        }
+    }
+
     /* ---------- chunk-level expansion ---------- */
 
-    function expandChunk(chunk, allocId, name, lineOffset) {
+    function expandChunk(chunk, deck, lineOffset) {
+        const allocId = deck.allocId, name = deck.name;
         const lines = chunk.split('\n');
         const out = [];
         let hadError = false;
@@ -512,7 +952,7 @@
                     // line; restore it, or the next ^\n---\n separator loses
                     // its preceding blank line and slides merge
                     out.push('');
-                    return { md: smallCapsPass(wrapFillSlides(mergeSlideComments(out.join('\n')))), hadError: hadError };
+                    return { md: out.join('\n'), hadError: hadError };
                 }
             } else if (kind === 'image') {
                 r = emitImage(opts, allocId, line, lineNo, name);
@@ -541,17 +981,32 @@
                     // keep any notes: block after the emitted markup
                     for (let j = bodyEnd; j < lines.length; j++) out.push(lines[j]);
                     if (r.isError) hadError = true;
-                    return { md: smallCapsPass(wrapFillSlides(mergeSlideComments(out.join('\n')))), hadError: hadError };
+                    return { md: out.join('\n'), hadError: hadError };
                 }
+            } else if (REGISTRY[kind]) {
+                const res = runRegistered(kind, lines, i, deck, lineOffset);
+                out.push(res.md);
+                if (res.isError) hadError = true;
+                if (res.furniture.length) {
+                    const f = expandChunk(res.furniture.join('\n'), deck, lineOffset + res.next);
+                    out.push(f.md);
+                    if (f.hadError) hadError = true;
+                }
+                i = res.next;
+                continue;
+            } else if (kind === 'end') {
+                r = { md: errorSlide(name, lineNo, line,
+                    '`@end` with no open block: it closes a markdown body (@cards, @columns, @quote ...) opened earlier on the same slide.'), isError: true };
             } else {
                 r = { md: errorSlide(name, lineNo, line,
-                    'Unknown directive `@' + esc(kind) + '`. Available: @image, @image-seq, @image-left, @image-right, @compare, @zoom, @kenburns, @slide, @section, @quote, @refs, @note. (Escape a literal @ with @@.)'), isError: true };
+                    'Unknown directive `@' + esc(kind) + '`. Available: @image, @image-seq, @image-left, @image-right, @compare, @zoom, @kenburns, @slide, @section, @quote, @refs, @note' +
+                    Object.keys(REGISTRY).map(function (k) { return ', @' + k; }).join('') + '. (Escape a literal @ with @@.)'), isError: true };
             }
             out.push(r.md);
             if (r.isError) hadError = true;
             i++;
         }
-        return { md: smallCapsPass(wrapFillSlides(mergeSlideComments(out.join('\n')))), hadError: hadError };
+        return { md: out.join('\n'), hadError: hadError };
     }
 
     /* ---------- top-level API ---------- */
@@ -559,15 +1014,15 @@
     function expandDirectives(src, meta) {
         const name = (meta && meta.name) || 'markdown';
         // short-circuit only when there is nothing at all to expand
-        // (inline ^^small caps^^ and %%subtle%% must expand even in
-        // directive-free decks)
-        if (src.indexOf('@') === -1 && src.indexOf('^^') === -1 && src.indexOf('%%') === -1) {
-            return { markdown: src, hadError: false };
+        // (inline marks must expand even in directive-free decks)
+        if (!/[@^%=\[{:]/.test(src)) {
+            return { markdown: src, hadError: false, warnings: [] };
         }
         // Split on reveal's separators (blank-line anchored, matching the
         // data-separator regexes ^\n---\n and ^\n--\n), keeping delimiters
         const parts = src.split(/(^\n---\n|^\n--\n)/m);
-        const allocId = makeIdAllocator();
+        // one deck: ids, named blocks and warnings are shared by its slides
+        const deck = { name: name, allocId: makeIdAllocator(), named: {}, warnings: [] };
         let hadError = false;
         let lineOffset = 0;
         const out = parts.map(function (part) {
@@ -575,14 +1030,13 @@
                 lineOffset += 2;
                 return part;
             }
-            const r = expandChunk(part, allocId, name, lineOffset);
+            const r = expandChunk(part, deck, lineOffset);
             lineOffset += part.split('\n').length - 1;
             if (r.hadError) hadError = true;
-            return r.md;
+            return inlineMarks(wrapFillSlides(mergeSlideComments(r.md)), makeInlineCtx(deck.warnings));
         });
-        return { markdown: out.join(''), hadError: hadError };
+        return { markdown: out.join(''), hadError: hadError, warnings: deck.warnings };
     }
-
 
     /* Separate slides flagged @slide spare from the rest of a deck's
        expanded markdown. Works on reveal's own separators (blank line then
@@ -643,6 +1097,10 @@
                     }
                     if (result.hadError) {
                         console.warn('[directives] ' + url + ' contains directive errors — see the red error slide(s).');
+                    }
+                    // unknown colour names, suspect grammar marks: local preview only
+                    if (window.MGA_LOCAL_PREVIEW) {
+                        result.warnings.forEach(function (w) { console.warn('[marks] ' + url + ': ' + w); });
                     }
                 });
         }));
@@ -876,6 +1334,39 @@
 
 
     window.autofitTextSlides = autofitTextSlides;
+
+    /* Local preview: an icon name with no glyph in the self-hosted subset
+       (base.css lists the codepoint pairs) draws nothing, so say so */
+    function checkInlineIcons() {
+        if (!window.MGA_LOCAL_PREVIEW) return;
+        const seen = {};
+        document.querySelectorAll('.reveal .slides .md-icon').forEach(function (i) {
+            const content = getComputedStyle(i, '::before').content;
+            const n = (/\bfa-([\w-]+)/.exec(i.className) || [])[1];
+            if ((!content || content === 'none' || content === 'normal') && !seen[n]) {
+                seen[n] = true;
+                console.warn('[marks] :fa-' + n + ': is not in the self-hosted icon set; add its codepoint pair to base.css');
+            }
+        });
+    }
+    window.checkInlineIcons = checkInlineIcons;
+
+    /* Export (?fragments=false, as CI's DeckTape run uses) shows each
+       slide's final state; the click marks keep their starting state
+       visible there ({--x--} struck through, {++x++} in the accent) */
+    if (/[?&]fragments=false\b/.test(location.search)) {
+        document.documentElement.classList.add('mga-final');
+    }
+
+    window.MGA_DIRECTIVES = {
+        register: registerDirective,
+        registry: REGISTRY,
+        parseLine: parseDirectiveLine,
+        palette: PALETTE_NAMES,
+        resolveColour: resolveColour,
+        colourValue: colourValue,
+        inlineMarks: inlineMarks
+    };
 
     window.expandDirectives = expandDirectives;
     window.expandMarkdownSections = expandMarkdownSections;

@@ -181,6 +181,83 @@ Inline styling in any markdown text:
   %%an aside%% renders in the theme's subtle text colour
 ```
 
+### Text blocks
+
+Each is a registered directive (directives.js, "text blocks (SPEC 4,
+phase 2a)"); the styles are the "Phase 2a: text blocks" section of
+base.css, with compact versions at the end of handout.css. Where a block
+builds, `?fragments=false` shows its final state.
+
+```
+Cards and columns (markdown body, cards separated by `::` lines, closed
+by @end or the end of the slide):
+  @cards [cols=N] [widths=62,38] [style=box|plain|bar|stat|strip]
+         [height=auto|fill] [h= text= head= radius=  (px)] [arrows] [stack] [build]
+  ### Heading
+  text
+  :: light-blue foot icon=chalkboard-teacher
+  ### Next card
+  @end
+  Card flags after `::`: a palette colour (strong colours take white
+  ink), icon=NAME, wide, accent, dim, foot (pinned to the card's foot),
+  answer, build. A first line [[TAG]]{colour} becomes the card's tag.
+  @columns is @cards with style=plain by default; @columns cols=2 with no
+  `::` lines flows the content into CSS columns (cols only).
+  style=bar: the card colour fills a heading bar. style=strip: two cards, the
+  first holding tokens on one line (`A3, B2, C1, ~~D3~~ C3`), the second
+  the text. arrows: an arrow between cards; stack: one per row, centred,
+  each card wider than the one above (arrows point down). height=fill:
+  the cards stretch to the slide foot. Autofit works inside cards and
+  columns.
+Terms (item lines):
+  @terms [sc] [build | build=columns] [answers]
+    hovercraft :: hover + craft
+  build: a row per click; build=columns: every term a click each, then
+  every gloss; answers: glosses are answers (one click; hidden in the
+  student version).
+Statistics:
+  @stats
+    96% :: Fewer files :: 83 files to 3          (number :: label [:: note])
+Numbered examples (numbering runs through the deck):
+  @ex [numbers=off] [start=N] [name=x]
+    The dog eyed the birthday cake. :: canonical order
+    *a five beautiful days           (* ? ?? # judgement marks; a line
+    (b) A hand-set label.             starting *word* is italic, not a mark;
+    ?Colourless green ideas.          a hand label does not advance the count)
+    text :: (N)                       (a field wholly in parentheses is a tag)
+  `@ex x` later repeats a named block with its original numbers.
+Table formatting (prefix for the markdown table that follows):
+  @table [head=COLOUR] [band] [rowhead] [caps] [small] [widths=22,26,26,26]
+  A header row of empty cells is hidden. widths= are preferred
+  percentages; a cell never shrinks below its longest word.
+Concordance (KWIC):
+  @kwic [build=context] [prose] [window=N]
+    the hammer was used to | strike | the nail into the wall
+  \| for a literal bar. build=context: nodes first, contexts on a click.
+  window=N (1 to 8): N words either side in position columns (-3 ... +3).
+Trees (indented item lines):
+  @tree [style=diagram|outline] [build | build=level | build=up]
+    FTA
+      commit the FTA
+  diagram: brace diagram; outline: `code :: label` rows. build is
+  reading order, build=level one level per click, build=up the leaves
+  first.
+Transcripts (conversation analysis):
+  @transcript [numbers] [mono] [overlay] [morph] [build]
+    a: Are you doing anything on Friday // evening?
+    b: // Nothing much, why?
+    (1.0)
+    b: Well (0.5) I'd like to       (a line with no label continues the turn)
+    note :: a: text                 (a margin note before the label)
+  Labels are up to 12 characters, no spaces. `//` marks overlap onset;
+  a turn starting with `//` lines up under the first onset above. A
+  pause line takes the step of the turn after it. overlay: the panel
+  slides up over a faded copy of the slide before (put the transcript on
+  its own slide after the slide it covers; consecutive overlay slides
+  carry on without the slide-up). morph: auto-animate between slides
+  that share lines.
+```
+
 ### Inline marks
 
 One pass in directives.js (inlineMarks) turns these into spans before
@@ -325,7 +402,9 @@ overflow beyond autofit), code, icons, every inline mark and the
 palette (Part Five), slide control: heading subtitle, @note top and
 build, @source, @slide statement, activity, static, build=auto, fade,
 hidden, nohandout, @pause and @include (Part Six; included.md is the
-included file), @refs, @slide spare. Its meta.json sets a series line. Open it in
+included file), the text blocks (Part Seven: cards, columns, terms,
+stats, examples, tables, concordance, trees, transcripts), @refs,
+@slide spare. Its meta.json sets a series line. Open it in
 each theme and layout after any change to inc/. Keep it current when
 adding a directive.
 

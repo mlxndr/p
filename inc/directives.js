@@ -962,7 +962,8 @@
             const api = {
                 fail: function (message, item) { throw new DirectiveError(message, item); },
                 warn: function (message) { deck.warnings.push('@' + kind + ', line ' + lineNo + ': ' + message); },
-                expand: function (bodyLines) { return expandChunk(bodyLines.join('\n'), deck, lineNo).md; }
+                expand: function (bodyLines) { return expandChunk(bodyLines.join('\n'), deck, lineNo).md; },
+                state: deck
             };
             const md = spec.emit(d, api);
             return { md: md, isError: false, next: next, furniture: furniture };
@@ -1000,6 +1001,473 @@
         emit: function (d, api) {
             if (d.positional.length) api.fail('takes nothing after it: everything below it on the slide is what appears.');
             return '\n<div class="md-pause" aria-hidden="true"></div>\n';
+        }
+    });
+
+    /* ---------- text blocks (SPEC 4, phase 2a) ----------
+
+       Shared helpers. A cell whose text is markdown is written as
+       <tag>, blank line, text, blank line, </tag>, so marked renders the
+       text inside (a paragraph, styled flush); inline marks need nothing
+       special because the inline pass runs over the whole slide later. */
+
+    function cell(tag, cls, text, attrs) {
+        return '<' + tag + (cls ? ' class="' + cls + '"' : '') + (attrs || '') + '>\n\n' +
+            String(text).trim() + '\n\n</' + tag + '>\n';
+    }
+
+    /* Relative luminance of #RRGGBB, for choosing ink on a fill */
+    function hexLuminance(hex) {
+        const c = [1, 3, 5].map(function (i) {
+            const v = parseInt(hex.substr(i, 2), 16) / 255;
+            return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    }
+
+    /* A colour value from colourValue() as a fill: class or inline style,
+       with the ink chosen for contrast (white on strong colours, dark on
+       light ones; for #hex, whichever reads better) */
+    function fillOf(c) {
+        if (!c) return { cls: '', style: '' };
+        if (c.name) return { cls: ' md-bg-' + c.name, style: '' };
+        const white = 1.05 / (hexLuminance(c.hex) + 0.05);
+        return { cls: ' md-bg-hex', style: '--tag-bg:' + c.hex + ';--tag-ink:' + (white >= 4.5 ? '#FFFFFF' : 'var(--p-ink)') + ';' };
+    }
+
+    /* @cards and @columns (SPEC 4.1): one parser, two names. A line that
+       is `::` alone (optionally followed by flags) opens the next card or
+       column; content before the first such line is the first card. */
+    const CARD_FLAGS = ['wide', 'build', 'accent', 'dim', 'foot', 'answer'];
+    const CARD_STYLES = ['box', 'plain', 'bar', 'stat', 'strip'];
+
+    function splitCards(body, api) {
+        const cards = [];
+        let cur = { flags: [], lines: [], first: true };
+        body.forEach(function (l) {
+            const m = /^::(?:\s+(.*))?\s*$/.exec(l);
+            if (!m) { cur.lines.push(l); return; }
+            if (!cur.first || cur.lines.join('').trim()) cards.push(cur);
+            cur = { flags: (m[1] || '').trim().split(/\s+/).filter(Boolean), lines: [], src: l };
+        });
+        if (!cur.first || cur.lines.join('').trim()) cards.push(cur);
+        // a card's own flags: colour, icon=, and the flag words
+        cards.forEach(function (c) {
+            c.opts = { colour: null, icon: null };
+            c.set = {};
+            c.flags.forEach(function (f) {
+                const kv = /^icon=([a-z0-9-]+)$/.exec(f);
+                if (kv) { c.opts.icon = kv[1]; return; }
+                if (CARD_FLAGS.indexOf(f) !== -1) { c.set[f] = true; return; }
+                const col = colourValue(f);
+                if (col && !c.opts.colour) { c.opts.colour = col; return; }
+                api.fail('unknown card flag `' + esc(f) + '` on the line `' + esc(c.src) + '`. Card flags: a colour (' +
+                    PALETTE_HUES.join(', ') + ', light-…, or #RRGGBB), ' + CARD_FLAGS.join(', ') + ', icon=NAME.');
+            });
+        });
+        return cards;
+    }
+
+    function emitCards(kind) {
+        return function (d, api) {
+            const style = d.opts.style || (kind === 'columns' ? 'plain' : 'box');
+            if (CARD_STYLES.indexOf(style) === -1) api.fail('`style=' + esc(style) + '`: styles are ' + CARD_STYLES.join(', ') + '.');
+            const height = d.opts.height || 'auto';
+            if (['fill', 'auto'].indexOf(height) === -1) api.fail('`height=` is fill or auto.');
+            const hasBreaks = d.body.some(function (l) { return /^::(\s|$)/.test(l); });
+
+            // @columns with no `::` lines: the content flows into CSS columns
+            if (kind === 'columns' && !hasBreaks) {
+                if (d.opts.widths || d.flags.length || d.build) api.fail('flowing columns (no `::` lines) take only cols=N.');
+                const n = d.opts.cols || 2;
+                return '\n<div class="md-flow" style="--cols:' + n + '">\n\n' + api.expand(d.body).trim() + '\n\n</div>\n';
+            }
+
+            const cards = splitCards(d.body, api);
+            if (!cards.length) api.fail('has no content.');
+            if (style === 'strip' && cards.length !== 2) {
+                api.fail('style=strip takes two cards: the tokens (`A3, B2, C1`) first, then the text, separated by a `::` line.');
+            }
+            const widths = d.opts.widths;
+            if (widths && widths.length !== Math.min(cards.length, d.opts.cols || cards.length)) {
+                api.fail('`widths=` has ' + widths.length + ' values for ' + Math.min(cards.length, d.opts.cols || cards.length) + ' columns.');
+            }
+            const n = d.opts.cols || (d.flags.indexOf('stack') !== -1 ? 1 : Math.min(cards.length, 4));
+            const cls = ['md-cards', 'md-style-' + style, 'md-height-' + height, 'md-ncols-' + n];
+            if (d.flags.indexOf('arrows') !== -1) cls.push('md-arrows');
+            if (d.flags.indexOf('stack') !== -1) cls.push('md-stack');
+            let style_ = '--cols:' + n + ';';
+            if (widths) style_ += 'grid-template-columns:' + widths.map(function (w) { return w + 'fr'; }).join(' ') + ';';
+            else if (style === 'strip') style_ += 'grid-template-columns:auto 1fr;';
+            ['h', 'text', 'head', 'radius'].forEach(function (k) {
+                if (d.opts[k] !== undefined) style_ += '--cards-' + k + ':' + d.opts[k] + 'px;';
+            });
+            let html = '\n<div class="' + cls.join(' ') + '" style="' + style_ + '"' + (d.build ? ' data-md-steps' : '') + '>\n';
+            cards.forEach(function (c, i) {
+                const f = fillOf(c.opts.colour);
+                const cc = ['md-card'];
+                if (c.opts.colour) cc.push('md-card-filled');
+                Object.keys(c.set).forEach(function (k) { if (k !== 'build') cc.push('md-card-' + k); });
+                const whole = d.build || c.set.build || c.set.answer;
+                if (whole) cc.push('fragment');
+                if (c.set.answer) cc.push('md-answer');
+                let attrs = ' style="' + f.style + '--i:' + i + ';--n:' + cards.length + '"';
+                if (whole) attrs += ' data-md-whole' + (d.build ? ' data-md-step="' + i + '"' : '');
+                let lines = c.lines.slice();
+                // first line a tag alone ([[AFTER]]{purple}): a pill at the top left
+                let tag = '';
+                const firstReal = lines.findIndex(function (l) { return l.trim(); });
+                if (firstReal !== -1 && /^\s*\[\[[^\]]+\]\]\{[\w-]+\}\s*$/.test(lines[firstReal])) {
+                    tag = '<div class="md-card-tag">\n\n' + lines[firstReal].trim() + '\n\n</div>\n';
+                    lines.splice(firstReal, 1);
+                }
+                let inner;
+                if (style === 'strip' && i === 0) {
+                    const tokens = lines.join(' ').trim().split(/\s*,\s*/).filter(Boolean);
+                    if (!tokens.length) api.fail('the strip card needs its tokens on one line, separated by `, `.');
+                    inner = tokens.map(function (t) { return cell('div', 'md-strip-token', t); }).join('');
+                    cc.push('md-strip');
+                } else {
+                    inner = api.expand(lines).trim() + '\n';
+                }
+                const icon = c.opts.icon ? '<i class="fad fa-' + c.opts.icon + ' md-icon md-card-icon" aria-hidden="true"></i>\n' : '';
+                html += '<div class="' + cc.join(' ') + f.cls + '"' + attrs + '>\n' + tag + icon + '\n' + inner + '\n</div>\n';
+            });
+            return html + '</div>\n';
+        };
+    }
+    const CARDS_SPEC = {
+        keys: ['cols', 'widths', 'style', 'height', 'h', 'text', 'head', 'radius'],
+        lists: ['widths'], numbers: ['cols', 'widths', 'h', 'text', 'head', 'radius'],
+        flags: ['arrows', 'stack']
+    };
+    registerDirective('cards', Object.assign({ body: 'markdown', emit: emitCards('cards') }, CARDS_SPEC));
+    registerDirective('columns', Object.assign({ body: 'markdown', emit: emitCards('columns') }, CARDS_SPEC));
+
+    /* @terms (SPEC 4.2): term :: gloss, a two-column definition list.
+       build: one row per click; build=columns: every term one per click,
+       then every gloss one per click (English Words 4, slides 26 to 29);
+       answers: the glosses are answers, one click when presenting (each
+       in its turn with a build) and hidden in the student version. */
+    registerDirective('terms', {
+        body: 'items', flags: ['sc', 'answers'], build: ['columns'],
+        emit: function (d, api) {
+            const rows = d.items;
+            const answers = d.flags.indexOf('answers') !== -1;
+            const stepped = d.build || answers;
+            let html = '\n<dl class="md-terms' + (d.flags.indexOf('sc') !== -1 ? ' md-terms-sc' : '') + '"' + (stepped ? ' data-md-steps' : '') + '>\n';
+            rows.forEach(function (it, i) {
+                if (it.fields.length > 2) api.fail('one ` :: ` per line: term :: gloss.', it);
+                const term = it.fields[0], gloss = it.fields.length > 1 ? it.fields[1] : '';
+                let tStep = null, gStep = null;
+                if (d.build === 'columns') { tStep = i; gStep = rows.length + i; }
+                else if (d.build) { tStep = i; gStep = i; }
+                else if (answers) { gStep = 0; }
+                const st = function (k) { return k === null ? '' : ' data-md-step="' + k + '"'; };
+                html += cell('dt', 'md-term' + (tStep !== null ? ' fragment' : ''), term, st(tStep));
+                html += cell('dd', 'md-gloss' + (gStep !== null ? ' fragment' : '') + (answers ? ' md-answer' : ''), gloss || '&nbsp;', st(gStep));
+            });
+            return html + '</dl>\n';
+        }
+    });
+
+    /* @stats (SPEC 4.3): number :: label :: note, drawn as stat cards.
+       A note written as a tag ([[note]]{green}) is a pill. */
+    registerDirective('stats', {
+        body: 'items',
+        emit: function (d, api) {
+            let html = '\n<div class="md-cards md-style-stat md-stats md-height-auto md-ncols-' + Math.min(d.items.length, 4) + '" style="--cols:' + Math.min(d.items.length, 4) + '"' + (d.build ? ' data-md-steps' : '') + '>\n';
+            d.items.forEach(function (it, i) {
+                if (it.fields.length < 2 || it.fields.length > 3 || !it.fields[0]) api.fail('each line is number :: label, with an optional third field for a note.', it);
+                html += '<div class="md-card' + (d.build ? ' fragment" data-md-whole data-md-step="' + i + '"' : '"') + '>\n' +
+                    cell('div', 'md-stat-num', it.fields[0]) + cell('div', 'md-stat-label', it.fields[1]) +
+                    (it.fields[2] ? cell('div', 'md-stat-note', it.fields[2]) : '') + '</div>\n';
+            });
+            return html + '</div>\n';
+        }
+    });
+
+    /* Inline markdown for cells that sit inside raw HTML (where marked
+       does not look): **bold**, *italic*, `code`; a backslash escape
+       becomes a character entity, so the inline pass leaves it alone too
+       (\[A ...] stays a literal bracket). */
+    function inlineHtml(text) {
+        return String(text)
+            .replace(/\\([!-\/:-@\[-`{-~])/g, function (m, ch) { return '&#' + ch.charCodeAt(0) + ';'; })
+            .replace(/`([^`]+)`/g, function (m, x) { return '<code>' + esc(x) + '</code>'; })
+            .replace(/\*\*(\S(?:.*?\S)?)\*\*/g, '<strong>$1</strong>')
+            .replace(/(^|[^\w*])\*(\S(?:[^*]*?\S)?)\*(?![\w*])/g, '$1<em>$2</em>')
+            .replace(/(^|[^\w_])_(\S(?:[^_]*?\S)?)_(?![\w_])/g, '$1<em>$2</em>');
+    }
+
+    /* @ex (SPEC 4.4): numbered linguistic examples, (1), (2) ... through
+       the deck. A judgement mark (* ? ?? #) glued to the first word hangs
+       in the margin (a list marker has a space after it, so the two never
+       collide; \* is a literal star, and *word* at the start is italic).
+       (b) at the start sets the label by hand and does not advance the
+       count. The second field is a gloss, or a right-aligned tag when it
+       is wholly in parentheses: (N). numbers=off, start=N, build. A
+       repeated named block keeps its first numbers. */
+    registerDirective('ex', {
+        body: 'items', keys: ['numbers', 'start'], numbers: ['start'],
+        emit: function (d, api) {
+            const st = api.state;
+            if (d.opts.numbers !== undefined && d.opts.numbers !== 'off') api.fail('`numbers=` takes only off.');
+            const off = d.opts.numbers === 'off';
+            st.exNext = st.exNext || 1;
+            st.exNumbers = st.exNumbers || {};
+            if (d.opts.start !== undefined && !d.named) st.exNext = Math.round(d.opts.start);
+            const reuse = d.named && st.exNumbers[d.named];
+            const nums = [];
+            let html = '\n<div class="md-ex' + (off ? ' md-ex-nonum' : '') + '"' + (d.build ? ' data-md-steps' : '') + '>\n';
+            d.items.forEach(function (it, i) {
+                if (it.fields.length > 2) api.fail('one ` :: ` per line: example :: gloss.', it);
+                let text = it.fields[0], label = null, judge = '';
+                const lm = /^\(([\w'.]{1,5})\)\s+(.*)$/.exec(text);
+                if (lm) { label = '(' + lm[1] + ')'; text = lm[2]; }
+                const italicFirst = /^\*[^\s*][^*]*\*(\s|$)/.test(text);
+                const jm = !italicFirst && /^(\?\?|\*|\?|#)(?=\S)(.*)$/.exec(text);
+                if (jm) { judge = jm[1]; text = jm[2]; }
+                if (!text) api.fail('an example needs its text.', it);
+                if (!label && !off) {
+                    const n = reuse ? reuse[nums.length] : st.exNext++;
+                    nums.push(n);
+                    label = '(' + n + ')';
+                }
+                const gloss = it.fields[1] || '';
+                const tag = /^\(.*\)$/.test(gloss);
+                const step = d.build ? ' fragment" data-md-whole data-md-step="' + i + '"' : '"';
+                html += '<div class="md-ex-row' + step + '>\n' +
+                    '<span class="md-ex-num">' + (label || '') + '</span>' +
+                    '<span class="md-ex-judge">' + esc(judge) + '</span>\n' +
+                    cell('div', 'md-ex-text', text) +
+                    (gloss ? cell('div', tag ? 'md-ex-tag' : 'md-ex-gloss', gloss) : '<div class="md-ex-gloss"></div>\n') +
+                    '</div>\n';
+            });
+            if (d.named && !reuse) st.exNumbers[d.named] = nums;
+            return html + '</div>\n';
+        }
+    });
+
+    /* @table (SPEC 4.17): applies to the next markdown table.
+       head=COLOUR band rowhead caps small widths=16,28,28,28 */
+    registerDirective('table', {
+        body: 'prefix', keys: ['head', 'widths'], colours: ['head'], lists: ['widths'], numbers: ['widths'],
+        flags: ['band', 'rowhead', 'caps', 'small'],
+        emit: function (d, api) {
+            if (!/^\s*\|/.test(d.block[0] || '')) api.fail('applies to a markdown table, and the next block is not one (it should start with |).');
+            const cls = ['md-table'];
+            let style = '';
+            if (d.opts.head) {
+                const f = fillOf(d.opts.head);
+                cls.push('md-table-head' + f.cls);
+                style += f.style;
+            }
+            d.flags.forEach(function (f) { cls.push('md-table-' + f); });
+            if (d.opts.widths) {
+                const total = d.opts.widths.reduce(function (a, b) { return a + b; }, 0);
+                d.opts.widths.forEach(function (w, i) { style += '--w' + (i + 1) + ':' + (100 * w / total).toFixed(3) + '%;'; });
+                cls.push('md-table-widths');
+            }
+            return '\n<div class="' + cls.join(' ') + '"' + (style ? ' style="' + style + '"' : '') + '>\n\n' + d.block.join('\n') + '\n\n</div>\n';
+        }
+    });
+
+    /* @kwic (SPEC 4.9): concordance lines, left | node | right, aligned
+       on the node with the edges faded. prose: running lines cut at both
+       edges, node bold; build: a line per click; build=context: the node
+       column first, the contexts on one click; window=N: N words either
+       side, under position numbers -N ... +N. Collocates: ==x== or, on a
+       click, {==x==}. */
+    function kwicSplit(text) {
+        // split on unescaped |
+        const parts = [];
+        let cur = '';
+        for (let i = 0; i < text.length; i++) {
+            if (text[i] === '\\' && text[i + 1] === '|') { cur += '\\|'; i++; continue; }
+            if (text[i] === '|') { parts.push(cur.trim()); cur = ''; continue; }
+            cur += text[i];
+        }
+        parts.push(cur.trim());
+        return parts;
+    }
+    registerDirective('kwic', {
+        body: 'items', keys: ['window'], numbers: ['window'], flags: ['prose'], build: ['context'],
+        emit: function (d, api) {
+            const win = d.opts.window ? Math.round(d.opts.window) : 0;
+            if (d.opts.window !== undefined && (win < 1 || win > 8)) api.fail('`window=` takes 1 to 8.');
+            const prose = d.flags.indexOf('prose') !== -1;
+            const cls = 'md-kwic' + (prose ? ' md-kwic-prose' : '') + (win ? ' md-kwic-window' : '');
+            const ctx = d.build === 'context';
+            const stepped = !!d.build;
+            let html = '\n<div class="' + cls + '"' + (win ? ' style="--win:' + win + '"' : '') + (stepped ? ' data-md-steps' : '') + '>\n';
+            const c = function (side, text, i) {
+                const frag = ctx && side !== 'node' ? ' fragment" data-md-step="1' : '';
+                return '<div class="md-kwic-' + side + frag + '"><span>' + inlineHtml(text) + '</span></div>';
+            };
+            if (win) {
+                html += '<div class="md-kwic-pos" aria-hidden="true">';
+                for (let k = -win; k <= win; k++) html += '<span>' + (k === 0 ? '' : (k > 0 ? '+' + k : '−' + (-k))) + '</span>';
+                html += '</div>\n';
+            }
+            d.items.forEach(function (it, i) {
+                const p = kwicSplit(it.text);
+                if (p.length !== 3) api.fail('each line is left context | node | right context (two bars; `\\|` for a literal bar).', it);
+                const step = d.build && !ctx ? ' fragment" data-md-whole data-md-step="' + i : '';
+                if (win) {
+                    const left = p[0].split(/\s+/).filter(Boolean).slice(-win);
+                    const right = p[2].split(/\s+/).filter(Boolean).slice(0, win);
+                    while (left.length < win) left.unshift('');
+                    while (right.length < win) right.push('');
+                    html += '<div class="md-kwic-line md-kwic-cells' + step + '">' +
+                        left.map(function (w) { return '<span class="md-kwic-w' + (ctx ? ' fragment" data-md-step="1' : '') + '">' + inlineHtml(w) + '</span>'; }).join('') +
+                        '<span class="md-kwic-node">' + inlineHtml(p[1]) + '</span>' +
+                        right.map(function (w) { return '<span class="md-kwic-w' + (ctx ? ' fragment" data-md-step="1' : '') + '">' + inlineHtml(w) + '</span>'; }).join('') +
+                        '</div>\n';
+                } else {
+                    html += '<div class="md-kwic-line' + step + '">' + c('left', p[0]) + c('node', p[1]) + c('right', p[2]) + '</div>\n';
+                }
+            });
+            return html + '</div>\n';
+        }
+    });
+
+    /* @tree (SPEC 4.5): indentation is descent.
+       style=diagram (default): left to right, a brace before each group
+       of children; a node written as a tag ([[x]]{green}) is a pill.
+       style=outline: an indented outline; `code :: label` puts a category
+       code (01.04.09.07) before the label.
+       build: one node per click, in reading order; build=level: a level
+       per click (the roots stay); build=up: the deepest level first. */
+    registerDirective('tree', {
+        body: 'items', keys: ['style'], build: ['level', 'up'],
+        emit: function (d, api) {
+            const style = d.opts.style || 'diagram';
+            if (['diagram', 'outline'].indexOf(style) === -1) api.fail('`style=` is diagram or outline.');
+            // items to nodes
+            const roots = [], stack = [];
+            let order = 0, maxDepth = 0;
+            d.items.forEach(function (it) {
+                if (style === 'diagram' && it.fields.length > 1) api.fail('a diagram node is one field; ` :: ` codes belong to style=outline.', it);
+                if (it.fields.length > 2) api.fail('an outline line is label, or code :: label.', it);
+                if (it.depth > stack.length) api.fail('indented more than one step below the line above.', it);
+                const node = { item: it, depth: it.depth, kids: [], order: order++ };
+                maxDepth = Math.max(maxDepth, it.depth);
+                stack.length = it.depth;
+                if (it.depth === 0) roots.push(node); else stack[it.depth - 1].kids.push(node);
+                stack.push(node);
+            });
+            const stepOf = function (n) {
+                if (d.build === 'level') return n.depth === 0 ? null : n.depth - 1;
+                if (d.build === 'up') return maxDepth - n.depth;
+                if (d.build) return n.order;
+                return null;
+            };
+            const frag = function (k) { return k === null ? '' : ' fragment" data-md-step="' + k; };
+            let html = '\n<div class="md-tree md-tree-' + style + '"' + (d.build ? ' data-md-steps' : '') + '>\n';
+            if (style === 'outline') {
+                (function walk(list) {
+                    list.forEach(function (n) {
+                        const f = n.item.fields;
+                        html += '<div class="md-to-row' + frag(stepOf(n)) + '" style="--d:' + n.depth + '">' +
+                            (f.length > 1 ? '<span class="md-to-code">' + inlineHtml(f[0]) + '</span>' : '') +
+                            '<span class="md-to-label">' + inlineHtml(f[f.length - 1]) + '</span></div>\n';
+                        walk(n.kids);
+                    });
+                })(roots);
+                return html + '</div>\n';
+            }
+            const brace = '<span class="md-brace" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>';
+            (function walk(list) {
+                html += '<div class="md-tn-list">\n';
+                list.forEach(function (n) {
+                    html += '<div class="md-tn">' +
+                        '<div class="md-tn-label' + frag(stepOf(n)) + '">' + inlineHtml(n.item.text) + '</div>';
+                    if (n.kids.length) {
+                        // the brace arrives with the first child (build, level)
+                        // or with the parent (build=up)
+                        const bStep = d.build === 'up' ? stepOf(n) : stepOf(n.kids[0]);
+                        html += '<div class="md-tn-kids"><div class="md-tn-brace' + frag(bStep) + '">' + brace + '</div>\n';
+                        walk(n.kids);
+                        html += '</div>';
+                    }
+                    html += '</div>\n';
+                });
+                html += '</div>\n';
+            })(roots);
+            return html + '</div>\n';
+        }
+    });
+
+    /* @transcript (SPEC 4.12). `label: text` starts a turn (label up to
+       12 characters, no spaces); a line of only (1.0) or (.) is a pause;
+       any other line continues the turn. `annotation :: a: text` puts the
+       annotation in a left column. A line whose text begins with // is
+       indented at runtime (alignTranscripts) so its marker sits under the
+       nearest unmatched // above. Inline (0.5) is set lighter.
+       overlay: the panel slides up over a faded copy of the slide before
+       (buildTranscriptOverlays) and leaves with a fade; consecutive
+       overlay transcripts hold still and morph. morph: adjacent
+       transcripts auto-animate, unchanged turns holding still.
+       build: one turn per click; numbers; mono. */
+    function trHash(s) {
+        let h = 5381;
+        for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0;
+        return h.toString(36);
+    }
+    registerDirective('transcript', {
+        body: 'items', flags: ['overlay', 'morph', 'numbers', 'mono'],
+        emit: function (d, api) {
+            const turns = [];
+            let lineNo = 0;
+            const PAUSE = /^\((?:\d+(?:\.\d+)?|\.)\)$/;
+            d.items.forEach(function (it) {
+                let text = it.text, note = '';
+                const nm = /^(.*?)\s::\s(.*)$/.exec(text);
+                if (nm) { note = nm[1].trim(); text = nm[2].trim(); }
+                const lm = /^([^\s:]{1,12}):\s+(.*)$/.exec(text);
+                const line = { note: note, n: ++lineNo };
+                if (PAUSE.test(text)) { line.pause = text; }
+                else if (lm) { line.label = lm[1]; line.text = lm[2]; }
+                else { line.text = text; }
+                if (line.label || !turns.length || line.pause) turns.push({ lines: [line], label: line.label || '' });
+                else turns[turns.length - 1].lines.push(line);
+            });
+            const overlay = d.flags.indexOf('overlay') !== -1;
+            const morph = overlay || d.flags.indexOf('morph') !== -1;
+            const cls = 'md-transcript' + (overlay ? ' md-tr-overlay' : '') + (d.flags.indexOf('numbers') !== -1 ? ' md-tr-numbers' : '') +
+                (d.flags.indexOf('mono') !== -1 ? ' md-tr-mono' : '') + (turns.some(function (t) { return t.lines.some(function (l) { return l.note; }); }) ? ' md-tr-notes' : '');
+            const fmt = function (t) {
+                return inlineHtml(t)
+                    .replace(/\((\d+(?:\.\d+)?|\.)\)/g, '<span class="md-tr-pause">($1)</span>')
+                    .replace(/\/\//g, '<span class="md-tr-ov">//</span>');
+            };
+            let html = '\n<div class="' + cls + '"' + (d.build ? ' data-md-steps' : '') + (morph ? ' data-id="md-tr-panel"' : '') + '>\n';
+            // with build, a pause line arrives with the turn after it
+            const steps = [];
+            let k = 0;
+            turns.forEach(function (t, ti) { steps[ti] = t.lines[0].pause ? null : k++; });
+            for (let ti = turns.length - 1, next = k - 1; ti >= 0; ti--) {
+                if (steps[ti] === null) steps[ti] = Math.max(next, 0); else next = steps[ti];
+            }
+            turns.forEach(function (t, ti) {
+                const step = d.build ? ' fragment" data-md-step="' + steps[ti] : '';
+                t.lines.forEach(function (l, li) {
+                    const starts = l.text && /^\/\//.test(l.text.trim());
+                    const id = morph ? ' data-id="tr-' + trHash((t.label || '') + '|' + (l.pause || l.text) + '|' + li) + '"' : '';
+                    html += '<div class="md-tr-line' + (l.pause ? ' md-tr-gap' : '') + (li > 0 ? ' md-tr-cont' : '') + (starts ? ' md-tr-ovstart' : '') + step + '"' + id + '>' +
+                        '<span class="md-tr-num">' + l.n + '</span>' +
+                        '<span class="md-tr-note">' + (l.note ? inlineHtml(l.note) : '') + '</span>' +
+                        '<span class="md-tr-label">' + (li === 0 && t.label ? esc(t.label) : '') + '</span>' +
+                        '<span class="md-tr-text">' + (l.pause ? '<span class="md-tr-pause">' + esc(l.pause) + '</span>' : fmt(l.text)) + '</span>' +
+                        '</div>\n';
+                });
+            });
+            // the slide: overlay transcripts change instantly (the panel
+            // moves) and leave with a fade; morph slides auto-animate
+            const slideAttrs = (overlay ? ' class="md-tr-overlay-slide" data-transition="none-in fade-out"' : '') +
+                (morph ? ' data-auto-animate' : '');
+            return (slideAttrs ? '<!-- .slide:' + slideAttrs + ' -->\n' : '') + html + '</div>\n';
         }
     });
 
@@ -1519,6 +1987,12 @@
                 if (h) h.after(note); else if (scope) scope.insertBefore(note, scope.firstChild);
             });
 
+            // a block part that builds as one piece (a card, a turn, a
+            // stat): lists inside it appear with it
+            Array.prototype.filter.call(sec.querySelectorAll('.fragment[data-md-whole]'), own).forEach(function (w) {
+                w.querySelectorAll('li.fragment').forEach(function (li) { li.classList.remove('fragment'); });
+            });
+
             // @pause groups
             const markers = Array.prototype.filter.call(sec.querySelectorAll('.md-pause'), own);
             let group = 0;
@@ -1585,10 +2059,83 @@
         deck.on('slidechanged', run);
     }
 
+    /* @transcript overlay: the panel lies over a faded copy of the slide
+       before it (the nearest earlier slide that is not itself an overlay
+       transcript), so the explanation is not retyped. The copy is static:
+       no builds, no ids. A run of overlay slides shares one copy and the
+       panel slides up only on the first. */
+    function buildTranscriptOverlays() {
+        const leaves = Array.prototype.filter.call(document.querySelectorAll('.reveal .slides section'),
+            function (s) { return !s.querySelector('section'); });
+        leaves.forEach(function (sec, i) {
+            if (!sec.querySelector('.md-tr-overlay')) return;
+            let j = i - 1;
+            while (j >= 0 && leaves[j].querySelector('.md-tr-overlay')) j--;
+            if (i > 0 && leaves[i - 1].querySelector('.md-tr-overlay')) sec.classList.add('md-tr-continued');
+            if (j < 0 || sec.querySelector(':scope > .md-overlay-under')) return;
+            const under = document.createElement('div');
+            under.className = 'md-overlay-under';
+            under.setAttribute('aria-hidden', 'true');
+            under.setAttribute('data-id', 'md-tr-under-' + j);
+            Array.prototype.forEach.call(leaves[j].childNodes, function (n) { under.appendChild(n.cloneNode(true)); });
+            under.querySelectorAll('[id]').forEach(function (e) { e.removeAttribute('id'); });
+            under.querySelectorAll('.fragment').forEach(function (e) { e.classList.remove('fragment'); });
+            under.querySelectorAll('[data-id]').forEach(function (e) { e.removeAttribute('data-id'); });
+            sec.insertBefore(under, sec.firstChild);
+        });
+    }
+
     window.MgaBuilds = {
         id: 'mga-builds',
-        init: function (deck) { applyBuilds(); wireAutoBuilds(deck); }
+        init: function (deck) { buildTranscriptOverlays(); applyBuilds(); wireAutoBuilds(deck); }
     };
+
+    /* @transcript: a line whose text starts with // is indented so its
+       marker sits under the nearest unmatched // in an earlier line of
+       the same transcript. Measured after fonts load (refitSlides). */
+    function alignTranscripts() {
+        document.querySelectorAll('.reveal .md-transcript').forEach(function (tr) {
+            const restore = unhideForMeasuring(tr);
+            const lines = tr.querySelectorAll('.md-tr-line');
+            lines.forEach(function (l) { const t = l.querySelector('.md-tr-text'); if (t) t.style.paddingLeft = ''; });
+            const open = [];   // unmatched onset markers, in order
+            lines.forEach(function (l) {
+                const text = l.querySelector('.md-tr-text');
+                if (!text) return;
+                const marks = Array.prototype.slice.call(text.querySelectorAll('.md-tr-ov'));
+                if (l.classList.contains('md-tr-ovstart') && marks.length && open.length) {
+                    const target = open.pop();
+                    const scale = tr.getBoundingClientRect().width / (tr.offsetWidth || 1) || 1;
+                    const dx = (target.getBoundingClientRect().left - marks[0].getBoundingClientRect().left) / scale;
+                    if (dx > 0) text.style.paddingLeft = dx.toFixed(1) + 'px';
+                    marks.shift();
+                }
+                marks.forEach(function (m) { open.push(m); });
+            });
+            restore();
+        });
+    }
+    window.alignTranscripts = alignTranscripts;
+
+    /* @cards height=fill: the cards reach down to the foot of the slide */
+    function fillCardHeights() {
+        const H = (window.Reveal && Reveal.getConfig) ? Reveal.getConfig().height : 1080;
+        document.querySelectorAll('.reveal .slides .md-cards.md-height-fill').forEach(function (box) {
+            const sec = box.closest('section');
+            const restore = unhideForMeasuring(box);
+            box.style.minHeight = '';
+            const sr = sec.getBoundingClientRect();
+            const scale = sec.offsetWidth ? sr.width / sec.offsetWidth : 1;
+            const top = (box.getBoundingClientRect().top - sr.top) / scale;
+            const pad = parseFloat(getComputedStyle(sec).paddingBottom) || 0;
+            let after = 0;
+            for (let n = box.nextElementSibling; n; n = n.nextElementSibling) after += n.offsetHeight;
+            const want = H - pad - top - after - 8;
+            if (want > box.offsetHeight) box.style.minHeight = want.toFixed(0) + 'px';
+            restore();
+        });
+    }
+    window.fillCardHeights = fillCardHeights;
 
     /* Local preview: an icon name with no glyph in the self-hosted subset
        (base.css lists the codepoint pairs) draws nothing, so say so */

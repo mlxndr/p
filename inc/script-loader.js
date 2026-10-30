@@ -103,6 +103,8 @@ function refitSlides() {
   try {
     if (typeof positionZoomImages === 'function') positionZoomImages();
     if (typeof fitColumnHeadings === 'function') fitColumnHeadings();
+    if (typeof alignTranscripts === 'function') alignTranscripts();
+    if (typeof fillCardHeights === 'function') fillCardHeights();
     if (typeof autofitFillSlides === 'function') autofitFillSlides();
     if (typeof autofitTextSlides === 'function') autofitTextSlides();
     if (typeof alignSources === 'function') alignSources();

@@ -346,6 +346,244 @@ Its reporters included the young Dickens.
 
 ---
 
+@section Part Seven: Text Blocks
+
+---
+
+## Columns
+
+@columns cols=3
+### Before 1900
+* Comparative philology
+* The Neogrammarians
+::
+### Around 1900
+* Saussure's *Cours*
+* Langue and parole
+:: accent
+### After 1950
+* Generative grammar
+* Corpus linguistics
+@end
+
+--
+
+## Cards
+
+@cards
+[[BEFORE]]{grey}
+### Two documents
+#### Regulations and guidance
+* 109 separate documents
+* Overlapping definitions
+:: light-blue foot
+[[AFTER]]{navy}
+### One handbook
+* 4 consolidated documents
+* One definition per term
+
+Navigability
+:: navy icon=chalkboard-teacher
+### Training
+Sessions for advisers in every School
+@end
+
+--
+
+## Header Bars and Widths
+
+@cards style=bar widths=62,38
+:: dark-red
+### What changes
+How credit is counted: course by course, then at session level
+:: dark-red
+### What does not change
+Classification thresholds and GPA requirements
+@end
+
+@source Assessment Regulations §16.2
+
+--
+
+## Arrows, One Card per Click
+
+@cards arrows build
+### Draft
+Written by the course team
+::
+### Review
+Checked by the School
+::
+### Approval
+Agreed at College level
+@end
+
+--
+
+## A Stack
+
+@cards stack arrows
+:: light-gold
+Word
+:: light-green
+Phrase
+:: light-blue
+Clause
+:: light-purple
+Sentence
+@end
+
+--
+
+## Grade Strip
+
+@cards style=strip
+:: dark-red
+A3, B2, C1, C1, C3, ~~D3~~ C3
+::
+### Six components
+The course grade is the weighted mean of the component grades, rounded to the nearest whole grade point.
+@end
+
+--
+
+## Flowing Columns
+
+@columns cols=2
+* *hovercraft*
+* *brunch*
+* *motel*
+* *smog*
+* *flu*
+* *phone*
+* *bus*
+* *pram*
+@end
+
+---
+
+## Terms Then Glosses
+
+@terms sc build=columns answers
+  hovercraft :: hover + craft
+  brunch :: breakfast + lunch
+  motel :: motor + hotel
+  flu :: influenza
+
+--
+
+## Statistics
+
+@stats
+  96% :: Fewer files :: 83 files to 3
+  [93%]{green} :: Reduction in text :: [[about 9,800 words now]]{green}
+  12 :: Schools consulted
+
+--
+
+## Examples
+
+@ex
+  The dog eyed the birthday cake. :: canonical order
+  *a five beautiful days :: numeral before determiner
+  (b) There will be a sponsored *fast* tomorrow. :: (N)
+  ?Colourless green ideas sleep furiously.
+
+--
+
+## A Formatted Table
+
+@table head=navy band rowhead widths=22,26,26,26
+| | Current state | Simplification | Outcome |
+|---|---|---|---|
+| Organisational | 109 documents | 4 consolidated documents | Navigability |
+| Linguistic | 41 defined terms | 19 defined terms | Consistency |
+| Procedural | 12 forms | 5 forms | Fewer errors |
+
+---
+
+## Concordance
+
+@kwic build=context
+  the hammer was used to | strike | the nail into the wall
+  workers voted to | [strike]{red} | over pay and conditions
+  a sudden thought would | strike | her as she walked
+  the union called a national | strike | for the following week
+
+--
+
+@slide smaller
+## Concordance as Prose and in a Window
+
+@kwic prose
+  ...the hammer was used to | strike | the nail into the wall, and...
+  ...workers in three plants voted to | strike | over pay and conditions...
+
+@kwic window=3
+  the union called a national | strike | for the following week
+  workers voted to | strike | over ==pay== and conditions
+
+---
+
+## A Brace Tree
+
+@tree build=level
+  FTA
+    commit the FTA
+      directly
+        baldly %%(without redressive action)%%
+        with politeness
+      indirectly
+    don't commit the FTA
+
+--
+
+## An Outline with Codes
+
+@tree style=outline
+  01 :: The world
+    01.04 :: Physical sensibility
+      01.04.09 :: Colour
+        01.04.09.07 :: ==Named colours==
+    01.05 :: Matter
+
+---
+
+## Transcript
+
+@transcript
+  a: Are you doing anything on Friday // evening?
+  b: // Nothing much, why?
+  (1.0)
+  a: Can you come round for dinner?
+  b: Well (0.5) I'd *really* like to, but I'm afraid I've already
+  arranged to meet friends (0.5) but thanks for asking.
+
+--
+
+## Preference Organisation
+
+* An invitation makes acceptance the preferred response
+* Refusals are marked: delay, hedging, an account
+* The next slides lay a transcript over this one
+
+--
+
+@transcript overlay
+  a: Can you come round for dinner on Saturday?
+  (1.0)
+  b: Well (0.5) I'd really like to, but I'm afraid I've already
+
+--
+
+@transcript overlay
+  a: Can you come round for dinner on Saturday?
+  (1.0)
+  b: Well (0.5) I'd really like to, but I'm afraid I've already
+  arranged to meet friends on Saturday evening (0.5) but thanks for asking.
+
+---
+
 @refs title="References"
 * Jupp, Peter. 1998. *British Politics on the Eve of Reform*. Basingstoke: Macmillan.
 * Vice, John & Stephen Farrell. 2017. *The History of Hansard*. London: House of Lords Library.

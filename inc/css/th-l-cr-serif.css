@@ -1,0 +1,29 @@
+@import url('base.css');
+@import url('light.css');
+
+/* Cream Serif: Cream's paper and Equity headings, with Equity for the body
+   as well. Made for the 1A Meaning and Structure lectures, where grammatical
+   labels such as MCl must not read as MCI (Concourse's l and I are close). */
+:root {
+    --r-main-font: 'Equity', 'Noto Serif', 'Constantia', 'Georgia', serif;
+}
+.reveal {
+    background-color: #F2F2EA;
+    font-weight: 400;   /* Equity has 400 and 700; base.css's 300 suits Concourse */
+}
+.reveal strong, .reveal b {
+    font-weight: 700;
+}
+/* An italic word in a small-caps heading (the word silly in "Silly and
+   its senses") keeps its lower case, as a cited form should. */
+.reveal h1 em, .reveal h2 em, .reveal h3 em,
+.reveal h1 i, .reveal h2 i, .reveal h3 i {
+    font-variant-caps: normal;
+}
+/* Monochrome: @slide contrast and the layout bands (Spine, Masthead)
+   use a warm off-black that mirrors the off-white paper */
+:root {
+    --r-contrast-bg: #22211D;
+    --r-contrast-ink: #F2F2EA;
+    --r-contrast-border: rgba(242, 242, 234, 0.4);
+}

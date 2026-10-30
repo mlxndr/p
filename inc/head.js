@@ -34,6 +34,7 @@
         { name: 'Classic', themes: [
             { key: 'cream',      name: 'Cream',      file: 'th-l-cr.css' },
             { key: 'cream-sans', name: 'Cream Sans', file: 'th-l-cr-m-thin.css' },
+            { key: 'cream-serif', name: 'Cream Serif', file: 'th-l-cr-serif.css' },
             { key: 'manuscript', name: 'Manuscript', file: 'th-l-e-cr-invert.css' },
             { key: 'twilight',   name: 'Twilight',   file: 'th-d-bg-twilight.css' }
         ]},

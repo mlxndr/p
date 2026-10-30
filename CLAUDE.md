@@ -289,7 +289,8 @@ with lightened versions in dark.css. Themes never override them, so each
 function keeps one colour everywhere. Colour is the only cue, by design.
 
 Menu sections: Colourful (Terracotta, Burgundy, Slate, Petrol); Classic
-(Cream, Cream Sans, Manuscript, Twilight); Other (High Accessibility); Institutional (University of Glasgow, Historical
+(Cream, Cream Sans, Cream Serif, Manuscript, Twilight; Cream Serif is
+Cream with Equity body text, made for the 1A Meaning and Structure lectures); Other (High Accessibility); Institutional (University of Glasgow, Historical
 Thesaurus, Historical Thesaurus Cream). Racing Green, Midnight and
 Letterpress were retired 2026-09 (files in _to_delete/retired/).
 
@@ -352,7 +353,9 @@ Fonts are self-hosted WOFF2 (Concourse, Equity, Century Supra by Matthew
 Butterick; Premiera (Burgundy, Petrol); Bitter, OFL, variable (Slate);
 Bild by DJR, variable (was Marginalia's; now unused);
 Monaspace Neon (slide code); JetBrains Mono (handout code); Luciole for
-accessibility). Noto Sans/Serif from Google Fonts is linked from head.js
+accessibility; Noto Sans 2.000 for the University of Glasgow theme, as
+"Noto Sans UoG" in woff2/noto-sans/ (OFL; unmodified, the build installed
+on Marc's Mac; subset to Latin, Greek, Cyrillic and IPA). Noto Sans/Serif from Google Fonts is linked from head.js
 without blocking the page, as a glyph-coverage fallback (IPA and phonetic
 symbols, non-Latin). A Font Awesome 5 Duotone subset is self-hosted for
 content icons (`<i class="fad fa-code"></i>`); the available icons are the

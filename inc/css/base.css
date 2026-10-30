@@ -547,6 +547,12 @@ html body .slide-menu-wrapper .slide-menu {
     box-shadow: 10px 0 40px rgba(0, 0, 0, 0.14);
 }
 
+/* The closed panel sits just off the left edge, so its shadow fell across
+   the first 40 px of every slide as a faint grey band. Shadow only when open. */
+html body .slide-menu-wrapper .slide-menu:not(.active) {
+    box-shadow: none;
+}
+
 /* ---------- regions: panels above, settings footer below ---------- */
 
 html body .slide-menu-wrapper .slide-menu-panel {

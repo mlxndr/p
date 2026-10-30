@@ -328,9 +328,48 @@
                  .replace(/%%([^%\n]+)%%/g, '<span class="md-subtle">$1</span>');
     }
 
+    /* Several directives on one slide (@slide plus @section, @quote, an
+       image directive...) each emit a <!-- .slide: --> comment, and reveal
+       applies them in turn, so a later class="" replaced an earlier one.
+       Merge them into one comment per slide: classes are combined, other
+       attributes keep their first value, bare flags are kept. */
+    function mergeSlideComments(md) {
+        return md.split(/(\n---?\n)/).map(function (piece) {
+            if (/^\n---?\n$/.test(piece)) return piece;
+            const re = /^[ \t]*<!--\s*\.slide:([\s\S]*?)-->[ \t]*$/gm;
+            const found = piece.match(re);
+            if (!found || found.length < 2) return piece;
+            const classes = [], attrs = [], seen = {};
+            for (const c of found) {
+                const body = /<!--\s*\.slide:([\s\S]*?)-->/.exec(c)[1];
+                const attrRe = /([\w-]+)(?:\s*=\s*"([^"]*)")?/g;
+                let m;
+                while ((m = attrRe.exec(body))) {
+                    const key = m[1], val = m[2];
+                    if (key === 'class') {
+                        for (const k of (val || '').split(/\s+/)) {
+                            if (k && classes.indexOf(k) === -1) classes.push(k);
+                        }
+                    } else if (!seen[key]) {
+                        seen[key] = true;
+                        attrs.push(val === undefined ? key : key + '="' + val + '"');
+                    }
+                }
+            }
+            const merged = '<!-- .slide:' +
+                (classes.length ? ' class="' + classes.join(' ') + '"' : '') +
+                (attrs.length ? ' ' + attrs.join(' ') : '') + ' -->';
+            let first = true;
+            return piece.replace(re, function () {
+                if (first) { first = false; return merged; }
+                return '';
+            });
+        }).join('');
+    }
+
     function wrapFillSlides(md) {
         return md.split('\n--\n').map(function (piece) {
-            if (piece.indexOf('class="md-fill"') === -1) return piece;
+            if (!/class="[^"]*\bmd-fill\b[^"]*"/.test(piece)) return piece;
             const lines = piece.split('\n');
             const head = [], body = [], notes = [];
             let inNotes = false;
@@ -473,7 +512,7 @@
                     // line; restore it, or the next ^\n---\n separator loses
                     // its preceding blank line and slides merge
                     out.push('');
-                    return { md: smallCapsPass(wrapFillSlides(out.join('\n'))), hadError: hadError };
+                    return { md: smallCapsPass(wrapFillSlides(mergeSlideComments(out.join('\n')))), hadError: hadError };
                 }
             } else if (kind === 'image') {
                 r = emitImage(opts, allocId, line, lineNo, name);
@@ -502,7 +541,7 @@
                     // keep any notes: block after the emitted markup
                     for (let j = bodyEnd; j < lines.length; j++) out.push(lines[j]);
                     if (r.isError) hadError = true;
-                    return { md: smallCapsPass(wrapFillSlides(out.join('\n'))), hadError: hadError };
+                    return { md: smallCapsPass(wrapFillSlides(mergeSlideComments(out.join('\n')))), hadError: hadError };
                 }
             } else {
                 r = { md: errorSlide(name, lineNo, line,
@@ -512,7 +551,7 @@
             if (r.isError) hadError = true;
             i++;
         }
-        return { md: smallCapsPass(wrapFillSlides(out.join('\n'))), hadError: hadError };
+        return { md: smallCapsPass(wrapFillSlides(mergeSlideComments(out.join('\n')))), hadError: hadError };
     }
 
     /* ---------- top-level API ---------- */

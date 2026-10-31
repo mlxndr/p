@@ -1,0 +1,651 @@
+/* ===========================================
+   Corporate mode: University of Glasgow (SPEC 8)
+
+   Loaded instead of a theme and a layout when meta.json has
+   "corporate": "uog" (head.js), and locked: no saved theme, no ?theme.
+   Geometry is the 2026 UoG PowerPoint template's: 12192000 x 6858000 EMU
+   = 1920 x 1080 px, so 1 px = 6350 EMU and 1 pt = 2 px. Numbers in the
+   comments are from the template and deck XML.
+
+   Calibrated against local PDF exports from PowerPoint for Mac (Boards
+   of Examiners, 28 October 2026; Session 1 and Session 2, 30 October):
+   - fonts: unmodified Noto Sans 2.000 with real Light, no kerning, no
+     ligatures, lining figures (PowerPoint draws what the font draws);
+   - line pitch 1.2 x size ("single" spacing), the baseline 0.94185 em
+     below the line top (the overrides below);
+   - line breaks from advances rounded to 1/8 pt (corpLineBreaks) and the
+     first baseline of each box at a whole point (corpFirstBaselines),
+     both in directives.js;
+   - roundRect corners at 3.553% of each box's shorter side, the text
+     inset a further 0.29289 x radius (corpRadii).
+
+   Card presets ("cards" in the corporate settings) set the --cc-*
+   variables on <html>: session (default), boards, template.
+   =========================================== */
+@import url('base.css');
+@import url('light.css');
+
+/* Noto Sans 2.000 (noto-source 20170915), the build PowerPoint uses on
+   the presenting Mac. PowerPoint's "single" spacing is 1.2 x size, split
+   in the font's ascent:descent ratio (1069:293); these overrides make
+   CSS do the same at line-height 1.2. Its own family name, so the
+   overrides never reach the University of Glasgow theme's faces. */
+@font-face { font-family: 'UoG Corporate Sans'; font-weight: 300; font-style: normal;
+    ascent-override: 94.185%; descent-override: 25.815%; line-gap-override: 0%;
+    src: url('woff2/noto-sans/NotoSans-Light.woff2') format('woff2'); }
+@font-face { font-family: 'UoG Corporate Sans'; font-weight: 300; font-style: italic;
+    ascent-override: 94.185%; descent-override: 25.815%; line-gap-override: 0%;
+    src: url('woff2/noto-sans/NotoSans-LightItalic.woff2') format('woff2'); }
+@font-face { font-family: 'UoG Corporate Sans'; font-weight: 400; font-style: normal;
+    ascent-override: 94.185%; descent-override: 25.815%; line-gap-override: 0%;
+    src: url('woff2/noto-sans/NotoSans-Regular.woff2') format('woff2'); }
+@font-face { font-family: 'UoG Corporate Sans'; font-weight: 400; font-style: italic;
+    ascent-override: 94.185%; descent-override: 25.815%; line-gap-override: 0%;
+    src: url('woff2/noto-sans/NotoSans-Italic.woff2') format('woff2'); }
+@font-face { font-family: 'UoG Corporate Sans'; font-weight: 600; font-style: normal;
+    ascent-override: 94.185%; descent-override: 25.815%; line-gap-override: 0%;
+    src: url('woff2/noto-sans/NotoSans-SemiBold.woff2') format('woff2'); }
+@font-face { font-family: 'UoG Corporate Sans'; font-weight: 700; font-style: normal;
+    ascent-override: 94.185%; descent-override: 25.815%; line-gap-override: 0%;
+    src: url('woff2/noto-sans/NotoSans-Bold.woff2') format('woff2'); }
+@font-face { font-family: 'UoG Corporate Sans'; font-weight: 700; font-style: italic;
+    ascent-override: 94.185%; descent-override: 25.815%; line-gap-override: 0%;
+    src: url('woff2/noto-sans/NotoSans-BoldItalic.woff2') format('woff2'); }
+
+/* ---------- palette: the names resolve to brand values (SPEC 5.3) ---------- */
+:root {
+    --uog-blue: #011451;
+    --p-navy: #011451;      /* University Blue */
+    --p-blue: #005398;      /* Dark Blue */
+    --p-purple: #4C2683;    /* Dark Purple */
+    --p-pink: #A60367;      /* Dark Pink */
+    --p-green: #405D18;     /* Dark Green */
+    --p-red: #7D2239;       /* Dark Red */
+    --p-orange: #BE4D00;    /* Rust (2025 palette) */
+    --p-light-blue: #4DBBC6;
+    --p-light-purple: #A5A1CE;
+    --p-light-pink: #E98BAF;
+    --p-light-green: #81C071;
+    --p-light-gold: #F2D25C;    /* Light Yellow */
+    --p-light-red: #E98BAF;     /* borrows Light Pink */
+    --p-light-grey: #E8E8E8;    /* the template's lt2: the takeaway panel */
+    /* brand rule: University Blue on the light colours */
+    --p-ink: #011451;
+    --r-highlight: var(--p-light-gold);
+
+    --r-main-font: 'UoG Corporate Sans', 'Noto Sans', sans-serif;
+    --r-heading-font: 'UoG Corporate Sans', 'Noto Sans', sans-serif;
+    --r-heading-bold-font: 'UoG Corporate Sans', 'Noto Sans', sans-serif;
+    --r-main-color: #011451;
+    --r-heading-color: #011451;
+    --r-font-color: #011451;
+    --r-background-color: #FFFFFF;
+    --r-subtle-color: #6B6B6B;
+    --r-link-color: #005398;
+    --r-border-color: #D9D9D9;
+    --L-accent: #A60367;
+    --title-logos: white;
+
+    /* PowerPoint "single" spacing */
+    --corp-lh: 1.2;
+    /* 90% spacing (title and content placeholders) */
+    --corp-lh90: 1.08;
+}
+
+/* ---------- card presets (SPEC 8) ---------- */
+html.corp, html.corp-cards-session {
+    --corp-top: 256px;          /* first row top */
+    --corp-flow-gap: 18.9px;    /* 120000 EMU between a lead and the blocks */
+    --corp-lead: 40px;          /* 20 pt lead paragraph above blocks */
+    --cc-gap: 39.37px;          /* 250000 EMU between cards */
+    --cc-pad: 28.8px 36px;      /* insets 182880 / 228600 */
+    --cc-head: 44px;            /* 22 pt bold */
+    --cc-head-after: 12px;      /* 6 pt after */
+    --cc-text: 28px;            /* 14 pt */
+    --cc-p-before: 12px;        /* 6 pt before each paragraph */
+    --cc-p-after: 0px;
+}
+html.corp-cards-boards {
+    --corp-top: 275.59px;
+    --corp-flow-gap: 31.5px;
+    --corp-lead: 36px;
+    --cc-gap: 36px;
+    --cc-pad: 36px;
+    --cc-head: 48px;            /* 24 pt, 10 pt after */
+    --cc-head-after: 20px;
+    --cc-text: 32px;            /* 16 pt, 8 pt after */
+    --cc-p-before: 0px;
+    --cc-p-after: 16px;
+}
+html.corp-cards-template {
+    --corp-top: 263px;
+    --corp-flow-gap: 31.5px;
+    --corp-lead: 40px;
+    --cc-gap: 36px;
+    --cc-pad: 36px;
+    --cc-head: 56px;            /* 28 pt */
+    --cc-head-after: 12px;
+    --cc-text: 40px;            /* 20 pt */
+    --cc-p-before: 0px;
+    --cc-p-after: 12px;
+}
+
+/* ---------- the frame ---------- */
+/* PowerPoint letterboxes in black when the screen is not 16:9; the white
+   ground belongs to the slide */
+html.corp body, html.corp .reveal-viewport, html.corp .reveal { background: #000 !important; }
+html.corp .reveal .slides > section,
+html.corp .reveal .slides > section > section {
+    background: #FFFFFF;
+    width: 1920px; height: 1080px;
+    padding: 0 !important; margin: 0;
+    top: 0 !important; left: 0;
+    overflow: hidden;
+}
+html.corp .reveal {
+    font-family: var(--r-main-font);
+    font-size: 56px;               /* 28 pt: the text box default */
+    font-weight: 400;
+    line-height: var(--corp-lh);
+    color: var(--uog-blue);
+    letter-spacing: 0;
+    /* PowerPoint neither kerns nor ligates, and draws the font's own
+       (lining) figures */
+    font-variant-ligatures: none;
+    font-kerning: none;
+    -webkit-font-smoothing: antialiased;
+}
+html.corp .reveal * { font-variant-numeric: normal; }
+/* base.css sets lists at 1.18; PowerPoint's single spacing is 1.2 */
+html.corp .reveal .slides section :is(ul, ol, li, p, h3, h4, table) { line-height: inherit; }
+html.corp .reveal .slides section,
+html.corp .reveal .slides section :is(p, li, h1, h2, h3, h4, td, th, div) { text-align: left; }
+
+/* furniture reveal adds that PowerPoint does not have */
+html.corp .reveal .progress,
+html.corp .reveal .slide-number,
+html.corp .reveal .controls,
+html.corp .slide-menu-button { display: none !important; }
+/* the closed menu's shadow would fall on the slide edge */
+html.corp .slide-menu:not(.active) { box-shadow: none !important; }
+/* the missing-alt ribbon only in local preview */
+html.corp:not(.mga-preview) .reveal .md-alt-missing { display: none; }
+
+/* ---------- content slide (layout "Full image") ---------- */
+/* Logo picture: off -254908,40015 ext 2997200 x 1612900 (PNG 984 x 533
+   with its transparent clear space) */
+html.corp .reveal .slides section.corp-content::before {
+    content: '';
+    position: absolute;
+    left: -40.14px; top: 6.30px; width: 472.00px; height: 254.00px;
+    background: url('../../img/uog_block.png') 0 0 / 100% 100% no-repeat;
+    z-index: 0;
+}
+/* Title placeholder: off 2742292,183683 ext 9172340 x 1325563, insets
+   91440/45720, anchored at the centre, 44 pt bold, 90% spacing. At 90%
+   PowerPoint takes the whole reduction from above the baseline, so the
+   line is raised 0.06 em against CSS's centring. */
+html.corp .reveal .slides section.corp-content > h1,
+html.corp .reveal .slides section.corp-content > h2 {
+    position: absolute;
+    left: 431.86px; top: calc(28.93px - 0.06em); width: 1444.46px; height: 208.75px;
+    box-sizing: border-box;
+    padding: 7.2px 14.4px;
+    margin: 0;
+    display: flex; flex-direction: column; justify-content: center; align-items: flex-start;
+    font-family: var(--r-heading-font);
+    font-size: 88px; font-weight: 700;
+    font-variant-caps: normal;
+    line-height: var(--corp-lh90);
+    letter-spacing: 0;
+    color: var(--uog-blue);
+    text-transform: none;
+    border: none;
+    background: none;
+}
+html.corp .reveal .slides section.corp-content > h2::after,
+html.corp .reveal .slides section.corp-content > h1::after { content: none; display: none; }
+html.corp .reveal .slides section.corp-content > h2 .md-head-sub {
+    font-family: var(--r-main-font); font-size: 0.5em; font-weight: 400; color: inherit; margin-top: 0.15em;
+}
+/* a ribbon heading (## [[Draft]]{light-purple}) is the title on a
+   coloured bar, ink by the brand rule */
+html.corp .reveal .slides section.corp-content > h2:has(> .md-ribbon) {
+    font-size: 88px;
+}
+html.corp .reveal .slides section.corp-content > h2 > .md-ribbon {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 18px 36px 22px;
+    border-radius: 14px;
+    font-size: 0.82em;
+    font-weight: 700;
+    font-variant-caps: normal;
+    letter-spacing: 0;
+    line-height: var(--corp-lh90);
+    background: var(--tag-bg);
+    color: var(--tag-ink, #FFFFFF);
+    vertical-align: baseline;
+}
+html.corp .reveal .slides section.corp-content > h2 > .md-ribbon::before,
+html.corp .reveal .slides section.corp-content > h2 > .md-ribbon::after { content: none; display: none; }
+
+/* The body: everything below the title, in one box on the template's
+   content edges (661492 to 11530508 EMU), from the preset's first row
+   down to the foot of the takeaway panel (6250000 EMU) */
+html.corp .reveal .slides section.corp-content > .corp-body {
+    position: absolute;
+    left: 104px; width: 1712px;
+    top: var(--corp-top);
+    bottom: 95.67px;
+    display: flex; flex-direction: column;
+    gap: var(--corp-flow-gap);
+    font-size: var(--corp-text, 56px);
+    z-index: 1;
+}
+html.corp .reveal .slides section.corp-content.corp-has-note > .corp-body { bottom: 239.43px; } /* 24 px above the panel */
+html.corp .reveal .corp-body > * { margin: 0; max-width: none; flex: 0 0 auto; }
+html.corp .reveal .corp-body p { margin: 0; }
+/* a block placed by the converter (top= on @cards, @note and friends):
+   its top is the slide position */
+html.corp .reveal .corp-body > [data-corp-top] {
+    position: absolute; left: 0; right: 0;
+    top: calc(var(--corp-y) - var(--corp-top));
+}
+html.corp .reveal .slides section.corp-content > .corp-body strong { color: inherit; font-weight: 700; }
+html.corp .reveal .slides section.corp-content > .corp-body em { color: inherit; }
+html.corp .reveal .slides section a { color: inherit; text-decoration: underline; }
+
+/* Body text in a text box (the default, "body": "textbox"): 28 pt, list
+   level two 24 pt (@slide text=N sets the first level, the second 4 pt
+   smaller). Bullets: marL 457200 indent -457200, Arial bullet. 12 pt
+   after each paragraph at 28 pt, 6 pt below that (the Session decks). */
+html.corp .reveal .corp-body { --corp-para-after: 24px; }
+html.corp-cards-session .reveal .slides section[data-corp-text] > .corp-body { --corp-para-after: 12px; }
+html.corp .reveal .corp-body > ul,
+html.corp .reveal .corp-body > ol { list-style: none; padding: 0; }
+html.corp .reveal .corp-body > :is(ul, ol) li {
+    position: relative; margin: 0 0 var(--corp-para-after); padding-left: 72px;
+}
+html.corp .reveal .corp-body > :is(ul, ol) li:last-child { margin-bottom: 0; }
+html.corp .reveal .corp-body > :is(ul, ol) ul {
+    list-style: none; padding: 0; margin: var(--corp-para-after) 0 0;
+    font-size: calc(var(--corp-text, 56px) - 8px);
+}
+html.corp .reveal .corp-body > ul li::before,
+html.corp .reveal .corp-body > ol ul li::before {
+    content: '\2022'; position: absolute; left: 0; top: 0;
+    font-family: Arial, 'Liberation Sans', sans-serif;
+}
+html.corp .reveal .corp-body li::marker { content: none; }
+html.corp .reveal .corp-body > ol { counter-reset: corp; }
+html.corp .reveal .corp-body > ol > li { counter-increment: corp; }
+html.corp .reveal .corp-body > ol > li::before { content: counter(corp) '.'; position: absolute; left: 0; top: 0; }
+html.corp .reveal .corp-body > p + p { margin-top: var(--corp-para-after); }
+/* reveal's list builds would otherwise slide; corporate builds appear */
+html.corp .reveal .corp-body li.fragment { transform: none; }
+
+/* With blocks below (cards, a table, a stack), a paragraph is the lead:
+   20 pt in the Session decks, 18 pt in the Boards deck */
+html.corp .reveal .slides section.corp-has-blocks > .corp-body > p,
+html.corp .reveal .slides section.corp-has-blocks > .corp-body > ul,
+html.corp .reveal .slides section.corp-has-blocks > .corp-body > ol { font-size: var(--corp-text, var(--corp-lead)); }
+
+/* The template's content placeholder ("body": "placeholder", or @slide
+   placeholder): off 285750,1627188 ext 11474450 x 4606925; 90% spacing;
+   level 1 32 pt with 10 pt before, level 2 28 pt em dash, level 3 24 pt
+   'o' (Courier New) */
+html.corp .reveal .slides section.corp-content > .corp-body.corp-ph {
+    left: 45px; top: 256.26px; width: 1807px; height: 725.5px; bottom: auto;
+    box-sizing: border-box; padding: 7.2px 14.4px;
+    display: block; font-size: var(--corp-text, 64px); line-height: var(--corp-lh90);
+}
+html.corp .reveal .corp-ph ul { list-style: none; margin: 0; padding: 0; line-height: inherit; }
+html.corp .reveal .corp-ph li { position: relative; padding-left: 36px; margin: 20px 0 0; top: -0.06em; }
+html.corp .reveal .corp-ph > ul > li:first-child, html.corp .reveal .corp-ph > p:first-child { margin-top: 0; }
+html.corp .reveal .corp-ph li::before { content: '\2022'; position: absolute; left: 0; font-family: Arial, 'Liberation Sans', sans-serif; }
+html.corp .reveal .corp-ph ul ul { font-size: calc(var(--corp-text, 64px) - 8px); padding-left: 36px; margin: 0; }
+html.corp .reveal .corp-ph ul ul > li { margin-top: 10px; top: 0; }
+html.corp .reveal .corp-ph ul ul > li::before { content: '\2014'; font-family: inherit; }
+html.corp .reveal .corp-ph ul ul ul { font-size: calc(var(--corp-text, 64px) - 16px); }
+html.corp .reveal .corp-ph ul ul ul > li::before { content: 'o'; font-family: 'Courier New', monospace; }
+html.corp .reveal .corp-ph p { margin: 20px 0 0; position: relative; top: -0.06em; }
+
+/* ---------- cards (@cards; text inside the shape, roundRect) ---------- */
+html.corp .reveal .corp-body .md-cards {
+    margin: 0;
+    gap: var(--corp-flow-gap) var(--cc-gap);
+    font-size: var(--cc-text);
+    line-height: var(--corp-lh);
+    flex: 1 1 auto;
+    min-height: 0;
+    align-items: stretch;
+}
+html.corp .reveal .corp-body .md-cards[style*="--cards-h"] { flex: 0 0 auto; align-items: start; }
+html.corp .reveal .corp-body .md-cards.md-ncols-3,
+html.corp .reveal .corp-body .md-cards.md-ncols-4 { font-size: var(--cc-text); }
+html.corp .reveal .md-cards .md-card {
+    box-sizing: border-box;
+    padding: var(--cc-pad);
+    border-radius: 14px;              /* set exactly by corpRadii */
+    border: none;
+    background: var(--tag-bg, var(--p-light-grey));
+    color: var(--tag-ink, var(--uog-blue));
+    font-size: var(--cards-text, var(--cc-text));
+    min-height: 0;
+    height: var(--cards-h, auto);
+    overflow: hidden;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+html.corp .reveal .md-cards .md-card > * { margin: 0; }
+html.corp .reveal .md-cards .md-card > h3 {
+    font-family: var(--r-heading-font);
+    font-size: var(--cards-head, var(--cc-head));
+    font-weight: 700; line-height: var(--corp-lh);
+    margin: 0 0 var(--cc-head-after);
+    color: inherit; border: none; padding: 0;
+    font-variant-caps: normal; letter-spacing: 0; text-transform: none;
+}
+/* #### before ### is the small line above a heading (corporate only, to
+   reproduce existing slides); after it, the light subtitle (Noto Sans
+   Light, 2 pt below the heading, 12 pt after) */
+html.corp .reveal .md-cards .md-card > h4 {
+    font-size: var(--cards-text, var(--cc-text)); font-weight: 400; line-height: var(--corp-lh);
+    color: inherit; margin: 0 0 4px; font-variant-caps: normal; letter-spacing: 0; text-transform: none; border: none;
+}
+html.corp .reveal .md-cards .md-card > h3:has(+ h4) { margin-bottom: 4px; }
+html.corp .reveal .md-cards .md-card > h3 + h4 { font-weight: 300; margin: 0 0 24px; font-family: var(--r-main-font); }
+html.corp .reveal .md-cards .md-card :is(p, li) { color: inherit; }
+html.corp .reveal .md-cards .md-card > p,
+html.corp .reveal .md-cards .md-card > ul > li,
+html.corp .reveal .md-cards .md-card > ol > li { margin: var(--cc-p-before) 0 var(--cc-p-after); }
+html.corp .reveal .md-cards .md-card > :first-child,
+html.corp .reveal .md-cards .md-card > ul:first-child > li:first-child { margin-top: 0; }
+html.corp .reveal .md-cards .md-card > :is(ul, ol) { list-style: none; padding: 0; margin: 0; }
+/* bullets: marL 285750 indent -285750, Arial bullet */
+html.corp .reveal .md-cards .md-card li { position: relative; padding-left: 45px; }
+html.corp .reveal .md-cards .md-card ul > li::before {
+    content: '\2022'; position: absolute; left: 0; top: 0;
+    font-family: Arial, 'Liberation Sans', sans-serif;
+}
+html.corp .reveal .md-cards .md-card li::marker { content: none; }
+html.corp .reveal .md-cards .md-card ol { counter-reset: corpc; }
+html.corp .reveal .md-cards .md-card ol > li { counter-increment: corpc; }
+html.corp .reveal .md-cards .md-card ol > li::before { content: counter(corpc) '.'; position: absolute; left: 0; top: 0; }
+html.corp .reveal .slides section .md-card-filled :is(h3, h4, strong, b, em, a, code) { color: inherit; }
+/* the first card with no `::` line before it is a plain text column */
+html.corp .reveal .md-cards .md-card:not(.md-card-filled) { background: none; padding: 0; color: var(--uog-blue); }
+html.corp .reveal .md-cards .md-card:not(.md-card-filled) > p { font-size: var(--cards-text, var(--corp-lead)); }
+/* white cards (the Boards deck's open stages) take a University Blue edge */
+html.corp .reveal .md-cards .md-card.md-bg-white { box-shadow: 0 0 0 1.5px var(--uog-blue), inset 0 0 0 1.5px var(--uog-blue); }
+html.corp .reveal .md-cards .md-card.md-card-foot > :last-child { margin-top: auto; }
+/* middle: the text anchored at the card's centre, as PowerPoint's
+   "anchor ctr" (converter output; usable by hand) */
+html.corp .reveal .md-cards .md-card.md-card-middle { justify-content: center; }
+html.corp .reveal .md-card-tag { position: static; margin: 0 0 12px; }
+
+/* arrows: grey rightArrow shapes (51.97 x 37.8 px, #6B6B6B) centred in
+   an 89.77 px gap; cards in an arrowed row are inset 28.8 px all round */
+html.corp .reveal .corp-body .md-cards.md-arrows { column-gap: 89.77px; }
+html.corp .reveal .md-cards.md-arrows .md-card { padding: 28.8px; overflow: visible; }
+/* the steps of an arrowed row: heading 4 pt after, text close below */
+html.corp .reveal .md-cards.md-arrows .md-card > h3 { margin-bottom: 8px; }
+html.corp .reveal .md-cards.md-arrows .md-card > h3 ~ p { margin-top: 0; }
+html.corp .reveal .md-arrows > .md-card:not(:last-child)::after {
+    right: -70.66px; width: 51.97px; height: 37.8px;
+    background: #6B6B6B;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 25H50V0L100 50 50 100V75H0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 25H50V0L100 50 50 100V75H0Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+}
+
+/* The Boards deck's process row (cards=boards): thin University Blue
+   connectors with arrowheads (w 22225 EMU, triangle tail) centred in a
+   24 px gap, as PowerPoint for Mac draws them: shaft 2.36 to 11.64 px
+   after the box, head a 12 x 12 px triangle with its tip at 21.64 px;
+   the steps inset 14.4 px */
+html.corp-cards-boards .reveal .corp-body .md-cards.md-arrows { column-gap: 24.1px; }   /* steps 265.25 px wide: 230.95 px of text, as measured */
+html.corp-cards-boards .reveal .md-cards.md-arrows .md-card { padding: 14.4px; }
+html.corp-cards-boards .reveal .md-arrows > .md-card:not(:last-child)::after {
+    right: -24px; width: 24px; height: 12px; margin-top: 0;
+    background: var(--uog-blue);
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'%3E%3Cpath d='M2.36 4.25H11.64V7.75H2.36ZM9.64 0L21.64 6L9.64 12Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 12'%3E%3Cpath d='M2.36 4.25H11.64V7.75H2.36ZM9.64 0L21.64 6L9.64 12Z'/%3E%3C/svg%3E") 0 0 / 100% 100% no-repeat;
+}
+/* the Boards deck's text boxes are unfilled roundRects, so their text
+   sits 0.29289 x radius inside (about 1.5 px) */
+html.corp-cards-boards .reveal .corp-body > :is(p, ol, ul) { padding: var(--corp-inset, 1.5px); }
+html.corp-cards-session .reveal .corp-body > :is(p, ol, ul) { padding: var(--corp-inset, 0); }
+
+/* stack: centred tiers, each 14% of the width narrower than the one
+   below, 18.9 px apart, text centred, anchored at the centre, inset
+   36 x 7.2 px (Session 1, slide 4) */
+html.corp .reveal .corp-body .md-cards.md-stack { gap: 18.9px; flex: 0 0 auto; align-items: center; }
+html.corp .reveal .md-stack > .md-card {
+    width: calc(100% - (var(--n) - 1 - var(--i)) * 14%);
+    padding: 7.2px 36px; justify-content: center;
+}
+html.corp .reveal .md-stack > .md-card :is(h3, p) { text-align: center; }
+html.corp .reveal .md-stack > .md-card > h3 { margin-bottom: 0; }
+html.corp .reveal .md-stack > .md-card > p { margin-top: 4px; }
+
+/* style=bar: the colour fills a heading bar, the body unfilled */
+html.corp .reveal .md-style-bar .md-card { background: none; color: var(--uog-blue); padding: 0; border: 1.5px solid var(--tag-bg, var(--uog-blue)); }
+html.corp .reveal .md-style-bar .md-card > h3 { background: var(--tag-bg, var(--uog-blue)); color: var(--tag-ink, #FFF); padding: 18px 36px; margin: 0; border-radius: 0; }
+html.corp .reveal .md-style-bar .md-card > :not(h3) { margin-left: 36px; margin-right: 36px; }
+
+/* style=stat: the Session decks' bands (26 pt bold value, 15 pt label,
+   centred, inset 14.4 px, 18.9 px apart); @stats labels in Light */
+html.corp .reveal .corp-body .md-cards.md-style-stat { gap: 18.9px; flex: 0 0 auto; }
+html.corp .reveal .md-cards.md-style-stat .md-card { height: var(--cards-h, 236.22px); }
+html.corp .reveal .md-style-stat .md-card { padding: 14.4px; justify-content: center; align-items: center; }
+html.corp .reveal .md-style-stat .md-card :is(p, div) { text-align: center; }
+html.corp .reveal .md-cards.md-style-stat .md-card > :first-child,
+html.corp .reveal .md-style-stat .md-stat-num { font-size: 52px; font-weight: 700; line-height: var(--corp-lh); margin: 0; }
+html.corp .reveal .md-cards.md-style-stat .md-card > :first-child + p,
+html.corp .reveal .md-style-stat .md-stat-label { font-size: 30px; margin: 8px 0 0; }
+html.corp .reveal .md-stats .md-stat-label { font-weight: 300; }
+html.corp .reveal .md-style-stat .md-stat-note { font-size: 24px; color: inherit; opacity: 0.85; }
+html.corp .reveal .md-stats .md-card:not(.md-card-filled) { background: var(--uog-blue); color: #FFFFFF; padding: 14.4px; }
+
+/* style=strip: grade strips (a narrow coloured column of grades) */
+html.corp .reveal .md-style-strip .md-strip { padding: 14.4px 28px; font-size: 40px; font-weight: 700; }
+html.corp .reveal .md-style-strip .md-card:not(.md-strip) { background: none; padding: 0; justify-content: center; }
+
+/* ---------- the takeaway panel (@note): E8E8E8, full width, 15 pt,
+   anchored at the centre, inset 36 x 14.4 px, at y 864.57 (Session) ---------- */
+html.corp .reveal .slides section.corp-content > .corp-note {
+    position: absolute;
+    left: 104px; width: 1712px;
+    bottom: 95.75px;                   /* foot at y 984.25 */
+    min-height: 119.69px;
+    box-sizing: border-box;
+    padding: 14.4px 36px;
+    border-radius: 14px;
+    background: var(--p-light-grey);
+    color: var(--uog-blue);
+    font-size: 30px; line-height: var(--corp-lh);
+    display: flex; flex-direction: column; justify-content: center;
+    z-index: 1;
+}
+html.corp .reveal .corp-note .md-note { all: unset; display: block; }
+html.corp .reveal .corp-note .md-note + .md-note { margin-top: 8px; }   /* 4 pt before */
+html.corp .reveal .corp-note p { margin: 0; color: inherit; font-size: inherit; }
+html.corp .reveal .corp-note strong { color: inherit; }
+
+/* ---------- source line (@source): 11 pt, #6B6B6B, right-aligned,
+   bottom-anchored in 1154.58,1007.87 661.42 x 47.24 ---------- */
+html.corp .reveal .slides section.corp-content .md-source {
+    position: absolute;
+    left: 1154.58px; top: 1007.87px; width: 661.42px; height: 47.24px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    margin: 0; padding: 0;
+    font-size: 22px; line-height: var(--corp-lh);
+    font-style: normal;
+    color: #6B6B6B;
+    z-index: 1;
+}
+html.corp .reveal .slides section.corp-content .md-source { text-align: right; }
+html.corp .reveal .slides section.corp-content .md-source p { text-align: right; margin: 0; color: inherit; font-size: inherit; }
+
+/* ---------- Part divider (@section Part 1 :: blue, with a body) ----------
+   "Part N" in the title placeholder; one wide card at 104,362.2,
+   1712 x 377.95, inset 72 x 36, anchored at the centre: 36 pt bold
+   question, 20 pt references 12 pt below */
+html.corp .reveal .slides section.corp-content > .corp-body > .corp-part {
+    position: absolute; left: 0; right: 0;
+    top: calc(362.2px - var(--corp-top)); height: 377.95px;
+    box-sizing: border-box; padding: 36px 72px;
+    border-radius: 14px;
+    background: var(--tag-bg, var(--uog-blue));
+    color: var(--tag-ink, #FFFFFF);
+    display: flex; flex-direction: column; justify-content: center;
+    font-size: 40px; line-height: var(--corp-lh);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+html.corp .reveal .corp-part > * { margin: 0; color: inherit; }
+html.corp .reveal .corp-part > h3 {
+    font-size: 72px; font-weight: 700; line-height: var(--corp-lh); border: none; padding: 0;
+    font-variant-caps: normal; letter-spacing: 0; text-transform: none; font-family: var(--r-heading-font);
+}
+html.corp .reveal .corp-body > .corp-part > * + * { margin-top: 24px; }
+
+/* ---------- tables (@table in corporate dress): the Session decks'
+   tables drawn from rectangles: a header row in the head colour (white
+   bold), FFFFFF/F4F4F4 bands with @table band, D9D9D9 hairlines (1 pt),
+   cells inset 18 x 7.2 px and anchored at the centre, 14 pt ---------- */
+html.corp .reveal .corp-body .md-table { margin: 0; }
+html.corp .reveal .corp-body table {
+    border-collapse: collapse; width: 100%; margin: 0;
+    font-size: 28px; line-height: var(--corp-lh);
+    font-variant-numeric: normal;
+}
+html.corp .reveal .corp-body table :is(th, td) {
+    padding: 7.2px 18px; height: 45.28px; box-sizing: border-box;
+    vertical-align: middle; border: none;
+    /* each cell's 1 pt line is centred on its edge, as PowerPoint draws
+       a shape's outline: half inside, half outside, so the text keeps
+       its full inset */
+    box-shadow: inset 0 0 0 1px #D9D9D9, 0 0 0 1px #D9D9D9;
+    color: var(--uog-blue); text-align: left; background: #FFFFFF;
+    font-size: inherit; line-height: inherit;
+}
+html.corp .reveal .corp-body table th {
+    background: var(--tag-bg, var(--uog-blue)); color: var(--tag-ink, #FFFFFF); font-weight: 700;
+    box-shadow: none;
+    font-variant-caps: normal; letter-spacing: 0; text-transform: none;
+}
+html.corp .reveal .corp-body .md-table-band tbody tr:nth-child(even) td { background: #F4F4F4; }
+html.corp .reveal .corp-body .md-table-rowhead td:first-child { font-weight: 700; }
+html.corp .reveal .corp-body .md-table-small table { font-size: 24px; }
+html.corp .reveal .corp-body .md-table-caps th { font-variant-caps: all-small-caps; }
+html.corp .reveal .corp-body .md-table-widths table { table-layout: fixed; }
+/* rows= from a converter: each row exactly as tall as in PowerPoint, the
+   text centred in it (corpWrapSlides sets the heights) */
+html.corp .reveal .corp-body .md-table[data-corp-rows] :is(th, td) { padding-top: 0; padding-bottom: 0; height: auto; }
+
+/* ---------- progress tracker (@menu style=steps): grey boxes with small
+   arrows, one box or arrow lit (Session 2) ---------- */
+html.corp .reveal .corp-body > .md-menu.md-menu-steps {
+    flex: 0 0 auto;
+    height: 62.99px;
+    gap: 0;
+    margin: 0;
+    font-size: 24px;                  /* 12 pt */
+    line-height: var(--corp-lh);
+    align-items: stretch;
+}
+/* boxes 294.53 x 62.99 px, E8E8E8, 12 pt #6B6B6B, inset 3.6 px, anchored
+   at the centre; a lit box takes the item's colour (Dark Green when the
+   item has none) with white bold text */
+html.corp .reveal .md-menu-steps .md-menu-item {
+    display: flex; align-items: center; justify-content: center;
+    padding: 0 3.6px; border-radius: 2.24px;     /* 3.553% of 62.99 */
+    background: #E8E8E8; color: #6B6B6B; font-weight: 400;
+    text-align: center;
+}
+html.corp .reveal .md-menu-steps .md-menu-item.is-lit { background: var(--tag-bg); color: var(--tag-ink, #FFFFFF); font-weight: 700; }
+html.corp .reveal .md-menu-steps .md-menu-item.md-menu-accent.is-lit { --tag-bg: var(--p-green); --tag-ink: #FFFFFF; }
+html.corp .reveal .md-menu-steps .md-menu-optional { opacity: 1; background: #CFDEEB; }
+/* arrows: a rightArrow 40.94 x 28.35 px in a 59.84 px gap, C0C0C0; lit,
+   the next item's colour (Dark Red when it has none) */
+html.corp .reveal .md-menu-steps .md-menu-arrow {
+    flex: 0 0 59.84px; height: auto;
+    background: none; clip-path: none; position: relative;
+}
+html.corp .reveal .md-menu-steps .md-menu-arrow::before {
+    content: ''; position: absolute; left: 9.45px; top: 17.32px; width: 40.94px; height: 28.35px;
+    background: #C0C0C0;
+    clip-path: polygon(0 25%, 50% 25%, 50% 0, 100% 50%, 50% 100%, 50% 75%, 0 75%);
+}
+html.corp .reveal .md-menu-steps .md-menu-arrow.is-lit::before { background: var(--tag-bg); }
+html.corp .reveal .md-menu-steps .md-menu-arrow.md-menu-accent.is-lit::before { background: var(--p-red); }
+/* the heading under a lit menu is the title here: it stays in the
+   placeholder */
+html.corp .reveal .corp-body > .md-menu-steps + h2 { display: none; }
+
+/* ---------- images: below the title, the body area; with no heading,
+   the whole slide, logo included ---------- */
+html.corp .reveal .slides section.corp-bleed { background: transparent; }
+html.corp .reveal .slides section.corp-bleed::before { content: none !important; }
+html.corp .reveal .corp-body > figure.corp-image {
+    flex: 1 1 auto; min-height: 0; margin: 0;
+    display: flex; flex-direction: column; align-items: center;
+}
+html.corp .reveal .corp-body > figure.corp-image img {
+    flex: 1 1 auto; min-height: 0; width: 100%; height: 100%;
+    max-width: none; max-height: none; margin: 0; object-fit: contain;
+}
+html.corp .reveal .corp-body > .md-split { flex: 1 1 auto; min-height: 0; column-gap: var(--cc-gap); margin: 0; }
+html.corp .reveal .corp-body > .md-split .md-split-body { font-size: var(--corp-text, 56px); align-self: start; }
+html.corp .reveal .corp-body > .md-split .md-split-body > ul { list-style: none; padding: 0; margin: 0; }
+html.corp .reveal .corp-body > .md-split .md-split-body li { position: relative; padding-left: 72px; margin: 0 0 var(--corp-para-after); }
+html.corp .reveal .corp-body > .md-split .md-split-body li::before {
+    content: '\2022'; position: absolute; left: 0; top: 0; font-family: Arial, 'Liberation Sans', sans-serif;
+}
+html.corp .reveal .corp-body img { max-width: 100%; margin: 0; }
+
+/* ---------- title slide: photo, logo block, gradient band ---------- */
+html.corp .reveal .slides section.corp-title { background: #FFFFFF; }
+html.corp .reveal section.corp-title .corp-photo {
+    position: absolute; max-width: none; max-height: none; margin: 0; object-fit: cover;
+}
+/* logo: off -276139,0 ext 3211423 x 1728181 */
+html.corp .reveal section.corp-title .corp-logo {
+    position: absolute;
+    left: -43.49px; top: 0; width: 505.74px; height: 272.15px;
+    max-width: none; max-height: none; margin: 0;
+}
+/* Rectangle: off 0,4902627 ext 12192000 x 1331327; gradient at 180
+   degrees: transparent, then University Blue at 74.9% from 13%, solid
+   from 37%. PowerPoint for Mac interpolates in premultiplied alpha, as
+   CSS does, so the transparent stop's tint never shows. */
+html.corp .reveal section.corp-title .corp-band {
+    position: absolute; left: 0; width: 1920px;
+    top: 772.07px; height: 209.66px;
+    background: linear-gradient(to left,
+        rgba(234,239,255,0) 0%, rgba(1,20,81,0.749) 13%, #011451 37%, #011451 100%);
+    box-sizing: border-box;
+    padding: 7.2px 14.4px 7.2px 86.4px;   /* insets + lvl2 marL 457200 */
+    display: flex; flex-direction: column; justify-content: center;
+    color: #FFFFFF;
+}
+html.corp .reveal section.corp-title .corp-band h1 {
+    font-size: 64px; font-weight: 700; line-height: var(--corp-lh);   /* 32 pt bold */
+    color: #FFFFFF; margin: 0; text-align: left; border: none;
+    font-variant-caps: normal; letter-spacing: 0; font-family: var(--r-heading-font); text-transform: none;
+}
+html.corp .reveal section.corp-title .corp-band h1::after { content: none; }
+html.corp .reveal section.corp-title .corp-band p {
+    font-size: 36px; font-weight: 400; line-height: var(--corp-lh);  /* 18 pt */
+    color: #FFFFFF; margin: 0; text-align: left;
+}
+/* no photo: the band alone on University Blue */
+html.corp .reveal .slides section.corp-title.corp-no-photo { background: var(--uog-blue); }
+
+/* ---------- builds appear (corporate default); PowerPoint has no
+   slide transitions in these decks ---------- */
+html.corp .reveal .slides section .fragment { transform: none !important; }
+
+/* Lining figures in data, as everywhere in PowerPoint */
+html.corp .reveal table { font-variant-numeric: normal; }

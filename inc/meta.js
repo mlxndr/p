@@ -140,6 +140,32 @@
         return html;
     }
 
+    /* Corporate title slide (SPEC 8; UoG 2026 template, slide 1): the
+       photograph, the logo block, and the gradient band holding title and
+       subtitle. "photoFrame": "x,y,w" (percent of the slide) reproduces a
+       PowerPoint picture frame exactly; otherwise the photograph covers
+       the slide, centred on "photoFocus": "x,y" (percent). "photoAlt"
+       describes it. With no photograph the band sits on University Blue. */
+    function corpTitleHtml(meta) {
+        var html = '';
+        if (meta.photo) {
+            var st;
+            var fr = String(meta.photoFrame || '').split(',').map(parseFloat);
+            if (fr.length === 3 && fr.every(function (v) { return !isNaN(v); })) {
+                st = 'left:' + fr[0] + '%;top:' + fr[1] + '%;width:' + fr[2] + '%;height:auto;';
+            } else {
+                var fo = String(meta.photoFocus || '50,50').split(',');
+                st = 'left:0;top:0;width:100%;height:100%;object-position:' + fo[0] + '% ' + (fo[1] || 50) + '%;';
+            }
+            if (!meta.photoAlt) console.warn('[meta] "photo" needs "photoAlt", a description of the photograph');
+            html += '<img class="corp-photo" src="' + esc(meta.photo) + '" alt="' + esc(meta.photoAlt || '') + '" style="' + st + '">';
+        }
+        html += '<img class="corp-logo" src="../img/uog_block.png" alt="University of Glasgow">';
+        html += '<div class="corp-band"><h1>' + emph(meta.title) + '</h1>' +
+            (meta.subtitle ? '<p>' + emph(meta.subtitle) + '</p>' : '') + '</div>';
+        return html;
+    }
+
     function closingSlideHtml(meta) {
         var authors = authorList(meta);
         var mails = emailsLine(authors);
@@ -195,10 +221,19 @@
                     sec.parentNode.removeChild(sec);
                     return;
                 }
-                sec.classList.add('title-slide');
-                if (kind === 'title') sec.innerHTML = titleSlideHtml(meta);
-                if (kind === 'closing') {
-                    sec.innerHTML = meta.closing === 'title' ? titleSlideHtml(meta) : closingSlideHtml(meta);
+                /* Corporate decks: the template's title slide, which is
+                   also the closing slide unless "closing" is false */
+                if (window.MGA_CORPORATE) {
+                    sec.classList.add('corp-title');
+                    if (!meta.photo) sec.classList.add('corp-no-photo');
+                    sec.setAttribute('data-autofit', 'off');
+                    sec.innerHTML = corpTitleHtml(meta);
+                } else {
+                    sec.classList.add('title-slide');
+                    if (kind === 'title') sec.innerHTML = titleSlideHtml(meta);
+                    if (kind === 'closing') {
+                        sec.innerHTML = meta.closing === 'title' ? titleSlideHtml(meta) : closingSlideHtml(meta);
+                    }
                 }
                 /* "advisory": a slide of its own straight after the title */
                 if (kind === 'title' && meta.advisory && [].concat(meta.advisory).length) {

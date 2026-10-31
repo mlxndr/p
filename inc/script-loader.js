@@ -101,6 +101,10 @@ function refitSlides() {
   root.classList.add('mga-measuring');
   void root.offsetHeight;
   try {
+    if (typeof corpRadii === 'function') corpRadii();
+    if (typeof corpFitCards === 'function') corpFitCards();
+    if (typeof corpLineBreaks === 'function') corpLineBreaks();
+    if (typeof corpFirstBaselines === 'function') corpFirstBaselines();
     if (typeof setBleedExtents === 'function') setBleedExtents();
     if (typeof positionZoomImages === 'function') positionZoomImages();
     if (typeof positionMenuHeads === 'function') positionMenuHeads();
@@ -262,6 +266,16 @@ function cacheDeckForOffline() {
      'woff2/Premiera-Book.woff2', 'woff2/Premiera-Italic.woff2', 'woff2/Premiera-Bold.woff2',
      'woff2/Bitter[wght].woff2', 'woff2/Bitter-Italic[wght].woff2'
     ].forEach(function (f) { add('../inc/css/' + f); });
+    // corporate decks: the stylesheet, every Noto Sans face and the logo
+    // block, whether or not the slides seen so far used them
+    if (window.MGA_CORPORATE) {
+      ['corp-uog.css', 'woff2/noto-sans/NotoSans-Light.woff2', 'woff2/noto-sans/NotoSans-LightItalic.woff2',
+       'woff2/noto-sans/NotoSans-Regular.woff2', 'woff2/noto-sans/NotoSans-Italic.woff2',
+       'woff2/noto-sans/NotoSans-SemiBold.woff2', 'woff2/noto-sans/NotoSans-Bold.woff2',
+       'woff2/noto-sans/NotoSans-BoldItalic.woff2'].forEach(function (f) { add('../inc/css/' + f); });
+      add('../img/uog_block.png');
+      if (window.MGA_META && window.MGA_META.photo) add(window.MGA_META.photo);
+    }
     const worker = reg.active || navigator.serviceWorker.controller;
     if (worker) worker.postMessage({ type: 'precache', urls: Array.from(urls) });
   }).catch(function () {});

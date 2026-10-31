@@ -142,6 +142,35 @@
         layoutByKey(document.documentElement.getAttribute('data-layout')) ||
         layoutByKey(DEFAULT_LAYOUT);
 
+    /* Corporate mode (SPEC 8): "corporate": "uog", or the settings object
+       { "template": "uog", "body": "textbox"|"placeholder", "text": 24,
+       "cards": "session"|"boards"|"template", "cardColours": [...] }.
+       The deck is locked to the corporate stylesheet: no theme or layout
+       choice, no saved or URL override, export included. */
+    var CORP = { uog: 'corp-uog.css' };
+    var corpIn = meta.corporate;
+    var corp = null;
+    if (corpIn) {
+        corp = typeof corpIn === 'string' ? { template: corpIn } : corpIn;
+        if (!CORP[corp.template]) {
+            console.warn('[corporate] unknown template "' + corp.template + '"; using uog');
+            corp.template = 'uog';
+        }
+        corp.body = corp.body === 'placeholder' ? 'placeholder' : 'textbox';
+        if (['session', 'boards', 'template'].indexOf(corp.cards || 'session') === -1) {
+            console.warn('[corporate] "cards" is session, boards or template, not "' + corp.cards + '"');
+            corp.cards = 'session';
+        }
+        corp.cards = corp.cards || 'session';
+        chosen = { key: 'corp-' + corp.template, href: CSS + CORP[corp.template] };
+        layout = { key: 'standard', href: CSS + 'layout-standard.css' };
+        var rc = document.documentElement.classList;
+        rc.add('corp', 'corp-' + corp.template, 'corp-cards-' + corp.cards, 'corp-body-' + corp.body);
+        if (corp.text) document.documentElement.style.setProperty('--corp-text', (2 * parseFloat(corp.text)) + 'px');
+        locked = true;
+    }
+    window.MGA_CORPORATE = corp;
+
     window.MGA_META = meta;
     window.MGA_THEME_LOCKED = locked;
     window.MGA_THEMES = THEMES;

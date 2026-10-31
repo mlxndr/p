@@ -1901,6 +1901,7 @@ html.mga-build-appear .reveal .slides section .fragment { transition: none !impo
 .reveal .md-cards.md-height-fill { align-items: stretch; }
 .reveal .md-card-wide { grid-column: 1 / -1; }
 .reveal .md-card-dim { opacity: 0.5; }
+.reveal .md-card-middle { justify-content: center; }
 .reveal .md-card-foot > :last-child { margin-top: auto; padding-top: 0.4em; }
 .reveal .md-card-icon { font-size: 1.5em; margin-bottom: 0.2em; }
 /* a tag on a card's first line sits at its top left */
@@ -2232,14 +2233,52 @@ html.mga-build-appear .reveal .slides section .fragment { transition: none !impo
     border-radius: 0.2em;
     box-shadow: 0 0.3em 1.2em rgba(0, 0, 0, 0.12);
 }
-.reveal .slides section.present:not(.md-tr-continued) .md-tr-overlay { animation: md-tr-up 0.6s ease both; }
-.reveal .slides section.present:not(.md-tr-continued) > .md-overlay-under { animation: md-under-fade 0.6s ease both; }
+/* arriving from a slide that is not an overlay (wireTranscriptOverlays
+   sets md-tr-arrive; between overlay slides, md-tr-hold: no movement) */
+.reveal .slides section.present.md-tr-arrive > .md-tr-overlay { animation: md-tr-up 0.6s ease both; }
+.reveal .slides section.present.md-tr-arrive > .md-overlay-under { animation: md-under-fade 0.6s ease both; }
 @keyframes md-tr-up { from { transform: translateY(110%); } to { transform: none; } }
 @keyframes md-under-fade { from { opacity: 1; } to { opacity: 0.2; } }
+/* leaving for a slide that is not an overlay: the panel slides down in a
+   layer on the incoming slide while the faded copy returns to full
+   strength (md-tr-back: the incoming slide is the copy, so its own
+   content comes back instead); otherwise the copy then gives way to the
+   new slide (md-tr-handover) */
+.reveal.md-tr-cut .slides section { transition: none !important; }
+.reveal .slides section > .md-tr-leaving {
+    position: absolute;
+    inset: 0;
+    box-sizing: border-box;
+    pointer-events: none;
+    z-index: 20;
+}
+/* the slide's own ground, out to the screen edges (setBleedExtents) */
+.reveal .slides section > .md-tr-leaving::before {
+    content: '';
+    position: absolute;
+    inset: calc(-1 * var(--bleed-y, 0px)) calc(-1 * var(--bleed-x, 0px));
+    background: var(--tr-ground, transparent);
+    background-image: var(--tr-ground-image, none);
+    background-size: var(--tr-ground-size, cover);
+    z-index: -1;
+}
+.reveal .md-tr-leaving > .md-overlay-under {
+    position: absolute;
+    inset: 0;
+    padding: inherit;
+    animation: md-under-return 0.6s ease both;
+}
+.reveal .md-tr-leaving > .md-tr-overlay { animation: md-tr-down 0.6s ease both; }
+.reveal .md-tr-leaving.md-tr-handover { opacity: 0; transition: opacity 0.4s ease; }
+.reveal .slides section.md-tr-return > :not(.md-tr-leaving):not(.md-morph-ghosts) { animation: md-tr-return 0.6s ease both; }
+@keyframes md-tr-down { from { transform: none; } to { transform: translateY(110%); } }
+@keyframes md-under-return { from { opacity: 0.2; } to { opacity: 1; } }
+@keyframes md-tr-return { from { filter: opacity(0.2); } to { filter: none; } }
 html.mga-final .reveal .md-tr-overlay,
 html.print-pdf .reveal .md-tr-overlay,
 html.mga-final .reveal .md-overlay-under,
 html.print-pdf .reveal .md-overlay-under { animation: none !important; }
+html.mga-final .reveal .md-tr-leaving, html.print-pdf .reveal .md-tr-leaving { display: none; }
 
 /* ===========================================
    Phase 2b: sets and tags, menus, morph, morpheme words, marks on

@@ -12,6 +12,10 @@
     }
     const transition = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'none' : deckTransition;
     const listBuild = meta.listBuild !== undefined ? meta.listBuild !== false : !meta.corporate;
+    // Corporate mode (SPEC 8) behaves like a PowerPoint slide show: no
+    // margin (letterboxed in black), no progress bar, no menu disc, no
+    // theme or transition panels, no transitions
+    const corp = !!window.MGA_CORPORATE;
 
     // Theme catalogue for the menu: owned by inc/head.js (which also chose
     // the opening theme before first paint), grouped into sections whose
@@ -29,17 +33,18 @@
         [ RevealMenu, RevealNotes, PdfExport, Appearance, OneTimer ]),
     width: 1920,
     height: 1080,
-    margin: 0.08,         // about 4% clear on each side: projectors often crop the edges
+    margin: corp ? 0 : 0.08,   // about 4% clear on each side: projectors often crop the edges
     minScale: 0.2,       // minimum scaling
     maxScale: 2.0,        // maximum scaling
     navigationMode: 'linear',
     showSlideNumber: 'print',
     pdfSeparateFragments: false,
     controls: false,
-    progress: true,
+    progress: !corp,
     center: false,
     hash: true,
     transition: transition,
+    backgroundTransition: corp ? 'none' : 'fade',
     // Morph (SPEC 6.3): builds on the new slide stay out of matching,
     // words and morpheme pieces move without scaling (directives.js)
     autoAnimateMatcher: window.mgaMorphMatcher || null,
@@ -60,11 +65,11 @@
         titleSelector: 'h1, h2, h3',
         useTextContentForMissingTitles: true,
         hideMissingTitles: false,
-        openButton: true,   // hidden on fine-pointer devices via CSS; the touch affordance
+        openButton: !corp,  // hidden on fine-pointer devices via CSS; the touch affordance
         keyboard: true,
         markers: false,
-        themes: themeSections.flatMap(function(s) { return s.themes; }),
-        transitions: true,
+        themes: corp ? false : themeSections.flatMap(function(s) { return s.themes; }),
+        transitions: !corp,
         custom: [
             {
                 title: 'Info',
@@ -81,6 +86,19 @@
         loadIcons: false,
         },
     });
+
+    // Corporate: a click on the slide advances, as in PowerPoint (the
+    // clicker's Page Down and Page Up already move next and back);
+    // links, the menu and text selection are left alone
+    if (corp) {
+        document.querySelector('.reveal').addEventListener('click', function (e) {
+            if (e.button !== 0 || e.target.closest('a, button, input, .slide-menu, .slide-menu-overlay, video')) return;
+            if (document.documentElement.classList.contains('mga-coords')) return;
+            const sel = window.getSelection && window.getSelection();
+            if (sel && String(sel).length) return;
+            Reveal.next();
+        });
+    }
 
     // Enhance menu after it's ready
     Reveal.on('menu-ready', function() {

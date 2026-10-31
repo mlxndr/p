@@ -828,9 +828,10 @@
         }
         for (const k of Object.keys(opts)) {
             if (k.charAt(0) === '_') continue;
-            if (['bg', 'id', 'build', 'text', 'words', 'duration', 'morphemes'].indexOf(k) === -1) {
-                return err('Unknown @slide option `' + esc(k) + '`. Valid: bg=, id=, build=auto, text=N, words=loose, duration=N, morphemes=STATE.');
+            if (['bg', 'id', 'build', 'text', 'words', 'duration', 'morphemes', 'y', 'gap', 'inset'].indexOf(k) === -1) {
+                return err('Unknown @slide option `' + esc(k) + '`. Valid: bg=, id=, build=auto, text=N, words=loose, duration=N, morphemes=STATE (and, from a converter, y=, gap= and inset= in px).');
             }
+            if ((k === 'y' || k === 'gap' || k === 'inset') && !/^\d+(\.\d+)?$/.test(opts[k])) return err('`' + k + '=` takes px, e.g. ' + k + '=256.');
         }
         // @slide morph [words | words=loose] [duration=1.5] (SPEC 6.3):
         // written on the incoming slide; linkMorphSlides marks the one before
@@ -862,7 +863,8 @@
         if (opts.bg && !/^[#\w][\w#(),.%\- ]*$/.test(opts.bg)) {
             return err('bg= does not look like a CSS colour.');
         }
-        if (!classes.length && !opts.bg && !transition && opts.text === undefined && opts.morphemes === undefined) {
+        if (!classes.length && !opts.bg && !transition && opts.text === undefined && opts.morphemes === undefined &&
+            opts.y === undefined && opts.gap === undefined && opts.inset === undefined) {
             return err('@slide needs at least one flag (' + SLIDE_FLAGS.filter(function (x) { return x !== 'centered'; }).join(', ') + ') or bg=&lt;colour&gt;.');
         }
         let attrs = '';
@@ -875,6 +877,11 @@
         if (opts.duration !== undefined) attrs += ' data-auto-animate-duration="' + parseFloat(opts.duration) + '"';
         if (opts.morphemes !== undefined) attrs += ' data-md-morphemes="' + opts.morphemes + '"';
         if (opts.text !== undefined) attrs += ' data-corp-text="' + esc(opts.text) + '"';
+        // corporate, converter-only: where the body starts and the space
+        // between its blocks (px)
+        if (opts.y !== undefined) attrs += ' data-corp-y="' + esc(opts.y) + '"';
+        if (opts.gap !== undefined) attrs += ' data-corp-gap="' + esc(opts.gap) + '"';
+        if (opts.inset !== undefined) attrs += ' data-corp-inset="' + esc(opts.inset) + '"';
         if (opts.bg) attrs += ' data-background-color="' + esc(opts.bg) + '"';
         if (opts.id) attrs += ' id="' + esc(opts.id) + '"';
         return { md: '<!-- .slide:' + attrs + ' -->', isError: false };
@@ -1197,12 +1204,24 @@
        the slide's heading (placeSlideNotes, at runtime); build gives it a
        click of its own instead of joining the list item before it. */
     registerDirective('note', {
-        body: 'line', text: true, flags: ['top'], build: [],
+        body: 'line', text: true, flags: ['top'], build: [], keys: ['y', 'h'], numbers: ['y', 'h'],
         emit: function (d) {
             const cls = 'md-note' + (d.flags.indexOf('top') !== -1 ? ' md-note-top' : '') + (d.build ? ' fragment' : '');
-            return '\n<div class="' + cls + '">\n\n' + d.text + '\n\n</div>\n';
+            return '\n<div class="' + cls + '"' + placeAttrs(d.opts) + '>\n\n' + d.text + '\n\n</div>\n';
         }
     });
+
+    /* Converter-only placement (corporate mode, SPEC 8): y= is the slide
+       position of a block's top and h= its height, in px of the
+       1920 x 1080 slide, as measured from a PowerPoint original. Written
+       as data attributes and custom properties; outside corporate mode
+       they do nothing. */
+    function placeAttrs(o) {
+        let st = '';
+        if (o.y !== undefined) st += '--corp-y:' + o.y + 'px;';
+        if (o.h !== undefined) st += '--corp-h:' + o.h + 'px;';
+        return st ? ' style="' + st + '"' + (o.y !== undefined ? ' data-corp-top' : '') + (o.h !== undefined ? ' data-corp-h' : '') : '';
+    }
 
     /* @source text — a small, upright, subtle, right-aligned line at the
        foot of what it follows (replaces <p class="md-source">, which still
@@ -1256,7 +1275,7 @@
     /* @cards and @columns (SPEC 4.1): one parser, two names. A line that
        is `::` alone (optionally followed by flags) opens the next card or
        column; content before the first such line is the first card. */
-    const CARD_FLAGS = ['wide', 'build', 'accent', 'dim', 'foot', 'answer'];
+    const CARD_FLAGS = ['wide', 'build', 'accent', 'dim', 'foot', 'answer', 'middle'];
     const CARD_STYLES = ['box', 'plain', 'bar', 'stat', 'strip'];
 
     function splitCards(body, api) {
@@ -1276,11 +1295,14 @@
             c.flags.forEach(function (f) {
                 const kv = /^icon=([a-z0-9-]+)$/.exec(f);
                 if (kv) { c.opts.icon = kv[1]; return; }
+                // converter-only sizes for one card (px), as on the block
+                const sz = /^(h|text|head)=(\d+(?:\.\d+)?)$/.exec(f);
+                if (sz) { c.opts[sz[1]] = parseFloat(sz[2]); return; }
                 if (CARD_FLAGS.indexOf(f) !== -1) { c.set[f] = true; return; }
                 const col = colourValue(f);
                 if (col && !c.opts.colour) { c.opts.colour = col; return; }
                 api.fail('unknown card flag `' + esc(f) + '` on the line `' + esc(c.src) + '`. Card flags: a colour (' +
-                    PALETTE_HUES.join(', ') + ', light-…, or #RRGGBB), ' + CARD_FLAGS.join(', ') + ', icon=NAME.');
+                    PALETTE_HUES.join(', ') + ', light-…, or #RRGGBB), ' + CARD_FLAGS.join(', ') + ', icon=NAME (and, from a converter, h=, text=, head= in px).');
             });
         });
         return cards;
@@ -1320,7 +1342,20 @@
             ['h', 'text', 'head', 'radius'].forEach(function (k) {
                 if (d.opts[k] !== undefined) style_ += '--cards-' + k + ':' + d.opts[k] + 'px;';
             });
-            let html = '\n<div class="' + cls.join(' ') + '" style="' + style_ + '"' + (d.build ? ' data-md-steps' : '') + '>\n';
+            if (d.opts.y !== undefined) style_ += '--corp-y:' + d.opts.y + 'px;';
+            if (d.opts.gap !== undefined) style_ += '--cc-gap:' + d.opts.gap + 'px;column-gap:' + d.opts.gap + 'px;';
+            let html = '\n<div class="' + cls.join(' ') + '" style="' + style_ + '"' + (d.opts.y !== undefined ? ' data-corp-top' : '') + (d.build ? ' data-md-steps' : '') + '>\n';
+            // corporate mode: a bare `::` takes the next colour of the
+            // deck's "cardColours" (default the Session decks' Part order)
+            const corp = window.MGA_CORPORATE;
+            if (corp && style !== 'plain' && style !== 'strip') {
+                const cycle = (corp.cardColours && corp.cardColours.length ? corp.cardColours : ['blue', 'green', 'purple', 'red', 'pink'])
+                    .map(colourValue).filter(Boolean);
+                let k = 0;
+                cards.forEach(function (c) {
+                    if (c.src && !c.opts.colour && cycle.length) c.opts.colour = cycle[k++ % cycle.length];
+                });
+            }
             cards.forEach(function (c, i) {
                 const f = fillOf(c.opts.colour);
                 const cc = ['md-card'];
@@ -1329,7 +1364,9 @@
                 const whole = d.build || c.set.build || c.set.answer;
                 if (whole) cc.push('fragment');
                 if (c.set.answer) cc.push('md-answer');
-                let attrs = ' style="' + f.style + '--i:' + i + ';--n:' + cards.length + '"';
+                let own = '';
+                ['h', 'text', 'head'].forEach(function (k) { if (c.opts[k] !== undefined) own += '--cards-' + k + ':' + c.opts[k] + 'px;'; });
+                let attrs = ' style="' + f.style + own + '--i:' + i + ';--n:' + cards.length + '"';
                 if (whole) attrs += ' data-md-whole' + (d.build ? ' data-md-step="' + i + '"' : '');
                 let lines = c.lines.slice();
                 // first line a tag alone ([[AFTER]]{purple}): a pill at the top left
@@ -1355,8 +1392,8 @@
         };
     }
     const CARDS_SPEC = {
-        keys: ['cols', 'widths', 'style', 'height', 'h', 'text', 'head', 'radius'],
-        lists: ['widths'], numbers: ['cols', 'widths', 'h', 'text', 'head', 'radius'],
+        keys: ['cols', 'widths', 'style', 'height', 'h', 'text', 'head', 'radius', 'y', 'gap'],
+        lists: ['widths'], numbers: ['cols', 'widths', 'h', 'text', 'head', 'radius', 'y', 'gap'],
         flags: ['arrows', 'stack']
     };
     registerDirective('cards', Object.assign({ body: 'markdown', emit: emitCards('cards') }, CARDS_SPEC));
@@ -1392,9 +1429,10 @@
     /* @stats (SPEC 4.3): number :: label :: note, drawn as stat cards.
        A note written as a tag ([[note]]{green}) is a pill. */
     registerDirective('stats', {
-        body: 'items',
+        body: 'items', keys: ['y', 'h'], numbers: ['y', 'h'],
         emit: function (d, api) {
-            let html = '\n<div class="md-cards md-style-stat md-stats md-height-auto md-ncols-' + Math.min(d.items.length, 4) + '" style="--cols:' + Math.min(d.items.length, 4) + '"' + (d.build ? ' data-md-steps' : '') + '>\n';
+            const pos = (d.opts.y !== undefined ? '--corp-y:' + d.opts.y + 'px;' : '') + (d.opts.h !== undefined ? '--cards-h:' + d.opts.h + 'px;' : '');
+            let html = '\n<div class="md-cards md-style-stat md-stats md-height-auto md-ncols-' + Math.min(d.items.length, 4) + '" style="--cols:' + Math.min(d.items.length, 4) + ';' + pos + '"' + (d.opts.y !== undefined ? ' data-corp-top' : '') + (d.build ? ' data-md-steps' : '') + '>\n';
             d.items.forEach(function (it, i) {
                 if (it.fields.length < 2 || it.fields.length > 3 || !it.fields[0]) api.fail('each line is number :: label, with an optional third field for a note.', it);
                 html += '<div class="md-card' + (d.build ? ' fragment" data-md-whole data-md-step="' + i + '"' : '"') + '>\n' +
@@ -1470,7 +1508,7 @@
     /* @table (SPEC 4.17): applies to the next markdown table.
        head=COLOUR band rowhead caps small widths=16,28,28,28 */
     registerDirective('table', {
-        body: 'prefix', keys: ['head', 'widths'], colours: ['head'], lists: ['widths'], numbers: ['widths'],
+        body: 'prefix', keys: ['head', 'widths', 'y', 'rows'], colours: ['head'], lists: ['widths', 'rows'], numbers: ['widths', 'y', 'rows'],
         flags: ['band', 'rowhead', 'caps', 'small'],
         emit: function (d, api) {
             if (!/^\s*\|/.test(d.block[0] || '')) api.fail('applies to a markdown table, and the next block is not one (it should start with |).');
@@ -1487,7 +1525,10 @@
                 d.opts.widths.forEach(function (w, i) { style += '--w' + (i + 1) + ':' + (100 * w / total).toFixed(3) + '%;'; });
                 cls.push('md-table-widths');
             }
-            return '\n<div class="' + cls.join(' ') + '"' + (style ? ' style="' + style + '"' : '') + '>\n\n' + d.block.join('\n') + '\n\n</div>\n';
+            if (d.opts.y !== undefined) style += '--corp-y:' + d.opts.y + 'px;';
+            // rows= (converter-only, px): each row's height in the original
+            const rows = d.opts.rows ? ' data-corp-rows="' + d.opts.rows.join(',') + '"' : '';
+            return '\n<div class="' + cls.join(' ') + '"' + (style ? ' style="' + style + '"' : '') + (d.opts.y !== undefined ? ' data-corp-top' : '') + rows + '>\n\n' + d.block.join('\n') + '\n\n</div>\n';
         }
     });
 
@@ -1624,7 +1665,8 @@
        indented at runtime (alignTranscripts) so its marker sits under the
        nearest unmatched // above. Inline (0.5) is set lighter.
        overlay: the panel slides up over a faded copy of the slide before
-       (buildTranscriptOverlays) and leaves with a fade; consecutive
+       (buildTranscriptOverlays) and slides back down when left for a
+       slide that is not an overlay (wireTranscriptOverlays); consecutive
        overlay transcripts hold still and morph. morph: adjacent
        transcripts auto-animate, unchanged turns holding still.
        build: one turn per click; numbers; mono. */
@@ -1682,8 +1724,8 @@
                 });
             });
             // the slide: overlay transcripts change instantly (the panel
-            // moves) and leave with a fade; morph slides auto-animate
-            const slideAttrs = (overlay ? ' class="md-tr-overlay-slide" data-transition="none-in fade-out"' : '') +
+            // moves, in and out); morph slides auto-animate
+            const slideAttrs = (overlay ? ' class="md-tr-overlay-slide" data-transition="none"' : '') +
                 (morph ? ' data-auto-animate' : '');
             return (slideAttrs ? '<!-- .slide:' + slideAttrs + ' -->\n' : '') + html + '</div>\n';
         }
@@ -2347,7 +2389,28 @@
             if (kind === 'slide') {
                 r = emitSlideMods(opts, line, lineNo, name);
             } else if (kind === 'section') {
-                r = emitSection(dm[2].trim(), line, lineNo, name);
+                // `@section Part 1 :: blue`: a colour after ` :: `; in
+                // corporate mode the markdown after it is the divider card
+                let text = dm[2].trim(), colour = null;
+                const cm = /^(.*?)\s+::\s+(\S+)$/.exec(text);
+                if (cm && colourValue(cm[2])) { text = cm[1].trim(); colour = colourValue(cm[2]); }
+                if (window.MGA_CORPORATE && text) {
+                    const c = collectMarkdown(lines, i + 1);
+                    const inner = expandChunk(c.body.join('\n'), deck, lineOffset + i + 1);
+                    const f = fillOf(colour || { name: 'navy' });
+                    out.push('<!-- .slide: class="corp-part-slide" -->\n## ' + text + '\n\n' +
+                        '<div class="corp-part' + f.cls + '"' + (f.style ? ' style="' + f.style + '"' : '') + '>\n\n' +
+                        inner.md.trim() + '\n\n</div>\n');
+                    if (inner.hadError) hadError = true;
+                    if (c.furniture.length) {
+                        const fu = expandChunk(c.furniture.join('\n'), deck, lineOffset + c.next);
+                        out.push(fu.md);
+                        if (fu.hadError) hadError = true;
+                    }
+                    i = c.next;
+                    continue;
+                }
+                r = emitSection(text, line, lineNo, name);
             } else if (kind === 'quote' || kind === 'refs') {
                 let bodyEnd = lines.length;
                 for (let j = i + 1; j < lines.length; j++) {
@@ -2992,11 +3055,113 @@
             under.className = 'md-overlay-under';
             under.setAttribute('aria-hidden', 'true');
             under.setAttribute('data-id', 'md-tr-under-' + j);
+            under.mgaSource = leaves[j];
             Array.prototype.forEach.call(leaves[j].childNodes, function (n) { under.appendChild(n.cloneNode(true)); });
             under.querySelectorAll('[id]').forEach(function (e) { e.removeAttribute('id'); });
             under.querySelectorAll('.fragment').forEach(function (e) { e.classList.remove('fragment'); });
             under.querySelectorAll('[data-id]').forEach(function (e) { e.removeAttribute('data-id'); });
             sec.insertBefore(under, sec.firstChild);
+        });
+    }
+
+    /* Overlay panels move with the slide changes (SPEC 4.18, Q7):
+       arriving from a slide that is not an overlay, the panel slides up
+       (md-tr-arrive); between overlay slides it holds still (md-tr-hold);
+       leaving for a slide that is not an overlay, forwards or back, the
+       panel slides down and the faded copy returns to full strength.
+       Reveal hides the slide being left at once (overlay slides have no
+       transition), so the leaving panel and copy are drawn in a layer on
+       the incoming slide for 0.6 s. If the incoming slide is the one
+       the panel covered, its own content comes back to full strength
+       under the panel; otherwise the copy returns to full strength and
+       then gives way to the new slide (0.4 s). Section transitions are
+       off for the change, so nothing slides under the layer. */
+    const TR_LEAVE = 600, TR_HANDOVER = 400;
+    function isOverlaySlide(s) { return !!(s && s.querySelector(':scope > .md-transcript.md-tr-overlay, :scope > .md-overlay-under')); }
+    function clearTranscriptLeaving() {
+        document.querySelectorAll('.reveal .md-tr-leaving').forEach(function (l) { l.remove(); });
+        document.querySelectorAll('.reveal .slides section.md-tr-return, .reveal .slides section.md-tr-after')
+            .forEach(function (s) { s.classList.remove('md-tr-return', 'md-tr-after'); });
+    }
+    function wireTranscriptOverlays(deck) {
+        if (!document.querySelector('.reveal .md-tr-overlay')) return;
+        const root = document.documentElement;
+        const still = function () {
+            return root.classList.contains('mga-final') || root.classList.contains('print-pdf') ||
+                (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        };
+        let timers = [];
+        deck.on('beforeslidechange', function (e) {
+            const from = deck.getCurrentSlide();
+            const to = deck.getSlide(e.indexh, e.indexv);
+            if (!from || !to || from === to) return;
+            timers.forEach(clearTimeout); timers = [];
+            clearTranscriptLeaving();
+            from.classList.remove('md-tr-arrive', 'md-tr-hold');
+            const fromOv = isOverlaySlide(from), toOv = isOverlaySlide(to);
+            if (toOv) to.classList.add(fromOv ? 'md-tr-hold' : 'md-tr-arrive');
+            // no section transition into or out of an overlay slide: the
+            // copy and the layer below must not move
+            const rv = document.querySelector('.reveal');
+            if (fromOv !== toOv) {
+                rv.classList.add('md-tr-cut');
+                timers.push(setTimeout(function () { rv.classList.remove('md-tr-cut'); }, 50));
+            }
+            if (!fromOv || toOv || still()) return;
+            const panel = from.querySelector(':scope > .md-tr-overlay');
+            const under = from.querySelector(':scope > .md-overlay-under');
+            if (!panel) return;
+            const back = !!(under && under.mgaSource === to);
+            const cs = getComputedStyle(from);
+            const layer = document.createElement('div');
+            layer.className = 'md-tr-leaving' + (back ? ' md-tr-back' : '');
+            layer.setAttribute('aria-hidden', 'true');
+            ['padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'font-size', 'line-height', 'text-align']
+                .forEach(function (k) { layer.style.setProperty(k, cs.getPropertyValue(k)); });
+            if (under && !back) {
+                // the slide's own ground, and the copy's own colours (the
+                // incoming slide may be dark)
+                const bg = deck.getSlideBackground(from);
+                const grounds = [bg && bg.querySelector('.slide-background-content'), bg,
+                    document.querySelector('.reveal-viewport'), document.body].filter(Boolean)
+                    .map(function (el) { return getComputedStyle(el); });
+                const clear = function (c) { return /rgba\(.*, 0\)$|^transparent$/.test(c); };
+                const withColour = grounds.find(function (g) { return !clear(g.backgroundColor); });
+                const withImage = grounds.find(function (g) { return g.backgroundImage !== 'none'; });
+                const paper = cs.getPropertyValue('--r-background-color').trim();
+                layer.style.setProperty('--tr-ground', paper || (withColour ? withColour.backgroundColor : 'transparent'));
+                if (withImage) {
+                    layer.style.setProperty('--tr-ground-image', withImage.backgroundImage);
+                    layer.style.setProperty('--tr-ground-size', withImage.backgroundSize);
+                }
+                const u = under.cloneNode(true);
+                Array.prototype.forEach.call(under.children, function (c, k) {
+                    const cs2 = getComputedStyle(c), d = u.children[k];
+                    if (d) ['color', 'font-family', 'font-weight', 'font-variant-caps', 'letter-spacing']
+                        .forEach(function (key) { d.style.setProperty(key, cs2.getPropertyValue(key)); });
+                });
+                [u].concat(Array.prototype.slice.call(u.querySelectorAll('[data-auto-animate-target]'))).forEach(function (x) {
+                    x.removeAttribute('data-id'); x.removeAttribute('data-auto-animate-target');
+                });
+                layer.appendChild(u);
+            }
+            const p = panel.cloneNode(true);
+            // auto-animate styles key on these attributes and would hold the clone still
+            [p].concat(Array.prototype.slice.call(p.querySelectorAll('[data-id], [data-auto-animate-target]'))).forEach(function (x) {
+                x.removeAttribute('data-id'); x.removeAttribute('data-auto-animate-target');
+            });
+            p.querySelectorAll('.fragment').forEach(function (x) {
+                if (!x.classList.contains('visible')) x.remove(); else x.classList.remove('fragment');
+            });
+            layer.appendChild(p);
+            to.appendChild(layer);
+            to.classList.add(back ? 'md-tr-return' : 'md-tr-after');
+            if (back) {
+                timers.push(setTimeout(clearTranscriptLeaving, TR_LEAVE + 50));
+            } else {
+                timers.push(setTimeout(function () { layer.classList.add('md-tr-handover'); }, TR_LEAVE));
+                timers.push(setTimeout(clearTranscriptLeaving, TR_LEAVE + TR_HANDOVER + 50));
+            }
         });
     }
 
@@ -3085,8 +3250,10 @@
         for (let i = 1; i < leaves.length; i++) {
             const prev = leaves[i - 1], cur = leaves[i];
             let link = cur.classList.contains('md-morph');
-            // the automatic links give way to an explicit @slide fade or cut
-            const auto = !cur.hasAttribute('data-transition');
+            // the automatic links give way to an explicit @slide fade or
+            // cut; corporate decks make none (PowerPoint's corporate decks
+            // have no transitions: a tracker simply stays where it is)
+            const auto = !cur.hasAttribute('data-transition') && !window.MGA_CORPORATE;
             if (!link && auto && menuOf(cur) && menuOf(cur) === menuOf(prev)) link = true;
             if (!link && auto && cur.querySelector('.md-mp')) {
                 const a = pieceIds(prev);
@@ -3348,10 +3515,337 @@
         }, true);
     }
 
+    /* ---------- corporate mode (SPEC 8, phase 4) ----------
+
+       corpWrapSlides (MgaBuilds.init, before the builds) gives each
+       ordinary slide the template's furniture: the logo block (CSS), the
+       title placeholder (the heading), one body box for everything else,
+       the takeaway panel built from the slide's @note lines, and the
+       source line. The rest run from refitSlides after layout. */
+    const CORP_BLOCKS = '.md-cards, .md-table, table, .md-stats, .corp-part, .md-menu, .md-split, figure, .md-fullimg';
+    function corpWrapSlides() {
+        const corp = window.MGA_CORPORATE;
+        if (!corp) return;
+        const rootPh = corp.body === 'placeholder';
+        document.querySelectorAll('.reveal .slides section').forEach(function (sec) {
+            if (sec.querySelector('section')) return;
+            if (sec.classList.contains('corp-title') || sec.classList.contains('corp-content') ||
+                sec.classList.contains('corp-bleed')) return;
+            sec.setAttribute('data-autofit', 'off');
+            // image slides (md-fill) keep their content in an inner column
+            const inner = sec.querySelector(':scope > .md-fill-inner');
+            if (inner) {
+                while (inner.firstChild) sec.insertBefore(inner.firstChild, inner);
+                inner.remove();
+            }
+            const kids = Array.prototype.slice.call(sec.childNodes);
+            const head = kids.find(function (n) { return n.nodeType === 1 && /^H[12]$/.test(n.tagName); });
+            const bgImage = sec.getAttribute('data-background-image');
+            // a full-bleed image with no heading covers the slide, logo included
+            if (!head && (sec.classList.contains('md-fill') || bgImage)) { sec.classList.add('corp-bleed'); return; }
+            // with a heading, an @image fills the body below the title
+            if (bgImage) {
+                const fig = document.createElement('figure');
+                fig.className = 'corp-image';
+                const img = document.createElement('img');
+                img.src = bgImage;
+                const alt = sec.querySelector(':scope > .visually-hidden');
+                img.alt = alt ? alt.textContent.trim() : '';
+                if (alt) alt.remove();
+                if (sec.getAttribute('data-background-size') === 'cover') img.style.objectFit = 'cover';
+                fig.appendChild(img);
+                sec.appendChild(fig);
+                ['data-background-image', 'data-background-size', 'data-background-position'].forEach(function (a) { sec.removeAttribute(a); });
+            }
+            sec.classList.add('corp-content');
+            const text = parseFloat(sec.getAttribute('data-corp-text'));
+            if (text > 0) sec.style.setProperty('--corp-text', (2 * text) + 'px');
+            const body = document.createElement('div');
+            body.className = 'corp-body';
+            const notes = [];
+            kids.forEach(function (n) {
+                if (n === head) return;
+                if (n.nodeType === 3 && !n.textContent.trim()) return;
+                if (n.nodeType === 1 && (n.tagName === 'ASIDE' || n.tagName === 'SCRIPT' || n.tagName === 'STYLE' ||
+                    n.classList.contains('md-source') || n.classList.contains('md-overlay-under'))) return;
+                if (n.nodeType === 1 && n.classList.contains('md-note')) { notes.push(n); return; }
+                body.appendChild(n);
+            });
+            // re-read: the image figure was appended after the children list
+            if (bgImage) { const f = sec.querySelector(':scope > figure.corp-image'); if (f) body.appendChild(f); }
+            sec.appendChild(body);
+            if (notes.length) {
+                const panel = document.createElement('div');
+                panel.className = 'corp-note';
+                notes.forEach(function (n) {
+                    const y = n.style.getPropertyValue('--corp-y'), h = n.style.getPropertyValue('--corp-h');
+                    if (y) { panel.style.top = y; panel.style.bottom = 'auto'; }
+                    if (h) { panel.style.height = h; panel.style.minHeight = '0'; }
+                    if (n.classList.contains('fragment') && notes.length === 1) {
+                        // a built note: the whole panel arrives
+                        n.classList.remove('fragment');
+                        panel.classList.add('fragment');
+                        Array.prototype.forEach.call(n.attributes, function (a) {
+                            if (/^data-fragment-index$/.test(a.name)) panel.setAttribute(a.name, a.value);
+                        });
+                    }
+                    panel.appendChild(n);
+                });
+                sec.appendChild(panel);
+                sec.classList.add('corp-has-note');
+                // the body stops 24 px above the panel
+                if (panel.style.top) body.style.bottom = (1080 - parseFloat(panel.style.top) + 24) + 'px';
+            }
+            const y = parseFloat(sec.getAttribute('data-corp-y')), gap = parseFloat(sec.getAttribute('data-corp-gap'));
+            if (y >= 0) sec.style.setProperty('--corp-top', y + 'px');
+            if (gap >= 0) body.style.setProperty('--corp-flow-gap', gap + 'px');
+            // a text box drawn as a roundRect: its text sits this far inside
+            const inset = parseFloat(sec.getAttribute('data-corp-inset'));
+            if (inset >= 0) body.style.setProperty('--corp-inset', inset + 'px');
+            // PowerPoint breaks a long address after a hyphen; Chromium will
+            // not inside a URL-like run, so offer it the same break
+            sec.querySelectorAll('a').forEach(function (a) {
+                const w = document.createTreeWalker(a, NodeFilter.SHOW_TEXT);
+                let t;
+                while ((t = w.nextNode())) t.textContent = t.textContent.replace(/(\w-)(?=\w)/g, '$1\u200B');
+            });
+            if (body.querySelector(CORP_BLOCKS)) sec.classList.add('corp-has-blocks');
+            body.querySelectorAll('.md-table[data-corp-rows]').forEach(function (t) {
+                const hs = t.getAttribute('data-corp-rows').split(',').map(parseFloat);
+                t.querySelectorAll('tr').forEach(function (tr, k) { if (hs[k] > 0) tr.style.height = hs[k] + 'px'; });
+            });
+            const ph = (rootPh && !sec.classList.contains('md-corp-textbox')) || sec.classList.contains('md-corp-placeholder');
+            if (ph && !sec.classList.contains('corp-has-blocks')) body.classList.add('corp-ph');
+        });
+    }
+
+    /* PowerPoint's roundRect (adj 3553): the corner radius is 3.553% of the
+       box's shorter side, so it changes with each box (a fixed CSS radius
+       cannot), and the text rectangle is inset a further 0.29289 x radius
+       inside the shape's own insets */
+    const CORP_ROUND = '.md-cards .md-card.md-card-filled, .md-stats .md-card, .corp-note, .corp-part, .md-cards.md-style-strip .md-strip';
+    function corpRadii() {
+        if (!window.MGA_CORPORATE) return;
+        document.querySelectorAll('.reveal .slides section.corp-content').forEach(function (sec) {
+            const restore = unhideForMeasuring(sec);
+            sec.querySelectorAll(CORP_ROUND).forEach(function (el) {
+                el.style.borderRadius = '';
+                el.style.padding = '';
+                const r = 0.03553 * Math.min(el.offsetWidth, el.offsetHeight);
+                if (!r) return;
+                const cs = getComputedStyle(el), k = 0.29289 * r;
+                el.style.borderRadius = r.toFixed(2) + 'px';
+                if (el.closest('.md-style-bar')) return;
+                el.style.padding = ['Top', 'Right', 'Bottom', 'Left'].map(function (side) {
+                    return (parseFloat(cs['padding' + side]) + k).toFixed(2) + 'px';
+                }).join(' ');
+            });
+            restore();
+        });
+    }
+
+    /* Hand-written decks: text that overflows a card shrinks, 1 pt at a
+       time, to 70% of the preset size; every card in the block takes the
+       same size. A block or card with a converter's text=, h= or y= is
+       left alone. */
+    function corpFitCards() {
+        if (!window.MGA_CORPORATE) return;
+        document.querySelectorAll('.reveal .slides section.corp-content .md-cards').forEach(function (block) {
+            // a converter's numbers (text=, h=, y=) mean the sizes are PowerPoint's
+            const conv = /--cards-(text|h)|--corp-y/;
+            if (conv.test(block.getAttribute('style') || '')) return;
+            const cards = Array.prototype.filter.call(block.children, function (c) {
+                return c.classList.contains('md-card') && !conv.test(c.getAttribute('style') || '');
+            });
+            if (!cards.length) return;
+            const restore = unhideForMeasuring(block);
+            block.style.removeProperty('--corp-fit');
+            cards.forEach(function (c) { c.style.removeProperty('font-size'); });
+            const base = parseFloat(getComputedStyle(cards[0]).fontSize);
+            const over = function () { return cards.some(function (c) { return c.scrollHeight > c.clientHeight + 1; }); };
+            let size = base;
+            while (over() && size - 2 >= base * 0.7) {
+                size -= 2;
+                cards.forEach(function (c) { c.style.fontSize = size + 'px'; });
+            }
+            if (over()) {
+                console.warn('[corporate] card text still overflows at 70%: "' +
+                    ((block.closest('section').querySelector('h1, h2') || {}).textContent || '').trim() + '"');
+                block.closest('section').classList.add('md-overflow');
+            }
+            restore();
+        });
+    }
+
+    /* PowerPoint for Mac lays each glyph's advance out in whole 1/8 pt
+       (0.25 px here), so its line widths differ from the browser's by up
+       to a pixel or two over a long line, and a line that fits in one can
+       wrap in the other. For every text block on a corporate slide this
+       works out where PowerPoint would break (greedy, breaking at spaces
+       and after hyphens, trailing spaces hanging), then nudges the
+       block's width, usually by a fraction of a pixel, so that the
+       browser breaks in the same places. Text is left-aligned (or
+       centred, where the nudge is split), so the nudge is invisible. */
+    let corpCanvas = null;
+    function corpLineBreaks() {
+        if (!window.MGA_CORPORATE) return;
+        corpCanvas = corpCanvas || document.createElement('canvas').getContext('2d');
+        const ctx = corpCanvas;
+        if ('fontKerning' in ctx) ctx.fontKerning = 'none';
+        // measured afresh each pass: one that runs before the webfonts
+        // arrive measures the fallback font
+        const advCache = {};
+        function adv(font, ch) {
+            const k = font + '\u0000' + ch;
+            if (!(k in advCache)) { ctx.font = font; advCache[k] = ctx.measureText(ch).width; }
+            return advCache[k];
+        }
+        const isBlock = function (el) { return !/^inline/.test(getComputedStyle(el).display); };
+        document.querySelectorAll('.reveal section.corp-content, .reveal section.corp-title').forEach(function (sec) {
+            const blocks = new Map();
+            const w = document.createTreeWalker(sec, NodeFilter.SHOW_TEXT);
+            let n;
+            while ((n = w.nextNode())) {
+                if (!n.textContent.trim()) continue;
+                let b = n.parentElement;
+                while (b !== sec && !isBlock(b)) b = b.parentElement;
+                if (b === sec || b.closest('aside')) continue;
+                if (!blocks.has(b)) blocks.set(b, []);
+                blocks.get(b).push(n);
+            }
+            const restore = unhideForMeasuring(sec);
+            blocks.forEach(function (nodes, el) {
+                if ('corpNudge' in el.dataset) {
+                    el.style[el.dataset.corpNudgeProp] = el.dataset.corpNudge;
+                    delete el.dataset.corpNudge; delete el.dataset.corpNudgeProp;
+                }
+                const cs = getComputedStyle(el);
+                if (cs.whiteSpace !== 'normal' || cs.display === 'flex' || cs.display === 'grid') return;
+                // the float width (clientWidth is rounded to a whole pixel)
+                let avail = parseFloat(cs.width);
+                if (cs.boxSizing === 'border-box' || cs.display === 'table-cell') avail -= parseFloat(cs.paddingLeft) + parseFloat(cs.paddingRight) +
+                    parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+                if (!(avail > 0)) return;
+                const chars = [];
+                nodes.forEach(function (t) {
+                    const ps = getComputedStyle(t.parentElement);
+                    const font = ps.fontStyle + ' ' + ps.fontWeight + ' ' + ps.fontSize + ' ' + ps.fontFamily;
+                    for (const ch of t.textContent) {
+                        const c = /\s/.test(ch) ? ' ' : ch;
+                        if (c === ' ' && (!chars.length || chars[chars.length - 1].c === ' ')) continue;
+                        chars.push({ c: c, a: adv(font, c) });
+                    }
+                });
+                while (chars.length && chars[chars.length - 1].c === ' ') chars.pop();
+                while (chars.length && chars[0].c === ' ') chars.shift();
+                const segs = [];
+                let cur = { w: 0, q: 0, sp: 0, spq: 0 };
+                chars.forEach(function (ch, i) {
+                    const q = Math.round(ch.a * 4) / 4;
+                    if (ch.c === ' ') { cur.sp = ch.a; cur.spq = q; segs.push(cur); cur = { w: 0, q: 0, sp: 0, spq: 0 }; return; }
+                    cur.w += ch.a; cur.q += q;
+                    const next = chars[i + 1];
+                    if (ch.c === '-' && i > 0 && next && next.c !== ' ' && /\w/.test(chars[i - 1].c)) {
+                        segs.push(cur); cur = { w: 0, q: 0, sp: 0, spq: 0 };
+                    }
+                });
+                if (cur.w) segs.push(cur);
+                if (segs.length < 2) return;
+                // a list item's text starts after its hanging indent
+                const lines = [];
+                let line = [], q = 0;
+                segs.forEach(function (sg) {
+                    if (line.length && q + sg.q > avail) { lines.push(line); line = []; q = 0; }
+                    line.push(sg); q += sg.q + sg.spq;
+                });
+                lines.push(line);
+                let lo = 0, hi = Infinity;
+                lines.forEach(function (L, i) {
+                    let wd = 0;
+                    L.forEach(function (sg, k) { wd += sg.w + (k < L.length - 1 ? sg.sp : 0); });
+                    lo = Math.max(lo, wd);
+                    if (i < lines.length - 1) hi = Math.min(hi, wd + L[L.length - 1].sp + lines[i + 1][0].w);
+                });
+                if (avail >= lo && avail < hi) return;
+                if (!(lo < hi)) return;
+                // Chromium lets a line overflow by a few 1/64 px, so stay a
+                // quarter pixel inside the range where possible
+                const eps = Math.min(0.25, (hi - lo) / 2);
+                const delta = (avail < lo ? lo + eps : hi - eps) - avail;
+                const centred = cs.textAlign === 'center';
+                const prop = centred ? 'paddingLeft' : cs.display === 'table-cell' ? 'paddingRight' :
+                    (cs.position === 'absolute' ? 'width' : 'marginRight');
+                el.dataset.corpNudge = el.style[prop];
+                el.dataset.corpNudgeProp = prop;
+                if (prop === 'width') el.style.width = (parseFloat(cs.width) + delta).toFixed(3) + 'px';
+                else if (prop === 'marginRight') el.style.marginRight = (parseFloat(cs.marginRight) - delta).toFixed(3) + 'px';
+                else if (prop === 'paddingRight') el.style.paddingRight = (parseFloat(cs.paddingRight) - delta).toFixed(3) + 'px';
+                else el.style.paddingLeft = (parseFloat(cs.paddingLeft) - delta).toFixed(3) + 'px';
+            });
+            restore();
+        });
+    }
+
+    /* PowerPoint for Mac puts the first baseline of a text box the font's
+       ascent below the top with the ascent rounded to a whole point
+       (0.94185 x size: 22.6 pt at 24 pt becomes 23 pt), while Chromium
+       rounds ascent and descent to whole pixels. The first block of each
+       box is moved (position: relative, so nothing after it moves) to
+       PowerPoint's baseline; in practice 22 to 32 pt first lines come
+       down 1 px. */
+    function corpFirstBaselines() {
+        if (!window.MGA_CORPORATE) return;
+        const firsts = [];
+        document.querySelectorAll('.reveal .md-cards .md-card, .reveal .corp-note, .reveal .corp-part, .reveal .corp-band').forEach(function (box) {
+            let el = box.firstElementChild;
+            while (el && (el.classList.contains('md-card-tag') || el.tagName === 'I')) el = el.nextElementSibling;
+            if (el && el.classList.contains('md-note')) el = el.firstElementChild || el;
+            if (el && /^(UL|OL)$/.test(el.tagName)) el = el.firstElementChild;
+            if (el) firsts.push(el);
+        });
+        document.querySelectorAll('.reveal .corp-body:not(.corp-ph) > p:first-child, .reveal .corp-body:not(.corp-ph) > :is(ul, ol):first-child > li:first-child').forEach(function (el) {
+            firsts.push(el);
+        });
+        firsts.forEach(function (el) {
+            el.style.top = '';
+            const restore = unhideForMeasuring(el);
+            const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+            let t;
+            while ((t = w.nextNode()) && !t.textContent.trim());
+            if (t) {
+                const i = t.textContent.search(/\S/);
+                const r = document.createRange();
+                r.setStart(t, i); r.setEnd(t, i + 1);
+                const rc = r.getClientRects()[0];
+                const cs = getComputedStyle(el);
+                const box = el.getBoundingClientRect();
+                const k = el.offsetHeight ? box.height / el.offsetHeight : 1;     // reveal's scale
+                const fs = parseFloat(getComputedStyle(t.parentElement).fontSize);
+                if (rc && k > 0 && fs) {
+                    // Chromium's glyph box starts the whole-pixel ascent above the baseline
+                    const actual = (rc.top - box.top) / k - parseFloat(cs.paddingTop) - parseFloat(cs.borderTopWidth) + Math.round(0.94185 * fs);
+                    const target = Math.round(0.94185 * fs / 2) * 2;
+                    const d = target - actual;
+                    if (Math.abs(d) > 0.01 && Math.abs(d) < 4) {
+                        if (cs.position === 'static') el.style.position = 'relative';
+                        el.style.top = d.toFixed(2) + 'px';
+                    }
+                }
+            }
+            restore();
+        });
+    }
+    window.corpRadii = corpRadii;
+    window.corpFitCards = corpFitCards;
+    window.corpLineBreaks = corpLineBreaks;
+    window.corpFirstBaselines = corpFirstBaselines;
+
     window.MgaBuilds = {
         id: 'mga-builds',
         init: function (deck) {
+            corpWrapSlides();
             buildTranscriptOverlays();
+            wireTranscriptOverlays(deck);
             markMenuHeads();
             linkMorphSlides();
             applyBuilds();

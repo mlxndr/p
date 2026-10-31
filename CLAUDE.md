@@ -3,7 +3,7 @@
 **Repository:** mlxndr/p
 **Purpose:** Academic presentation platform (mga.is)
 **Owner:** Marc Alexander, University of Glasgow
-**Last updated:** 2026-10-30
+**Last updated:** 2026-10-30 (phase 4: corporate mode)
 
 ## Overview
 
@@ -37,10 +37,12 @@ inc/
   scripts-config.js         Which scripts/plugins to load
   script-loader.js          Loads core → plugins → expands directives →
                             config → theme-sync (logos, QR codes) →
-                            refitSlides (zoom boxes, menu headings,
-                            @parse widths, autofit) → offline list
+                            refitSlides (corporate radii, card fit,
+                            line breaks and baselines, zoom boxes, menu
+                            headings, @parse widths, autofit) → offline
+                            list
   directives.js             @-directive expander, builds, morph, @zoom
-                            positioner, autofit
+                            positioner, autofit, corporate layout
   revconfig.js              Reveal.initialize + menu config
   qr.js                     QR code library
   handout.js, marked.min.js Handout rendering
@@ -51,6 +53,9 @@ inc/
     handout.css             Print-optimised handout styles
     light.css, dark.css     Colour-mode variable sets
     colourful.css           Shared structure of the Colourful themes
+    corp-uog.css            Corporate mode (University of Glasgow 2026
+                            PowerPoint template); loaded instead of a
+                            theme and layout
     th-{l|d|e}-*.css        Themes (light/dark/experimental): @import
                             base + light|dark (+ colourful), then set
                             variables
@@ -73,6 +78,8 @@ inc/
 archive/                    Old presentations (note: their ../inc/ paths
                             are broken one level deep — known issue)
 f/                          Binary file storage (PDF/PPTX exports)
+img/uog_block.png           The template's logo block (corporate mode)
+specimen-uog/               Corporate specimen deck (unlisted)
 ```
 
 ## Authoring slides
@@ -191,9 +198,13 @@ Slide modifiers (expand to classes; combine flags freely):
   @slide statement          one large centred sentence or quotation
   @slide activity           room activity: lighter ground, accent bar at
                             the screen edge
-  @slide text=N, placeholder, textbox   corporate decks (phase 4)
+  @slide text=N, placeholder, textbox   corporate decks: body size in
+                            pt; the template's content placeholder or a
+                            text box (see Corporate mode)
 Part divider (one centred display heading; shows the deck's series
-line above it when meta.json has "series"):
+line above it when meta.json has "series"; ` :: colour` after the text
+is the card colour in corporate mode, where the markdown below it goes
+on the card):
   @section Part Two: The Corpus
 Heading with a smaller second line:
   ## Silly | from 'blessed' to 'foolish'      (\| for a literal bar)
@@ -366,7 +377,9 @@ Transcripts (conversation analysis):
   pause line takes the step of the turn after it. overlay: the panel
   slides up over a faded copy of the slide before (put the transcript on
   its own slide after the slide it covers; consecutive overlay slides
-  carry on without the slide-up). morph: auto-animate between slides
+  hold still, in either direction) and slides back down when the slide
+  is left for one that is not an overlay, the copy returning to full
+  strength (wireTranscriptOverlays). morph: auto-animate between slides
   that share lines.
 ```
 
@@ -561,6 +574,77 @@ synchronously so the theme is right before first paint (the browser's
 deprecation note about synchronous requests is expected).
 `"unlisted": true` keeps a deck off the landing page.
 
+### Corporate mode
+
+`"corporate": "uog"` in meta.json (or the settings object `{ "template":
+"uog", "body": "textbox"|"placeholder", "text": 24, "cards":
+"session"|"boards"|"template", "cardColours": ["blue", ...] }`) makes a
+deck reproduce the University of Glasgow 2026 PowerPoint template.
+head.js loads `inc/css/corp-uog.css` in place of a theme and layout and
+locks it (no saved theme, no ?theme, no menu theme panel); revconfig.js
+drops the margin (letterboxed in black), progress bar, menu disc and
+transitions, and a click on the slide advances. Lists appear whole and
+builds appear instantly unless the deck says otherwise. Automatic morph
+links (menus, morpheme words) are not made; an explicit `@slide morph`
+still works. The palette names resolve to brand values (navy is
+University Blue #011451, blue Dark Blue, light-gold Light Yellow,
+orange Rust, light-grey the panel grey E8E8E8, light-red borrows Light
+Pink); ink is white on the strong colours and University Blue on the
+light ones.
+
+The same markdown, dressed as the template (SPEC 8):
+
+```
+meta.json: "photo", "photoFrame": "x,y,w" (percent) or "photoFocus",
+  "photoAlt": the title slide's photograph; the band holds title and
+  subtitle. No photo: the band on University Blue. The closing slide
+  repeats the title slide unless "closing": false.
+## Heading                the title placeholder (44 pt bold), beside
+                          the logo block
+* list / paragraph        a text box at 28 pt (level two 24); with blocks
+                          below it, a paragraph is the lead (20 pt;
+                          Boards preset 18). @slide text=N sets the size
+                          in pt; @slide placeholder the master's body
+@cards                    roundRect cards: corners 3.553% of the shorter
+                          side (corpRadii), presets for gap, insets and
+                          type; a bare `::` takes the next cardColours
+                          colour; content before the first `::` is a plain
+                          text column; white cards take a blue edge;
+                          arrows, stack, style=bar|stat|strip; text that
+                          overflows a card shrinks to 70% (corpFitCards)
+@note text                the grey takeaway panel at the foot (consecutive
+                          notes are paragraphs of one panel)
+@source text              11 pt grey, bottom right
+@section Part 1 :: blue   "Part 1" in the title, then the markdown below it
+### Question ...           on one wide coloured card
+@menu set 2>3 (steps)     the progress tracker: grey boxes, lit box Dark
+                          Green, lit arrow Dark Red unless the set says
+@table head=navy band     navy header, banded rows, D9D9D9 hairlines
+@stats                    navy bands, labels in Noto Sans Light
+## [[Name]]{light-purple} the title on a coloured bar
+@image (with a heading)   fills the body below the title; with no heading
+                          it covers the slide, logo included
+```
+
+Converter-only placement (written by a converter from a PowerPoint
+original, never by hand), all in px of the 1920 x 1080 slide: `y=` (the
+block's top) on @cards, @note, @table and @stats; `h=` on @cards, cards
+(`:: blue h=395`), @note and @stats; `text=` and `head=` on cards;
+`gap=` on @cards (between columns); `rows=` on @table (row heights);
+`middle` on a card (text anchored at the centre); and `@slide y= gap=
+inset=` (where the body starts, the space between its blocks, the text
+inset of a rounded text box).
+
+Exactness: PowerPoint for Mac rounds glyph advances to 1/8 pt and breaks
+lines on those widths; corpLineBreaks reproduces its breaks by nudging
+block widths by fractions of a pixel. It puts a box's first baseline at a
+whole point below the top; corpFirstBaselines moves each first line
+there. Fonts are the self-hosted Noto Sans 2.000 faces under the family
+"UoG Corporate Sans" with ascent and descent overrides (PowerPoint's
+single spacing is 1.2 x size), no kerning, no ligatures, lining figures.
+Check corporate changes against a local PDF export from PowerPoint for
+Mac (File > Export > PDF), never the cloud export.
+
 ### Specimen deck
 
 `specimen/` (unlisted) holds one of every construction: lists, tables
@@ -581,7 +665,10 @@ every state, @marks, over= in each style, bleed, hold on @image-seq,
 only, layout=leech; @passage with find and with palette colours),
 @refs, @slide spare. Its meta.json sets a series line. Open it in
 each theme and layout after any change to inc/. Keep it current when
-adding a directive.
+adding a directive. `specimen-uog/` (unlisted) does the same for
+corporate mode: text boxes, the placeholder, cards in each style, the
+takeaway panel, source lines, a Part divider, the tracker, tables,
+statistics, grade strips, a ribbon title and images.
 
 ### Spare slides
 

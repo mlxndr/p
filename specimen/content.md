@@ -83,6 +83,25 @@ Speaker notes live here; press s to see them.
 
 --
 
+@quote attrib="W. E. Gladstone, HC Deb 20 April 1877" card
+'...that Barrow's *Mirror of Parliament* is the primary record, and not *Hansard's Debates*.'
+
+--
+
+## A Card
+
+The turned-corner card holds any markdown, here a transcript:
+
+@card
+@transcript
+  a: Are you doing anything on Friday // evening?
+  b: // Nothing much, why?
+  (1.0)
+  b: Well (0.5) I'd like to
+@end
+
+--
+
 ## An Inline Blockquote
 
 Markdown's own quotation marker:
@@ -499,6 +518,19 @@ The course grade is the weighted mean of the component grades, rounded to the ne
 | Organisational | 109 documents | 4 consolidated documents | Navigability |
 | Linguistic | 41 defined terms | 19 defined terms | Consistency |
 | Procedural | 12 forms | 5 forms | Fewer errors |
+
+--
+
+## A Table with Bars
+
+@table rowhead bars
+| | 1775–1799 | 1875–1899 |
+|---|---|---|
+| 1 | French (33%) | Latin (40.5%) |
+| 2 | Latin (30%) | German (18%) |
+| 3 | German (5%) | French (15.5%) |
+
+@source Durkin 2014, *Borrowed words*. (The bars show in forms that draw them, such as Plate and Key.)
 
 ---
 

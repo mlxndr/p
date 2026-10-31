@@ -91,9 +91,9 @@
         if (reveal) reveal.remove();
 
         const themes = window.MGA_THEMES || [];
-        const layouts = window.MGA_LAYOUTS || [];
+        const palettes = window.MGA_PALETTES || [];
         const deckTheme = META.pdfTheme || META.theme || 'terracotta';
-        const deckLayout = META.layout || 'standard';
+        const deckPalette = META.pdfPalette || window.MGA_PALETTE || META.palette || '';
         const STUDENT_NOTE = 'leaves out slides marked <code>nohandout</code> and blanks the answers';
 
         const appearance = CORP
@@ -106,10 +106,14 @@
                             esc(t.name) + '</option>';
                     }).join('') + '</optgroup>';
                 }).join('') + '</select></label>' +
-                '<label class="ex-field"><span>Layout</span><select name="layout">' +
-                layouts.map(function (l) {
-                    return '<option value="' + l.key + '"' + (l.key === deckLayout ? ' selected' : '') + '>' +
-                        esc(l.name) + '</option>';
+                '<label class="ex-field"><span>Palette <span class="ex-note">(forms)</span></span><select name="palette">' +
+                '<option value="">The form’s own</option>' +
+                ['light', 'dark'].map(function (m) {
+                    return '<optgroup label="' + (m === 'light' ? 'Light' : 'Dark') + '">' +
+                        palettes.filter(function (p) { return p.mode === m; }).map(function (p) {
+                            return '<option value="' + p.key + '"' + (p.key === deckPalette ? ' selected' : '') + '>' +
+                                esc(p.name) + '</option>';
+                        }).join('') + '</optgroup>';
                 }).join('') + '</select></label>' +
               '</div>' +
               '<p class="ex-desc">The deck’s own ' + (META.pdfTheme ? 'theme for PDFs' : 'theme') +
@@ -221,7 +225,8 @@
             return !!(el && el.checked);
         }
         function look() {
-            return CORP ? '' : '&theme=' + encodeURIComponent(val('theme')) + '&layout=' + encodeURIComponent(val('layout'));
+            return CORP ? '' : '&theme=' + encodeURIComponent(val('theme')) +
+                (val('palette') ? '&palette=' + encodeURIComponent(val('palette')) : '');
         }
         function update() {
             const builds = val('builds') === 'each';

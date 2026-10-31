@@ -168,13 +168,13 @@ blockquote {
     font-family: var(--r-serif-font);
 }
 
-/* Grammar colours: the same Okabe-Ito set as base.css (--g-*), so a
+/* Grammar colours: the same set as base.css (--g-*), so a
    function has one colour on slides and handouts alike. */
-.subject { color: #005D9C; }
-.predicator { color: #963100; }
-.object { color: #00744D; }
-.complement { color: #C16F9D; }
-.adverbial { color: #B67600; }
+.subject { color: #0303B5; }
+.predicator { color: #9C3A0A; }
+.object { color: #057B89; }
+.complement { color: #8448F4; }
+.adverbial { color: #A88200; }
 
 /* Page footer */
 .footer {

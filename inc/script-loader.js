@@ -214,6 +214,13 @@ function setupThemeBasedElements() {
     try { localStorage.setItem('theme', link.getAttribute('href')); } catch (e) {}
   }
 
+  // A form takes its palette classes, any other theme loses them
+  // (head.js); the menu's swatches show only for a form
+  function formChanged(link) {
+    if (window.mgaThemeChanged) window.mgaThemeChanged(link.getAttribute('href'));
+    if (window.mgaMarkPalettePicker) window.mgaMarkPalettePicker();
+  }
+
   // Watch the theme link: the menu either changes its href or replaces
   // the element outright. Only genuine changes are saved (the opening
   // theme, including a ?theme= override, is never written back).
@@ -223,7 +230,7 @@ function setupThemeBasedElements() {
     current = link;
     new MutationObserver(function (mutations) {
       mutations.forEach(function (m) {
-        if (m.attributeName === 'href') { saveChoice(link); whenLoaded(link); }
+        if (m.attributeName === 'href') { formChanged(link); saveChoice(link); whenLoaded(link); }
       });
     }).observe(link, { attributes: true, attributeFilter: ['href'] });
   }
@@ -236,6 +243,7 @@ function setupThemeBasedElements() {
     mutations.forEach(function (m) {
       m.addedNodes.forEach(function (node) {
         if (node.nodeName === 'LINK' && node.id === 'theme') {
+          formChanged(node);
           saveChoice(node);
           observe(node);
           whenLoaded(node);
@@ -275,8 +283,7 @@ function cacheDeckForOffline() {
     (window.MGA_THEMES || []).forEach(function (s) {
       s.themes.forEach(function (t) { add(t.href); });
     });
-    (window.MGA_LAYOUTS || []).forEach(function (l) { add(l.href); });
-    ['colourful.css', 'light.css', 'dark.css',
+    ['colourful.css', 'light.css', 'dark.css', 'palettes.css',
      'woff2/century_supra_ot_b_regular.woff2', 'woff2/century_supra_ot_b_italic.woff2',
      'woff2/century_supra_ot_b_bold.woff2', 'woff2/century_supra_ot_b_bold_italic.woff2',
      'woff2/Premiera-Book.woff2', 'woff2/Premiera-Italic.woff2', 'woff2/Premiera-Bold.woff2',

@@ -62,7 +62,7 @@
         'refs':       ['title', 'id']
     };
     const KNOWN_FLAGS = ['fragment', 'hold', 'natural', 'spare',
-        'smaller', 'smallest', 'centred', 'centered', 'plain', 'contrast'];
+        'smaller', 'smallest', 'centred', 'centered', 'plain', 'contrast', 'card'];
     /* flags only some image directives take (phase 2b): over= styles and
        build on @image, bleed on the split layouts */
     const KIND_FLAGS = {
@@ -926,8 +926,8 @@
         }).join('\n');
         return { md: '<!-- .slide: class="' + cls + '"' +
             (opts.id ? ' id="' + esc(opts.id) + '"' : '') + ' -->\n' +
-            '<div class="md-quote-inner">\n\n' + quoted + '\n\n' +
-            (opts.attrib ? '<p class="md-source">' + esc(opts.attrib) + '</p>\n' : '') +
+            '<div class="md-quote-inner' + (has(opts, 'card') ? ' md-slip' : '') + '">\n\n' + quoted + '\n\n' +
+            (opts.attrib ? '<p class="md-source">' + esc(opts.attrib).replace(/\*([^*]+)\*/g, '<em>$1</em>') + '</p>\n' : '') +
             '\n</div>', isError: false };
     }
 
@@ -1397,6 +1397,18 @@
         flags: ['arrows', 'stack']
     };
     registerDirective('cards', Object.assign({ body: 'markdown', emit: emitCards('cards') }, CARDS_SPEC));
+    /* @card: the turned-corner card (a callout beside @note, @quote and the
+       rest): any markdown, to @end or the end of the slide, on a card with
+       its top right corner turned down. Each form draws it in its own way
+       from the palette's card roles. `@quote ... card` puts a quotation on
+       one. */
+    registerDirective('card', {
+        body: 'markdown',
+        emit: function (d, api) {
+            if (!d.body.join('').trim()) api.fail('has no content.');
+            return '\n<div class="md-slip">\n\n' + api.expand(d.body).trim() + '\n\n</div>\n';
+        }
+    });
     registerDirective('columns', Object.assign({ body: 'markdown', emit: emitCards('columns') }, CARDS_SPEC));
 
     /* @terms (SPEC 4.2): term :: gloss, a two-column definition list.
@@ -1509,9 +1521,17 @@
        head=COLOUR band rowhead caps small widths=16,28,28,28 */
     registerDirective('table', {
         body: 'prefix', keys: ['head', 'widths', 'y', 'rows'], colours: ['head'], lists: ['widths', 'rows'], numbers: ['widths', 'y', 'rows'],
-        flags: ['band', 'rowhead', 'caps', 'small'],
+        flags: ['band', 'rowhead', 'caps', 'small', 'bars'],
         emit: function (d, api) {
             if (!/^\s*\|/.test(d.block[0] || '')) api.fail('applies to a markdown table, and the next block is not one (it should start with |).');
+            // bars: a cell ending in (N%) gets a bar of that length beneath
+            // its text (forms that draw bars style .md-bar; the rest hide it)
+            if (d.flags.indexOf('bars') !== -1) {
+                d.block = d.block.map(function (row, ri) {
+                    if (ri < 2) return row;
+                    return row.replace(/\((\d+(?:\.\d+)?)%\)(\s*)(?=\|)/g, '($1%)<span class="md-bar" style="--v:$1"></span>$2');
+                });
+            }
             const cls = ['md-table'];
             let style = '';
             if (d.opts.head) {
@@ -1710,12 +1730,17 @@
             for (let ti = turns.length - 1, next = k - 1; ti >= 0; ti--) {
                 if (steps[ti] === null) steps[ti] = Math.max(next, 0); else next = steps[ti];
             }
+            // each speaker numbered in order of first appearance (md-tr-spk-1,
+            // -2, ...), so a form can tell speakers apart by more than the label
+            const speakers = [];
+            turns.forEach(function (t) { if (t.label && speakers.indexOf(t.label) === -1) speakers.push(t.label); });
             turns.forEach(function (t, ti) {
                 const step = d.build ? ' fragment" data-md-step="' + steps[ti] : '';
+                const spk = t.label ? ' md-tr-spk-' + (speakers.indexOf(t.label) + 1) : '';
                 t.lines.forEach(function (l, li) {
                     const starts = l.text && /^\/\//.test(l.text.trim());
                     const id = morph ? ' data-id="tr-' + trHash((t.label || '') + '|' + (l.pause || l.text) + '|' + li) + '"' : '';
-                    html += '<div class="md-tr-line' + (l.pause ? ' md-tr-gap' : '') + (li > 0 ? ' md-tr-cont' : '') + (starts ? ' md-tr-ovstart' : '') + step + '"' + id + '>' +
+                    html += '<div class="md-tr-line' + spk + (l.pause ? ' md-tr-gap' : '') + (li > 0 ? ' md-tr-cont' : '') + (starts ? ' md-tr-ovstart' : '') + step + '"' + id + '>' +
                         '<span class="md-tr-num">' + l.n + '</span>' +
                         '<span class="md-tr-note">' + (l.note ? inlineHtml(l.note) : '') + '</span>' +
                         '<span class="md-tr-label">' + (li === 0 && t.label ? esc(t.label) : '') + '</span>' +
@@ -2869,6 +2894,8 @@
             if (idx === null || idx === undefined) return;
             note.classList.add('fragment');
             note.setAttribute('data-fragment-index', idx);
+            // the export's final state (?fragments=false) shows every step
+            if (document.documentElement.classList.contains('mga-final') || last.classList.contains('visible')) note.classList.add('visible');
             changed = true;
         });
         if (changed && window.Reveal && Reveal.sync) {
@@ -3397,7 +3424,10 @@
             const hw = hr.width / scale;
             const left = (ir.left - hr.left) / scale, right = (ir.right - hr.left) / scale;
             const centre = (left + right) / 2;
-            let ml = centre < avail / 2 ? left : right - hw;
+            // aligned with the item's nearer edge; a form that sets
+            // --menu-head-align: centre centres it under the item instead
+            const centred = getComputedStyle(h).getPropertyValue('--menu-head-align').trim() === 'centre';
+            let ml = centred ? centre - hw / 2 : centre < avail / 2 ? left : right - hw;
             ml = Math.max(0, Math.min(avail - hw, ml));
             h.style.marginLeft = ml.toFixed(1) + 'px';
             restore();

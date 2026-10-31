@@ -310,18 +310,20 @@ li::marker {
        shows as a box on themes with background images */
 }
 
-/* Grammatical functions: one colour each, everywhere, from the Okabe-Ito
-   palette (designed to stay distinct under red-green colour blindness),
-   darkened just enough to read at 3:1 or better on every light paper.
-   Minimum separation between any two, simulated for protan and deutan
-   vision as well as normal, is about three times the old set's.
-   dark.css supplies lightened versions for dark grounds. */
+/* Grammatical functions: one colour each, chosen (Oct 2026) to stay apart
+   under red-green colour blindness as well as normal vision. Read the blue
+   and yellow axes and lightness: Subjects dark blue, Complements a lighter
+   violet, Objects a neutral teal, Predicators a dark rust, Adverbials a light
+   gold. Every one reads at 4.5:1 or better on every light paper except the
+   gold (3:1 or better, the large-text standard), so in @passage the coloured
+   functions are set in bold. dark.css and palettes.css (html.pal-dark) carry
+   the dark set. */
 :root {
-    --g-subject: #005D9C;      /* blue */
-    --g-predicator: #963100;   /* vermillion, deepened */
-    --g-object: #00744D;       /* bluish green */
-    --g-complement: #C16F9D;   /* reddish purple */
-    --g-adverbial: #B67600;    /* orange */
+    --g-subject: #0303B5;      /* deep blue */
+    --g-predicator: #9C3A0A;   /* rust */
+    --g-object: #057B89;       /* teal */
+    --g-complement: #8448F4;   /* violet */
+    --g-adverbial: #A88200;    /* gold */
 }
 .subject { color: var(--g-subject); }
 .predicator { color: var(--g-predicator); }
@@ -1728,63 +1730,46 @@ html.mga-measuring *::after {
     --L-accent: var(--c-ink, var(--r-link-color));
 }
 
-/* Layout picker: a row of icons at the top of the Themes panel
-   (built in revconfig.js) */
-html body .slide-menu-wrapper .mga-layout-picker {
+/* Palette picker (forms only): swatches at the top of the Themes panel,
+   light palettes then dark (built in revconfig.js). Each swatch is the
+   palette's paper with its accent in the lower right half. */
+html body .slide-menu-wrapper .mga-palette-picker {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
-    padding: 4px 14px 14px 18px;
+    gap: 6px 10px;
+    padding: 6px 14px 14px 18px;
     border-bottom: 1px solid var(--menu-divider-color);
     margin-bottom: 4px;
 }
-html body .slide-menu-wrapper .mga-layout-label {
+html body .slide-menu-wrapper .mga-palette-picker[hidden] { display: none; }
+html body .slide-menu-wrapper .mga-palette-label {
     font-family: 'Concourse', 'Helvetica Neue', sans-serif;
     font-size: 0.72em;
     font-feature-settings: "smcp", "c2sc";
     letter-spacing: 0.12em;
     color: var(--menu-text-muted);
-    margin-right: auto;
+    width: 100%;
 }
-html body .slide-menu-wrapper .mga-layout-picker button {
+html body .slide-menu-wrapper .mga-palette-row { display: flex; gap: 6px; }
+html body .slide-menu-wrapper .mga-palette-picker button {
     appearance: none;
-    border: none;
-    background: transparent;
-    width: 42px;
-    height: 38px;
+    width: 26px;
+    height: 26px;
     padding: 0;
     cursor: pointer;
-    border-bottom: 2px solid transparent;
-    color: var(--menu-text);
-    opacity: 0.5;
+    border: 1px solid var(--menu-divider-color);
+    border-radius: 3px;
+    background: linear-gradient(135deg, var(--sw-paper) 50%, var(--sw-accent) 50%);
 }
-html body .slide-menu-wrapper .mga-layout-picker svg {
-    width: 26px;
-    height: 19px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.2;
-    vertical-align: middle;
-}
-html body .slide-menu-wrapper .mga-layout-picker svg .fill {
-    fill: currentColor;
-    stroke: none;
-    opacity: 0.22;
-}
-html body .slide-menu-wrapper .mga-layout-picker svg .dot {
-    fill: currentColor;
-    stroke: none;
-}
-html body .slide-menu-wrapper .mga-layout-picker button:hover {
-    opacity: 0.8;
-}
-html body .slide-menu-wrapper .mga-layout-picker button.active {
-    border-bottom-color: var(--menu-accent);
-    opacity: 1;
-}
-html body .slide-menu-wrapper .mga-layout-picker button:focus-visible {
+html body .slide-menu-wrapper .mga-palette-picker button:hover { outline: 1px solid var(--menu-text-muted); }
+html body .slide-menu-wrapper .mga-palette-picker button.active {
     outline: 2px solid var(--menu-accent);
-    outline-offset: 1px;
+    outline-offset: 2px;
+}
+html body .slide-menu-wrapper .mga-palette-picker button:focus-visible {
+    outline: 2px solid var(--menu-accent);
+    outline-offset: 2px;
 }
 
 /* Info (and any custom) panel: the menu's own typography, never the
@@ -2866,14 +2851,18 @@ html.mga-coords .reveal .md-marks-box { cursor: crosshair; }
 .reveal .pz-leech .pz-mh { text-decoration: none; }
 
 /* ---------- @passage ----------
-   Until its step, a function keeps the running text's colour (and a
-   conjunction its weight); with find it is bold for one step first. */
+   A coloured function is bold, so its colour shows in thick strokes.
+   Until its step, a function keeps the running text's colour and weight
+   (and a conjunction its weight); with find it is bold for one step first. */
+.reveal .md-passage .md-g.subject, .reveal .md-passage .md-g.predicator,
+.reveal .md-passage .md-g.object, .reveal .md-passage .md-g.complement,
+.reveal .md-passage .md-g.adverbial { font-weight: 700; }
 .reveal .md-pmarks { display: none; }
-.reveal .md-passage:has(.md-ps-c-subject:not(.visible)) .md-g.subject { color: inherit; }
-.reveal .md-passage:has(.md-ps-c-predicator:not(.visible)) .md-g.predicator { color: inherit; }
-.reveal .md-passage:has(.md-ps-c-object:not(.visible)) .md-g.object { color: inherit; }
-.reveal .md-passage:has(.md-ps-c-complement:not(.visible)) .md-g.complement { color: inherit; }
-.reveal .md-passage:has(.md-ps-c-adverbial:not(.visible)) .md-g.adverbial { color: inherit; }
+.reveal .md-passage:has(.md-ps-c-subject:not(.visible)) .md-g.subject { color: inherit; font-weight: inherit; }
+.reveal .md-passage:has(.md-ps-c-predicator:not(.visible)) .md-g.predicator { color: inherit; font-weight: inherit; }
+.reveal .md-passage:has(.md-ps-c-object:not(.visible)) .md-g.object { color: inherit; font-weight: inherit; }
+.reveal .md-passage:has(.md-ps-c-complement:not(.visible)) .md-g.complement { color: inherit; font-weight: inherit; }
+.reveal .md-passage:has(.md-ps-c-adverbial:not(.visible)) .md-g.adverbial { color: inherit; font-weight: inherit; }
 .reveal .md-passage:has(.md-ps-c-conjunction:not(.visible)) .md-g.conjunction { font-weight: inherit; }
 .reveal .md-passage:has(.md-ps-b-subject.visible):has(.md-ps-c-subject:not(.visible)) .md-g.subject { font-weight: 700; }
 .reveal .md-passage:has(.md-ps-b-predicator.visible):has(.md-ps-c-predicator:not(.visible)) .md-g.predicator { font-weight: 700; }
@@ -2940,3 +2929,33 @@ html.mga-final .reveal .md-passage .md-c { transition: none; }
 html.reveal-print .reveal .slides .pdf-page > section:not(.stack) {
     height: var(--slide-height, 1080px) !important;
 }
+
+/* ---------- @card: the turned-corner card ----------
+   A callout with its top right corner turned down. This is the plain
+   version every theme gets; each form (form-*.css) draws its own from
+   the palette's card roles (--pal-card, --pal-card-ink, --pal-card-fold). */
+.reveal .md-slip {
+    --slip-corner: 1.4em;
+    background: var(--slip-card, color-mix(in srgb, var(--r-background-color, #FFF) 55%, #FFF));
+    color: var(--slip-ink, inherit);
+    padding: 0.9em 1.3em;
+    margin: 0.6em 0;
+    clip-path: polygon(0 0, calc(100% - var(--slip-corner)) 0, 100% var(--slip-corner), 100% 100%, 0 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+.reveal .md-slip::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: var(--slip-corner); height: var(--slip-corner);
+    background: linear-gradient(225deg, transparent 50%, var(--slip-fold, rgba(0, 0, 0, 0.14)) 50%);
+}
+.reveal .md-slip:not(.md-quote-inner) { position: relative; }
+/* a quotation card keeps @quote's own placement (centred when the slide
+   has no heading); with a heading it sits in the flow */
+.reveal section.md-quote:has(h2) .md-quote-inner.md-slip { position: relative; top: auto; }
+.reveal .md-slip > :first-child { margin-top: 0; }
+.reveal .md-slip > :last-child { margin-bottom: 0; }
+
+/* @table bars: a bar beneath each "(N%)" cell; forms that draw bars style it */
+.reveal .md-table .md-bar { display: none; }

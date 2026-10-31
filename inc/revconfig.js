@@ -147,86 +147,64 @@
             }, 50);
         }
 
-        // Layout picker: a row of icons at the top of the Themes panel.
-        // Mouse: click. Keyboard: with the Themes panel open, the number
-        // keys 1-4 choose a layout directly; or Tab to the icons, move
-        // with the arrow keys and choose with Enter or Space.
-        const layoutLink = document.getElementById('layout');
-        const layouts = window.MGA_LAYOUTS || [];
+        // Palette picker (forms only): a row of swatches at the top of the
+        // Themes panel, light palettes then dark. Mouse: click. Keyboard:
+        // Tab to the swatches, move with the arrow keys, choose with Enter
+        // or Space. Hidden while the theme is not a form.
+        const themeLink = function () { return document.getElementById('theme'); };
+        const palettes = window.MGA_PALETTES || [];
         const themesPanel = document.querySelector('.slide-menu-panel[data-panel="Themes"]');
         let picker = null;
-        // Refit once the new layout stylesheet is really in force. The load
-        // event alone proved unreliable for a stylesheet the browser has
-        // cached, so also watch for the sheet itself to change over, and
-        // refit once more shortly after for good measure.
-        function refitWhenApplied(link, href) {
-            let done = false;
-            const want = new URL(href, location.href).href;
-            function refit() {
-                if (done) return;
-                done = true;
-                if (window.updateThemeElements) window.updateThemeElements();
-                setTimeout(function () {
-                    if (window.refitSlides) window.refitSlides();
-                }, 400);
-            }
-            link.addEventListener('load', refit, { once: true });
-            const t0 = performance.now();
-            (function poll() {
-                let ready = false;
-                try { ready = !!(link.sheet && link.sheet.href === want && link.sheet.cssRules); } catch (e) {}
-                if (ready) { requestAnimationFrame(refit); return; }
-                if (performance.now() - t0 < 3000) requestAnimationFrame(poll); else refit();
-            })();
+        function refitSoon() {
+            if (window.updateThemeElements) window.updateThemeElements();
+            setTimeout(function () { if (window.refitSlides) window.refitSlides(); }, 300);
         }
-        function chooseLayout(key) {
-            const l = layouts.filter(function (x) { return x.key === key; })[0];
-            if (!l || !layoutLink) return;
-            if (layoutLink.getAttribute('href') !== l.href) {
-                layoutLink.setAttribute('href', l.href);
-                refitWhenApplied(layoutLink, l.href);
-            }
-            window.MGA_LAYOUT = key;
-            try { localStorage.setItem('layout', key); } catch (e) {}
+        function markPicker() {
+            if (!picker) return;
+            const link = themeLink();
+            const form = link && window.mgaFormByHref ? window.mgaFormByHref(link.getAttribute('href')) : null;
+            picker.hidden = !form;
             picker.querySelectorAll('button').forEach(function (b) {
-                const on = b.getAttribute('data-layout') === key;
+                const on = b.getAttribute('data-palette') === window.MGA_PALETTE;
                 b.classList.toggle('active', on);
                 b.setAttribute('aria-checked', on ? 'true' : 'false');
                 b.tabIndex = on ? 0 : -1;
             });
         }
-        if (themesPanel && layouts.length && !themesPanel.querySelector('.mga-layout-picker')) {
+        window.mgaMarkPalettePicker = markPicker;
+        function choosePalette(key) {
+            if (window.mgaSetPalette) window.mgaSetPalette(key);
+            markPicker();
+            refitSoon();
+        }
+        if (themesPanel && palettes.length && !themesPanel.querySelector('.mga-palette-picker')) {
             picker = document.createElement('div');
-            picker.className = 'mga-layout-picker';
+            picker.className = 'mga-palette-picker';
             picker.setAttribute('role', 'radiogroup');
-            picker.setAttribute('aria-label', 'Layout');
-            picker.innerHTML = '<span class="mga-layout-label">Layout</span>' +
-                layouts.map(function (l, n) {
-                    return '<button type="button" role="radio" data-layout="' + l.key + '"' +
-                        ' title="' + l.name + ' (' + (n + 1) + ')" aria-label="' + l.name + '">' +
-                        l.icon + '</button>';
-                }).join('');
+            picker.setAttribute('aria-label', 'Palette');
+            const sw = function (p) {
+                return '<button type="button" role="radio" data-palette="' + p.key + '" title="' + p.name + '"' +
+                    ' aria-label="' + p.name + '" style="--sw-paper:' + p.paper + ';--sw-accent:' + p.accent + '"></button>';
+            };
+            picker.innerHTML = '<span class="mga-palette-label">Palette</span>' +
+                '<span class="mga-palette-row">' + palettes.filter(function (p) { return p.mode === 'light'; }).map(sw).join('') + '</span>' +
+                '<span class="mga-palette-row">' + palettes.filter(function (p) { return p.mode === 'dark'; }).map(sw).join('') + '</span>';
             themesPanel.insertBefore(picker, themesPanel.firstChild);
             picker.addEventListener('click', function (e) {
-                const b = e.target.closest('button[data-layout]');
-                if (b) chooseLayout(b.getAttribute('data-layout'));
+                const b = e.target.closest('button[data-palette]');
+                if (b) choosePalette(b.getAttribute('data-palette'));
             });
-            chooseLayout(window.MGA_LAYOUT);
+            markPicker();
 
-            // Keys, taken before the menu plugin sees them
             window.addEventListener('keydown', function (e) {
-                const menuOpen = document.querySelector('.slide-menu.active');
-                if (!menuOpen) return;
+                if (!document.querySelector('.slide-menu.active') || picker.hidden) return;
                 const buttons = Array.prototype.slice.call(picker.querySelectorAll('button'));
-                const onPicker = buttons.indexOf(document.activeElement);
-                const themesActive = themesPanel.classList.contains('active-menu-panel');
-                if (themesActive && /^[1-9]$/.test(e.key) && layouts[+e.key - 1]) {
-                    chooseLayout(layouts[+e.key - 1].key);
-                } else if (onPicker !== -1 && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) {
-                    const next = (onPicker + (e.key === 'ArrowRight' ? 1 : buttons.length - 1)) % buttons.length;
-                    buttons[next].focus();
-                } else if (onPicker !== -1 && (e.key === 'Enter' || e.key === ' ')) {
-                    chooseLayout(buttons[onPicker].getAttribute('data-layout'));
+                const on = buttons.indexOf(document.activeElement);
+                if (on === -1) return;
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    buttons[(on + (e.key === 'ArrowRight' ? 1 : buttons.length - 1)) % buttons.length].focus();
+                } else if (e.key === 'Enter' || e.key === ' ') {
+                    choosePalette(buttons[on].getAttribute('data-palette'));
                 } else {
                     return;
                 }

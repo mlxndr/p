@@ -1,0 +1,1100 @@
+@import url('base.css');
+@import url('palettes.css');
+
+/* ===========================================================
+   Quiet Index (Thumb Index, quiet; design B06): a form.
+   Bitter headings in the accent ink over Concourse text, square
+   list marks, a solid tab on the screen's fore-edge that descends
+   through the lecture, the section ground on @section dividers,
+   the current column on the tint under a heavy bar, and a light
+   turned-corner card. Every colour comes from the palette roles
+   (palettes.css), the set colours, the --p-* palette or the
+   grammar colours.
+   =========================================================== */
+
+:root {
+    --r-main-font: 'Concourse', 'Noto Sans', 'Helvetica Neue', sans-serif;
+    --r-heading-font: 'Bitter', 'Noto Serif', Georgia, serif;
+    --r-heading-bold-font: 'Bitter', 'Noto Serif', Georgia, serif;
+    --r-serif-font: 'Bitter', 'Noto Serif', Georgia, serif;
+    --r-main-font-size: 50px;
+    --tag-caps: normal;
+}
+
+/* The form's own variables, from the roles. The card resets them. */
+.reveal {
+    --tq-ink: var(--pal-ink);
+    --tq-ink2: var(--pal-ink2);
+    --tq-head: var(--pal-accent-ink);
+    --tq-mark: var(--pal-mark);
+    --tq-rule: var(--pal-rule);
+    --tq-strong-rule: var(--pal-ink);
+    --tq-dim-fill: color-mix(in srgb, var(--pal-ink) 9%, var(--pal-paper));
+    --tq-dim-ink: color-mix(in srgb, var(--pal-ink2) 82%, var(--pal-paper));
+    --tq-section-sub: color-mix(in srgb, var(--pal-on-section) 80%, var(--pal-section));
+    --tq-lift: drop-shadow(0 2px 0 color-mix(in srgb, var(--pal-ink) 8%, transparent))
+               drop-shadow(0 20px 18px color-mix(in srgb, var(--pal-ink) 20%, transparent));
+    --tq-flap-shadow: drop-shadow(-3px 4px 3px color-mix(in srgb, var(--pal-ink) 16%, transparent));
+    --r-highlight-ink: var(--pal-highlight-ink);
+    --r-border-color: var(--pal-rule);
+
+    background-color: var(--pal-paper) !important;
+    color: var(--tq-ink);
+    font-weight: 400;
+    font-kerning: normal;
+}
+html.pal-dark .reveal { --tq-lift: none; --tq-flap-shadow: none; }
+
+.reveal strong, .reveal b { font-weight: 600; }
+
+/* cited forms: the serif italic (Bitter covers ǐ ǎ ǔ) */
+.reveal em { font-family: var(--r-serif-font); font-style: italic; font-weight: 400; font-size: 0.96em; }
+.reveal :is(.md-refs, .md-source, .md-note, h1, h2, h3, h4, .md-series, .md-tr-label, dt) em { font-family: inherit; font-size: 1em; }
+.reveal :is(h1, h2, h3, h4) em { font-weight: inherit; }
+
+/* ---------- the thumb index ----------
+   A solid tab on the fore-edge of the screen, lower with each slide.
+   Drawn on the slide backgrounds (and, in print, on each page's), its
+   place from the slide's position among its siblings (--tq-i of --tq-n,
+   set at the end of this file). */
+.reveal .backgrounds > .slide-background::after,
+html.reveal-print .reveal .slides > .pdf-page > .slide-background::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    width: 1.36%;
+    height: 10.9%;
+    top: calc(4.4% + 80.2% * var(--tq-i, 0) / max(var(--tq-n, 1) - 1, 1));
+    background: var(--pal-accent);
+    z-index: 3;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .backgrounds > .slide-background.md-section::after,
+.reveal .backgrounds > .slide-background.md-contrast::after,
+html.reveal-print .reveal .slides > .pdf-page > .slide-background:is(.md-section, .md-contrast)::after {
+    background: var(--pal-series);
+}
+/* not over a picture */
+.reveal .slide-background:has(> .slide-background-content[style*="url("])::after,
+.reveal .slide-background:has(> .slide-background-content > :is(video, iframe))::after,
+.reveal .slide-background[data-background-hash*="url("]::after { display: none; }
+
+/* the tab is the lecture's progress: reveal's bar is not drawn */
+.reveal .progress { display: none !important; }
+
+/* ---------- headings ----------
+   They stand apart by face, weight and ink: Bitter 600 in the accent ink.
+   No rule beneath. */
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+    font-family: var(--r-heading-font);
+    font-variant-caps: normal;
+    font-variant-numeric: oldstyle-nums;
+    text-transform: none;
+}
+.reveal .slides section h2 {
+    font-size: 1.66em;
+    font-weight: 600;
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: var(--tq-head);
+    border-bottom: none;
+    margin: 0.5em 0 0.62em;
+}
+.reveal .slides section h3 {
+    font-size: 1.1em;
+    font-weight: 600;
+    line-height: 1.12;
+    color: var(--tq-head);
+    border-bottom: none;
+}
+.reveal .slides section h4 { font-weight: 600; color: var(--tq-ink); }
+.reveal .slides section h2 .md-head-sub {
+    font-family: var(--r-main-font);
+    font-size: 0.52em;
+    font-weight: 400;
+    line-height: 1.2;
+    margin: 0.3em 0 0;
+    color: var(--tq-ink2);
+}
+
+/* ---------- running text and lists ---------- */
+.reveal .slides section p { margin: 0 0 0.5em; }
+.reveal .slides section ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 0.4em;
+    line-height: 1.3;
+}
+.reveal .slides section ul > li {
+    position: relative;
+    padding-left: 1.13em;
+    margin: 0 0 0.43em;
+}
+.reveal .slides section ul > li::before {
+    content: '';
+    position: absolute;
+    left: 0.04em;
+    top: 0.47em;
+    width: 0.33em;
+    height: 0.33em;
+    background: var(--tq-mark);
+}
+.reveal .slides section ul ul { font-size: 87%; margin: 0.26em 0 0.1em; }
+.reveal .slides section ul ul > li { padding-left: 1.1em; margin-bottom: 0.25em; }
+.reveal .slides section ul ul > li::before {
+    width: 0.5em;
+    height: 0.1em;
+    top: 0.62em;
+    left: 0;
+    background: var(--tq-ink2);
+}
+.reveal .slides section ol li::marker { color: var(--tq-head); font-weight: 600; }
+
+/* text tags: coloured text, no pill */
+.reveal .md-settext { font-weight: 400; }
+
+/* ==x== */
+.reveal .md-hl, .reveal .md-hl-in.visible { color: var(--r-highlight-ink); }
+
+/* small text furniture */
+.reveal .md-source { color: var(--tq-ink2); text-align: left; font-size: 0.7em; line-height: 1.3; }
+.reveal .slides section:not(.title-slide) > div.md-source { margin-top: 0.75em; }
+.reveal .md-note { color: var(--tq-ink2); border-left: 3px solid var(--tq-rule); }
+.reveal .md-subtle { color: var(--tq-ink2); }
+
+/* ---------- the series line ---------- */
+.reveal .md-series-name {
+    font-family: var(--r-heading-font);
+    font-weight: 500;
+    font-variant-caps: small-caps;
+    letter-spacing: 0.07em;
+    color: var(--tq-head);
+}
+.reveal .md-series-sub {
+    font-family: var(--r-serif-font);
+    font-style: italic;
+    color: var(--tq-ink2);
+}
+
+/* ---------- title and closing slides ----------
+   Series line top left, the title large in Bitter 500 beneath it, names
+   bottom left, the logo bottom right. The title's size is set inline
+   (2.2em of the section), so the section's size carries it. */
+.reveal .slides section.title-slide {
+    height: 100%;
+    font-size: 63px;
+    text-align: left;
+}
+.reveal .slides section.title-slide .pres-series {
+    margin: 118px 0 0;
+    text-align: left;
+}
+.reveal .slides section.title-slide .md-series-name { font-size: 54px; line-height: 1.1; }
+.reveal .slides section.title-slide .md-series-sub { font-size: 41px; margin-top: 6px; }
+.reveal .slides section.title-slide h1 {
+    margin: 150px 0 0;
+    max-width: 1700px;
+    font-family: var(--r-heading-font);
+    font-weight: 500 !important;
+    line-height: 1.02;
+    letter-spacing: -0.012em;
+    color: var(--tq-ink);
+    text-align: left;
+}
+.reveal .slides section.title-slide:not([data-meta="closing"]):has(.titlebr tr:nth-child(3)) h1 { margin-top: 100px; }
+.reveal .slides section.title-slide[data-meta="closing"] > br { display: none; }
+.reveal .slides section.title-slide[data-meta="closing"] h1 { margin-top: 118px; }
+.reveal .slides section.title-slide :is(.pres-subtitle-mainfont, .pres-subtitle-headingfont) {
+    margin: 0.45em 0 0 !important;
+    padding: 0 !important;
+    max-width: 1700px;
+    font-family: var(--r-serif-font);
+    font-size: 0.72em !important;
+    font-weight: 400 !important;
+    line-height: 1.2;
+    text-align: left !important;
+    color: var(--tq-ink2);
+}
+.reveal .slides section.title-slide .titlebr {
+    left: 0;
+    right: 0;
+    bottom: 60px;
+    width: 100%;
+    font-size: 50px;
+    line-height: 1.3;
+}
+.reveal .slides section.title-slide .titlebr hr,
+.reveal .slides section.title-slide .titlebr tr:has(> td > hr) { display: none; }
+.reveal .slides section.title-slide .titlebr td { padding: 0; vertical-align: bottom; border: none; background: none; }
+.reveal .slides section.title-slide .titlebr tr + tr td { padding-top: 24px; }
+.reveal .slides section.title-slide .tpa4-l { font-weight: 400; color: var(--tq-ink); }
+.reveal .slides section.title-slide .tpa4-r { font-weight: 400; color: var(--tq-ink2); font-size: 0.82em; }
+.reveal .slides section.title-slide .titlebr .subtle { font-size: 0.82em; color: var(--tq-ink2); }
+.reveal .slides section.title-slide .titlebr img { height: 104px; width: auto; max-height: none; max-width: none; }
+/* one logo (the restrained variant): the logo larger */
+.reveal .slides section.title-slide .titlebr:not(:has(tr:nth-child(3))) img { height: 150px; }
+.reveal .slides section.title-slide .titlebr canvas.qr-code { width: 220px; height: 220px; }
+/* the closing slide stacks its logos: smaller */
+.reveal .slides section.title-slide[data-meta="closing"] .titlebr img { height: 90px; }
+
+/* ---------- @section dividers: the section ground ---------- */
+.reveal .slide-background.md-section { background-color: var(--pal-section); }
+.reveal .slides section.md-section { color: var(--pal-on-section); }
+.reveal .slides section.md-section .md-section-series {
+    left: 0;
+    right: auto;
+    top: 300px;
+    text-align: left;
+    font-size: 1em;
+}
+.reveal .slides section.md-section .md-section-series .md-series-name { color: var(--pal-series); font-size: 46px; line-height: 1.1; }
+.reveal .slides section.md-section .md-section-series .md-series-sub { color: var(--tq-section-sub); opacity: 1; font-size: 37px; margin-top: 4px; }
+.reveal .slides section.md-section h1 {
+    top: 470px;
+    left: 0;
+    right: auto;
+    width: 1700px;
+    transform: none;
+    text-align: left;
+    font-family: var(--r-heading-font);
+    font-weight: 500;
+    font-size: 122px;
+    line-height: 1.05;
+    letter-spacing: -0.01em;
+    color: var(--pal-on-section);
+}
+.reveal .slides section.md-section h1::after { display: none; }
+/* no series line: the title stands a little higher */
+.reveal .slides section.md-section:not(:has(.md-section-series)) h1 { top: 400px; }
+
+/* ---------- @slide contrast, statement, activity ---------- */
+.reveal .slides section.md-contrast {
+    --tq-ink: var(--pal-on-section);
+    --tq-ink2: var(--tq-section-sub);
+    --tq-head: var(--pal-on-section);
+    --tq-mark: var(--pal-series);
+    --tq-rule: color-mix(in srgb, var(--pal-on-section) 35%, var(--pal-section));
+    --r-subtle-color: var(--tq-section-sub);
+    /* the section ground is dark in every palette: the colour marks'
+       light versions (the grammar set is palettes.css's to give) */
+    --pt-red: var(--p-light-red); --pt-orange: var(--p-light-orange); --pt-gold: var(--p-light-gold);
+    --pt-green: var(--p-light-green); --pt-teal: var(--p-light-teal); --pt-blue: var(--p-light-blue);
+    --pt-navy: var(--p-light-navy); --pt-purple: var(--p-light-purple); --pt-pink: var(--p-light-pink);
+    --pt-grey: var(--p-light-grey);
+}
+.reveal .slides section.md-statement > p,
+.reveal .slides section.md-statement > blockquote {
+    font-family: var(--r-heading-font);
+    font-weight: 500;
+    font-size: 1.9em;
+    line-height: 1.18;
+    letter-spacing: -0.01em;
+    color: var(--tq-ink);
+}
+.reveal .slide-background.md-activity {
+    background-color: var(--pal-quiet);
+    background-image: linear-gradient(to right, var(--pal-accent) 0 16px, transparent 16px);
+}
+
+/* ---------- tags and ribbon headings ----------
+   A tag is a plain rectangle; a ribbon heading is a band of the set
+   colour from the screen's edge, its icon before the text. */
+.reveal .md-tag { border-radius: 0; }
+.reveal .slides section h2:has(> .md-ribbon) { margin-top: 0.4em; }
+.reveal .md-tag.md-ribbon {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 0.4em;
+    min-width: 0;
+    margin-left: calc(-1 * var(--bleed-x, 0px));
+    padding: 0.16em 0.6em 0.19em calc(var(--bleed-x, 0px) + 0.02em);
+    font-size: 1em;
+    font-family: var(--r-heading-font);
+    font-weight: 600;
+    font-variant-caps: normal;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+}
+.reveal .md-tag.md-ribbon::before,
+.reveal .md-tag.md-ribbon::after { display: none; }
+.reveal .md-tag.md-ribbon .md-tag-icon { margin-left: 0; font-size: 0.76em; }
+.reveal .md-tag.md-ribbon[class*="md-bg-light-"] .md-tag-icon {
+    --fa-primary-color: var(--tq-ribbon-icon);
+    --fa-secondary-color: var(--tq-ribbon-icon);
+    --fa-secondary-opacity: 0.45;
+}
+
+/* ---------- @menu ----------
+   Unlit items quiet discs; the lit item larger, in its set colour, with
+   a ring (a paper gap, then the colour) and a stem down to its heading,
+   which takes the same colour. */
+.reveal .md-menu {
+    --menu-off: var(--tq-dim-fill);
+    --menu-off-ink: var(--tq-dim-ink);
+}
+.reveal .md-menu-strip {
+    display: grid;
+    grid-template-columns: repeat(var(--n, 5), minmax(0, 1fr));
+    align-items: center;
+    justify-items: center;
+    gap: 0;
+    width: min(100%, calc(var(--n, 5) * 190px));
+    margin: 0.5em 0 0;
+}
+.reveal .md-menu-strip .md-menu-item {
+    flex: none;
+    width: 100px;
+    height: 100px;
+    box-shadow: none;
+}
+.reveal .md-menu-strip .md-menu-item .md-icon { --fa-secondary-opacity: 0.4; }
+.reveal .md-menu-strip .md-menu-item.is-lit {
+    background: var(--tq-lit);
+    color: var(--tq-lit-on, var(--tag-ink));
+}
+.reveal .md-menu-strip[data-md-lit] .md-menu-item.is-lit {
+    width: 134px;
+    height: 134px;
+    box-shadow: 0 0 0 8px var(--pal-paper), 0 0 0 14px var(--tq-lit);
+}
+.reveal .md-menu-strip .md-menu-item.is-lit .md-icon { --fa-secondary-opacity: 0.55; }
+.reveal .md-menu-strip[data-md-lit]:has(+ .md-menu-head) .md-menu-item.is-lit::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 14px);
+    width: 6px;
+    height: 46px;
+    margin-left: -3px;
+    background: var(--tq-lit);
+}
+.reveal .slides section .md-menu-strip + h2.md-menu-head {
+    margin-top: 72px;
+    color: var(--tq-lit-text, var(--tq-head));
+}
+.reveal .slides section .md-menu-strip + h2.md-menu-head + * { margin-top: 0.3em; }
+html.pal-dark .reveal .md-menu-strip .md-menu-item.is-lit:not([class*="md-bg-light-"]) { --tq-lit-on: var(--pal-paper); }
+.reveal .md-menu-labels .md-menu-item.is-lit .md-menu-label { color: var(--tq-lit); }
+/* tabs and steps: the lit item in its colour, the heading in its colour */
+.reveal .md-menu-tabs .md-menu-item, .reveal .md-menu-steps .md-menu-item { border-radius: 0; }
+
+/* ---------- @cards and @columns ----------
+   Columns: the quiet ground under a thin bar in the rule colour. The
+   current column (`:: accent`) takes the tint, a heavy accent bar, its
+   heading at 600 in the accent ink and the full ink; beside it the
+   others step back (regular heading, secondary ink). */
+.reveal .md-style-box .md-card,
+.reveal .md-style-stat .md-card {
+    background: var(--pal-quiet);
+    border: none;
+    border-top: 4px solid var(--tq-rule);
+    border-radius: 0;
+    padding: 0.7em 0.68em 0.5em;
+}
+.reveal .md-cards { column-gap: 0.8em; }
+.reveal .md-card > h3 {
+    font-family: var(--r-heading-font);
+    font-size: 1.1em;
+    font-weight: 600;
+    line-height: 1.12;
+    margin: 0 0 0.55em;
+    color: var(--tq-ink);
+}
+.reveal .md-card li { line-height: 1.24; margin: 0 0 0.45em; }
+.reveal .slides section .md-card ul > li { padding-left: 0.95em; }
+.reveal .slides section .md-card ul > li::before { width: 0.3em; height: 0.3em; top: 0.45em; }
+.reveal .md-style-box .md-card.md-card-accent {
+    background: var(--pal-tint);
+    border: none;
+    border-top: 12px solid var(--pal-accent);
+    padding-top: calc(0.7em - 8px);
+}
+.reveal .md-card.md-card-accent > h3 { color: var(--tq-head); }
+.reveal .md-cards:has(> .md-card-accent) > .md-card:not(.md-card-accent) { color: var(--tq-ink2); }
+.reveal .md-cards:has(> .md-card-accent) > .md-card:not(.md-card-accent) > h3 { font-weight: 400; color: var(--tq-ink2); }
+.reveal .md-cards:has(> .md-card-accent) > .md-card:not(.md-card-accent) li::before { background: var(--tq-rule); }
+.reveal .slides section .md-card-filled ul > li::before { background: currentColor; }
+/* style=plain (@columns): unboxed, a bar above the heading */
+.reveal .md-style-plain .md-card > h3 { border-top: 4px solid var(--tq-rule); padding-top: 0.45em; }
+.reveal .md-style-plain .md-card-accent > h3 { border-top: 12px solid var(--pal-accent); padding-top: calc(0.45em - 8px); color: var(--tq-head); }
+/* bar and strip: square corners */
+.reveal .md-style-bar .md-card, .reveal .slides section .md-style-bar .md-card > h3,
+.reveal .md-strip { border-radius: 0; }
+
+/* ---------- @table ----------
+   Rules in the ink above and below the header and at the foot, no
+   verticals, even rows on the quiet ground. */
+.reveal .slides section:not(.title-slide) table {
+    width: auto;
+    min-width: 75%;
+    font-size: 0.87em;
+    line-height: 1.2;
+    font-variant-numeric: lining-nums tabular-nums;
+}
+.reveal .slides section:not(.title-slide) :is(th, td) { padding: 0.4em 0.7em; border: none; }
+.reveal .slides section:not(.title-slide) thead th {
+    font-size: 0.95em;
+    font-weight: 600;
+    border-top: 5px solid var(--tq-strong-rule);
+    border-bottom: 3px solid var(--tq-strong-rule);
+    padding-top: 0.48em;
+    padding-bottom: 0.42em;
+}
+.reveal .slides section:not(.title-slide) table:not(:has(thead th:not(:empty))) tbody tr:first-child td { border-top: 5px solid var(--tq-strong-rule); }
+.reveal .slides section:not(.title-slide) tbody tr:last-child td { border-bottom: 5px solid var(--tq-strong-rule); }
+.reveal .slides section:not(.title-slide) tbody tr:nth-child(even) td {
+    background: var(--pal-quiet);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .md-table-rowhead tbody td:first-child { font-weight: 600; color: var(--tq-ink2); text-align: center; }
+.reveal .md-table-rowhead thead th:first-child { text-align: center; }
+
+/* ---------- @parse: the framework's arrangement, untouched ----------
+   Labels in Bitter (MCl never reads as MCI) and the secondary ink; the
+   functions bold and underlined in the grammar colours. */
+.reveal .pz {
+    --pz-word-label: var(--tq-ink2);
+    --pz-phrase-label: var(--tq-ink2);
+}
+.reveal .pz .pz-fn { font-weight: 700; text-decoration-thickness: 0.08em; }
+
+/* ---------- @passage: a swatch beside each function in the key ---------- */
+.reveal .slides section .md-passage { font-size: 1.17em; line-height: 1.55; }
+.reveal .slides section p:has(+ .md-passage) { font-size: 0.96em; margin-bottom: 0.6em; }
+.reveal .slides section p:has(+ .md-passage) :is(.md-g, .md-c) { white-space: nowrap; }
+.reveal .slides section p:has(+ .md-passage) :is(.md-g:not(.conjunction), .md-c)::before {
+    content: '';
+    display: inline-block;
+    width: 0.66em;
+    height: 0.66em;
+    margin-right: 0.28em;
+    vertical-align: -0.04em;
+    background: currentColor;
+}
+
+/* ---------- @terms ---------- */
+.reveal dl.md-terms { column-gap: 1.4em; row-gap: 0.75em; margin-top: 0.6em; align-items: baseline; }
+.reveal dl.md-terms dt { font-family: var(--r-heading-font); font-weight: 600; font-size: 1.17em; line-height: 1.15; color: var(--tq-ink); }
+.reveal dl.md-terms dd { font-size: 1.04em; line-height: 1.25; }
+.reveal dl.md-terms-sc dt { font-weight: 600; }
+
+/* ---------- quotations ----------
+   Upright Bitter with a hanging opening mark; no rule, no ornament. */
+.reveal blockquote {
+    font-family: var(--r-serif-font);
+    border-left: none;
+    padding: 0;
+    margin: 0.4em 0;
+}
+.reveal blockquote::before { display: none; }
+.reveal .md-quote-inner {
+    left: 0;
+    right: auto;
+    margin: 0;
+    max-width: 31em;
+    font-size: 1.08em;
+}
+.reveal .md-quote-inner blockquote {
+    margin: 0;
+    font-size: 1em;
+    line-height: 1.42;
+}
+.reveal .md-quote-inner blockquote p { text-indent: -0.42em; }
+.reveal .md-quote-inner .md-source { margin-top: 0.75em; font-size: 0.7em; text-align: left; }
+.reveal section.md-quote:has(h2) .md-quote-inner { margin: 0.4em 0 0; }
+
+/* ---------- image beside text ---------- */
+.reveal .md-split-body { font-family: var(--r-serif-font); line-height: 1.44; }
+
+/* ---------- @transcript ---------- */
+.reveal .md-transcript { column-gap: 1em; row-gap: 0.42em; margin-top: 0.6em; }
+.reveal .md-tr-label {
+    font-family: var(--r-main-font);
+    font-weight: 600;
+    font-variant-caps: normal;
+    letter-spacing: 0;
+    font-size: 0.85em;
+    color: var(--tq-head);
+}
+.reveal .md-tr-text { font-family: var(--r-serif-font); font-size: 1em; line-height: 1.3; }
+.reveal .md-tr-pause, .reveal .md-tr-gap .md-tr-text { color: var(--tq-ink2); font-weight: 400; }
+.reveal .md-tr-ov { color: var(--tq-ink2); }
+
+/* ---------- @refs ---------- */
+.reveal .slides section.md-refs ul { max-width: 46em; }
+.reveal .slides section.md-refs ul > li { padding-left: 0; margin-bottom: 0.4em; line-height: 1.26; }
+.reveal .slides section.md-refs ul > li::before { display: none; }
+
+/* ---------- the turned-corner card ----------
+   A light card in every palette. The top right corner is folded down:
+   the corner is cut away and a flap in the fold colour lies over it.
+   Inside it the inks, accent, highlight and set colours are the card's.
+   A soft lift on light palettes; none on dark. A quotation on a card
+   puts the card under the quoted text, with the source beneath it. */
+.reveal .md-slip { --tq-flap: 76px; }
+.reveal .md-slip:not(.md-quote-inner),
+.reveal .md-quote-inner.md-slip > blockquote {
+    --tq-ink: var(--pal-card-ink);
+    --tq-ink2: var(--pal-card-ink2);
+    --tq-head: var(--pal-card-accent);
+    --tq-mark: var(--pal-card-accent);
+    --tq-rule: var(--pal-card-fold);
+    --r-font-color: var(--pal-card-ink);
+    --r-subtle-color: var(--pal-card-ink2);
+    --r-highlight: var(--pal-card-highlight);
+    --r-highlight-ink: var(--pal-card-ink);
+}
+.reveal .md-slip {
+    width: fit-content;
+    max-width: min(100%, 33em);
+    padding: 0.8em 1.4em 0.85em 1.3em;
+    margin: 0.4em 0;
+    clip-path: none;
+    box-shadow: none;
+    color: var(--pal-card-ink);
+    background: linear-gradient(225deg, transparent calc(var(--tq-flap) * 0.7071), var(--pal-card) calc(var(--tq-flap) * 0.7071 + 0.5px));
+    filter: var(--tq-lift);
+}
+.reveal .md-slip::after {
+    width: var(--tq-flap);
+    height: var(--tq-flap);
+    background: linear-gradient(225deg, transparent 50%, var(--pal-card-fold) calc(50% + 0.5px));
+    filter: var(--tq-flap-shadow);
+}
+.reveal .md-quote-inner.md-slip {
+    width: auto;
+    max-width: 31em;
+    padding: 0;
+    background: none;
+    filter: none;
+    color: inherit;
+}
+.reveal .md-quote-inner.md-slip::after { display: none; }
+/* a quotation card with no heading stays optically centred, like any @quote */
+.reveal .slides section.md-quote:not(:has(h2, h3)) .md-quote-inner.md-slip { position: absolute; top: 47%; }
+.reveal .md-quote-inner.md-slip > blockquote {
+    position: relative;
+    padding: 1.0em 1.4em 1.05em 1.55em;
+    color: var(--pal-card-ink);
+    background: linear-gradient(225deg, transparent calc(var(--tq-flap) * 0.7071), var(--pal-card) calc(var(--tq-flap) * 0.7071 + 0.5px));
+    filter: var(--tq-lift);
+}
+.reveal .md-quote-inner.md-slip > blockquote::before {
+    display: block;
+    content: '';
+    position: absolute;
+    top: 0; right: 0; left: auto;
+    width: var(--tq-flap);
+    height: var(--tq-flap);
+    font-size: 1em;
+    background: linear-gradient(225deg, transparent 50%, var(--pal-card-fold) calc(50% + 0.5px));
+    filter: var(--tq-flap-shadow);
+}
+.reveal .md-quote-inner.md-slip > .md-source { margin-top: 0.9em; }
+.reveal .md-slip > .md-transcript { margin: 0; }
+/* the card is light in every palette: inside it on a dark palette, the
+   light grammar set and the normal colour marks */
+html.pal-dark .reveal .md-slip,
+html.pal-dark .reveal .md-quote-inner.md-slip > blockquote {
+    --g-subject: #0303B5; --g-predicator: #9C3A0A; --g-object: #057B89;
+    --g-complement: #8448F4; --g-adverbial: #A88200;
+    --pt-red: var(--p-red); --pt-orange: var(--p-orange); --pt-gold: var(--p-gold);
+    --pt-green: var(--p-green); --pt-teal: var(--p-teal); --pt-blue: var(--p-blue);
+    --pt-navy: var(--p-navy); --pt-purple: var(--p-purple); --pt-pink: var(--p-pink);
+    --pt-grey: var(--p-grey);
+}
+
+/* ---------- the handout (export, handout=N) ----------
+   The section ground gives way to paper with a heavy accent rule, so a
+   printer does not lay down a solid block. The slides PDF keeps the
+   screen's look. The tab is left out: the sheets regroup the pages, so
+   its place would be wrong. */
+html.mga-handout .reveal .slide-background.md-section { background-color: var(--pal-paper); }
+html.mga-handout .reveal .slides section.md-section,
+html.mga-handout .reveal .slides section.md-section h1 { color: var(--tq-ink); }
+html.mga-handout .reveal .slides section.md-section .md-section-series .md-series-name { color: var(--tq-head); }
+html.mga-handout .reveal .slides section.md-section .md-section-series .md-series-sub { color: var(--tq-ink2); }
+html.mga-handout .reveal .slides section.md-section h1 { border-top: 10px solid var(--pal-accent); padding-top: 30px; }
+html.mga-handout .reveal .slide-background::after { display: none; }
+
+/* ---------- generated: the lit menu item's colour ----------
+   Strong set colours: the colour itself on light palettes, its light
+   version on dark ones (--pt-*). Light set colours carry dark ink. */
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-red) { --tq-lit-text: var(--pt-red, var(--p-red)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-orange) { --tq-lit-text: var(--pt-orange, var(--p-orange)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-gold) { --tq-lit-text: var(--pt-gold, var(--p-gold)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-green) { --tq-lit-text: var(--pt-green, var(--p-green)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-teal) { --tq-lit-text: var(--pt-teal, var(--p-teal)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-blue) { --tq-lit-text: var(--pt-blue, var(--p-blue)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-navy) { --tq-lit-text: var(--pt-navy, var(--p-navy)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-purple) { --tq-lit-text: var(--pt-purple, var(--p-purple)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-pink) { --tq-lit-text: var(--pt-pink, var(--p-pink)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-grey) { --tq-lit-text: var(--pt-grey, var(--p-grey)); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-red) { --tq-lit-text: var(--p-red); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-orange) { --tq-lit-text: var(--p-orange); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-gold) { --tq-lit-text: var(--p-gold); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-green) { --tq-lit-text: var(--p-green); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-teal) { --tq-lit-text: var(--p-teal); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-blue) { --tq-lit-text: var(--p-blue); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-navy) { --tq-lit-text: var(--p-navy); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-purple) { --tq-lit-text: var(--p-purple); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-pink) { --tq-lit-text: var(--p-pink); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-grey) { --tq-lit-text: var(--p-grey); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-red) { --tq-lit-text: var(--p-light-red); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-orange) { --tq-lit-text: var(--p-light-orange); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-gold) { --tq-lit-text: var(--p-light-gold); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-green) { --tq-lit-text: var(--p-light-green); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-teal) { --tq-lit-text: var(--p-light-teal); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-blue) { --tq-lit-text: var(--p-light-blue); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-navy) { --tq-lit-text: var(--p-light-navy); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-purple) { --tq-lit-text: var(--p-light-purple); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-pink) { --tq-lit-text: var(--p-light-pink); }
+html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-light-grey) { --tq-lit-text: var(--p-light-grey); }
+.reveal .md-menu-item.is-lit.md-bg-red { --tq-lit: var(--pt-red, var(--p-red)); }
+.reveal .md-menu-item.is-lit.md-bg-light-red { --tq-lit: var(--p-light-red); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-orange { --tq-lit: var(--pt-orange, var(--p-orange)); }
+.reveal .md-menu-item.is-lit.md-bg-light-orange { --tq-lit: var(--p-light-orange); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-gold { --tq-lit: var(--pt-gold, var(--p-gold)); }
+.reveal .md-menu-item.is-lit.md-bg-light-gold { --tq-lit: var(--p-light-gold); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-green { --tq-lit: var(--pt-green, var(--p-green)); }
+.reveal .md-menu-item.is-lit.md-bg-light-green { --tq-lit: var(--p-light-green); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-teal { --tq-lit: var(--pt-teal, var(--p-teal)); }
+.reveal .md-menu-item.is-lit.md-bg-light-teal { --tq-lit: var(--p-light-teal); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-blue { --tq-lit: var(--pt-blue, var(--p-blue)); }
+.reveal .md-menu-item.is-lit.md-bg-light-blue { --tq-lit: var(--p-light-blue); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-navy { --tq-lit: var(--pt-navy, var(--p-navy)); }
+.reveal .md-menu-item.is-lit.md-bg-light-navy { --tq-lit: var(--p-light-navy); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-purple { --tq-lit: var(--pt-purple, var(--p-purple)); }
+.reveal .md-menu-item.is-lit.md-bg-light-purple { --tq-lit: var(--p-light-purple); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-pink { --tq-lit: var(--pt-pink, var(--p-pink)); }
+.reveal .md-menu-item.is-lit.md-bg-light-pink { --tq-lit: var(--p-light-pink); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-grey { --tq-lit: var(--pt-grey, var(--p-grey)); }
+.reveal .md-menu-item.is-lit.md-bg-light-grey { --tq-lit: var(--p-light-grey); --tq-lit-on: var(--p-ink); }
+.reveal .md-menu-item.is-lit.md-bg-hex { --tq-lit: var(--tag-bg); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-hex) { --tq-lit-text: var(--tq-head); }
+.reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-menu-accent) { --tq-lit-text: var(--tq-head); }
+.reveal .md-menu-item.is-lit.md-menu-accent { --tq-lit: var(--pal-accent); --tq-lit-on: var(--pal-on-accent); }
+
+/* ---------- generated: ribbon icons on light set colours ---------- */
+.reveal .md-ribbon.md-bg-light-red { --tq-ribbon-icon: var(--p-red); }
+.reveal .md-ribbon.md-bg-light-orange { --tq-ribbon-icon: var(--p-orange); }
+.reveal .md-ribbon.md-bg-light-gold { --tq-ribbon-icon: var(--p-gold); }
+.reveal .md-ribbon.md-bg-light-green { --tq-ribbon-icon: var(--p-green); }
+.reveal .md-ribbon.md-bg-light-teal { --tq-ribbon-icon: var(--p-teal); }
+.reveal .md-ribbon.md-bg-light-blue { --tq-ribbon-icon: var(--p-blue); }
+.reveal .md-ribbon.md-bg-light-navy { --tq-ribbon-icon: var(--p-navy); }
+.reveal .md-ribbon.md-bg-light-purple { --tq-ribbon-icon: var(--p-purple); }
+.reveal .md-ribbon.md-bg-light-pink { --tq-ribbon-icon: var(--p-pink); }
+.reveal .md-ribbon.md-bg-light-grey { --tq-ribbon-icon: var(--p-grey); }
+
+/* ---------- generated: the thumb index's place ----------
+   --tq-i: the slide's index among its siblings (0 first); --tq-n: their
+   number. Slides beyond 200 share the last place. */
+.reveal .backgrounds > .slide-background:nth-child(1), html.reveal-print .reveal .slides > .pdf-page:nth-child(1) { --tq-i: 0; }
+.reveal .backgrounds > .slide-background:nth-child(2), html.reveal-print .reveal .slides > .pdf-page:nth-child(2) { --tq-i: 1; }
+.reveal .backgrounds > .slide-background:nth-child(3), html.reveal-print .reveal .slides > .pdf-page:nth-child(3) { --tq-i: 2; }
+.reveal .backgrounds > .slide-background:nth-child(4), html.reveal-print .reveal .slides > .pdf-page:nth-child(4) { --tq-i: 3; }
+.reveal .backgrounds > .slide-background:nth-child(5), html.reveal-print .reveal .slides > .pdf-page:nth-child(5) { --tq-i: 4; }
+.reveal .backgrounds > .slide-background:nth-child(6), html.reveal-print .reveal .slides > .pdf-page:nth-child(6) { --tq-i: 5; }
+.reveal .backgrounds > .slide-background:nth-child(7), html.reveal-print .reveal .slides > .pdf-page:nth-child(7) { --tq-i: 6; }
+.reveal .backgrounds > .slide-background:nth-child(8), html.reveal-print .reveal .slides > .pdf-page:nth-child(8) { --tq-i: 7; }
+.reveal .backgrounds > .slide-background:nth-child(9), html.reveal-print .reveal .slides > .pdf-page:nth-child(9) { --tq-i: 8; }
+.reveal .backgrounds > .slide-background:nth-child(10), html.reveal-print .reveal .slides > .pdf-page:nth-child(10) { --tq-i: 9; }
+.reveal .backgrounds > .slide-background:nth-child(11), html.reveal-print .reveal .slides > .pdf-page:nth-child(11) { --tq-i: 10; }
+.reveal .backgrounds > .slide-background:nth-child(12), html.reveal-print .reveal .slides > .pdf-page:nth-child(12) { --tq-i: 11; }
+.reveal .backgrounds > .slide-background:nth-child(13), html.reveal-print .reveal .slides > .pdf-page:nth-child(13) { --tq-i: 12; }
+.reveal .backgrounds > .slide-background:nth-child(14), html.reveal-print .reveal .slides > .pdf-page:nth-child(14) { --tq-i: 13; }
+.reveal .backgrounds > .slide-background:nth-child(15), html.reveal-print .reveal .slides > .pdf-page:nth-child(15) { --tq-i: 14; }
+.reveal .backgrounds > .slide-background:nth-child(16), html.reveal-print .reveal .slides > .pdf-page:nth-child(16) { --tq-i: 15; }
+.reveal .backgrounds > .slide-background:nth-child(17), html.reveal-print .reveal .slides > .pdf-page:nth-child(17) { --tq-i: 16; }
+.reveal .backgrounds > .slide-background:nth-child(18), html.reveal-print .reveal .slides > .pdf-page:nth-child(18) { --tq-i: 17; }
+.reveal .backgrounds > .slide-background:nth-child(19), html.reveal-print .reveal .slides > .pdf-page:nth-child(19) { --tq-i: 18; }
+.reveal .backgrounds > .slide-background:nth-child(20), html.reveal-print .reveal .slides > .pdf-page:nth-child(20) { --tq-i: 19; }
+.reveal .backgrounds > .slide-background:nth-child(21), html.reveal-print .reveal .slides > .pdf-page:nth-child(21) { --tq-i: 20; }
+.reveal .backgrounds > .slide-background:nth-child(22), html.reveal-print .reveal .slides > .pdf-page:nth-child(22) { --tq-i: 21; }
+.reveal .backgrounds > .slide-background:nth-child(23), html.reveal-print .reveal .slides > .pdf-page:nth-child(23) { --tq-i: 22; }
+.reveal .backgrounds > .slide-background:nth-child(24), html.reveal-print .reveal .slides > .pdf-page:nth-child(24) { --tq-i: 23; }
+.reveal .backgrounds > .slide-background:nth-child(25), html.reveal-print .reveal .slides > .pdf-page:nth-child(25) { --tq-i: 24; }
+.reveal .backgrounds > .slide-background:nth-child(26), html.reveal-print .reveal .slides > .pdf-page:nth-child(26) { --tq-i: 25; }
+.reveal .backgrounds > .slide-background:nth-child(27), html.reveal-print .reveal .slides > .pdf-page:nth-child(27) { --tq-i: 26; }
+.reveal .backgrounds > .slide-background:nth-child(28), html.reveal-print .reveal .slides > .pdf-page:nth-child(28) { --tq-i: 27; }
+.reveal .backgrounds > .slide-background:nth-child(29), html.reveal-print .reveal .slides > .pdf-page:nth-child(29) { --tq-i: 28; }
+.reveal .backgrounds > .slide-background:nth-child(30), html.reveal-print .reveal .slides > .pdf-page:nth-child(30) { --tq-i: 29; }
+.reveal .backgrounds > .slide-background:nth-child(31), html.reveal-print .reveal .slides > .pdf-page:nth-child(31) { --tq-i: 30; }
+.reveal .backgrounds > .slide-background:nth-child(32), html.reveal-print .reveal .slides > .pdf-page:nth-child(32) { --tq-i: 31; }
+.reveal .backgrounds > .slide-background:nth-child(33), html.reveal-print .reveal .slides > .pdf-page:nth-child(33) { --tq-i: 32; }
+.reveal .backgrounds > .slide-background:nth-child(34), html.reveal-print .reveal .slides > .pdf-page:nth-child(34) { --tq-i: 33; }
+.reveal .backgrounds > .slide-background:nth-child(35), html.reveal-print .reveal .slides > .pdf-page:nth-child(35) { --tq-i: 34; }
+.reveal .backgrounds > .slide-background:nth-child(36), html.reveal-print .reveal .slides > .pdf-page:nth-child(36) { --tq-i: 35; }
+.reveal .backgrounds > .slide-background:nth-child(37), html.reveal-print .reveal .slides > .pdf-page:nth-child(37) { --tq-i: 36; }
+.reveal .backgrounds > .slide-background:nth-child(38), html.reveal-print .reveal .slides > .pdf-page:nth-child(38) { --tq-i: 37; }
+.reveal .backgrounds > .slide-background:nth-child(39), html.reveal-print .reveal .slides > .pdf-page:nth-child(39) { --tq-i: 38; }
+.reveal .backgrounds > .slide-background:nth-child(40), html.reveal-print .reveal .slides > .pdf-page:nth-child(40) { --tq-i: 39; }
+.reveal .backgrounds > .slide-background:nth-child(41), html.reveal-print .reveal .slides > .pdf-page:nth-child(41) { --tq-i: 40; }
+.reveal .backgrounds > .slide-background:nth-child(42), html.reveal-print .reveal .slides > .pdf-page:nth-child(42) { --tq-i: 41; }
+.reveal .backgrounds > .slide-background:nth-child(43), html.reveal-print .reveal .slides > .pdf-page:nth-child(43) { --tq-i: 42; }
+.reveal .backgrounds > .slide-background:nth-child(44), html.reveal-print .reveal .slides > .pdf-page:nth-child(44) { --tq-i: 43; }
+.reveal .backgrounds > .slide-background:nth-child(45), html.reveal-print .reveal .slides > .pdf-page:nth-child(45) { --tq-i: 44; }
+.reveal .backgrounds > .slide-background:nth-child(46), html.reveal-print .reveal .slides > .pdf-page:nth-child(46) { --tq-i: 45; }
+.reveal .backgrounds > .slide-background:nth-child(47), html.reveal-print .reveal .slides > .pdf-page:nth-child(47) { --tq-i: 46; }
+.reveal .backgrounds > .slide-background:nth-child(48), html.reveal-print .reveal .slides > .pdf-page:nth-child(48) { --tq-i: 47; }
+.reveal .backgrounds > .slide-background:nth-child(49), html.reveal-print .reveal .slides > .pdf-page:nth-child(49) { --tq-i: 48; }
+.reveal .backgrounds > .slide-background:nth-child(50), html.reveal-print .reveal .slides > .pdf-page:nth-child(50) { --tq-i: 49; }
+.reveal .backgrounds > .slide-background:nth-child(51), html.reveal-print .reveal .slides > .pdf-page:nth-child(51) { --tq-i: 50; }
+.reveal .backgrounds > .slide-background:nth-child(52), html.reveal-print .reveal .slides > .pdf-page:nth-child(52) { --tq-i: 51; }
+.reveal .backgrounds > .slide-background:nth-child(53), html.reveal-print .reveal .slides > .pdf-page:nth-child(53) { --tq-i: 52; }
+.reveal .backgrounds > .slide-background:nth-child(54), html.reveal-print .reveal .slides > .pdf-page:nth-child(54) { --tq-i: 53; }
+.reveal .backgrounds > .slide-background:nth-child(55), html.reveal-print .reveal .slides > .pdf-page:nth-child(55) { --tq-i: 54; }
+.reveal .backgrounds > .slide-background:nth-child(56), html.reveal-print .reveal .slides > .pdf-page:nth-child(56) { --tq-i: 55; }
+.reveal .backgrounds > .slide-background:nth-child(57), html.reveal-print .reveal .slides > .pdf-page:nth-child(57) { --tq-i: 56; }
+.reveal .backgrounds > .slide-background:nth-child(58), html.reveal-print .reveal .slides > .pdf-page:nth-child(58) { --tq-i: 57; }
+.reveal .backgrounds > .slide-background:nth-child(59), html.reveal-print .reveal .slides > .pdf-page:nth-child(59) { --tq-i: 58; }
+.reveal .backgrounds > .slide-background:nth-child(60), html.reveal-print .reveal .slides > .pdf-page:nth-child(60) { --tq-i: 59; }
+.reveal .backgrounds > .slide-background:nth-child(61), html.reveal-print .reveal .slides > .pdf-page:nth-child(61) { --tq-i: 60; }
+.reveal .backgrounds > .slide-background:nth-child(62), html.reveal-print .reveal .slides > .pdf-page:nth-child(62) { --tq-i: 61; }
+.reveal .backgrounds > .slide-background:nth-child(63), html.reveal-print .reveal .slides > .pdf-page:nth-child(63) { --tq-i: 62; }
+.reveal .backgrounds > .slide-background:nth-child(64), html.reveal-print .reveal .slides > .pdf-page:nth-child(64) { --tq-i: 63; }
+.reveal .backgrounds > .slide-background:nth-child(65), html.reveal-print .reveal .slides > .pdf-page:nth-child(65) { --tq-i: 64; }
+.reveal .backgrounds > .slide-background:nth-child(66), html.reveal-print .reveal .slides > .pdf-page:nth-child(66) { --tq-i: 65; }
+.reveal .backgrounds > .slide-background:nth-child(67), html.reveal-print .reveal .slides > .pdf-page:nth-child(67) { --tq-i: 66; }
+.reveal .backgrounds > .slide-background:nth-child(68), html.reveal-print .reveal .slides > .pdf-page:nth-child(68) { --tq-i: 67; }
+.reveal .backgrounds > .slide-background:nth-child(69), html.reveal-print .reveal .slides > .pdf-page:nth-child(69) { --tq-i: 68; }
+.reveal .backgrounds > .slide-background:nth-child(70), html.reveal-print .reveal .slides > .pdf-page:nth-child(70) { --tq-i: 69; }
+.reveal .backgrounds > .slide-background:nth-child(71), html.reveal-print .reveal .slides > .pdf-page:nth-child(71) { --tq-i: 70; }
+.reveal .backgrounds > .slide-background:nth-child(72), html.reveal-print .reveal .slides > .pdf-page:nth-child(72) { --tq-i: 71; }
+.reveal .backgrounds > .slide-background:nth-child(73), html.reveal-print .reveal .slides > .pdf-page:nth-child(73) { --tq-i: 72; }
+.reveal .backgrounds > .slide-background:nth-child(74), html.reveal-print .reveal .slides > .pdf-page:nth-child(74) { --tq-i: 73; }
+.reveal .backgrounds > .slide-background:nth-child(75), html.reveal-print .reveal .slides > .pdf-page:nth-child(75) { --tq-i: 74; }
+.reveal .backgrounds > .slide-background:nth-child(76), html.reveal-print .reveal .slides > .pdf-page:nth-child(76) { --tq-i: 75; }
+.reveal .backgrounds > .slide-background:nth-child(77), html.reveal-print .reveal .slides > .pdf-page:nth-child(77) { --tq-i: 76; }
+.reveal .backgrounds > .slide-background:nth-child(78), html.reveal-print .reveal .slides > .pdf-page:nth-child(78) { --tq-i: 77; }
+.reveal .backgrounds > .slide-background:nth-child(79), html.reveal-print .reveal .slides > .pdf-page:nth-child(79) { --tq-i: 78; }
+.reveal .backgrounds > .slide-background:nth-child(80), html.reveal-print .reveal .slides > .pdf-page:nth-child(80) { --tq-i: 79; }
+.reveal .backgrounds > .slide-background:nth-child(81), html.reveal-print .reveal .slides > .pdf-page:nth-child(81) { --tq-i: 80; }
+.reveal .backgrounds > .slide-background:nth-child(82), html.reveal-print .reveal .slides > .pdf-page:nth-child(82) { --tq-i: 81; }
+.reveal .backgrounds > .slide-background:nth-child(83), html.reveal-print .reveal .slides > .pdf-page:nth-child(83) { --tq-i: 82; }
+.reveal .backgrounds > .slide-background:nth-child(84), html.reveal-print .reveal .slides > .pdf-page:nth-child(84) { --tq-i: 83; }
+.reveal .backgrounds > .slide-background:nth-child(85), html.reveal-print .reveal .slides > .pdf-page:nth-child(85) { --tq-i: 84; }
+.reveal .backgrounds > .slide-background:nth-child(86), html.reveal-print .reveal .slides > .pdf-page:nth-child(86) { --tq-i: 85; }
+.reveal .backgrounds > .slide-background:nth-child(87), html.reveal-print .reveal .slides > .pdf-page:nth-child(87) { --tq-i: 86; }
+.reveal .backgrounds > .slide-background:nth-child(88), html.reveal-print .reveal .slides > .pdf-page:nth-child(88) { --tq-i: 87; }
+.reveal .backgrounds > .slide-background:nth-child(89), html.reveal-print .reveal .slides > .pdf-page:nth-child(89) { --tq-i: 88; }
+.reveal .backgrounds > .slide-background:nth-child(90), html.reveal-print .reveal .slides > .pdf-page:nth-child(90) { --tq-i: 89; }
+.reveal .backgrounds > .slide-background:nth-child(91), html.reveal-print .reveal .slides > .pdf-page:nth-child(91) { --tq-i: 90; }
+.reveal .backgrounds > .slide-background:nth-child(92), html.reveal-print .reveal .slides > .pdf-page:nth-child(92) { --tq-i: 91; }
+.reveal .backgrounds > .slide-background:nth-child(93), html.reveal-print .reveal .slides > .pdf-page:nth-child(93) { --tq-i: 92; }
+.reveal .backgrounds > .slide-background:nth-child(94), html.reveal-print .reveal .slides > .pdf-page:nth-child(94) { --tq-i: 93; }
+.reveal .backgrounds > .slide-background:nth-child(95), html.reveal-print .reveal .slides > .pdf-page:nth-child(95) { --tq-i: 94; }
+.reveal .backgrounds > .slide-background:nth-child(96), html.reveal-print .reveal .slides > .pdf-page:nth-child(96) { --tq-i: 95; }
+.reveal .backgrounds > .slide-background:nth-child(97), html.reveal-print .reveal .slides > .pdf-page:nth-child(97) { --tq-i: 96; }
+.reveal .backgrounds > .slide-background:nth-child(98), html.reveal-print .reveal .slides > .pdf-page:nth-child(98) { --tq-i: 97; }
+.reveal .backgrounds > .slide-background:nth-child(99), html.reveal-print .reveal .slides > .pdf-page:nth-child(99) { --tq-i: 98; }
+.reveal .backgrounds > .slide-background:nth-child(100), html.reveal-print .reveal .slides > .pdf-page:nth-child(100) { --tq-i: 99; }
+.reveal .backgrounds > .slide-background:nth-child(101), html.reveal-print .reveal .slides > .pdf-page:nth-child(101) { --tq-i: 100; }
+.reveal .backgrounds > .slide-background:nth-child(102), html.reveal-print .reveal .slides > .pdf-page:nth-child(102) { --tq-i: 101; }
+.reveal .backgrounds > .slide-background:nth-child(103), html.reveal-print .reveal .slides > .pdf-page:nth-child(103) { --tq-i: 102; }
+.reveal .backgrounds > .slide-background:nth-child(104), html.reveal-print .reveal .slides > .pdf-page:nth-child(104) { --tq-i: 103; }
+.reveal .backgrounds > .slide-background:nth-child(105), html.reveal-print .reveal .slides > .pdf-page:nth-child(105) { --tq-i: 104; }
+.reveal .backgrounds > .slide-background:nth-child(106), html.reveal-print .reveal .slides > .pdf-page:nth-child(106) { --tq-i: 105; }
+.reveal .backgrounds > .slide-background:nth-child(107), html.reveal-print .reveal .slides > .pdf-page:nth-child(107) { --tq-i: 106; }
+.reveal .backgrounds > .slide-background:nth-child(108), html.reveal-print .reveal .slides > .pdf-page:nth-child(108) { --tq-i: 107; }
+.reveal .backgrounds > .slide-background:nth-child(109), html.reveal-print .reveal .slides > .pdf-page:nth-child(109) { --tq-i: 108; }
+.reveal .backgrounds > .slide-background:nth-child(110), html.reveal-print .reveal .slides > .pdf-page:nth-child(110) { --tq-i: 109; }
+.reveal .backgrounds > .slide-background:nth-child(111), html.reveal-print .reveal .slides > .pdf-page:nth-child(111) { --tq-i: 110; }
+.reveal .backgrounds > .slide-background:nth-child(112), html.reveal-print .reveal .slides > .pdf-page:nth-child(112) { --tq-i: 111; }
+.reveal .backgrounds > .slide-background:nth-child(113), html.reveal-print .reveal .slides > .pdf-page:nth-child(113) { --tq-i: 112; }
+.reveal .backgrounds > .slide-background:nth-child(114), html.reveal-print .reveal .slides > .pdf-page:nth-child(114) { --tq-i: 113; }
+.reveal .backgrounds > .slide-background:nth-child(115), html.reveal-print .reveal .slides > .pdf-page:nth-child(115) { --tq-i: 114; }
+.reveal .backgrounds > .slide-background:nth-child(116), html.reveal-print .reveal .slides > .pdf-page:nth-child(116) { --tq-i: 115; }
+.reveal .backgrounds > .slide-background:nth-child(117), html.reveal-print .reveal .slides > .pdf-page:nth-child(117) { --tq-i: 116; }
+.reveal .backgrounds > .slide-background:nth-child(118), html.reveal-print .reveal .slides > .pdf-page:nth-child(118) { --tq-i: 117; }
+.reveal .backgrounds > .slide-background:nth-child(119), html.reveal-print .reveal .slides > .pdf-page:nth-child(119) { --tq-i: 118; }
+.reveal .backgrounds > .slide-background:nth-child(120), html.reveal-print .reveal .slides > .pdf-page:nth-child(120) { --tq-i: 119; }
+.reveal .backgrounds > .slide-background:nth-child(121), html.reveal-print .reveal .slides > .pdf-page:nth-child(121) { --tq-i: 120; }
+.reveal .backgrounds > .slide-background:nth-child(122), html.reveal-print .reveal .slides > .pdf-page:nth-child(122) { --tq-i: 121; }
+.reveal .backgrounds > .slide-background:nth-child(123), html.reveal-print .reveal .slides > .pdf-page:nth-child(123) { --tq-i: 122; }
+.reveal .backgrounds > .slide-background:nth-child(124), html.reveal-print .reveal .slides > .pdf-page:nth-child(124) { --tq-i: 123; }
+.reveal .backgrounds > .slide-background:nth-child(125), html.reveal-print .reveal .slides > .pdf-page:nth-child(125) { --tq-i: 124; }
+.reveal .backgrounds > .slide-background:nth-child(126), html.reveal-print .reveal .slides > .pdf-page:nth-child(126) { --tq-i: 125; }
+.reveal .backgrounds > .slide-background:nth-child(127), html.reveal-print .reveal .slides > .pdf-page:nth-child(127) { --tq-i: 126; }
+.reveal .backgrounds > .slide-background:nth-child(128), html.reveal-print .reveal .slides > .pdf-page:nth-child(128) { --tq-i: 127; }
+.reveal .backgrounds > .slide-background:nth-child(129), html.reveal-print .reveal .slides > .pdf-page:nth-child(129) { --tq-i: 128; }
+.reveal .backgrounds > .slide-background:nth-child(130), html.reveal-print .reveal .slides > .pdf-page:nth-child(130) { --tq-i: 129; }
+.reveal .backgrounds > .slide-background:nth-child(131), html.reveal-print .reveal .slides > .pdf-page:nth-child(131) { --tq-i: 130; }
+.reveal .backgrounds > .slide-background:nth-child(132), html.reveal-print .reveal .slides > .pdf-page:nth-child(132) { --tq-i: 131; }
+.reveal .backgrounds > .slide-background:nth-child(133), html.reveal-print .reveal .slides > .pdf-page:nth-child(133) { --tq-i: 132; }
+.reveal .backgrounds > .slide-background:nth-child(134), html.reveal-print .reveal .slides > .pdf-page:nth-child(134) { --tq-i: 133; }
+.reveal .backgrounds > .slide-background:nth-child(135), html.reveal-print .reveal .slides > .pdf-page:nth-child(135) { --tq-i: 134; }
+.reveal .backgrounds > .slide-background:nth-child(136), html.reveal-print .reveal .slides > .pdf-page:nth-child(136) { --tq-i: 135; }
+.reveal .backgrounds > .slide-background:nth-child(137), html.reveal-print .reveal .slides > .pdf-page:nth-child(137) { --tq-i: 136; }
+.reveal .backgrounds > .slide-background:nth-child(138), html.reveal-print .reveal .slides > .pdf-page:nth-child(138) { --tq-i: 137; }
+.reveal .backgrounds > .slide-background:nth-child(139), html.reveal-print .reveal .slides > .pdf-page:nth-child(139) { --tq-i: 138; }
+.reveal .backgrounds > .slide-background:nth-child(140), html.reveal-print .reveal .slides > .pdf-page:nth-child(140) { --tq-i: 139; }
+.reveal .backgrounds > .slide-background:nth-child(141), html.reveal-print .reveal .slides > .pdf-page:nth-child(141) { --tq-i: 140; }
+.reveal .backgrounds > .slide-background:nth-child(142), html.reveal-print .reveal .slides > .pdf-page:nth-child(142) { --tq-i: 141; }
+.reveal .backgrounds > .slide-background:nth-child(143), html.reveal-print .reveal .slides > .pdf-page:nth-child(143) { --tq-i: 142; }
+.reveal .backgrounds > .slide-background:nth-child(144), html.reveal-print .reveal .slides > .pdf-page:nth-child(144) { --tq-i: 143; }
+.reveal .backgrounds > .slide-background:nth-child(145), html.reveal-print .reveal .slides > .pdf-page:nth-child(145) { --tq-i: 144; }
+.reveal .backgrounds > .slide-background:nth-child(146), html.reveal-print .reveal .slides > .pdf-page:nth-child(146) { --tq-i: 145; }
+.reveal .backgrounds > .slide-background:nth-child(147), html.reveal-print .reveal .slides > .pdf-page:nth-child(147) { --tq-i: 146; }
+.reveal .backgrounds > .slide-background:nth-child(148), html.reveal-print .reveal .slides > .pdf-page:nth-child(148) { --tq-i: 147; }
+.reveal .backgrounds > .slide-background:nth-child(149), html.reveal-print .reveal .slides > .pdf-page:nth-child(149) { --tq-i: 148; }
+.reveal .backgrounds > .slide-background:nth-child(150), html.reveal-print .reveal .slides > .pdf-page:nth-child(150) { --tq-i: 149; }
+.reveal .backgrounds > .slide-background:nth-child(151), html.reveal-print .reveal .slides > .pdf-page:nth-child(151) { --tq-i: 150; }
+.reveal .backgrounds > .slide-background:nth-child(152), html.reveal-print .reveal .slides > .pdf-page:nth-child(152) { --tq-i: 151; }
+.reveal .backgrounds > .slide-background:nth-child(153), html.reveal-print .reveal .slides > .pdf-page:nth-child(153) { --tq-i: 152; }
+.reveal .backgrounds > .slide-background:nth-child(154), html.reveal-print .reveal .slides > .pdf-page:nth-child(154) { --tq-i: 153; }
+.reveal .backgrounds > .slide-background:nth-child(155), html.reveal-print .reveal .slides > .pdf-page:nth-child(155) { --tq-i: 154; }
+.reveal .backgrounds > .slide-background:nth-child(156), html.reveal-print .reveal .slides > .pdf-page:nth-child(156) { --tq-i: 155; }
+.reveal .backgrounds > .slide-background:nth-child(157), html.reveal-print .reveal .slides > .pdf-page:nth-child(157) { --tq-i: 156; }
+.reveal .backgrounds > .slide-background:nth-child(158), html.reveal-print .reveal .slides > .pdf-page:nth-child(158) { --tq-i: 157; }
+.reveal .backgrounds > .slide-background:nth-child(159), html.reveal-print .reveal .slides > .pdf-page:nth-child(159) { --tq-i: 158; }
+.reveal .backgrounds > .slide-background:nth-child(160), html.reveal-print .reveal .slides > .pdf-page:nth-child(160) { --tq-i: 159; }
+.reveal .backgrounds > .slide-background:nth-child(161), html.reveal-print .reveal .slides > .pdf-page:nth-child(161) { --tq-i: 160; }
+.reveal .backgrounds > .slide-background:nth-child(162), html.reveal-print .reveal .slides > .pdf-page:nth-child(162) { --tq-i: 161; }
+.reveal .backgrounds > .slide-background:nth-child(163), html.reveal-print .reveal .slides > .pdf-page:nth-child(163) { --tq-i: 162; }
+.reveal .backgrounds > .slide-background:nth-child(164), html.reveal-print .reveal .slides > .pdf-page:nth-child(164) { --tq-i: 163; }
+.reveal .backgrounds > .slide-background:nth-child(165), html.reveal-print .reveal .slides > .pdf-page:nth-child(165) { --tq-i: 164; }
+.reveal .backgrounds > .slide-background:nth-child(166), html.reveal-print .reveal .slides > .pdf-page:nth-child(166) { --tq-i: 165; }
+.reveal .backgrounds > .slide-background:nth-child(167), html.reveal-print .reveal .slides > .pdf-page:nth-child(167) { --tq-i: 166; }
+.reveal .backgrounds > .slide-background:nth-child(168), html.reveal-print .reveal .slides > .pdf-page:nth-child(168) { --tq-i: 167; }
+.reveal .backgrounds > .slide-background:nth-child(169), html.reveal-print .reveal .slides > .pdf-page:nth-child(169) { --tq-i: 168; }
+.reveal .backgrounds > .slide-background:nth-child(170), html.reveal-print .reveal .slides > .pdf-page:nth-child(170) { --tq-i: 169; }
+.reveal .backgrounds > .slide-background:nth-child(171), html.reveal-print .reveal .slides > .pdf-page:nth-child(171) { --tq-i: 170; }
+.reveal .backgrounds > .slide-background:nth-child(172), html.reveal-print .reveal .slides > .pdf-page:nth-child(172) { --tq-i: 171; }
+.reveal .backgrounds > .slide-background:nth-child(173), html.reveal-print .reveal .slides > .pdf-page:nth-child(173) { --tq-i: 172; }
+.reveal .backgrounds > .slide-background:nth-child(174), html.reveal-print .reveal .slides > .pdf-page:nth-child(174) { --tq-i: 173; }
+.reveal .backgrounds > .slide-background:nth-child(175), html.reveal-print .reveal .slides > .pdf-page:nth-child(175) { --tq-i: 174; }
+.reveal .backgrounds > .slide-background:nth-child(176), html.reveal-print .reveal .slides > .pdf-page:nth-child(176) { --tq-i: 175; }
+.reveal .backgrounds > .slide-background:nth-child(177), html.reveal-print .reveal .slides > .pdf-page:nth-child(177) { --tq-i: 176; }
+.reveal .backgrounds > .slide-background:nth-child(178), html.reveal-print .reveal .slides > .pdf-page:nth-child(178) { --tq-i: 177; }
+.reveal .backgrounds > .slide-background:nth-child(179), html.reveal-print .reveal .slides > .pdf-page:nth-child(179) { --tq-i: 178; }
+.reveal .backgrounds > .slide-background:nth-child(180), html.reveal-print .reveal .slides > .pdf-page:nth-child(180) { --tq-i: 179; }
+.reveal .backgrounds > .slide-background:nth-child(181), html.reveal-print .reveal .slides > .pdf-page:nth-child(181) { --tq-i: 180; }
+.reveal .backgrounds > .slide-background:nth-child(182), html.reveal-print .reveal .slides > .pdf-page:nth-child(182) { --tq-i: 181; }
+.reveal .backgrounds > .slide-background:nth-child(183), html.reveal-print .reveal .slides > .pdf-page:nth-child(183) { --tq-i: 182; }
+.reveal .backgrounds > .slide-background:nth-child(184), html.reveal-print .reveal .slides > .pdf-page:nth-child(184) { --tq-i: 183; }
+.reveal .backgrounds > .slide-background:nth-child(185), html.reveal-print .reveal .slides > .pdf-page:nth-child(185) { --tq-i: 184; }
+.reveal .backgrounds > .slide-background:nth-child(186), html.reveal-print .reveal .slides > .pdf-page:nth-child(186) { --tq-i: 185; }
+.reveal .backgrounds > .slide-background:nth-child(187), html.reveal-print .reveal .slides > .pdf-page:nth-child(187) { --tq-i: 186; }
+.reveal .backgrounds > .slide-background:nth-child(188), html.reveal-print .reveal .slides > .pdf-page:nth-child(188) { --tq-i: 187; }
+.reveal .backgrounds > .slide-background:nth-child(189), html.reveal-print .reveal .slides > .pdf-page:nth-child(189) { --tq-i: 188; }
+.reveal .backgrounds > .slide-background:nth-child(190), html.reveal-print .reveal .slides > .pdf-page:nth-child(190) { --tq-i: 189; }
+.reveal .backgrounds > .slide-background:nth-child(191), html.reveal-print .reveal .slides > .pdf-page:nth-child(191) { --tq-i: 190; }
+.reveal .backgrounds > .slide-background:nth-child(192), html.reveal-print .reveal .slides > .pdf-page:nth-child(192) { --tq-i: 191; }
+.reveal .backgrounds > .slide-background:nth-child(193), html.reveal-print .reveal .slides > .pdf-page:nth-child(193) { --tq-i: 192; }
+.reveal .backgrounds > .slide-background:nth-child(194), html.reveal-print .reveal .slides > .pdf-page:nth-child(194) { --tq-i: 193; }
+.reveal .backgrounds > .slide-background:nth-child(195), html.reveal-print .reveal .slides > .pdf-page:nth-child(195) { --tq-i: 194; }
+.reveal .backgrounds > .slide-background:nth-child(196), html.reveal-print .reveal .slides > .pdf-page:nth-child(196) { --tq-i: 195; }
+.reveal .backgrounds > .slide-background:nth-child(197), html.reveal-print .reveal .slides > .pdf-page:nth-child(197) { --tq-i: 196; }
+.reveal .backgrounds > .slide-background:nth-child(198), html.reveal-print .reveal .slides > .pdf-page:nth-child(198) { --tq-i: 197; }
+.reveal .backgrounds > .slide-background:nth-child(199), html.reveal-print .reveal .slides > .pdf-page:nth-child(199) { --tq-i: 198; }
+.reveal .backgrounds > .slide-background:nth-child(200), html.reveal-print .reveal .slides > .pdf-page:nth-child(200) { --tq-i: 199; }
+.reveal .backgrounds:has(> .slide-background:nth-child(1):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(1):last-child) { --tq-n: 1; }
+.reveal .backgrounds:has(> .slide-background:nth-child(2):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(2):last-child) { --tq-n: 2; }
+.reveal .backgrounds:has(> .slide-background:nth-child(3):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(3):last-child) { --tq-n: 3; }
+.reveal .backgrounds:has(> .slide-background:nth-child(4):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(4):last-child) { --tq-n: 4; }
+.reveal .backgrounds:has(> .slide-background:nth-child(5):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(5):last-child) { --tq-n: 5; }
+.reveal .backgrounds:has(> .slide-background:nth-child(6):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(6):last-child) { --tq-n: 6; }
+.reveal .backgrounds:has(> .slide-background:nth-child(7):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(7):last-child) { --tq-n: 7; }
+.reveal .backgrounds:has(> .slide-background:nth-child(8):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(8):last-child) { --tq-n: 8; }
+.reveal .backgrounds:has(> .slide-background:nth-child(9):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(9):last-child) { --tq-n: 9; }
+.reveal .backgrounds:has(> .slide-background:nth-child(10):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(10):last-child) { --tq-n: 10; }
+.reveal .backgrounds:has(> .slide-background:nth-child(11):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(11):last-child) { --tq-n: 11; }
+.reveal .backgrounds:has(> .slide-background:nth-child(12):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(12):last-child) { --tq-n: 12; }
+.reveal .backgrounds:has(> .slide-background:nth-child(13):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(13):last-child) { --tq-n: 13; }
+.reveal .backgrounds:has(> .slide-background:nth-child(14):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(14):last-child) { --tq-n: 14; }
+.reveal .backgrounds:has(> .slide-background:nth-child(15):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(15):last-child) { --tq-n: 15; }
+.reveal .backgrounds:has(> .slide-background:nth-child(16):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(16):last-child) { --tq-n: 16; }
+.reveal .backgrounds:has(> .slide-background:nth-child(17):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(17):last-child) { --tq-n: 17; }
+.reveal .backgrounds:has(> .slide-background:nth-child(18):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(18):last-child) { --tq-n: 18; }
+.reveal .backgrounds:has(> .slide-background:nth-child(19):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(19):last-child) { --tq-n: 19; }
+.reveal .backgrounds:has(> .slide-background:nth-child(20):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(20):last-child) { --tq-n: 20; }
+.reveal .backgrounds:has(> .slide-background:nth-child(21):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(21):last-child) { --tq-n: 21; }
+.reveal .backgrounds:has(> .slide-background:nth-child(22):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(22):last-child) { --tq-n: 22; }
+.reveal .backgrounds:has(> .slide-background:nth-child(23):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(23):last-child) { --tq-n: 23; }
+.reveal .backgrounds:has(> .slide-background:nth-child(24):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(24):last-child) { --tq-n: 24; }
+.reveal .backgrounds:has(> .slide-background:nth-child(25):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(25):last-child) { --tq-n: 25; }
+.reveal .backgrounds:has(> .slide-background:nth-child(26):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(26):last-child) { --tq-n: 26; }
+.reveal .backgrounds:has(> .slide-background:nth-child(27):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(27):last-child) { --tq-n: 27; }
+.reveal .backgrounds:has(> .slide-background:nth-child(28):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(28):last-child) { --tq-n: 28; }
+.reveal .backgrounds:has(> .slide-background:nth-child(29):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(29):last-child) { --tq-n: 29; }
+.reveal .backgrounds:has(> .slide-background:nth-child(30):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(30):last-child) { --tq-n: 30; }
+.reveal .backgrounds:has(> .slide-background:nth-child(31):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(31):last-child) { --tq-n: 31; }
+.reveal .backgrounds:has(> .slide-background:nth-child(32):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(32):last-child) { --tq-n: 32; }
+.reveal .backgrounds:has(> .slide-background:nth-child(33):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(33):last-child) { --tq-n: 33; }
+.reveal .backgrounds:has(> .slide-background:nth-child(34):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(34):last-child) { --tq-n: 34; }
+.reveal .backgrounds:has(> .slide-background:nth-child(35):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(35):last-child) { --tq-n: 35; }
+.reveal .backgrounds:has(> .slide-background:nth-child(36):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(36):last-child) { --tq-n: 36; }
+.reveal .backgrounds:has(> .slide-background:nth-child(37):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(37):last-child) { --tq-n: 37; }
+.reveal .backgrounds:has(> .slide-background:nth-child(38):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(38):last-child) { --tq-n: 38; }
+.reveal .backgrounds:has(> .slide-background:nth-child(39):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(39):last-child) { --tq-n: 39; }
+.reveal .backgrounds:has(> .slide-background:nth-child(40):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(40):last-child) { --tq-n: 40; }
+.reveal .backgrounds:has(> .slide-background:nth-child(41):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(41):last-child) { --tq-n: 41; }
+.reveal .backgrounds:has(> .slide-background:nth-child(42):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(42):last-child) { --tq-n: 42; }
+.reveal .backgrounds:has(> .slide-background:nth-child(43):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(43):last-child) { --tq-n: 43; }
+.reveal .backgrounds:has(> .slide-background:nth-child(44):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(44):last-child) { --tq-n: 44; }
+.reveal .backgrounds:has(> .slide-background:nth-child(45):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(45):last-child) { --tq-n: 45; }
+.reveal .backgrounds:has(> .slide-background:nth-child(46):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(46):last-child) { --tq-n: 46; }
+.reveal .backgrounds:has(> .slide-background:nth-child(47):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(47):last-child) { --tq-n: 47; }
+.reveal .backgrounds:has(> .slide-background:nth-child(48):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(48):last-child) { --tq-n: 48; }
+.reveal .backgrounds:has(> .slide-background:nth-child(49):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(49):last-child) { --tq-n: 49; }
+.reveal .backgrounds:has(> .slide-background:nth-child(50):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(50):last-child) { --tq-n: 50; }
+.reveal .backgrounds:has(> .slide-background:nth-child(51):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(51):last-child) { --tq-n: 51; }
+.reveal .backgrounds:has(> .slide-background:nth-child(52):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(52):last-child) { --tq-n: 52; }
+.reveal .backgrounds:has(> .slide-background:nth-child(53):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(53):last-child) { --tq-n: 53; }
+.reveal .backgrounds:has(> .slide-background:nth-child(54):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(54):last-child) { --tq-n: 54; }
+.reveal .backgrounds:has(> .slide-background:nth-child(55):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(55):last-child) { --tq-n: 55; }
+.reveal .backgrounds:has(> .slide-background:nth-child(56):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(56):last-child) { --tq-n: 56; }
+.reveal .backgrounds:has(> .slide-background:nth-child(57):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(57):last-child) { --tq-n: 57; }
+.reveal .backgrounds:has(> .slide-background:nth-child(58):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(58):last-child) { --tq-n: 58; }
+.reveal .backgrounds:has(> .slide-background:nth-child(59):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(59):last-child) { --tq-n: 59; }
+.reveal .backgrounds:has(> .slide-background:nth-child(60):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(60):last-child) { --tq-n: 60; }
+.reveal .backgrounds:has(> .slide-background:nth-child(61):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(61):last-child) { --tq-n: 61; }
+.reveal .backgrounds:has(> .slide-background:nth-child(62):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(62):last-child) { --tq-n: 62; }
+.reveal .backgrounds:has(> .slide-background:nth-child(63):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(63):last-child) { --tq-n: 63; }
+.reveal .backgrounds:has(> .slide-background:nth-child(64):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(64):last-child) { --tq-n: 64; }
+.reveal .backgrounds:has(> .slide-background:nth-child(65):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(65):last-child) { --tq-n: 65; }
+.reveal .backgrounds:has(> .slide-background:nth-child(66):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(66):last-child) { --tq-n: 66; }
+.reveal .backgrounds:has(> .slide-background:nth-child(67):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(67):last-child) { --tq-n: 67; }
+.reveal .backgrounds:has(> .slide-background:nth-child(68):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(68):last-child) { --tq-n: 68; }
+.reveal .backgrounds:has(> .slide-background:nth-child(69):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(69):last-child) { --tq-n: 69; }
+.reveal .backgrounds:has(> .slide-background:nth-child(70):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(70):last-child) { --tq-n: 70; }
+.reveal .backgrounds:has(> .slide-background:nth-child(71):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(71):last-child) { --tq-n: 71; }
+.reveal .backgrounds:has(> .slide-background:nth-child(72):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(72):last-child) { --tq-n: 72; }
+.reveal .backgrounds:has(> .slide-background:nth-child(73):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(73):last-child) { --tq-n: 73; }
+.reveal .backgrounds:has(> .slide-background:nth-child(74):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(74):last-child) { --tq-n: 74; }
+.reveal .backgrounds:has(> .slide-background:nth-child(75):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(75):last-child) { --tq-n: 75; }
+.reveal .backgrounds:has(> .slide-background:nth-child(76):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(76):last-child) { --tq-n: 76; }
+.reveal .backgrounds:has(> .slide-background:nth-child(77):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(77):last-child) { --tq-n: 77; }
+.reveal .backgrounds:has(> .slide-background:nth-child(78):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(78):last-child) { --tq-n: 78; }
+.reveal .backgrounds:has(> .slide-background:nth-child(79):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(79):last-child) { --tq-n: 79; }
+.reveal .backgrounds:has(> .slide-background:nth-child(80):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(80):last-child) { --tq-n: 80; }
+.reveal .backgrounds:has(> .slide-background:nth-child(81):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(81):last-child) { --tq-n: 81; }
+.reveal .backgrounds:has(> .slide-background:nth-child(82):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(82):last-child) { --tq-n: 82; }
+.reveal .backgrounds:has(> .slide-background:nth-child(83):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(83):last-child) { --tq-n: 83; }
+.reveal .backgrounds:has(> .slide-background:nth-child(84):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(84):last-child) { --tq-n: 84; }
+.reveal .backgrounds:has(> .slide-background:nth-child(85):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(85):last-child) { --tq-n: 85; }
+.reveal .backgrounds:has(> .slide-background:nth-child(86):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(86):last-child) { --tq-n: 86; }
+.reveal .backgrounds:has(> .slide-background:nth-child(87):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(87):last-child) { --tq-n: 87; }
+.reveal .backgrounds:has(> .slide-background:nth-child(88):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(88):last-child) { --tq-n: 88; }
+.reveal .backgrounds:has(> .slide-background:nth-child(89):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(89):last-child) { --tq-n: 89; }
+.reveal .backgrounds:has(> .slide-background:nth-child(90):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(90):last-child) { --tq-n: 90; }
+.reveal .backgrounds:has(> .slide-background:nth-child(91):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(91):last-child) { --tq-n: 91; }
+.reveal .backgrounds:has(> .slide-background:nth-child(92):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(92):last-child) { --tq-n: 92; }
+.reveal .backgrounds:has(> .slide-background:nth-child(93):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(93):last-child) { --tq-n: 93; }
+.reveal .backgrounds:has(> .slide-background:nth-child(94):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(94):last-child) { --tq-n: 94; }
+.reveal .backgrounds:has(> .slide-background:nth-child(95):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(95):last-child) { --tq-n: 95; }
+.reveal .backgrounds:has(> .slide-background:nth-child(96):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(96):last-child) { --tq-n: 96; }
+.reveal .backgrounds:has(> .slide-background:nth-child(97):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(97):last-child) { --tq-n: 97; }
+.reveal .backgrounds:has(> .slide-background:nth-child(98):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(98):last-child) { --tq-n: 98; }
+.reveal .backgrounds:has(> .slide-background:nth-child(99):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(99):last-child) { --tq-n: 99; }
+.reveal .backgrounds:has(> .slide-background:nth-child(100):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(100):last-child) { --tq-n: 100; }
+.reveal .backgrounds:has(> .slide-background:nth-child(101):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(101):last-child) { --tq-n: 101; }
+.reveal .backgrounds:has(> .slide-background:nth-child(102):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(102):last-child) { --tq-n: 102; }
+.reveal .backgrounds:has(> .slide-background:nth-child(103):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(103):last-child) { --tq-n: 103; }
+.reveal .backgrounds:has(> .slide-background:nth-child(104):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(104):last-child) { --tq-n: 104; }
+.reveal .backgrounds:has(> .slide-background:nth-child(105):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(105):last-child) { --tq-n: 105; }
+.reveal .backgrounds:has(> .slide-background:nth-child(106):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(106):last-child) { --tq-n: 106; }
+.reveal .backgrounds:has(> .slide-background:nth-child(107):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(107):last-child) { --tq-n: 107; }
+.reveal .backgrounds:has(> .slide-background:nth-child(108):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(108):last-child) { --tq-n: 108; }
+.reveal .backgrounds:has(> .slide-background:nth-child(109):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(109):last-child) { --tq-n: 109; }
+.reveal .backgrounds:has(> .slide-background:nth-child(110):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(110):last-child) { --tq-n: 110; }
+.reveal .backgrounds:has(> .slide-background:nth-child(111):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(111):last-child) { --tq-n: 111; }
+.reveal .backgrounds:has(> .slide-background:nth-child(112):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(112):last-child) { --tq-n: 112; }
+.reveal .backgrounds:has(> .slide-background:nth-child(113):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(113):last-child) { --tq-n: 113; }
+.reveal .backgrounds:has(> .slide-background:nth-child(114):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(114):last-child) { --tq-n: 114; }
+.reveal .backgrounds:has(> .slide-background:nth-child(115):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(115):last-child) { --tq-n: 115; }
+.reveal .backgrounds:has(> .slide-background:nth-child(116):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(116):last-child) { --tq-n: 116; }
+.reveal .backgrounds:has(> .slide-background:nth-child(117):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(117):last-child) { --tq-n: 117; }
+.reveal .backgrounds:has(> .slide-background:nth-child(118):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(118):last-child) { --tq-n: 118; }
+.reveal .backgrounds:has(> .slide-background:nth-child(119):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(119):last-child) { --tq-n: 119; }
+.reveal .backgrounds:has(> .slide-background:nth-child(120):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(120):last-child) { --tq-n: 120; }
+.reveal .backgrounds:has(> .slide-background:nth-child(121):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(121):last-child) { --tq-n: 121; }
+.reveal .backgrounds:has(> .slide-background:nth-child(122):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(122):last-child) { --tq-n: 122; }
+.reveal .backgrounds:has(> .slide-background:nth-child(123):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(123):last-child) { --tq-n: 123; }
+.reveal .backgrounds:has(> .slide-background:nth-child(124):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(124):last-child) { --tq-n: 124; }
+.reveal .backgrounds:has(> .slide-background:nth-child(125):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(125):last-child) { --tq-n: 125; }
+.reveal .backgrounds:has(> .slide-background:nth-child(126):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(126):last-child) { --tq-n: 126; }
+.reveal .backgrounds:has(> .slide-background:nth-child(127):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(127):last-child) { --tq-n: 127; }
+.reveal .backgrounds:has(> .slide-background:nth-child(128):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(128):last-child) { --tq-n: 128; }
+.reveal .backgrounds:has(> .slide-background:nth-child(129):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(129):last-child) { --tq-n: 129; }
+.reveal .backgrounds:has(> .slide-background:nth-child(130):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(130):last-child) { --tq-n: 130; }
+.reveal .backgrounds:has(> .slide-background:nth-child(131):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(131):last-child) { --tq-n: 131; }
+.reveal .backgrounds:has(> .slide-background:nth-child(132):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(132):last-child) { --tq-n: 132; }
+.reveal .backgrounds:has(> .slide-background:nth-child(133):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(133):last-child) { --tq-n: 133; }
+.reveal .backgrounds:has(> .slide-background:nth-child(134):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(134):last-child) { --tq-n: 134; }
+.reveal .backgrounds:has(> .slide-background:nth-child(135):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(135):last-child) { --tq-n: 135; }
+.reveal .backgrounds:has(> .slide-background:nth-child(136):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(136):last-child) { --tq-n: 136; }
+.reveal .backgrounds:has(> .slide-background:nth-child(137):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(137):last-child) { --tq-n: 137; }
+.reveal .backgrounds:has(> .slide-background:nth-child(138):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(138):last-child) { --tq-n: 138; }
+.reveal .backgrounds:has(> .slide-background:nth-child(139):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(139):last-child) { --tq-n: 139; }
+.reveal .backgrounds:has(> .slide-background:nth-child(140):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(140):last-child) { --tq-n: 140; }
+.reveal .backgrounds:has(> .slide-background:nth-child(141):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(141):last-child) { --tq-n: 141; }
+.reveal .backgrounds:has(> .slide-background:nth-child(142):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(142):last-child) { --tq-n: 142; }
+.reveal .backgrounds:has(> .slide-background:nth-child(143):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(143):last-child) { --tq-n: 143; }
+.reveal .backgrounds:has(> .slide-background:nth-child(144):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(144):last-child) { --tq-n: 144; }
+.reveal .backgrounds:has(> .slide-background:nth-child(145):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(145):last-child) { --tq-n: 145; }
+.reveal .backgrounds:has(> .slide-background:nth-child(146):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(146):last-child) { --tq-n: 146; }
+.reveal .backgrounds:has(> .slide-background:nth-child(147):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(147):last-child) { --tq-n: 147; }
+.reveal .backgrounds:has(> .slide-background:nth-child(148):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(148):last-child) { --tq-n: 148; }
+.reveal .backgrounds:has(> .slide-background:nth-child(149):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(149):last-child) { --tq-n: 149; }
+.reveal .backgrounds:has(> .slide-background:nth-child(150):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(150):last-child) { --tq-n: 150; }
+.reveal .backgrounds:has(> .slide-background:nth-child(151):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(151):last-child) { --tq-n: 151; }
+.reveal .backgrounds:has(> .slide-background:nth-child(152):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(152):last-child) { --tq-n: 152; }
+.reveal .backgrounds:has(> .slide-background:nth-child(153):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(153):last-child) { --tq-n: 153; }
+.reveal .backgrounds:has(> .slide-background:nth-child(154):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(154):last-child) { --tq-n: 154; }
+.reveal .backgrounds:has(> .slide-background:nth-child(155):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(155):last-child) { --tq-n: 155; }
+.reveal .backgrounds:has(> .slide-background:nth-child(156):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(156):last-child) { --tq-n: 156; }
+.reveal .backgrounds:has(> .slide-background:nth-child(157):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(157):last-child) { --tq-n: 157; }
+.reveal .backgrounds:has(> .slide-background:nth-child(158):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(158):last-child) { --tq-n: 158; }
+.reveal .backgrounds:has(> .slide-background:nth-child(159):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(159):last-child) { --tq-n: 159; }
+.reveal .backgrounds:has(> .slide-background:nth-child(160):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(160):last-child) { --tq-n: 160; }
+.reveal .backgrounds:has(> .slide-background:nth-child(161):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(161):last-child) { --tq-n: 161; }
+.reveal .backgrounds:has(> .slide-background:nth-child(162):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(162):last-child) { --tq-n: 162; }
+.reveal .backgrounds:has(> .slide-background:nth-child(163):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(163):last-child) { --tq-n: 163; }
+.reveal .backgrounds:has(> .slide-background:nth-child(164):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(164):last-child) { --tq-n: 164; }
+.reveal .backgrounds:has(> .slide-background:nth-child(165):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(165):last-child) { --tq-n: 165; }
+.reveal .backgrounds:has(> .slide-background:nth-child(166):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(166):last-child) { --tq-n: 166; }
+.reveal .backgrounds:has(> .slide-background:nth-child(167):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(167):last-child) { --tq-n: 167; }
+.reveal .backgrounds:has(> .slide-background:nth-child(168):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(168):last-child) { --tq-n: 168; }
+.reveal .backgrounds:has(> .slide-background:nth-child(169):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(169):last-child) { --tq-n: 169; }
+.reveal .backgrounds:has(> .slide-background:nth-child(170):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(170):last-child) { --tq-n: 170; }
+.reveal .backgrounds:has(> .slide-background:nth-child(171):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(171):last-child) { --tq-n: 171; }
+.reveal .backgrounds:has(> .slide-background:nth-child(172):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(172):last-child) { --tq-n: 172; }
+.reveal .backgrounds:has(> .slide-background:nth-child(173):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(173):last-child) { --tq-n: 173; }
+.reveal .backgrounds:has(> .slide-background:nth-child(174):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(174):last-child) { --tq-n: 174; }
+.reveal .backgrounds:has(> .slide-background:nth-child(175):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(175):last-child) { --tq-n: 175; }
+.reveal .backgrounds:has(> .slide-background:nth-child(176):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(176):last-child) { --tq-n: 176; }
+.reveal .backgrounds:has(> .slide-background:nth-child(177):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(177):last-child) { --tq-n: 177; }
+.reveal .backgrounds:has(> .slide-background:nth-child(178):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(178):last-child) { --tq-n: 178; }
+.reveal .backgrounds:has(> .slide-background:nth-child(179):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(179):last-child) { --tq-n: 179; }
+.reveal .backgrounds:has(> .slide-background:nth-child(180):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(180):last-child) { --tq-n: 180; }
+.reveal .backgrounds:has(> .slide-background:nth-child(181):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(181):last-child) { --tq-n: 181; }
+.reveal .backgrounds:has(> .slide-background:nth-child(182):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(182):last-child) { --tq-n: 182; }
+.reveal .backgrounds:has(> .slide-background:nth-child(183):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(183):last-child) { --tq-n: 183; }
+.reveal .backgrounds:has(> .slide-background:nth-child(184):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(184):last-child) { --tq-n: 184; }
+.reveal .backgrounds:has(> .slide-background:nth-child(185):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(185):last-child) { --tq-n: 185; }
+.reveal .backgrounds:has(> .slide-background:nth-child(186):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(186):last-child) { --tq-n: 186; }
+.reveal .backgrounds:has(> .slide-background:nth-child(187):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(187):last-child) { --tq-n: 187; }
+.reveal .backgrounds:has(> .slide-background:nth-child(188):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(188):last-child) { --tq-n: 188; }
+.reveal .backgrounds:has(> .slide-background:nth-child(189):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(189):last-child) { --tq-n: 189; }
+.reveal .backgrounds:has(> .slide-background:nth-child(190):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(190):last-child) { --tq-n: 190; }
+.reveal .backgrounds:has(> .slide-background:nth-child(191):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(191):last-child) { --tq-n: 191; }
+.reveal .backgrounds:has(> .slide-background:nth-child(192):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(192):last-child) { --tq-n: 192; }
+.reveal .backgrounds:has(> .slide-background:nth-child(193):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(193):last-child) { --tq-n: 193; }
+.reveal .backgrounds:has(> .slide-background:nth-child(194):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(194):last-child) { --tq-n: 194; }
+.reveal .backgrounds:has(> .slide-background:nth-child(195):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(195):last-child) { --tq-n: 195; }
+.reveal .backgrounds:has(> .slide-background:nth-child(196):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(196):last-child) { --tq-n: 196; }
+.reveal .backgrounds:has(> .slide-background:nth-child(197):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(197):last-child) { --tq-n: 197; }
+.reveal .backgrounds:has(> .slide-background:nth-child(198):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(198):last-child) { --tq-n: 198; }
+.reveal .backgrounds:has(> .slide-background:nth-child(199):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(199):last-child) { --tq-n: 199; }
+.reveal .backgrounds:has(> .slide-background:nth-child(200):last-child), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(200):last-child) { --tq-n: 200; }
+.reveal .backgrounds > .slide-background:nth-child(n+201), html.reveal-print .reveal .slides > .pdf-page:nth-child(n+201) { --tq-i: 199; }
+.reveal .backgrounds:has(> .slide-background:nth-child(201)), html.reveal-print .reveal .slides:has(> .pdf-page:nth-child(201)) { --tq-n: 200; }
+
+/* the menu heading centred under its lit item (positionMenuHeads) */
+.reveal .md-menu-head { --menu-head-align: centre; }

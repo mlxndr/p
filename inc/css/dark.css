@@ -20,11 +20,11 @@
 
 :root {
     /* grammatical functions, lightened for dark grounds (see base.css) */
-    --g-subject: #3F95D7;
-    --g-predicator: #F1731C;
-    --g-object: #33B588;
-    --g-complement: #FFBEEF;
-    --g-adverbial: #FFE250;
+    --g-subject: #4F8BFF;
+    --g-predicator: #FF7A45;
+    --g-object: #1FB59F;
+    --g-complement: #C9B6FF;
+    --g-adverbial: #F2D23C;
 }
 
 :root {

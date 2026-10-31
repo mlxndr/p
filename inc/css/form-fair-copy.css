@@ -1,0 +1,580 @@
+@import url('base.css');
+@import url('palettes.css');
+
+/* =====================================================================
+   Fair Copy (form; design A09, round 6)
+
+   A plain form: Concourse headings in true small caps, Equity text, no
+   heading rule, no ornament. Every colour comes from the palette roles
+   (palettes.css: html.pal-NAME plus html.pal-light or html.pal-dark).
+
+     paper   ground                    ink    text and main headings
+     ink2    secondary text            tint   section divider, current column
+     quiet   the other columns         mark   the current column's bar
+     card, card-ink, card-ink2, card-fold    the turned-corner card
+     graphite = ink and ink2 mixed: series line, table heads, transcript
+       labels, and every heading with the graphite option
+       (meta.json "formOptions": ["graphite"] -> html.form-opt-graphite)
+
+   Geometry: the slide is 1920 x 1080 with reveal's 8% margin, so 1px of
+   the slide is 0.92px of a 1920 screen. Sizes are the proposal's screen
+   sizes divided by 0.92; 1em of body text (54px) is 50px on screen.
+   Text slides are inset 64px at the sides and 53px at the top (the
+   proposal's 136px and 92px on screen).
+   ===================================================================== */
+
+:root {
+    --r-main-font: 'Equity', 'Bitter', 'Noto Serif', Georgia, serif;   /* Bitter supplies ǐ ǎ ǔ */
+    --r-serif-font: 'Equity', 'Bitter', 'Noto Serif', Georgia, serif;
+    --r-heading-font: 'Concourse', 'Noto Sans', 'Helvetica Neue', sans-serif;
+    --r-heading-bold-font: 'Concourse', 'Noto Sans', 'Helvetica Neue', sans-serif;
+    --r-main-font-size: 54px;
+    --sc-tracking: 0;
+
+    --fc-ink2: var(--pal-ink2);
+    --fc-graphite: color-mix(in srgb, var(--pal-ink) 50%, var(--pal-ink2));
+    --fc-head: var(--pal-ink);
+    --fc-dim-icon: color-mix(in srgb, var(--pal-ink2) 72%, var(--pal-paper));   /* unlit menu icons (non-text) */
+    --fc-cut: 54px;                                                             /* the card's turned corner */
+    --fc-inset-x: 64px;
+    --fc-inset-top: 53px;
+}
+
+/* the graphite option: main headings in graphite too */
+html.form-opt-graphite { --fc-head: var(--fc-graphite); }
+
+.reveal-viewport,
+.reveal {
+    background-color: var(--pal-paper) !important;
+}
+.reveal {
+    font-weight: 400;
+    line-height: 1.3;
+    font-kerning: normal;
+    font-synthesis: none;
+}
+
+/* ---------- the text area ---------- */
+.reveal .slides section:not(.stack) {
+    box-sizing: border-box;
+    padding: var(--fc-inset-top) var(--fc-inset-x) 0;
+}
+.reveal .slides section.md-centred:not(.stack),
+.reveal .slides section.md-statement:not(.stack) { padding-top: 0; }
+/* reveal's print CSS clears section padding: restate it */
+html.reveal-print .reveal .slides .pdf-page > section:not(.stack) {
+    padding: var(--fc-inset-top) var(--fc-inset-x) 0 !important;
+}
+html.reveal-print .reveal .slides .pdf-page > section.md-centred:not(.stack),
+html.reveal-print .reveal .slides .pdf-page > section.md-statement:not(.stack) {
+    padding-top: 0 !important;
+}
+
+/* ---------- headings: Concourse in true small caps, in the ink, no rule ---------- */
+.reveal h1, .reveal h2, .reveal h3 {
+    font-family: var(--r-heading-font);
+    font-weight: 400;
+    font-variant-caps: small-caps;
+    font-variant-numeric: oldstyle-nums;
+    letter-spacing: 0;
+    color: var(--fc-head);
+    border-bottom: none;
+}
+.reveal .slides section h2 {
+    font-size: 1.68em;
+    line-height: 1.0;
+    margin: 0 0 0.69em;
+    padding: 0;
+    max-width: 19.5em;
+}
+.reveal .slides section h3 { font-size: 1.2em; line-height: 1.1; margin: 0 0 0.4em; }
+.reveal .md-head-sub {
+    font-family: var(--r-main-font);
+    font-size: 0.476em;
+    color: var(--fc-ink2);
+    margin: 0.19em 0 0;
+}
+.reveal strong, .reveal b { font-weight: 700; }
+
+/* ---------- lists: no markers; each item hangs out of its own text ---------- */
+.reveal .slides section ul {
+    display: block;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    line-height: inherit;
+}
+.reveal .slides section ul ul { font-size: 100%; margin: 0.24em 0 0 0.92em; }
+.reveal .slides section li :not(li) { text-indent: 0; }
+.reveal .slides section ul > li {
+    padding-left: 0.92em;
+    text-indent: -0.92em;
+    margin: 0 0 0.48em;
+}
+.reveal .slides section ul ul > li {
+    font-size: 0.88em;
+    padding-left: 0.91em;
+    text-indent: -0.91em;
+    margin: 0 0 0.18em;
+}
+.reveal .slides section ul ul > li:last-child { margin-bottom: 0; }
+.reveal .slides section ol > li { margin: 0 0 0.48em; }
+.reveal .slides section ol li::marker { color: var(--fc-ink2); }
+
+/* ---------- series line ---------- */
+.reveal .md-series { line-height: 1; }
+.reveal .md-series-name {
+    font-family: var(--r-heading-font);
+    font-weight: 600;
+    font-size: 1.08em;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.06em;
+    color: var(--fc-graphite);
+    line-height: 1;
+}
+.reveal .md-series-sub {
+    font-family: var(--r-main-font);
+    font-style: italic;
+    font-size: 0.76em;
+    color: var(--fc-ink2);
+    line-height: 1.2;
+    margin-top: 0.21em;
+}
+
+/* ---------- title and closing slides (meta.js) ----------
+   Series line at the top left; the title stands on the names, which sit
+   at the foot with the logo on the right. The title's size is set inline
+   (2.2em !important), so the slide's own size carries it: 2.2 x 67.2px
+   = the proposal's 136px on screen. Everything else is set back in px. */
+.reveal .slides section.title-slide {
+    font-size: 67.2px;
+    text-align: left;
+    --fc-tb: 205px;           /* top of the names block, from the foot */
+    --fc-sub: 0px;            /* subtitle height */
+}
+.reveal .slides section.title-slide:has(.titlebr tr:nth-child(3)) { --fc-tb: 345px; }
+.reveal .slides section.title-slide[data-meta="closing"]:has(.titlebr tr:nth-child(3)) { --fc-tb: 530px; }
+.reveal .slides section.title-slide:has(.pres-subtitle-mainfont) { --fc-sub: 62px; }
+.reveal .slides section.title-slide:has(.pres-subtitle-mainfont br) { --fc-sub: 124px; }
+.reveal .slides section.title-slide > br { display: none; }
+
+.reveal section.title-slide .pres-series {
+    position: absolute;
+    left: var(--fc-inset-x);
+    top: 66px;
+    margin: 0;
+    font-size: 54px;
+    text-align: left;
+}
+.reveal .slides section.title-slide h1,
+.reveal .slides section.title-slide h1.pres-title-headingfont {
+    position: absolute;
+    left: 60px;
+    right: var(--fc-inset-x);
+    bottom: calc(var(--fc-tb) + 128px);
+    margin: 0;
+    font-family: var(--r-heading-font);
+    font-weight: 400 !important;
+    font-variant-caps: small-caps !important;
+    letter-spacing: 0;
+    line-height: 1.0;
+    text-align: left;
+    color: var(--fc-head) !important;
+}
+.reveal .slides section.title-slide:has(.pres-subtitle-mainfont) h1 {
+    bottom: calc(var(--fc-tb) + 100px + var(--fc-sub) + 34px);
+}
+.reveal .slides section.title-slide .pres-subtitle-mainfont {
+    position: absolute;
+    left: var(--fc-inset-x);
+    right: var(--fc-inset-x);
+    bottom: calc(var(--fc-tb) + 100px);
+    margin: 0;
+    padding: 0 !important;
+    font-family: var(--r-main-font);
+    font-size: 50px !important;
+    font-style: italic;
+    font-weight: 400 !important;
+    line-height: 1.24;
+    text-align: left !important;
+    color: var(--fc-ink2);
+}
+.reveal section.title-slide table.titlebr {
+    position: absolute;
+    left: var(--fc-inset-x);
+    right: var(--fc-inset-x);
+    bottom: 75px;
+    width: calc(100% - 2 * var(--fc-inset-x));
+    margin: 0;
+    font-size: 54px;
+    line-height: 1.3;
+    text-align: left;
+    border: none;
+}
+.reveal section.title-slide table.titlebr tr:has(hr) { display: none; }
+.reveal section.title-slide table.titlebr td { padding: 0; vertical-align: bottom; font-weight: 400; color: var(--pal-ink); }
+.reveal section.title-slide table.titlebr tr + tr td { padding-top: 40px; }
+.reveal section.title-slide table.titlebr tr:first-child:has(hr) + tr td { padding-top: 0; }
+.reveal section.title-slide .tpa4-l { text-align: left; width: 60%; }
+.reveal section.title-slide .tpa4-r { text-align: right; width: 40%; }
+.reveal section.title-slide .tpa4-l > br:has(+ .subtle) { display: none; }
+.reveal section.title-slide .tpa4-l .subtle,
+.reveal section.title-slide .tpa4-r .subtle {
+    display: block;
+    font-size: 0.8em !important;
+    color: var(--fc-ink2);
+    margin-top: 4px;
+}
+.reveal section.title-slide:not(:has(.titlebr tr:nth-child(3))) .tpa4-r img.uog-logo { width: 435px; height: auto; }
+.reveal section.title-slide td img { max-height: none; vertical-align: bottom; }
+.reveal section.title-slide .qr-code { width: 260px !important; height: 260px !important; }
+
+/* ---------- @section: the palette's pale tint as ground ---------- */
+.reveal .slide-background.md-section { background-color: var(--pal-tint); }
+.reveal .slides section.md-section .md-section-series {
+    position: absolute;
+    left: var(--fc-inset-x);
+    right: auto;
+    top: 66px;
+    font-size: 0.852em;
+    text-align: left;
+}
+.reveal .slides section.md-section .md-section-series .md-series-sub { color: var(--fc-ink2); opacity: 1; }
+.reveal .slides section.md-section h1 {
+    position: absolute;
+    top: auto;
+    left: 60px;
+    right: var(--fc-inset-x);
+    bottom: 312px;
+    transform: none;
+    margin: 0;
+    font-size: 2.48em;
+    font-weight: 400;
+    line-height: 1.0;
+    text-align: left;
+    color: var(--fc-head);
+    text-wrap: balance;
+}
+.reveal .slides section.md-section h1::after { display: none; }
+
+/* ---------- ribbon heading: the tag as a flat label from the screen edge ---------- */
+.reveal .slides section h2:has(> .md-ribbon) {
+    margin-left: calc(-1 * (var(--fc-inset-x) + var(--bleed-x, 0px)));
+}
+.reveal .md-tag.md-ribbon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    min-width: 0;
+    margin: 0;
+    padding: 0.19em 0.67em 0.24em calc(var(--fc-inset-x) + var(--bleed-x, 0px));
+    border-radius: 0;
+    font-size: 1em;
+    font-variant-caps: small-caps;
+    letter-spacing: 0;
+    line-height: 1;
+    vertical-align: baseline;
+}
+.reveal .md-tag.md-ribbon::before,
+.reveal .md-tag.md-ribbon::after { display: none; }
+.reveal .md-tag.md-ribbon .md-tag-icon {
+    margin-left: 0;
+    font-size: 0.7em;
+    color: color-mix(in oklab, var(--tag-bg) 45%, var(--tag-ink));
+    --fa-secondary-opacity: 0.45;
+}
+
+/* ---------- @menu (strip): unlit icons bare and dimmed; the lit item a
+   disc in its colour with a stem down to its heading ---------- */
+.reveal .md-menu-strip {
+    gap: 59px;
+    margin: -24px 0 0;
+}
+.reveal .md-menu-strip .md-menu-item {
+    flex: 0 1 117px;
+    box-shadow: none;
+}
+.reveal .md-menu-strip .md-menu-item .md-icon { font-size: 56cqi; --fa-secondary-opacity: 0.45; }
+.reveal .md-menu-strip .md-menu-item.is-lit .md-icon { font-size: 52cqi; }
+.reveal .md-menu-strip .md-menu-item.is-dim {
+    background: transparent;
+    color: var(--fc-dim-icon);
+}
+.reveal .md-menu-strip:has(+ .md-menu-head) .md-menu-item.is-lit::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: calc(50% - 3px);
+    width: 6.5px;
+    height: 48px;
+    background: var(--tag-bg);
+}
+.reveal .slides section h2.md-menu-head { margin-top: 87px; margin-bottom: 0.47em; }
+/* centre the heading under its item (positionMenuHeads aligns it to one
+   edge of the item; items 3 to n-2 of a menu of up to ten take the
+   centre, where a heading has room either side) */
+.reveal .md-menu-strip:not(:has(> :nth-child(11))):has(> .is-lit:nth-child(3):nth-last-child(n+3)) + h2.md-menu-head { margin-left: calc(2 * 176px + 58.5px) !important; transform: translateX(-50%); }
+.reveal .md-menu-strip:not(:has(> :nth-child(11))):has(> .is-lit:nth-child(4):nth-last-child(n+3)) + h2.md-menu-head { margin-left: calc(3 * 176px + 58.5px) !important; transform: translateX(-50%); }
+.reveal .md-menu-strip:not(:has(> :nth-child(11))):has(> .is-lit:nth-child(5):nth-last-child(n+3)) + h2.md-menu-head { margin-left: calc(4 * 176px + 58.5px) !important; transform: translateX(-50%); }
+.reveal .md-menu-strip:not(:has(> :nth-child(11))):has(> .is-lit:nth-child(6):nth-last-child(n+3)) + h2.md-menu-head { margin-left: calc(5 * 176px + 58.5px) !important; transform: translateX(-50%); }
+.reveal .md-menu-strip:not(:has(> :nth-child(11))):has(> .is-lit:nth-child(7):nth-last-child(n+3)) + h2.md-menu-head { margin-left: calc(6 * 176px + 58.5px) !important; transform: translateX(-50%); }
+.reveal .md-menu-strip:not(:has(> :nth-child(11))):has(> .is-lit:nth-child(8):nth-last-child(n+3)) + h2.md-menu-head { margin-left: calc(7 * 176px + 58.5px) !important; transform: translateX(-50%); }
+
+/* ---------- @cards (style=box): panels a step off the paper. The
+   current card (accent) is on the tint with a bar in the mark; the
+   others are on the quiet ground with quieter headings ---------- */
+.reveal .md-cards { column-gap: 39px; }
+.reveal .md-cards.md-ncols-2 { font-size: 0.9em; }
+.reveal .md-cards.md-ncols-3 { font-size: 0.8em; }
+.reveal .md-cards.md-ncols-4 { font-size: 0.72em; column-gap: 30px; }
+.reveal .md-style-box .md-card {
+    background: var(--pal-quiet);
+    border: none;
+    border-top: 11px solid var(--pal-quiet);
+    border-radius: 0;
+    padding: 24px 28px 15px 30px;
+}
+.reveal .md-style-box .md-card-accent {
+    background: var(--pal-tint);
+    border: none;
+    border-top: 11px solid var(--pal-mark);
+}
+.reveal .md-style-box .md-card-filled { border-top-color: var(--tag-bg); }
+.reveal .slides section .md-card > h3 {
+    font-size: 1.125em;
+    line-height: 1.1;
+    margin: 0 0 0.49em;
+    text-wrap: balance;
+}
+.reveal .md-cards:has(> .md-card-accent) > .md-card:not(.md-card-accent):not(.md-card-filled) > h3 { color: var(--fc-ink2); }
+.reveal .slides section .md-card ul { margin: 0; }
+.reveal .slides section .md-card ul > li {
+    line-height: 1.22;
+    padding-left: 0.75em;
+    text-indent: -0.75em;
+    margin: 0 0 0.4em;
+}
+/* on a contrast slide the panels are veils of the slide's ink */
+.reveal .slides section.md-contrast .md-style-box .md-card:not(.md-card-filled) {
+    background: color-mix(in srgb, var(--r-contrast-ink) 10%, transparent);
+    border-top-color: transparent;
+}
+.reveal .slides section.md-contrast .md-style-box .md-card-accent:not(.md-card-filled) {
+    background: color-mix(in srgb, var(--r-contrast-ink) 18%, transparent);
+    border-top-color: var(--r-contrast-ink);
+}
+
+/* ---------- tables: one strong rule under the heads, no others ---------- */
+.reveal .md-table th {
+    font-family: var(--r-heading-font);
+    font-weight: 600;
+    font-size: 0.92em;
+    color: var(--fc-graphite);
+    padding: 0 43px 24px 0;
+    border-bottom: 4.3px solid var(--pal-ink);
+    vertical-align: bottom;
+}
+.reveal .md-table td {
+    padding: 17px 43px 17px 0;
+    line-height: 1.15;
+    border: none;
+}
+.reveal .md-table tbody tr:first-child td { padding-top: 28px; }
+.reveal .md-table-rowhead tbody td:first-child { font-weight: 400; color: var(--fc-ink2); width: 98px; }
+.reveal .md-table-rowhead thead th:first-child { width: 98px; }
+
+/* ---------- @source ---------- */
+.reveal .md-source { color: var(--fc-ink2); text-align: left; }
+.reveal .slides section:not(.title-slide) > .md-source {
+    font-size: 0.68em;
+    margin-top: 1.53em;
+    text-align: left;
+}
+.reveal .md-source > p { text-align: left; }
+
+/* ---------- @note ---------- */
+.reveal .md-note { color: var(--fc-ink2); border-left-color: var(--pal-rule); }
+
+/* ---------- @parse: the framework's arrangement; labels in ink2, the
+   clause functions bold in their colours ---------- */
+.reveal .pz {
+    --pz-word-label: var(--fc-ink2);
+    --pz-phrase-label: var(--fc-ink2);
+}
+.reveal .pz .pz-fn { font-weight: 700; }
+
+/* ---------- @passage: the key with a swatch before every function ---------- */
+.reveal .slides section > p:has(+ .md-passage) {
+    font-size: 0.96em;
+    margin: 0 0 1em;
+}
+.reveal .slides section > p:has(+ .md-passage) .md-g { white-space: nowrap; }
+.reveal .slides section > p:has(+ .md-passage) .md-g::before {
+    content: '';
+    display: inline-block;
+    width: 0.62em;
+    height: 0.62em;
+    margin: 0 0.29em 0 0;
+    background: currentColor;
+    vertical-align: -0.02em;
+}
+.reveal .slides section > p:has(+ .md-passage) .md-g ~ .md-g::before { margin-left: 0.29em; }
+.reveal .md-passage p { font-size: 1.4em; line-height: 1.44; margin: 0; max-width: none; }
+.reveal .md-g.conjunction { color: var(--pal-ink); }
+
+/* ---------- @terms ---------- */
+.reveal dl.md-terms {
+    font-size: 1.24em;
+    line-height: 1.2;
+    column-gap: 1.55em;
+    row-gap: 1.03em;
+    margin: 0.71em 0 0;
+}
+
+/* ---------- @quote: upright, no rule, no marker ---------- */
+/* centred without a transform: Chrome splits a translated block where
+   its untranslated box crosses the printed page's foot */
+.reveal .md-quote-inner {
+    top: 0;
+    bottom: 6%;
+    left: var(--fc-inset-x);
+    right: var(--fc-inset-x);
+    height: fit-content;
+    transform: none;
+    margin: auto auto auto 0;
+    max-width: 27.6em;
+    font-size: 1.2em;
+}
+.reveal section.md-quote:has(h2) .md-quote-inner,
+.reveal section.md-quote:has(h3) .md-quote-inner { margin: 0.4em 0 0; }
+.reveal .md-quote-inner blockquote {
+    margin: 0;
+    padding: 0;
+    border: none;
+    font-size: 1em;
+    line-height: 1.36;
+}
+.reveal .md-quote-inner blockquote::before { display: none; }
+.reveal .md-quote-inner .md-source {
+    font-size: 0.67em;
+    margin-top: 1.1em;
+    text-align: left;
+}
+/* plain quotations in running text: a hairline in the rule colour */
+.reveal blockquote { border-left-color: var(--pal-rule); }
+.reveal blockquote::before { color: var(--pal-rule); }
+
+/* ---------- images ---------- */
+.reveal .md-split-body > p { font-size: 1.12em; line-height: 1.38; }
+
+/* ---------- @transcript ---------- */
+.reveal .md-transcript {
+    font-size: 1.32em;
+    line-height: 1.38;
+    column-gap: 0.79em;
+    row-gap: 0.32em;
+    margin: 0.36em 0 0;
+}
+.reveal .md-tr-label {
+    font-family: var(--r-heading-font);
+    font-weight: 600;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.04em;
+    color: var(--fc-graphite);
+}
+.reveal .md-tr-pause, .reveal .md-tr-gap .md-tr-text, .reveal .md-tr-num { color: var(--fc-ink2); }
+
+/* ---------- @refs ---------- */
+.reveal .slides section.md-refs { font-size: 1em; }
+.reveal .slides section.md-refs h2 { margin-bottom: 0.48em; }
+.reveal .slides section.md-refs ul {
+    font-size: 0.68em;
+    max-width: none;
+    padding-left: 0;
+    text-indent: 0;
+}
+.reveal .slides section.md-refs ul > li {
+    line-height: 1.24;
+    padding-left: 1.53em;
+    text-indent: -1.53em;
+    margin: 0 0 0.29em;
+}
+
+/* ---------- @slide contrast: the palette's section ground ---------- */
+.reveal .slides section.md-contrast {
+    --fc-head: var(--r-contrast-ink);
+    --fc-ink2: color-mix(in srgb, var(--r-contrast-ink) 75%, var(--r-contrast-bg));
+    --fc-graphite: color-mix(in srgb, var(--r-contrast-ink) 85%, var(--r-contrast-bg));
+    --fc-dim-icon: color-mix(in srgb, var(--r-contrast-ink) 55%, var(--r-contrast-bg));
+}
+
+/* ---------- the turned-corner card (@card, @quote ... card) ----------
+   A light card in every palette with its top right corner turned down:
+   the corner is cut away (the ground shows through) and the card's
+   underside drawn in the fold colour. On light palettes it lifts off
+   the paper with a soft shadow mixed from the ink; on dark ones it lies
+   flat. A quotation's card is the quotation itself; its source stays
+   on the paper below. */
+.reveal .md-slip:not(.md-quote-inner),
+.reveal .md-quote-inner.md-slip > blockquote {
+    position: relative;
+    clip-path: none;
+    box-shadow: none;
+    background: linear-gradient(225deg, transparent 0 var(--fc-cut), var(--pal-card) var(--fc-cut));
+    color: var(--pal-card-ink);
+    filter: drop-shadow(0 0 1px color-mix(in srgb, var(--pal-ink) 45%, transparent))
+            drop-shadow(0 18px 20px color-mix(in srgb, var(--pal-ink) 16%, transparent));
+    --r-font-color: var(--pal-card-ink);
+    --r-subtle-color: var(--pal-card-ink2);
+    --r-border-color: color-mix(in srgb, var(--pal-card-ink) 25%, transparent);
+    --fc-head: var(--pal-card-ink);
+    --fc-ink2: var(--pal-card-ink2);
+    --fc-graphite: color-mix(in srgb, var(--pal-card-ink) 50%, var(--pal-card-ink2));
+}
+html.pal-dark .reveal .md-slip:not(.md-quote-inner),
+html.pal-dark .reveal .md-quote-inner.md-slip > blockquote {
+    filter: none;
+    /* the light-paper grammar and colour-mark sets inside the light card */
+    --g-subject: #0303B5; --g-predicator: #9C3A0A; --g-object: #057B89;
+    --g-complement: #8448F4; --g-adverbial: #A88200;
+    --pt-red: var(--p-red); --pt-orange: var(--p-orange); --pt-gold: var(--p-gold);
+    --pt-green: var(--p-green); --pt-teal: var(--p-teal); --pt-blue: var(--p-blue);
+    --pt-navy: var(--p-navy); --pt-purple: var(--p-purple); --pt-pink: var(--p-pink);
+    --pt-grey: var(--p-grey);
+}
+.reveal .md-slip:not(.md-quote-inner)::after,
+.reveal .md-quote-inner.md-slip > blockquote::after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: calc(var(--fc-cut) * 1.4142);
+    height: calc(var(--fc-cut) * 1.4142);
+    background: linear-gradient(to left bottom, transparent calc(50% - 1px), var(--pal-card-fold) calc(50% - 1px));
+}
+.reveal .md-slip:not(.md-quote-inner) {
+    width: fit-content;
+    min-width: min(100%, 26.2em);
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 43px 70px 48px;
+    margin: 0.3em 0 0;
+}
+.reveal .md-slip .md-transcript { margin: 0; font-size: 1.12em; }
+.reveal .md-quote-inner.md-slip {
+    background: none;
+    clip-path: none;
+    box-shadow: none;
+    padding: 0;
+    max-width: 23em;
+    margin: auto;
+}
+.reveal section.md-quote:not(:has(h2, h3)) .md-quote-inner.md-slip { position: absolute; }
+.reveal section.md-quote:has(h2, h3) .md-quote-inner { position: static; inset: auto; height: auto; }
+.reveal section.md-quote:has(h2) .md-quote-inner.md-slip,
+.reveal section.md-quote:has(h3) .md-quote-inner.md-slip { margin: 0.4em 0 0; }
+.reveal .md-quote-inner.md-slip::after { display: none; }
+.reveal .md-quote-inner.md-slip > blockquote {
+    padding: 0.88em 1.6em 0.94em 1.34em;
+}

@@ -1,0 +1,824 @@
+@import url('base.css');
+@import url('palettes.css');
+
+/* ===========================================================
+   Thumb Index (B04) — a form: the palette (palettes.css, a
+   pal-NAME class on <html>) supplies every colour; this file
+   supplies the shape. Every heading is a tab hanging from the
+   top edge of the screen, in the palette's tint with lettering
+   in its accent ink; the @menu strip is a row of thumb tabs,
+   the lit one hanging lower with a stem down to its heading.
+   One face (Bitter) for all reading text, Concourse small caps
+   for the series line.
+
+   Units: the stage is 1920 x 1080 and reveal shows it with a
+   margin (--bleed-x/--bleed-y, set by directives.js); tabs
+   reach up through that margin to the screen edge.
+   =========================================================== */
+
+:root {
+    --r-main-font: 'Bitter', 'Noto Serif', Georgia, serif;
+    --r-heading-font: 'Bitter', 'Noto Serif', Georgia, serif;
+    --r-heading-bold-font: 'Bitter', 'Noto Serif', Georgia, serif;
+    --r-serif-font: 'Bitter', 'Noto Serif', Georgia, serif;
+    --r-highlight-ink: var(--pal-highlight-ink);
+
+    /* geometry (stage px) */
+    --tb-pad: 46px;            /* text margin, left and right */
+    --tb-tabin: 48px;          /* a tab's lettering inset: the tab starts this far left of the text */
+    --tb-tabtop: 37px;         /* lettering below the screen's top edge */
+    --tb-radius: 28px;
+    --tb-under: 66px;          /* space under every tab */
+
+    /* roles */
+    --tb-tab: var(--pal-tint);
+    --tb-tab-ink: var(--pal-accent-ink);
+    --tb-off: color-mix(in srgb, var(--pal-rule) 55%, var(--pal-quiet));
+    --tb-off-ink: var(--pal-ink2);
+    --tb-lift: drop-shadow(0 2px 0 color-mix(in srgb, var(--pal-ink) 8%, transparent))
+               drop-shadow(0 20px 18px color-mix(in srgb, var(--pal-ink) 20%, transparent));
+}
+html.pal-dark { --tb-lift: none; }
+
+.reveal {
+    background-color: var(--pal-paper) !important;
+    color: var(--pal-ink);
+    font-weight: 440;          /* Bitter is variable: a touch above 400 for projectors */
+    line-height: 1.3;
+    font-kerning: normal;
+}
+
+/* the text margin */
+.reveal .slides > section:not(.stack),
+.reveal .slides > section.stack > section {
+    box-sizing: border-box;
+    padding-left: var(--tb-pad);
+    padding-right: var(--tb-pad);
+}
+html.reveal-print .reveal .slides .pdf-page > section:not(.stack) {
+    padding-left: var(--tb-pad) !important;
+    padding-right: var(--tb-pad) !important;
+}
+
+/* ---------- type ---------- */
+.reveal h1, .reveal h2, .reveal h3, .reveal h4 {
+    font-family: var(--r-heading-font);
+    font-variant-caps: normal;
+    font-weight: 700;
+    color: var(--pal-ink);
+    letter-spacing: 0;
+    border-bottom: none;
+}
+.reveal h3 { font-size: 1.15em; line-height: 1.15; }
+.reveal strong, .reveal b { font-weight: 700; }
+.reveal a { color: var(--pal-accent-ink); }
+.reveal .md-settext { font-weight: 620; }   /* text tags: the hue survives distance */
+
+/* ---------- headings: a tab hanging from the top edge ---------- */
+.reveal .slides section > h2,
+.reveal .slides section > .md-overlay-under > h2,
+.reveal .slides section > .md-fill-inner > h2 {
+    width: fit-content;
+    max-width: calc(100% + var(--tb-tabin));
+    box-sizing: border-box;
+    margin: calc(-1 * var(--bleed-y, 0px)) 0 var(--tb-under) calc(-1 * var(--tb-tabin));
+    padding: var(--tb-tabtop) 52px 35px var(--tb-tabin);
+    background: var(--tb-tab);
+    color: var(--tb-tab-ink);
+    font-size: 1.42em;
+    line-height: 1.1;
+    border: none;
+    border-radius: 0 0 var(--tb-radius) var(--tb-radius);
+    text-align: left;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .slides section > h2 .md-head-sub {
+    margin: 0.15em 0 0;
+    font-family: var(--r-main-font);
+    font-size: 0.62em;
+    font-weight: 400;
+    line-height: 1.15;
+    color: inherit;
+}
+.reveal .slides section.md-fill .md-fill-inner > h2 { flex: 0 0 auto; margin-bottom: 0.9em; }
+
+/* a tag used as the heading: the tab takes the tag's colour */
+.reveal .slides section > h2:has(> .md-ribbon) {
+    background: transparent;
+    padding: 0;
+    margin-top: calc(-1 * var(--bleed-y, 0px));
+}
+.reveal .slides section > h2 > .md-tag.md-ribbon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45em;
+    min-width: 0;
+    margin: 0;
+    padding: var(--tb-tabtop) 56px 35px var(--tb-tabin);
+    font-size: 1em;
+    line-height: 1.1;
+    font-variant-caps: normal;
+    font-weight: 700;
+    border-radius: 0 0 var(--tb-radius) var(--tb-radius);
+    background: var(--set-light, var(--tag-bg));
+    color: var(--p-ink);
+}
+.reveal .slides section > h2 > .md-tag.md-ribbon::before,
+.reveal .slides section > h2 > .md-tag.md-ribbon::after { display: none; }
+.reveal .slides section > h2 > .md-tag.md-ribbon .md-tag-icon {
+    order: -1;
+    margin: 0;
+    font-size: 0.86em;
+    --fa-primary-color: var(--set-strong, currentColor);
+    --fa-secondary-color: var(--set-strong, currentColor);
+    --fa-secondary-opacity: 0.45;
+}
+html.pal-dark .reveal .slides section > h2 > .md-tag.md-ribbon {
+    background: color-mix(in srgb, var(--set-strong, var(--tag-bg)) 34%, var(--pal-paper));
+    color: var(--set-light, var(--pal-ink));
+}
+html.pal-dark .reveal .slides section > h2 > .md-tag.md-ribbon .md-tag-icon {
+    --fa-primary-color: var(--set-light, currentColor);
+    --fa-secondary-color: var(--set-light, currentColor);
+}
+
+/* each set colour, strong and light: the ribbon tab and the lit menu tab use both */
+.reveal .md-bg-red, .reveal .md-bg-light-red { --set-strong: var(--p-red); --set-light: var(--p-light-red); --set-ink: var(--p-ink); }
+.reveal .md-bg-orange, .reveal .md-bg-light-orange { --set-strong: var(--p-orange); --set-light: var(--p-light-orange); --set-ink: var(--p-ink); }
+.reveal .md-bg-gold, .reveal .md-bg-light-gold { --set-strong: var(--p-gold); --set-light: var(--p-light-gold); --set-ink: var(--p-ink); }
+.reveal .md-bg-green, .reveal .md-bg-light-green { --set-strong: var(--p-green); --set-light: var(--p-light-green); --set-ink: var(--p-ink); }
+.reveal .md-bg-teal, .reveal .md-bg-light-teal { --set-strong: var(--p-teal); --set-light: var(--p-light-teal); --set-ink: var(--p-ink); }
+.reveal .md-bg-blue, .reveal .md-bg-light-blue { --set-strong: var(--p-blue); --set-light: var(--p-light-blue); --set-ink: var(--p-ink); }
+.reveal .md-bg-navy, .reveal .md-bg-light-navy { --set-strong: var(--p-navy); --set-light: var(--p-light-navy); --set-ink: var(--p-ink); }
+.reveal .md-bg-purple, .reveal .md-bg-light-purple { --set-strong: var(--p-purple); --set-light: var(--p-light-purple); --set-ink: var(--p-ink); }
+.reveal .md-bg-pink, .reveal .md-bg-light-pink { --set-strong: var(--p-pink); --set-light: var(--p-light-pink); --set-ink: var(--p-ink); }
+.reveal .md-bg-grey, .reveal .md-bg-light-grey { --set-strong: var(--p-grey); --set-light: var(--p-light-grey); --set-ink: var(--p-ink); }
+.reveal .md-menu .md-menu-accent { --set-strong: var(--pal-accent-ink); --set-light: var(--pal-tint); }
+
+/* ---------- body text and lists ---------- */
+.reveal .slides section > p { margin: 0 0 0.6em; }
+.reveal .slides section ul { list-style: none; padding-left: 0; margin: 0; line-height: 1.3; }
+.reveal .slides section ul > li { position: relative; padding-left: 1.05em; margin: 0 0 0.42em; }
+.reveal .slides section ul > li::before {
+    content: "";
+    position: absolute;
+    left: 0.12em; top: 0.47em;
+    width: 0.36em; height: 0.36em;
+    border-radius: 3px;
+    background: var(--pal-mark);
+}
+.reveal .slides section ul ul { font-size: 0.917em; margin: 0.22em 0 0; }
+.reveal .slides section ul ul > li { padding-left: 1em; margin-bottom: 0.16em; line-height: 1.28; }
+.reveal .slides section ul ul > li::before {
+    left: 0.1em; top: 0.6em;
+    width: 0.48em; height: 0.13em;
+    border-radius: 2px;
+    background: var(--pal-ink2);
+}
+.reveal .slides section ol { padding-left: 1.2em; }
+.reveal .slides section ol > li::marker { color: var(--pal-accent-ink); font-weight: 700; }
+.reveal .slides section.md-refs ul > li,
+.reveal .slides section .md-advisory-list > li { padding-left: 0; }
+.reveal .slides section.md-refs ul > li::before,
+.reveal .slides section .md-advisory-list > li::before { display: none; }
+
+/* ---------- title slide ---------- */
+.reveal .slides section.title-slide:not([hidden]) {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: flex-end;
+    height: 100%;
+    padding-bottom: 61px;
+}
+html.reveal-print .reveal .slides .pdf-page > section.title-slide {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 61px !important;
+}
+.reveal .slides section.title-slide > br { display: none; }
+.reveal .slides section.title-slide .pres-series {
+    position: absolute;
+    top: calc(-1 * var(--bleed-y, 0px));
+    left: calc(var(--tb-pad) - var(--tb-tabin));
+    margin: 0;
+    padding: 46px 61px 43px var(--tb-tabin);
+    background: var(--tb-tab);
+    color: var(--tb-tab-ink);
+    border-radius: 0 0 30px 30px;
+    text-align: left;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .md-series-name {
+    font-family: 'Concourse', var(--r-main-font);
+    font-weight: 600;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.07em;
+    font-size: 1.38em;
+    line-height: 1;
+}
+.reveal .md-series-sub {
+    font-family: var(--r-main-font);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.88em;
+    line-height: 1.2;
+    margin-top: 9px;
+    color: inherit;
+}
+.reveal .slides section.title-slide h1,
+.reveal .slides section.title-slide .pres-title-headingfont {
+    zoom: 1.33;                /* meta.js sets 2.2em inline */
+    margin: 0;
+    font-family: var(--r-heading-font);
+    font-weight: 720 !important;
+    font-variant-caps: normal !important;
+    line-height: 1;
+    letter-spacing: -0.012em;
+    color: var(--pal-ink);
+    text-align: left;
+}
+.reveal .slides section.title-slide .pres-subtitle-mainfont {
+    margin: 0.45em 0 0;
+    font-size: 0.96em !important;
+    line-height: 1.3;
+    padding: 0 !important;
+    text-align: left !important;
+    font-style: italic;
+    font-weight: 400 !important;
+    color: var(--pal-ink2);
+}
+.reveal .slides section.title-slide table.titlebr {
+    position: static;
+    width: 100%;
+    margin: 61px 0 0;
+    font-size: 1em;
+    border-collapse: collapse;
+}
+.reveal .slides section.title-slide .titlebr td { padding: 0; vertical-align: bottom; }
+.reveal .slides section.title-slide .titlebr hr {
+    width: 239px;
+    height: 13px;
+    margin: 0 0 50px;
+    border: 0;
+    border-radius: 7px;
+    background: var(--pal-accent);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .slides section.title-slide .tpa4-l {
+    font-weight: 640;
+    font-size: 1.17em;
+    line-height: 1.25;
+    color: var(--pal-ink);
+    text-align: left;
+}
+.reveal .slides section.title-slide .tpa4-l .subtle,
+.reveal .slides section.title-slide .tpa4-r .subtle {
+    display: inline-block;
+    margin-top: 6px;
+    font-weight: 400;
+    font-size: 0.75em;
+    color: var(--pal-ink2);
+}
+.reveal .slides section.title-slide .tpa4-r { font-weight: 400; color: var(--pal-ink); }
+.reveal .slides section.title-slide .tpa4-r img,
+.reveal .slides section.title-slide .tpa4-l img {
+    height: 163px;
+    width: auto;
+    max-height: none;
+    display: inline-block;
+    vertical-align: bottom;
+}
+/* several logos: a row of their own under the bar, smaller */
+.reveal .slides section.title-slide .titlebr:has(tr:nth-child(3)) hr { margin: 44px 0 40px; }
+.reveal .slides section.title-slide .titlebr:has(tr:nth-child(3)) img { height: 120px; }
+/* closing slide: logos stacked, the QR code beside them */
+.reveal .slides section[data-meta="closing"] .titlebr hr { margin: 44px 0 40px; }
+.reveal .slides section[data-meta="closing"] .titlebr td { line-height: 1.25 !important; }
+.reveal .slides section[data-meta="closing"] .titlebr img { height: 100px; margin: 10px 0; }
+
+/* ---------- section divider ---------- */
+.reveal .slide-background.md-section { background-color: var(--pal-section); }
+.reveal .slides section.md-section { color: var(--pal-on-section); }
+.reveal .slides section.md-section .md-section-series {
+    top: calc(-1 * var(--bleed-y, 0px));
+    left: var(--tb-pad);
+    right: auto;
+    padding-top: 56px;
+    text-align: left;
+    font-size: 1em;
+    color: var(--pal-series);
+}
+.reveal .slides section.md-section .md-section-series .md-series-name { font-size: 1.04em; }
+.reveal .slides section.md-section .md-section-series .md-series-sub { font-size: 0.75em; opacity: 1; }
+.reveal .slides section.md-section h1 {
+    left: var(--tb-pad);
+    right: var(--tb-pad);
+    text-align: left;
+    font-size: 2.67em;
+    font-weight: 720;
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    color: var(--pal-on-section);
+}
+.reveal .slides section.md-section h1::before {
+    content: "";
+    display: block;
+    width: 239px;
+    height: 15px;
+    margin-bottom: 61px;
+    border-radius: 8px;
+    background: var(--pal-series);
+}
+.reveal .slides section.md-section h1::after { display: none; }
+/* corporate-style section bodies (markdown below the part title) */
+.reveal .slides section.md-section > :not(h1):not(.md-section-series) { color: var(--pal-on-section); }
+
+/* ---------- @menu: the strip is a row of thumb tabs ---------- */
+.reveal .slides section { --mi-w: 163px; --mi-gap: 15px; }
+.reveal .slides section:has(> .md-menu-strip > .md-menu-item:nth-of-type(11)) { --mi-w: 157px; }
+.reveal .slides section:has(> .md-menu-strip > .md-menu-item:nth-of-type(12)) { --mi-w: 143px; }
+.reveal .slides section:has(> .md-menu-strip > .md-menu-item:nth-of-type(13)) { --mi-w: 133px; }
+.reveal .slides section:has(> .md-menu-strip > .md-menu-item:nth-of-type(14)) { --mi-w: 124px; }
+.reveal .slides section:has(> .md-menu-strip > .md-menu-item:nth-of-type(15)) { --mi-w: 117px; }
+.reveal .slides section:has(> .md-menu-strip > .md-menu-item:nth-of-type(16)) { --mi-w: 109px; }
+
+.reveal .md-menu {
+    --menu-off: var(--tb-off);
+    --menu-off-ink: var(--tb-off-ink);
+}
+.reveal .slides section > .md-menu-strip:not(.md-menu-centre) {
+    position: absolute;
+    top: calc(-1 * var(--bleed-y, 0px));
+    left: calc(var(--tb-pad) - var(--tb-tabin));
+    margin: 0;
+    gap: var(--mi-gap);
+    align-items: flex-start;
+}
+.reveal .slides section > .md-menu-strip:not(.md-menu-centre) + * { margin-top: 316px; }
+.reveal .slides section > .md-menu-strip:not(.md-menu-centre) .md-menu-item {
+    flex: 0 0 var(--mi-w);
+    width: var(--mi-w);
+    height: calc(var(--bleed-y, 0px) + 74px);
+    aspect-ratio: auto;
+    padding: 0;
+    box-sizing: border-box;
+    border-radius: 0 0 24px 24px;
+    box-shadow: none;
+    container-type: normal;
+}
+.reveal .slides section > .md-menu-strip:not(.md-menu-centre) .md-menu-item .md-icon,
+.reveal .slides section > .md-menu-strip:not(.md-menu-centre) .md-menu-initial { font-size: 59px; }
+.reveal .md-menu-strip .md-menu-item.is-dim .md-icon {
+    --fa-primary-color: var(--tb-off-ink);
+    --fa-secondary-color: var(--tb-off-ink);
+    --fa-secondary-opacity: 0.38;
+}
+/* the lit tab: the item's light colour, hanging lower */
+.reveal .md-menu-strip .md-menu-item.is-lit {
+    background: var(--set-light, var(--tag-bg));
+    color: var(--set-strong, var(--tag-ink));
+}
+.reveal .md-menu-strip .md-menu-item.is-lit .md-icon {
+    --fa-primary-color: var(--set-strong, currentColor);
+    --fa-secondary-color: var(--set-strong, currentColor);
+    --fa-secondary-opacity: 0.45;
+}
+html.pal-dark .reveal .md-menu-strip .md-menu-item.is-lit {
+    background: color-mix(in srgb, var(--set-strong, var(--tag-bg)) 40%, var(--pal-paper));
+    color: var(--set-light, var(--tag-ink));
+}
+html.pal-dark .reveal .md-menu-strip .md-menu-item.is-lit .md-icon {
+    --fa-primary-color: var(--set-light, currentColor);
+    --fa-secondary-color: var(--set-light, currentColor);
+}
+.reveal .slides section > .md-menu-strip:not(.md-menu-centre) .md-menu-item.is-lit {
+    height: calc(var(--bleed-y, 0px) + 118px);
+}
+/* the heading under the lit tab: a free label in the ink, centred under
+   the tab and joined to it by a stem (positionMenuHeads leaves an
+   absolutely placed heading alone) */
+.reveal .slides section > .md-menu-strip:not(.md-menu-centre)[data-md-lit] + h2.md-menu-head {
+    position: absolute;
+    top: 179px;
+    left: calc(var(--tb-pad) - var(--tb-tabin) + var(--lit, 0) * (var(--mi-w) + var(--mi-gap)) + var(--mi-w) / 2);
+    --centre: calc(var(--tb-pad) - var(--tb-tabin) + var(--lit, 0) * (var(--mi-w) + var(--mi-gap)) + var(--mi-w) / 2);
+    transform: translateX(min(max(-50%, calc(var(--tb-pad) - var(--centre))), calc(1920px - var(--tb-pad) - var(--centre) - 100%)));
+    margin: 0 !important;
+    padding: 0;
+    max-width: none;
+    background: transparent;
+    color: var(--pal-ink);
+    white-space: nowrap;
+    border-radius: 0;
+    font-size: 1.42em;
+}
+.reveal .slides section > .md-menu-strip:not(.md-menu-centre):has(+ h2.md-menu-head) .md-menu-item.is-lit::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: calc(100% + 13px);
+    width: 9px;
+    height: 48px;
+    margin-left: -4.5px;
+    border-radius: 4px;
+    background: var(--set-strong, var(--pal-mark));
+}
+html.pal-dark .reveal .slides section > .md-menu-strip:not(.md-menu-centre):has(+ h2.md-menu-head) .md-menu-item.is-lit::after {
+    background: var(--set-light, var(--pal-mark));
+}
+.reveal .slides section > .md-menu-strip[data-md-lit] + h2.md-menu-head + * { margin-top: 316px; }
+.reveal .md-menu-strip[data-md-lit="1"] + h2.md-menu-head { --lit: 1; }
+.reveal .md-menu-strip[data-md-lit="2"] + h2.md-menu-head { --lit: 2; }
+.reveal .md-menu-strip[data-md-lit="3"] + h2.md-menu-head { --lit: 3; }
+.reveal .md-menu-strip[data-md-lit="4"] + h2.md-menu-head { --lit: 4; }
+.reveal .md-menu-strip[data-md-lit="5"] + h2.md-menu-head { --lit: 5; }
+.reveal .md-menu-strip[data-md-lit="6"] + h2.md-menu-head { --lit: 6; }
+.reveal .md-menu-strip[data-md-lit="7"] + h2.md-menu-head { --lit: 7; }
+.reveal .md-menu-strip[data-md-lit="8"] + h2.md-menu-head { --lit: 8; }
+.reveal .md-menu-strip[data-md-lit="9"] + h2.md-menu-head { --lit: 9; }
+.reveal .md-menu-strip[data-md-lit="10"] + h2.md-menu-head { --lit: 10; }
+.reveal .md-menu-strip[data-md-lit="11"] + h2.md-menu-head { --lit: 11; }
+.reveal .md-menu-strip[data-md-lit="12"] + h2.md-menu-head { --lit: 12; }
+.reveal .md-menu-strip[data-md-lit="13"] + h2.md-menu-head { --lit: 13; }
+.reveal .md-menu-strip[data-md-lit="14"] + h2.md-menu-head { --lit: 14; }
+.reveal .md-menu-strip[data-md-lit="15"] + h2.md-menu-head { --lit: 15; }
+/* a heading after a menu of another style: a tab of its own under the menu */
+.reveal .slides section > .md-menu:not(.md-menu-strip) + h2.md-menu-head {
+    margin-top: 0.25em;
+    padding-top: 0.32em;
+    border-radius: var(--tb-radius);
+}
+
+/* ---------- @cards and @columns ----------
+   Each card hangs from a bar like a long tab. The current card (the
+   `accent` flag): the tint, a heavy accent bar, a bold heading in the
+   accent ink. Beside a current card the others are quieter: the quiet
+   ground, a thin rule-coloured bar, a regular heading and the second
+   ink. With no current card every card is quiet with a bold heading. */
+.reveal .slides section > .md-cards:not(.md-stack):not(.md-style-stat):not(.md-style-strip) {
+    width: calc(100% + var(--tb-tabin));
+    margin-left: calc(-1 * var(--tb-tabin));
+    column-gap: 24px;
+}
+.reveal .md-style-box .md-card,
+.reveal .md-style-plain .md-card,
+.reveal .md-style-bar .md-card {
+    background: var(--pal-quiet);
+    border: 0;
+    border-top: 6px solid var(--pal-rule);
+    border-radius: 0 0 24px 24px;
+    padding: 0.55em 0.6em 0.7em var(--tb-tabin);
+    color: var(--pal-ink);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .md-cards .md-card > h3 {
+    color: var(--pal-ink);
+    font-weight: 700;
+    border: none;
+    padding: 0;
+    background: none;
+    margin: 0 0 0.45em;
+}
+.reveal .md-cards .md-card li::before { background: var(--pal-ink2); }
+.reveal .md-cards .md-card.md-card-accent {
+    background: var(--pal-tint);
+    border-top: 15px solid var(--pal-accent);
+    padding-top: calc(0.55em - 9px);
+}
+.reveal .md-cards .md-card.md-card-accent > h3 { color: var(--pal-accent-ink); font-weight: 720; }
+.reveal .md-cards .md-card.md-card-accent li::before { background: var(--pal-mark); }
+.reveal .md-cards:has(> .md-card-accent) > .md-card:not(.md-card-accent),
+.reveal .md-cards .md-card.md-card-dim { color: var(--pal-ink2); opacity: 1; }
+.reveal .md-cards:has(> .md-card-accent) > .md-card:not(.md-card-accent) > h3,
+.reveal .md-cards .md-card.md-card-dim > h3 { color: var(--pal-ink2); font-weight: 480; }
+.reveal .md-cards:has(> .md-card-accent) > .md-card:not(.md-card-accent) li::before,
+.reveal .md-cards .md-card.md-card-dim li::before { background: var(--pal-rule); }
+/* a colour on a card: the bar in the set colour, the ground its light version */
+.reveal .md-cards .md-card.md-card-filled {
+    background: var(--set-light, var(--tag-bg)) !important;
+    color: var(--p-ink);
+    border-top: 15px solid var(--set-strong, var(--tag-bg)) !important;
+}
+.reveal .slides section .md-cards .md-card-filled > h3 { color: var(--p-ink); }
+html.pal-dark .reveal .md-cards .md-card.md-card-filled {
+    background: color-mix(in srgb, var(--set-strong, var(--tag-bg)) 30%, var(--pal-paper)) !important;
+    color: var(--pal-ink);
+    border-top-color: var(--set-light, var(--tag-bg)) !important;
+}
+html.pal-dark .reveal .slides section .md-cards .md-card-filled > h3 { color: var(--pal-ink); }
+.reveal .md-style-bar .md-card { padding-top: 0; }
+.reveal .slides section .md-style-bar .md-card > h3 {
+    margin: 0 -0.6em 0.5em calc(-1 * var(--tb-tabin));
+    padding: 0.35em 0.6em 0.4em var(--tb-tabin);
+    background: var(--pal-tint);
+    color: var(--pal-accent-ink);
+    border-radius: 0;
+}
+.reveal .md-style-bar .md-card.md-card-filled,
+html.pal-dark .reveal .md-style-bar .md-card.md-card-filled {
+    background: var(--pal-quiet) !important;
+    color: var(--pal-ink);
+    border-top-width: 6px !important;
+}
+.reveal .slides section .md-style-bar .md-card.md-card-filled > h3 {
+    background: var(--set-light, var(--tag-bg));
+    color: var(--set-ink, var(--tag-ink));
+}
+html.pal-dark .reveal .slides section .md-style-bar .md-card.md-card-filled > h3 {
+    background: color-mix(in srgb, var(--set-strong, var(--tag-bg)) 30%, var(--pal-paper));
+    color: var(--set-light, var(--pal-ink));
+}
+.reveal .md-style-stat .md-card { background: var(--pal-quiet); border: 0; border-top: 6px solid var(--pal-rule); border-radius: 0 0 24px 24px; }
+.reveal .md-style-stat .md-card > p:first-of-type, .reveal .md-stat-num { color: var(--pal-accent-ink); }
+.reveal .md-strip { background: var(--pal-tint); color: var(--pal-accent-ink); }
+.reveal .md-strip.md-card-filled { background: var(--set-light, var(--tag-bg)); color: var(--p-ink); }
+
+/* ---------- tables ---------- */
+.reveal .slides section .md-table table,
+.reveal .slides section:not(.title-slide) > table {
+    width: auto;
+    font-size: 1.04em;
+    line-height: 1.2;
+    border-collapse: collapse;
+}
+.reveal .slides section .md-table table th,
+.reveal .slides section .md-table table td,
+.reveal .slides section:not(.title-slide) > table th,
+.reveal .slides section:not(.title-slide) > table td {
+    padding: 20px 70px 20px 0;
+    text-align: left;
+}
+.reveal .slides section .md-table thead th,
+.reveal .slides section:not(.title-slide) > table thead th {
+    font-weight: 700;
+    font-size: 0.92em;
+    color: var(--pal-ink);
+    border-bottom: 7px solid var(--pal-mark);
+    padding-bottom: 17px;
+}
+.reveal .slides section .md-table tbody td,
+.reveal .slides section:not(.title-slide) > table tbody td { border-bottom: 3px solid var(--pal-rule); }
+.reveal .slides section .md-table tbody tr:last-child td,
+.reveal .slides section:not(.title-slide) > table tbody tr:last-child td { border-bottom: 0; }
+.reveal .slides section .md-table-rowhead tbody td:first-child {
+    font-weight: 700;
+    color: var(--pal-accent-ink);
+    text-align: center;
+    padding: 20px 70px 20px 9px;
+}
+.reveal .slides section .md-table-band tbody tr:nth-child(even) td { background: var(--pal-quiet); }
+.reveal .slides section .md-table.md-table-head thead th { border-bottom-color: var(--tag-bg); }
+.reveal .slides section .md-table-small table { font-size: 0.72em; }
+.reveal .slides section .md-table + div.md-source,
+.reveal .slides section .md-table + p.md-source { margin-top: 52px; text-align: left; max-width: none !important; }
+
+/* ---------- sources, notes, highlight ---------- */
+.reveal .md-source { color: var(--pal-ink2); font-weight: 400; line-height: 1.3; }
+.reveal .md-note { color: var(--pal-ink2); border-left: 4px solid var(--pal-rule); font-weight: 400; }
+.reveal .md-subtle, .reveal .subtle { color: var(--pal-ink2); }
+.reveal .md-hl, .reveal .md-hl-in.visible { color: var(--pal-highlight-ink); }
+
+/* ---------- @parse: the framework's arrangement, Thumb Index's inks ---------- */
+.reveal .pz {
+    --pz-word-label: var(--pal-ink2);
+    --pz-phrase-label: color-mix(in srgb, var(--pal-ink2) 80%, var(--pal-paper));
+}
+.reveal .pz-w { font-weight: 480; }
+.reveal .pz .pz-fn { font-weight: 720; }
+
+/* ---------- @passage and its key: a swatch beside each function ---------- */
+.reveal .slides section > p:has(+ .md-passage) {
+    font-size: 1.13em;
+    font-weight: 520;
+    margin-bottom: 52px;
+}
+.reveal .slides section > p:has(+ .md-passage) .md-g:not(.conjunction),
+.reveal .slides section > p:has(> .md-g:first-child + .md-g, > .md-g:only-child) .md-g:not(.conjunction) { white-space: nowrap; }
+.reveal .slides section > p:has(+ .md-passage) .md-g:not(.conjunction)::before {
+    content: "";
+    display: inline-block;
+    width: 0.66em;
+    height: 0.66em;
+    margin-right: 0.28em;
+    vertical-align: -0.04em;
+    border-radius: 4px;
+    background: currentColor;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .md-passage > p {
+    font-size: 1.25em;
+    line-height: 1.6;
+    font-weight: 540;
+    max-width: none;
+    margin: 0;
+}
+
+/* ---------- @terms ---------- */
+.reveal dl.md-terms { column-gap: 0; row-gap: 0; margin: 10px 0 0; width: 100%; }
+.reveal dl.md-terms dt,
+.reveal dl.md-terms dd { padding: 37px 0; border-bottom: 3px solid var(--pal-rule); }
+.reveal dl.md-terms dt:last-of-type,
+.reveal dl.md-terms dd:last-of-type { border-bottom: 0; }
+.reveal dl.md-terms dt { font-weight: 700; font-size: 1.25em; line-height: 1.2; color: var(--pal-accent-ink); }
+.reveal dl.md-terms dd { font-size: 1.13em; line-height: 1.25; padding-left: 70px; }
+.reveal dl.md-terms dt > p, .reveal dl.md-terms dd > p { margin: 0; }
+
+/* ---------- quotation: no bar; the opening mark hangs in the margin ---------- */
+.reveal blockquote { border-left: none; padding-left: 0; font-family: var(--r-main-font); }
+.reveal blockquote::before { display: none; }
+.reveal .md-quote-inner {
+    max-width: 1717px;
+    left: 171px;
+    right: var(--tb-pad);
+    margin: 0;
+    font-size: 1.13em;
+}
+.reveal .md-quote-inner blockquote { margin: 0; font-size: 1em; line-height: 1.38; font-weight: 440; }
+.reveal .md-quote-inner blockquote p { text-indent: -0.42em; hanging-punctuation: first; }
+.reveal .md-quote-inner .md-source { margin-top: 0.75em; font-size: 0.74em; text-align: left; }
+.reveal section.md-quote:has(h2, h3) .md-quote-inner { left: 0; margin: 0 0 0 125px; max-width: min(1592px, calc(100% - 125px)); }
+
+/* ---------- the turned-corner card ----------
+   The top right corner is folded down: the card's corner is cut away
+   and a flap in the fold colour lies over it. A soft lift on light
+   palettes only. In a @quote ... card the card is the quotation
+   itself, with its source beneath on the slide. */
+.reveal .md-slip {
+    --slip-corner: 83px;
+    --slip-card: var(--pal-card);
+    --slip-ink: var(--pal-card-ink);
+    --slip-fold: var(--pal-card-fold);
+}
+.reveal .md-slip:not(.md-quote-inner),
+.reveal .md-quote-inner.md-slip > blockquote {
+    position: relative;
+    clip-path: none;
+    box-shadow: none;
+    border: 0;
+    border-radius: 0;
+    background: linear-gradient(225deg, transparent calc(var(--slip-corner) * 0.7071), var(--slip-card) calc(var(--slip-corner) * 0.7071 + 0.5px));
+    color: var(--slip-ink);
+    filter: var(--tb-lift);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .md-slip:not(.md-quote-inner)::after,
+.reveal .md-quote-inner.md-slip > blockquote::after {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: var(--slip-corner); height: var(--slip-corner);
+    background: linear-gradient(225deg, transparent 50%, var(--slip-fold) calc(50% + 0.5px));
+    border-radius: 0 0 0 8px;
+    filter: drop-shadow(-3px 4px 3px color-mix(in srgb, var(--pal-card-ink) 16%, transparent));
+}
+.reveal .md-quote-inner.md-slip {
+    background: none;
+    clip-path: none;
+    box-shadow: none;
+    padding: 0;
+    color: inherit;
+}
+.reveal .md-quote-inner.md-slip::after { display: none; }
+/* a card quotation with no heading stays optically centred, like any @quote */
+.reveal section.md-quote:not(:has(h2, h3)) .md-quote-inner.md-slip { position: absolute; top: 47%; }
+.reveal .md-quote-inner.md-slip > blockquote { padding: 1em 1.4em 1.05em 1.5em; }
+.reveal .md-slip:not(.md-quote-inner) {
+    width: max-content;
+    max-width: 100%;
+    padding: 0.8em 1.6em 0.85em 1.1em;
+}
+/* inside the card the inks are the card's, so a dark palette's pale
+   inks never reach it */
+.reveal .md-slip:not(.md-quote-inner),
+.reveal .md-quote-inner.md-slip > blockquote {
+    --r-font-color: var(--pal-card-ink);
+    --r-subtle-color: var(--pal-card-ink2);
+    --r-border-color: color-mix(in srgb, var(--pal-card-ink) 25%, transparent);
+    --r-highlight: var(--pal-card-highlight);
+    --pal-highlight: var(--pal-card-highlight);
+    --pal-highlight-ink: var(--pal-card-ink);
+    --pal-ink: var(--pal-card-ink);
+    --pal-ink2: var(--pal-card-ink2);
+    --pal-accent-ink: var(--pal-card-accent);
+    --pal-mark: var(--pal-card-accent);
+    --pal-rule: color-mix(in srgb, var(--pal-card-ink) 22%, var(--pal-card));
+    --pal-tint: color-mix(in srgb, var(--pal-card-accent) 16%, var(--pal-card));
+    --pal-quiet: color-mix(in srgb, var(--pal-card-ink) 6%, var(--pal-card));
+    --pal-paper: var(--pal-card);
+    --tb-off: color-mix(in srgb, var(--pal-card-ink) 10%, var(--pal-card));
+    --tb-off-ink: var(--pal-card-ink);
+    --tb-tab: color-mix(in srgb, var(--pal-card-accent) 16%, var(--pal-card));
+    --tb-tab-ink: var(--pal-card-accent);
+}
+.reveal .md-slip .md-hl { background: var(--pal-card-highlight); color: var(--pal-card-ink); }
+html.pal-dark .reveal .md-slip {
+    --g-subject: #0303B5; --g-predicator: #9C3A0A; --g-object: #057B89;
+    --g-complement: #8448F4; --g-adverbial: #A88200;
+    --pt-red: var(--p-red); --pt-orange: var(--p-orange); --pt-gold: var(--p-gold);
+    --pt-green: var(--p-green); --pt-teal: var(--p-teal); --pt-blue: var(--p-blue);
+    --pt-navy: var(--p-navy); --pt-purple: var(--p-purple); --pt-pink: var(--p-pink);
+    --pt-grey: var(--p-grey);
+}
+
+/* ---------- images ---------- */
+.reveal .md-split-body p { font-size: 1.1em; line-height: 1.4; }
+.reveal .md-split-img figcaption,
+.reveal .md-frame-caption,
+.reveal .bg-caption { font-style: italic; color: var(--pal-ink2); }
+
+/* ---------- @transcript: speaker labels are small tabs ---------- */
+.reveal .md-transcript { column-gap: 43px; row-gap: 30px; margin-top: 6px; }
+.reveal .md-tr-line { align-items: center; }
+.reveal .md-tr-label {
+    min-width: 104px;
+    height: 104px;
+    box-sizing: border-box;
+    padding: 0 0.3em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 17px;
+    background: var(--tb-tab);
+    color: var(--tb-tab-ink);
+    font-weight: 700;
+    font-size: 1.4em;
+    line-height: 1;
+    font-variant-numeric: lining-nums;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .md-tr-label:empty { background: none; }
+.reveal .md-tr-text { font-size: 1.33em; line-height: 1.3; }
+.reveal .md-tr-num { font-size: 0.75em; color: var(--pal-ink2); }
+.reveal .md-tr-pause, .reveal .md-tr-gap .md-tr-text { color: var(--pal-ink2); font-weight: 400; }
+.reveal .md-slip .md-transcript { row-gap: 20px; column-gap: 39px; margin: 0; }
+.reveal .md-slip .md-tr-label { min-width: 87px; height: 87px; border-radius: 15px; font-size: 1.2em; }
+.reveal .md-slip .md-tr-text { font-size: 1.22em; }
+.reveal .md-transcript.md-tr-overlay {
+    background: var(--pal-paper);
+    border-color: var(--pal-rule);
+    box-shadow: 0 0.3em 1.2em color-mix(in srgb, var(--pal-ink) 14%, transparent);
+}
+
+/* ---------- references ---------- */
+.reveal .slides section.md-refs > h2 { margin-bottom: 37px; font-size: calc(1.42em / 0.7); }
+.reveal .slides section.md-refs ul { max-width: none; }
+.reveal .slides section.md-refs li { font-weight: 420; line-height: 1.22; margin-bottom: 8px; }
+
+/* ---------- @slide contrast, statement, activity, centred ---------- */
+.reveal .slides section.md-contrast {
+    --pal-mark: var(--pal-on-section);
+    --pal-ink2: color-mix(in srgb, var(--pal-on-section) 75%, var(--pal-section));
+    --pal-rule: color-mix(in srgb, var(--pal-on-section) 30%, var(--pal-section));
+    color: var(--pal-on-section);
+}
+.reveal .slides section.md-contrast > h2,
+.reveal .slides section.md-contrast > .md-fill-inner > h2 {
+    background: color-mix(in srgb, var(--pal-on-section) 16%, var(--pal-section));
+    color: var(--pal-on-section);
+}
+/* a centred or statement slide with a heading keeps its tab at the top
+   and centres the rest in the space below */
+.reveal .slides section.md-centred:has(> h2):not([hidden]),
+.reveal .slides section.md-statement:has(> h2):not([hidden]) {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    top: 0;
+    transform: none;
+}
+.reveal .slides section.md-centred:has(> h2) > h2,
+.reveal .slides section.md-statement:has(> h2) > h2 {
+    position: absolute;
+    top: 0;
+    left: calc(var(--tb-pad) - var(--tb-tabin));
+    margin: calc(-1 * var(--bleed-y, 0px)) 0 0;
+}
+.reveal .slides section.md-statement > h2 { text-align: left; }
+.reveal .slides section.md-statement > p,
+.reveal .slides section.md-statement > blockquote { font-weight: 600; line-height: 1.2; }
+.reveal .slide-background.md-activity {
+    background-color: color-mix(in srgb, var(--pal-quiet) 60%, var(--pal-paper));
+    background-image: linear-gradient(to right, var(--pal-accent) 0 16px, transparent 16px);
+}
+.reveal .slides section.md-smaller > h2 { font-size: calc(1.42em / 0.85); }
+.reveal .slides section.md-smallest > h2 { font-size: calc(1.42em / 0.72); }
+html.pal-dark .reveal .md-menu-labels .md-menu-label { color: var(--set-light, var(--tag-bg)); }
+
+/* the second speaker in the neutral tab (md-tr-spk-2, from directives.js) */
+.reveal .md-tr-spk-2 .md-tr-label:not(:empty) {
+    background: color-mix(in srgb, var(--pal-rule) 55%, var(--pal-quiet));
+    color: var(--pal-ink);
+}
+.reveal .md-slip .md-tr-spk-2 .md-tr-label:not(:empty) {
+    background: color-mix(in srgb, var(--pal-card-fold) 45%, var(--pal-card));
+    color: var(--pal-card-ink);
+}

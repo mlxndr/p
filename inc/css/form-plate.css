@@ -1,0 +1,1034 @@
+@import url('base.css');
+@import url('palettes.css');
+
+/* =====================================================================
+   PLATE AND KEY (form "plate"): the matter in Bitter, the apparatus in
+   Concourse; one heading band whose rule sits at the same height on
+   every slide; the accent only on the current item; colour as a key
+   entry (swatch + label), never as decoration.
+
+   Every colour comes from the palette roles (palettes.css: --pal-*),
+   the --p-* palette, the set colours and the grammar colours. Light and
+   dark differ only under html.pal-light / html.pal-dark.
+
+   Units. The design was drawn at 1920 x 1080 with no outer margin;
+   reveal draws the 1920 x 1080 stage at 92% to leave its 8% margin.
+   --px is one pixel of the design enlarged by 1/0.92, so the slides
+   look on screen as the approved proposal did: calc(46 * var(--px)) is
+   the design's 46 px. The section padding is in stage pixels, chosen
+   so the visible margins match the design's (120 px at the sides, 60 px
+   top and foot, of which reveal's margin supplies 77 and 43).
+   ===================================================================== */
+
+.reveal {
+  --px: 1.087px;
+  --f-text: 'Bitter', 'Noto Serif', Georgia, serif;     /* the matter */
+  --f-app: 'Concourse', 'Noto Sans', sans-serif;       /* the apparatus */
+  --r-main-font: var(--f-text);
+  --r-heading-font: var(--f-text);
+  --r-heading-bold-font: var(--f-text);
+  --r-serif-font: var(--f-text);
+  --r-main-font-size: calc(46 * var(--px));
+  --r-highlight-ink: var(--pal-highlight-ink);
+  --tag-caps: normal;
+
+  /* roles under the form's own names */
+  --ink: var(--pal-ink);
+  --ink-2: var(--pal-ink2);
+  --head-ink: var(--pal-ink);
+  --rule: var(--pal-ink);
+  --mark: var(--pal-mark);
+  --accent: var(--pal-accent);
+  --accent-ink: var(--pal-accent-ink);
+  --dim-icon: color-mix(in srgb, var(--pal-ink2) 85%, var(--pal-paper));
+  --hl: var(--pal-highlight);
+  --hl-ink: var(--pal-highlight-ink);
+  --on-item: var(--p-white);
+
+  /* weights: light text on a dark ground looks heavier, so dark
+     palettes drop a step (below) */
+  --w-text: 420;
+  --w-head: 620;
+  --w-strong: 600;
+  --w-title: 640;
+  --w-passage: 520;
+  --w-cj: 780;
+
+  /* the vertical grid (design px) */
+  --head-band: calc(118 * var(--px));   /* top margin to the heading's foot */
+  --head-pad: calc(22 * var(--px));     /* heading foot to its rule */
+  --head-rule: calc(3 * var(--px));
+  --head-gap: calc(46 * var(--px));     /* rule to body matter */
+
+  /* the card: shadows are neutral darkening, not colour */
+  --card-shadow: rgba(0, 0, 0, 0.10);
+  --slip-lift: 0 1px 2px rgba(0, 0, 0, 0.08), 0 12px 30px rgba(0, 0, 0, 0.09);
+  --slip-fold-shadow: rgba(0, 0, 0, 0.16);
+
+  background-color: var(--pal-paper) !important;
+  color: var(--ink);
+  font-family: var(--f-text);
+  font-weight: var(--w-text);
+  line-height: 1.34;
+  font-kerning: normal;
+}
+html.pal-dark .reveal {
+  --w-text: 390;
+  --w-head: 590;
+  --w-strong: 570;
+  --w-title: 610;
+  --w-passage: 490;
+  --w-cj: 740;
+  --on-item: var(--pal-paper);
+  --card-shadow: rgba(0, 0, 0, 0.45);
+  --slip-lift: 0 2px 4px rgba(0, 0, 0, 0.35), 0 16px 40px rgba(0, 0, 0, 0.40);
+  --slip-fold-shadow: rgba(0, 0, 0, 0.22);
+}
+
+/* =====================================================================
+   The slide frame: a column, so sources can stand on the foot margin.
+   Reveal writes display:block (or none) inline on each section; the
+   column is applied to every section reveal is showing, never to a
+   hidden one or to a stack of vertical slides.
+   ===================================================================== */
+.reveal .slides section:not(.stack) {
+  box-sizing: border-box;
+  padding: 18px 47px 0;          /* the foot margin is the last block's (below): autofit counts
+                                    section padding beneath absolutely placed layers */
+  font-weight: var(--w-text);
+}
+.reveal .slides section:not(.stack):not(.title-slide):not(.md-section) > :last-child:not(.md-over):not(.md-overlay-under) { margin-bottom: 18px; }
+.reveal .slides section:not(.stack):not([style*="display: none"]) {
+  display: flex !important;
+  flex-direction: column;
+}
+.reveal .slides section:not(.stack) > * { flex-shrink: 0; }
+.reveal .slides section p { margin: 0 0 calc(24 * var(--px)); }
+.reveal .slides section :is(p, li, dd) { text-wrap: pretty; }
+.reveal em { font-style: italic; }
+.reveal strong, .reveal b { font-weight: var(--w-strong); }
+
+/* the prose measure: the design runs text to the full width */
+.reveal .slides section:not(.title-slide) > :is(p, ul, ol, blockquote) { max-width: none; }
+.reveal .slides section.md-fit:not(.title-slide) > :is(p, ul, ol, blockquote) { max-width: none; }
+
+/* ---------------- the heading ----------------
+   A fixed band: the heading stands on its rule, and the rule is at the
+   same height on every slide. A heading with a second line, or a ribbon,
+   grows up into the band rather than pushing the rule down. */
+.reveal .slides section h2 {
+  box-sizing: content-box;
+  min-height: var(--head-band);
+  align-content: end;
+  font-family: var(--f-text);
+  font-weight: var(--w-head);
+  font-size: calc(68 * var(--px));
+  font-variant-caps: normal;
+  line-height: 1.06;
+  letter-spacing: -0.006em;
+  text-wrap: balance;
+  text-align: left;
+  color: var(--head-ink);
+  margin: 0 0 var(--head-gap);
+  padding: 0 0 var(--head-pad);
+  border-bottom: var(--head-rule) solid var(--rule);
+}
+.reveal .slides section h1,
+.reveal .slides section h3,
+.reveal .slides section h4 {
+  font-family: var(--f-text);
+  font-variant-caps: normal;
+  color: var(--head-ink);
+  text-transform: none;
+}
+.reveal .slides section h3 {
+  font-weight: var(--w-head);
+  font-size: calc(48 * var(--px));
+  line-height: 1.12;
+  border-bottom: 0;
+  margin: 0 0 calc(20 * var(--px));
+}
+.reveal .slides section h4 { font-weight: var(--w-strong); font-size: 1em; margin: 0 0 0.3em; }
+.reveal .md-head-sub {
+  display: block;
+  font-family: var(--f-app);
+  font-weight: 400;
+  font-size: calc(36 / 68 * 1em);
+  color: var(--ink-2);
+  letter-spacing: 0;
+  line-height: 1.15;
+  margin: calc(4 * var(--px)) 0 0;
+}
+/* @slide plain: no heading rule */
+.reveal .slides section.md-plain h2 { border-bottom: 0; }
+
+/* ---------------- lists ----------------
+   Proximity carries the levels: items of the first level stand half a
+   line apart; their second-level items close up under them, smaller,
+   on tighter leading, so each item reads as one group. */
+.reveal .slides section ul { list-style: none; margin: 0; padding: 0; line-height: 1.34; }
+.reveal .slides section ul > li { position: relative; padding-left: calc(50 * var(--px)); margin: 0 0 calc(26 * var(--px)); }
+.reveal .slides section ul > li::before {
+  content: '';
+  position: absolute;
+  left: calc(2 * var(--px));
+  top: 0.56em;
+  width: calc(16 * var(--px));
+  height: calc(16 * var(--px));
+  background: var(--mark);
+}
+.reveal .slides section li ul { margin-top: calc(8 * var(--px)); font-size: calc(42 / 46 * 1em); }
+.reveal .slides section li li { line-height: 1.3; margin-bottom: calc(4 * var(--px)); padding-left: calc(40 * var(--px)); }
+.reveal .slides section li li:last-child { margin-bottom: 0; }
+.reveal .slides section ul ul > li::before {
+  width: calc(20 * var(--px)); height: calc(4 * var(--px)); top: 0.68em; left: 0; background: var(--ink-2);
+}
+.reveal .slides section ol { margin: 0; padding-left: 1.4em; }
+.reveal .slides section ol > li { margin: 0 0 calc(26 * var(--px)); padding-left: 0.2em; }
+.reveal .slides section ol > li::marker {
+  color: var(--accent-ink); font-family: var(--f-app); font-weight: 600; font-variant-numeric: lining-nums;
+}
+.reveal li::marker { color: var(--ink-2); }
+
+/* text tags ([[Latin]] from a text set): the category name in its
+   colour, semibold, in the text face */
+.reveal .md-c.md-settext { font-weight: var(--w-strong); }
+.reveal .md-table .md-c.md-settext { font-family: var(--f-app); font-weight: 600; }
+
+/* tags drawn as pills elsewhere become plain square labels */
+.reveal .md-tag:not(.md-ribbon) {
+  border-radius: 0;
+  font-family: var(--f-app);
+  font-weight: 600;
+  font-size: 0.72em;
+  letter-spacing: 0.01em;
+  padding: 0.1em 0.5em 0.14em;
+}
+
+/* highlight (==x==): the palette's highlight on the paper, its
+   card-highlight on a card */
+.reveal .md-hl, .reveal .md-hl-in.visible { background-color: var(--hl); color: var(--hl-ink); }
+.reveal .md-hl, .reveal .md-hl-in { border-radius: 0; padding: 0 0.1em; margin: 0 -0.1em; }
+
+/* =====================================================================
+   Title and closing slides (meta.js). The title slide stands on the
+   paper: the series at the top, the title at the optical middle, the
+   names on the foot margin with the logo beside them. No rules.
+   ===================================================================== */
+.reveal .slides section.title-slide {
+  padding: 54px 47px 45px;
+  font-size: calc(150 / 2.2 * var(--px));      /* the h1's inline 2.2em is 150 design px */
+  text-align: left;
+  color: var(--ink);
+}
+.reveal .md-series { line-height: 1; }
+.reveal .md-series-name {
+  display: block;
+  font-family: var(--f-app);
+  font-weight: 600;
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.08em;
+  font-size: calc(54 * var(--px));
+  line-height: 1;
+  color: var(--accent-ink);
+}
+.reveal .md-series-sub {
+  display: block;
+  font-family: var(--f-text);
+  font-style: italic;
+  font-weight: var(--w-text);
+  font-size: calc(38 * var(--px));
+  color: var(--ink-2);
+  margin-top: calc(12 * var(--px));
+  line-height: 1.2;
+}
+.reveal section.title-slide .pres-series { margin: 0; text-align: left; }
+.reveal .slides section.title-slide h1,
+.reveal .slides section.title-slide .pres-title-headingfont {
+  font-family: var(--f-text);
+  font-weight: var(--w-title) !important;
+  font-variant-caps: normal !important;
+  line-height: 1.02;
+  letter-spacing: -0.015em;
+  color: var(--head-ink) !important;
+  text-align: left;
+  margin: auto 0;
+  padding: 0 0 calc(24 * var(--px));
+  max-width: calc(1500 * var(--px));
+  border: 0;
+}
+.reveal .slides section.title-slide .pres-subtitle-mainfont {
+  font-family: var(--f-text);
+  font-style: italic;
+  font-weight: var(--w-text) !important;
+  font-size: calc(44 * var(--px)) !important;
+  color: var(--ink-2);
+  text-align: left !important;
+  margin: calc(-150 * var(--px)) 0 auto;
+  padding: 0 !important;
+  max-width: calc(1500 * var(--px));
+}
+.reveal .slides section.title-slide > br { display: none; }
+.reveal section.title-slide .titlebr {
+  position: static;
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 1em;
+}
+.reveal section.title-slide .titlebr td { padding: 0; vertical-align: bottom; color: var(--ink); }
+.reveal section.title-slide .titlebr hr { display: none; }
+.reveal section.title-slide .titlebr tr:has(hr) { display: none; }
+/* several logos (meta.js puts them in a row of their own): a line apart */
+.reveal section.title-slide .titlebr tr:has(hr) + tr:has(> .tpa4-l > img) td { padding-top: calc(48 * var(--px)); }
+.reveal section.title-slide .titlebr .tpa4-l {
+  font-family: var(--f-text);
+  font-weight: var(--w-strong);
+  font-size: calc(50 * var(--px));
+  line-height: 1.15;
+  width: auto;
+}
+.reveal section.title-slide .titlebr .tpa4-l > br { display: none; }
+.reveal section.title-slide .titlebr .subtle {
+  display: block;
+  font-family: var(--f-app);
+  font-weight: 400;
+  font-size: calc(38 * var(--px)) !important;
+  color: var(--ink-2);
+  margin-top: calc(10 * var(--px));
+  line-height: 1.15;
+}
+.reveal section.title-slide .titlebr .tpa4-l .subtle + br + .subtle { margin-top: 0; }
+.reveal section.title-slide .titlebr .tpa4-r {
+  text-align: right;
+  font-family: var(--f-app);
+  font-weight: 400;
+  font-size: calc(38 * var(--px));
+  color: var(--ink-2);
+  width: auto;
+}
+.reveal section.title-slide .titlebr .tpa4-r br { display: none; }
+.reveal section.title-slide .theme-logo,
+.reveal section.title-slide .titlebr img {
+  display: inline-block;
+  height: calc(111 * var(--px));
+  width: auto;
+  max-width: none;
+  max-height: none;
+  vertical-align: bottom;
+  margin: 0;
+}
+/* closing slide: the title smaller and higher; names and addresses at
+   the foot, the logos under them, the QR code on the right */
+.reveal .slides section.title-slide[data-meta="closing"] h1 {
+  font-size: calc(104 * var(--px)) !important;
+  margin: calc(40 * var(--px)) 0 auto;
+}
+.reveal section.title-slide[data-meta="closing"] .titlebr td { vertical-align: bottom; }
+.reveal section.title-slide[data-meta="closing"] .titlebr .tpa4-l .subtle { font-size: calc(36 * var(--px)) !important; }
+.reveal section.title-slide[data-meta="closing"] .titlebr tr + tr + tr td { padding-top: calc(36 * var(--px)); }
+.reveal section.title-slide[data-meta="closing"] .titlebr .tpa4-l { line-height: 1.15 !important; }
+.reveal section.title-slide[data-meta="closing"] .titlebr .tpa4-l > img { display: block; margin-top: calc(24 * var(--px)); }
+.reveal section.title-slide[data-meta="closing"] .titlebr .tpa4-l > img.leverhulme-logo { height: calc(104 * var(--px)); }
+.reveal section.title-slide[data-meta="closing"] .qr-code {
+  width: calc(240 * var(--px)) !important;
+  height: calc(240 * var(--px)) !important;
+}
+
+/* =====================================================================
+   @section: the palette's section colour as the ground. The part title
+   sits a little above the middle (the optical centre).
+   ===================================================================== */
+.reveal .slide-background.md-section { background-color: var(--pal-section); }
+.reveal .slides section.md-section {
+  padding: 54px 47px 45px;
+  color: var(--pal-on-section);
+  height: 100%;
+}
+.reveal .slides section.md-section .md-section-series {
+  position: static;
+  text-align: left;
+  font-size: 1em;
+}
+.reveal .slides section.md-section .md-series-name { color: var(--pal-series); font-size: calc(44 * var(--px)); }
+.reveal .slides section.md-section .md-series-sub {
+  color: color-mix(in srgb, var(--pal-on-section) 78%, var(--pal-section));
+  opacity: 1;
+  font-size: calc(34 * var(--px));
+  margin-top: calc(10 * var(--px));
+}
+.reveal .slides section.md-section h1 {
+  position: static;
+  transform: none;
+  font-family: var(--f-text);
+  font-weight: var(--w-title);
+  font-size: calc(128 * var(--px));
+  line-height: 1.02;
+  letter-spacing: -0.012em;
+  text-align: left;
+  text-wrap: balance;
+  color: var(--pal-on-section);
+  margin: auto 0;
+  padding: 0 0 calc(96 * var(--px));
+  max-width: calc(1560 * var(--px));
+  border: 0;
+}
+.reveal .slides section.md-section h1::after { display: none; }
+/* markdown under a section heading (corporate decks put it on a card;
+   here it is a quiet line under the title) */
+.reveal .slides section.md-section > :not(h1):not(.md-section-series) { color: var(--pal-on-section); }
+
+/* =====================================================================
+   Ribbon heading: a tag drawn as a key entry (swatch + label), standing
+   in the heading band like any other heading, on the same rule
+   ===================================================================== */
+.reveal .slides section h2:has(> .md-ribbon) {
+  border-bottom: var(--head-rule) solid var(--rule);
+  padding-bottom: var(--head-pad);
+}
+.reveal .md-tag.md-ribbon {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(28 * var(--px));
+  margin: 0;
+  padding: 0 calc(36 * var(--px)) 0 0;
+  min-width: 0;
+  height: calc(96 * var(--px));
+  box-sizing: border-box;
+  border-radius: 0;
+  font-family: var(--f-app);
+  font-weight: 600;
+  font-variant-caps: normal;
+  letter-spacing: 0;
+  font-size: calc(58 * var(--px));
+  line-height: 1;
+  vertical-align: bottom;
+  color: var(--p-ink);
+  background: var(--rb-light);
+  border: calc(4 * var(--px)) solid var(--rb-strong);
+}
+.reveal .md-tag.md-ribbon::before,
+.reveal .md-tag.md-ribbon::after { display: none; }
+.reveal .md-tag.md-ribbon .md-icon {
+  order: -1;
+  display: block;
+  margin: 0;
+  width: calc(96 * var(--px));
+  height: calc(88 * var(--px));
+  line-height: calc(88 * var(--px));
+  text-align: center;
+  font-size: calc(44 * var(--px));
+  background: var(--rb-strong);
+  color: var(--p-white);
+  --fa-secondary-opacity: 0.55;
+}
+.reveal .md-tag.md-ribbon .md-icon::after { left: 0; right: 0; text-align: center; }
+/* each set colour as a pair: the light ground and the strong swatch */
+.reveal .md-ribbon.md-bg-red,    .reveal .md-ribbon.md-bg-light-red    { --rb-strong: var(--p-red);    --rb-light: var(--p-light-red); }
+.reveal .md-ribbon.md-bg-orange, .reveal .md-ribbon.md-bg-light-orange { --rb-strong: var(--p-orange); --rb-light: var(--p-light-orange); }
+.reveal .md-ribbon.md-bg-gold,   .reveal .md-ribbon.md-bg-light-gold   { --rb-strong: var(--p-gold);   --rb-light: var(--p-light-gold); }
+.reveal .md-ribbon.md-bg-green,  .reveal .md-ribbon.md-bg-light-green  { --rb-strong: var(--p-green);  --rb-light: var(--p-light-green); }
+.reveal .md-ribbon.md-bg-teal,   .reveal .md-ribbon.md-bg-light-teal   { --rb-strong: var(--p-teal);   --rb-light: var(--p-light-teal); }
+.reveal .md-ribbon.md-bg-blue,   .reveal .md-ribbon.md-bg-light-blue   { --rb-strong: var(--p-blue);   --rb-light: var(--p-light-blue); }
+.reveal .md-ribbon.md-bg-navy,   .reveal .md-ribbon.md-bg-light-navy   { --rb-strong: var(--p-navy);   --rb-light: var(--p-light-navy); }
+.reveal .md-ribbon.md-bg-purple, .reveal .md-ribbon.md-bg-light-purple { --rb-strong: var(--p-purple); --rb-light: var(--p-light-purple); }
+.reveal .md-ribbon.md-bg-pink,   .reveal .md-ribbon.md-bg-light-pink   { --rb-strong: var(--p-pink);   --rb-light: var(--p-light-pink); }
+.reveal .md-ribbon.md-bg-grey,   .reveal .md-ribbon.md-bg-light-grey   { --rb-strong: var(--p-grey);   --rb-light: var(--p-light-grey); }
+.reveal .md-ribbon.md-bg-black,  .reveal .md-ribbon.md-bg-white        { --rb-strong: var(--p-black);  --rb-light: var(--p-white); }
+
+/* =====================================================================
+   @menu strip: the set's key, one entry lit. The strip's rule is the
+   heading rule, at the same height as on every other slide. The dimmed
+   entries are bare icons on the paper; the lit entry is the only solid
+   object, joined by a stem through the rule to its heading, which is
+   centred on it (held to the margins for the first and last two).
+   ===================================================================== */
+.reveal .md-menu-strip:not(.md-menu-centre) {
+  --m: max(var(--n, 10), 10);
+  display: flex;
+  gap: calc((100% - var(--m) * 92 * var(--px)) / (var(--m) - 1));
+  margin: calc(var(--head-band) - 92 * var(--px)) 0 0;
+  padding: 0 0 var(--head-pad);
+  border-bottom: var(--head-rule) solid var(--rule);
+  position: relative;
+}
+.reveal .md-menu-strip .md-menu-item {
+  flex: 0 0 calc(92 * var(--px));
+  width: calc(92 * var(--px));
+  height: calc(92 * var(--px));
+  aspect-ratio: auto;
+  border-radius: 0;
+  box-shadow: none;
+  container-type: normal;
+  --item: var(--tag-bg);
+}
+.reveal .md-menu-strip .md-menu-item .md-icon,
+.reveal .md-menu-strip .md-menu-initial { font-size: calc(42 * var(--px)); }
+.reveal .md-menu-strip .md-menu-item.is-dim {
+  background: transparent;
+  color: var(--dim-icon);
+  --fa-secondary-opacity: 0.45;
+}
+.reveal .md-menu-strip .md-menu-item.is-lit {
+  background: var(--item);
+  color: var(--on-item);
+  --fa-secondary-opacity: 0.6;
+}
+/* every item of the strip lit (@menu all): the key itself, each entry
+   in its colour, no stem */
+.reveal .md-menu-strip:not(:has(.is-dim)) .md-menu-item.is-lit::after { display: none; }
+.reveal .md-menu-strip:not(.md-menu-centre):has(.is-dim) .md-menu-item.is-lit::after {
+  content: '';
+  position: absolute;
+  left: calc(50% - 4 * var(--px));
+  top: 100%;
+  width: calc(8 * var(--px));
+  height: calc(var(--head-pad) + var(--head-rule) + 22 * var(--px));
+  background: var(--item);
+}
+/* set colours on dark palettes: the dark set (--pt-*, above), the icon in the paper */
+html.pal-dark .reveal .md-menu-strip .md-bg-red    { --item: var(--pt-red); }
+html.pal-dark .reveal .md-menu-strip .md-bg-orange { --item: var(--pt-orange); }
+html.pal-dark .reveal .md-menu-strip .md-bg-gold   { --item: var(--pt-gold); }
+html.pal-dark .reveal .md-menu-strip .md-bg-green  { --item: var(--pt-green); }
+html.pal-dark .reveal .md-menu-strip .md-bg-teal   { --item: var(--pt-teal); }
+html.pal-dark .reveal .md-menu-strip .md-bg-blue   { --item: var(--pt-blue); }
+html.pal-dark .reveal .md-menu-strip .md-bg-navy   { --item: var(--pt-navy); }
+html.pal-dark .reveal .md-menu-strip .md-bg-purple { --item: var(--pt-purple); }
+html.pal-dark .reveal .md-menu-strip .md-bg-pink   { --item: var(--pt-pink); }
+html.pal-dark .reveal .md-menu-strip .md-bg-grey   { --item: var(--pt-grey); }
+html.pal-dark .reveal .md-menu-strip .md-menu-accent { --item: var(--accent); }
+
+/* the heading under the lit entry: index and count from the menu */
+.reveal .md-menu-strip + .md-menu-head { --n: 10; --lit: 0; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(2):last-child) + .md-menu-head { --n: 2; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(3):last-child) + .md-menu-head { --n: 3; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(4):last-child) + .md-menu-head { --n: 4; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(5):last-child) + .md-menu-head { --n: 5; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(6):last-child) + .md-menu-head { --n: 6; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(7):last-child) + .md-menu-head { --n: 7; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(8):last-child) + .md-menu-head { --n: 8; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(9):last-child) + .md-menu-head { --n: 9; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(11):last-child) + .md-menu-head { --n: 11; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(12):last-child) + .md-menu-head { --n: 12; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(13):last-child) + .md-menu-head { --n: 13; }
+.reveal .md-menu-strip:has(> .md-menu-item:nth-child(14):last-child) + .md-menu-head { --n: 14; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(2)) + .md-menu-head { --lit: 1; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(3)) + .md-menu-head { --lit: 2; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(4)) + .md-menu-head { --lit: 3; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(5)) + .md-menu-head { --lit: 4; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(6)) + .md-menu-head { --lit: 5; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(7)) + .md-menu-head { --lit: 6; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(8)) + .md-menu-head { --lit: 7; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(9)) + .md-menu-head { --lit: 8; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(10)) + .md-menu-head { --lit: 9; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(11)) + .md-menu-head { --lit: 10; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(12)) + .md-menu-head { --lit: 11; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(13)) + .md-menu-head { --lit: 12; }
+.reveal .md-menu-strip:has(> .is-lit:nth-child(14)) + .md-menu-head { --lit: 13; }
+.reveal .slides section .md-menu-strip:not(.md-menu-centre) + h2.md-menu-head {
+  min-height: 0;
+  border: 0;
+  padding: 0;
+  width: max-content;
+  max-width: 100%;
+  align-self: flex-start;
+  margin: calc(22 * var(--px)) 0 calc(30 * var(--px))
+          calc(var(--lit) * (100% - 92 * var(--px)) / (max(var(--n), 10) - 1) + 46 * var(--px)) !important;
+  transform: translateX(-50%);
+}
+.reveal .slides section .md-menu-strip:not(.md-menu-centre):has(> .is-lit:nth-child(-n+2)) + h2.md-menu-head {
+  margin-left: 0 !important; transform: none;
+}
+.reveal .slides section .md-menu-strip:not(.md-menu-centre):has(> .md-menu-item:nth-child(10)):has(> .is-lit:nth-last-child(-n+2)) + h2.md-menu-head {
+  margin-left: auto !important; align-self: flex-end; transform: none;
+}
+.reveal .slides section .md-menu-head + p { margin-bottom: calc(28 * var(--px)); }
+/* a short list under a menu heading: three columns of examples, a step
+   larger, as object language */
+.reveal .slides section .md-menu-strip ~ ul:has(> li:nth-child(4)):not(:has(li > ul)):not(:has(> li:nth-child(13))) {
+  display: grid;
+  grid-template-columns: repeat(3, calc(420 * var(--px)));
+  row-gap: calc(14 * var(--px));
+}
+.reveal .slides section .md-menu-strip ~ ul:has(> li:nth-child(4)):not(:has(li > ul)):not(:has(> li:nth-child(13))) > li {
+  margin: 0; font-size: calc(58 / 46 * 1em); padding-left: calc(52 / 58 * 50 * var(--px));
+}
+.reveal .slides section .md-menu-strip ~ ul:has(> li:nth-child(4)):not(:has(li > ul)):not(:has(> li:nth-child(13))) > li::before { top: 0.5em; }
+
+/* the other menu styles: flat, in the form's colours */
+.reveal .md-menu {
+  --menu-off: color-mix(in srgb, var(--pal-ink) 10%, var(--pal-paper));
+  --menu-off-ink: var(--ink-2);
+}
+.reveal .md-menu-strip.md-menu-centre .md-menu-item { border-radius: 0; box-shadow: none; }
+.reveal .md-menu-steps .md-menu-item { border-radius: 0; font-family: var(--f-app); font-weight: 600; }
+.reveal .md-menu-tabs .md-menu-item { font-family: var(--f-app); font-weight: 600; font-variant-caps: normal; }
+.reveal .md-menu-labels .md-menu-label { font-family: var(--f-app); color: var(--ink-2); }
+html.pal-dark .reveal .md-menu-strip.md-menu-labels .md-menu-label { color: var(--ink-2); }
+
+/* =====================================================================
+   @cards and @columns: columns, not boxes. Three columns on quiet tints
+   of the ground. The current one (the card marked `accent`, or, while
+   the lists build, the column holding the newest item) stands on a
+   deeper tint under a heavy bar in the mark, its heading and numeral at
+   full strength; the others are lighter, without the bar, their
+   headings in the secondary ink and the text weight.
+   ===================================================================== */
+.reveal .md-cards { column-gap: calc(28 * var(--px)); row-gap: calc(28 * var(--px)); margin: 0 0 calc(20 * var(--px)); }
+.reveal .md-cards.md-ncols-3 { font-size: calc(38 / 46 * 1em); }
+.reveal .md-cards.md-ncols-4 { font-size: calc(34 / 46 * 1em); column-gap: calc(22 * var(--px)); }
+.reveal .md-cards.md-ncols-2 { font-size: calc(42 / 46 * 1em); }
+.reveal .md-card > h3 {
+  font-family: var(--f-text);
+  font-weight: var(--w-head);
+  font-size: calc(44 / 38 * 1em);
+  line-height: 1.12;
+  margin: 0 0 calc(24 * var(--px));
+  text-wrap: balance;
+  border: 0;
+}
+.reveal .slides section .md-card li { line-height: 1.24; margin: 0 0 calc(16 * var(--px)); padding-left: calc(30 * var(--px)); text-wrap: wrap; }
+.reveal .slides section .md-card li:last-child { margin-bottom: 0; }
+.reveal .slides section .md-card ul > li::before {
+  width: calc(11 * var(--px)); height: calc(11 * var(--px)); top: 0.52em; left: calc(2 * var(--px)); background: var(--ink-2);
+}
+.reveal .md-card p { margin: 0 0 0.5em; }
+
+/* box (the @cards default) and plain (the @columns default): columns */
+.reveal :is(.md-style-box, .md-style-plain) > .md-card {
+  background: var(--pal-quiet);
+  border: 0;
+  border-radius: 0;
+  padding: calc(50 * var(--px)) calc(30 * var(--px)) calc(36 * var(--px)) calc(32 * var(--px));
+}
+.reveal .md-style-plain > .md-card > h3 { border-top: 0; padding-top: 0; }
+.reveal :is(.md-style-box, .md-style-plain) > .md-card:is(.md-card-accent) {
+  background: var(--pal-tint);
+  border: 0;
+  border-top: calc(14 * var(--px)) solid var(--mark);
+  padding-top: calc(36 * var(--px));
+}
+.reveal :is(.md-style-box, .md-style-plain) > .md-card:is(.md-card-accent) > h3 { color: var(--head-ink); }
+.reveal :is(.md-style-box, .md-style-plain) > .md-card:is(.md-card-accent) li::before { background: var(--mark) !important; }
+/* the others, when one column is current */
+.reveal :is(.md-style-box, .md-style-plain):has(> .md-card-accent) > .md-card:not(.md-card-accent):not(.md-card-filled) > h3 {
+  color: var(--ink-2); font-weight: var(--w-text);
+}
+.reveal :is(.md-style-box, .md-style-plain):has(> .md-card-accent) > .md-card:not(.md-card-accent) li::before { opacity: 0.7; }
+/* a column given a set colour: its light version as the ground */
+.reveal :is(.md-style-box, .md-style-plain) > .md-card-filled { background: var(--tag-bg) !important; }
+.reveal .md-style-plain > .md-card-filled { color: var(--tag-ink, var(--p-white)); }
+.reveal .slides section .md-card-filled li::before { background: currentColor !important; }
+.reveal .md-card-dim { opacity: 0.55; }
+
+/* bar: the colour (or the section colour) fills a heading bar */
+.reveal .md-style-bar .md-card { border-radius: 0; border-width: calc(2 * var(--px)); padding: 0 calc(26 * var(--px)) calc(26 * var(--px)); }
+.reveal .slides section .md-style-bar .md-card > h3 {
+  border-radius: 0;
+  margin: 0 calc(-26 * var(--px)) calc(20 * var(--px));
+  padding: calc(16 * var(--px)) calc(26 * var(--px));
+  background: var(--tag-bg, var(--pal-section));
+  color: var(--tag-ink, var(--pal-on-section));
+}
+/* stat: a figure on a quiet ground */
+.reveal .md-style-stat .md-card { background: var(--pal-quiet); border: 0; border-radius: 0; }
+.reveal .md-stat-num,
+.reveal .md-style-stat .md-card > p:first-of-type { font-family: var(--f-text); font-weight: var(--w-head); color: var(--head-ink); }
+.reveal .md-style-stat .md-card-filled :is(.md-stat-num, p) { color: inherit; }
+.reveal .md-stat-label { font-family: var(--f-app); font-weight: 600; }
+.reveal .md-stat-note { font-family: var(--f-app); color: var(--ink-2); }
+/* strip */
+.reveal .md-strip { border-radius: 0; font-family: var(--f-app); font-weight: 600; }
+.reveal .md-style-strip .md-card:not(.md-strip) { background: var(--pal-quiet); padding: calc(26 * var(--px)) calc(30 * var(--px)); }
+.reveal .md-arrows > .md-card:not(:last-child)::after { background: var(--ink-2); }
+.reveal .md-card-tag { top: -0.7em; left: calc(26 * var(--px)); }
+.reveal .md-cards.md-flow { columns: var(--cols, 2); }
+
+/* =====================================================================
+   Tables: one rule under the column heads; no rules at top or foot.
+   Data in the apparatus face, lining tabular figures.
+   ===================================================================== */
+.reveal .md-table table,
+.reveal .slides section > table {
+  border-collapse: collapse;
+  width: 100%;
+  font-family: var(--f-app);
+  font-weight: 400;
+  font-size: calc(40 / 46 * 1em);
+  line-height: 1.2;
+  font-variant-numeric: lining-nums tabular-nums;
+  margin: 0 0 calc(24 * var(--px));
+}
+.reveal .md-table th,
+.reveal .slides section > table th {
+  font-weight: 600;
+  font-size: calc(38 / 40 * 1em);
+  text-align: left;
+  padding: 0 calc(24 * var(--px)) calc(16 * var(--px)) 0;
+  border: 0;
+  border-bottom: var(--head-rule) solid var(--rule);
+  background: none;
+  color: var(--ink);
+}
+.reveal .md-table td,
+.reveal .slides section > table td {
+  padding: calc(20 * var(--px)) calc(24 * var(--px)) calc(16 * var(--px)) 0;
+  vertical-align: top;
+  border: 0;
+}
+.reveal .md-table-rowhead tbody td:first-child { color: var(--ink-2); font-weight: 600; width: calc(110 * var(--px)); }
+.reveal .md-table-rowhead thead th:first-child { width: calc(110 * var(--px)); }
+.reveal .md-table-band tbody tr:nth-child(even) td { background: var(--pal-quiet); }
+.reveal .md-table-band td:first-child { padding-left: calc(16 * var(--px)); }
+.reveal .md-table-band th:first-child { padding-left: calc(16 * var(--px)); }
+.reveal .slides section .md-table.md-table-head thead th { padding-left: calc(16 * var(--px)); padding-top: calc(12 * var(--px)); }
+.reveal .md-table-small table { font-size: calc(32 / 46 * 1em); }
+/* the percentage bars (@table bars: a cell ending in "(N%)" holds .md-bar):
+   one scale for the whole table, 1 point = 11 design px */
+.reveal .md-table .md-bar {
+  display: block;
+  height: calc(12 * var(--px));
+  margin-top: calc(10 * var(--px));
+  width: calc(var(--v) * 11 * var(--px));
+  background: var(--bar, var(--ink-2));
+}
+.reveal .md-table td:has(.md-c-red)    { --bar: var(--pt-red, var(--p-red)); }
+.reveal .md-table td:has(.md-c-orange) { --bar: var(--pt-orange, var(--p-orange)); }
+.reveal .md-table td:has(.md-c-gold)   { --bar: var(--pt-gold, var(--p-gold)); }
+.reveal .md-table td:has(.md-c-green)  { --bar: var(--pt-green, var(--p-green)); }
+.reveal .md-table td:has(.md-c-teal)   { --bar: var(--pt-teal, var(--p-teal)); }
+.reveal .md-table td:has(.md-c-blue)   { --bar: var(--pt-blue, var(--p-blue)); }
+.reveal .md-table td:has(.md-c-navy)   { --bar: var(--pt-navy, var(--p-navy)); }
+.reveal .md-table td:has(.md-c-purple) { --bar: var(--pt-purple, var(--p-purple)); }
+.reveal .md-table td:has(.md-c-pink)   { --bar: var(--pt-pink, var(--p-pink)); }
+.reveal .md-table td:has(.md-c-grey)   { --bar: var(--pt-grey, var(--p-grey)); }
+
+/* =====================================================================
+   Sources stand on the foot margin of every slide, in one size;
+   notes are quiet paragraphs with a hairline in the secondary ink
+   ===================================================================== */
+.reveal .md-source,
+.reveal .slides section:not(.title-slide) > .md-source {
+  font-family: var(--f-app);
+  font-weight: 400;
+  font-style: normal;
+  font-size: calc(36 * var(--px));
+  line-height: 1.25;
+  color: var(--ink-2);
+  text-align: left;
+}
+.reveal .slides section:not(.title-slide) > div.md-source,
+.reveal .slides section:not(.title-slide) > p.md-source {
+  margin: calc(-8 * var(--px)) 0 calc(24 * var(--px));
+  max-width: none !important;
+}
+/* the slide's last word: on the foot margin */
+.reveal .slides section:not(.title-slide) > :is(div, p).md-source:last-child {
+  margin: auto 0 0;
+  padding-top: calc(24 * var(--px));
+}
+.reveal .md-source p { margin: 0; }
+.reveal .md-source em { font-style: italic; }
+.reveal .md-note {
+  font-family: var(--f-app);
+  font-weight: 400;
+  font-size: calc(36 * var(--px));
+  line-height: 1.3;
+  color: var(--ink-2);
+  border-left: calc(3 * var(--px)) solid var(--ink-2);
+  padding-left: calc(24 * var(--px));
+  margin: calc(16 * var(--px)) 0 calc(24 * var(--px));
+  max-width: calc(1400 * var(--px));
+}
+.reveal .md-note.md-note-top { margin: 0 0 calc(30 * var(--px)); }
+
+/* =====================================================================
+   Parse: the framework's arrangement, unchanged in order and position.
+   Only the leading changes: the label tiers close up on their words, so
+   each analysed line reads as one unit, and the lines stand further
+   apart. The figure sits at the optical centre of the space under the
+   heading; the examples are a step larger than the commentary.
+   ===================================================================== */
+.reveal .pz {
+  flex: 1 1 auto;
+  justify-content: center;
+  margin: 0;
+  padding-bottom: calc(70 * var(--px));
+  font-size: calc(84 * var(--px));
+  --pz-word-label: var(--ink-2);
+  --pz-phrase-label: var(--ink-2);
+}
+.reveal .slides section:has(> .pz) > .pz ~ .pz { flex: 0 0 auto; padding-bottom: 0; }
+.reveal .pz-ex { gap: calc(76 * var(--px)); }
+.reveal .pz-line { line-height: 1.1; column-gap: 0.42em; }
+.reveal .pz { --pz-gap: 0.42em; }
+.reveal .pz-t, .reveal .pz-b { line-height: 1.22; min-height: 1.22em; font-weight: var(--w-text); letter-spacing: 0; }
+.reveal .pz-t { margin-bottom: calc(2 * var(--px)); }
+.reveal .pz-br { font-weight: 300; color: var(--ink); }
+.reveal .pz .pz-fn { font-weight: 700; text-underline-offset: 0.16em; }
+.reveal .pz-leech { --pz-gap: 0.3em; }
+
+/* =====================================================================
+   @passage and its key: the key's entries each carry a swatch; the
+   passage is a step larger than the commentary
+   ===================================================================== */
+.reveal .slides section > p:has(> .md-g):has(+ .md-passage) {
+  font-size: calc(42 / 46 * 1em);
+  font-weight: var(--w-passage);
+  line-height: 1.3;
+  color: var(--ink);
+  margin: 0 0 calc(40 * var(--px));
+}
+.reveal .slides section > p:has(> .md-g):has(+ .md-passage) .md-g { white-space: nowrap; }
+.reveal .slides section > p:has(> .md-g):has(+ .md-passage) .md-g::before {
+  content: '';
+  display: inline-block;
+  width: calc(28 * var(--px));
+  height: calc(28 * var(--px));
+  background: currentColor;
+  margin: 0 calc(14 * var(--px)) 0 0;
+  vertical-align: -0.02em;
+}
+.reveal .slides section > p:has(> .md-g):has(+ .md-passage) .md-g ~ .md-g::before { margin-left: calc(14 * var(--px)); }
+.reveal .slides section > p:has(> .md-g):has(+ .md-passage) .md-g.conjunction::before { background: var(--ink); }
+.reveal .md-passage p {
+  font-size: calc(60 / 46 * 1em);
+  font-weight: var(--w-passage);
+  line-height: 1.55;
+  margin: 0;
+  text-wrap: pretty;
+}
+.reveal .md-g.conjunction { font-weight: var(--w-cj); color: var(--ink); }
+
+/* =====================================================================
+   @terms: term and gloss on one baseline, rows a line apart
+   ===================================================================== */
+.reveal dl.md-terms {
+  grid-template-columns: minmax(calc(500 * var(--px)), max-content) minmax(0, 1fr);
+  column-gap: calc(40 * var(--px));
+  row-gap: 0;
+  align-items: baseline;
+  margin: 0;
+}
+.reveal dl.md-terms dt,
+.reveal dl.md-terms dd { padding: 0 0 calc(46 * var(--px)); }
+.reveal dl.md-terms dt { font-weight: var(--w-strong); font-size: calc(48 / 46 * 1em); line-height: 1.25; }
+.reveal dl.md-terms dd { line-height: 1.25; }
+.reveal dl.md-terms-sc dt { font-weight: var(--w-strong); }
+
+/* =====================================================================
+   @quote: centred on the optical middle; the opening mark hangs; the
+   quotation a step larger than the commentary
+   ===================================================================== */
+.reveal .md-quote-inner {
+  max-width: none;
+  left: calc(166 * var(--px));
+  right: calc(122 * var(--px));
+  top: 46%;
+  font-size: calc(56 * var(--px));
+}
+.reveal .md-quote-inner blockquote,
+.reveal .slides section blockquote {
+  font-family: var(--f-text);
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  line-height: 1.42;
+}
+.reveal .md-quote-inner blockquote::before { display: none; }
+.reveal .md-quote-inner blockquote p { margin: 0; text-indent: -0.4em; }
+.reveal .md-quote-inner .md-source {
+  margin: calc(40 * var(--px)) 0 0;
+  font-size: calc(36 * var(--px));
+  text-indent: 0;
+}
+/* the faded copy under a transcript overlay is laid out as the slide was */
+.reveal .slides section > .md-overlay-under { display: flex; flex-direction: column; box-sizing: border-box; }
+
+/* a markdown blockquote in running text: a quiet rule in the secondary ink */
+.reveal .slides section > blockquote {
+  border-left: calc(3 * var(--px)) solid var(--ink-2);
+  padding-left: calc(36 * var(--px));
+  margin: 0 0 calc(24 * var(--px));
+}
+.reveal .slides section > blockquote::before { display: none; }
+/* a quotation slide with its own heading flows under it */
+.reveal section.md-quote:has(h2) .md-quote-inner { margin: 0; font-size: calc(52 * var(--px)); }
+
+/* @slide statement: one large sentence, centred */
+.reveal .slides section.md-statement { justify-content: center; text-align: center; }
+.reveal .slides section.md-statement > :is(p, blockquote) {
+  font-family: var(--f-text);
+  font-weight: var(--w-head);
+  font-size: calc(76 * var(--px));
+  line-height: 1.2;
+  max-width: calc(1500 * var(--px)) !important;
+  margin: 0 auto calc(30 * var(--px));
+  text-align: center;
+  text-wrap: balance;
+}
+.reveal .slides section.md-statement > h2 { border-bottom: 0; min-height: 0; text-align: center; align-self: center; }
+.reveal .slides section.md-statement > .md-source { margin: 0 auto; text-align: center; }
+/* @slide centred */
+.reveal .slides section.md-centred { justify-content: center; }
+
+/* =====================================================================
+   Images
+   ===================================================================== */
+.reveal .md-fill-inner > h2 { margin-bottom: var(--head-gap); }
+.reveal .md-split { column-gap: calc(84 * var(--px)); align-items: start; }
+.reveal .md-split-img { justify-content: flex-start; }
+.reveal .md-split-img img { object-position: top; }
+.reveal .md-split-body p { font-size: calc(52 / 46 * 1em); line-height: 1.44; }
+.reveal .md-split-body > p:first-child { text-indent: -0.42em; }
+.reveal .md-split-img figcaption,
+.reveal .md-compare figcaption,
+.reveal .md-frame-caption,
+.reveal .bg-caption {
+  font-family: var(--f-app);
+  font-style: normal;
+  font-size: calc(32 * var(--px));
+  color: var(--ink-2);
+}
+/* text over an image: the panel in the paper, square */
+.reveal .md-over-panel,
+.reveal .md-over .md-over-body { border-radius: 0; }
+
+/* =====================================================================
+   @transcript: speakers in the apparatus face, in the accent; turns on
+   one edge; a step larger than the commentary
+   ===================================================================== */
+.reveal .md-transcript {
+  column-gap: calc(24 * var(--px));
+  row-gap: calc(22 * var(--px));
+  margin: 0;
+  font-size: calc(60 / 46 * 1em);
+  line-height: 1.3;
+}
+.reveal .md-tr-label {
+  min-width: calc(72 * var(--px));
+  font-family: var(--f-app);
+  font-weight: 600;
+  font-variant-caps: normal;
+  font-size: calc(56 / 60 * 1em);
+  letter-spacing: 0;
+  color: var(--accent-ink);
+}
+.reveal .md-tr-num { font-family: var(--f-app); color: var(--ink-2); }
+.reveal .md-tr-pause, .reveal .md-tr-gap .md-tr-text { color: var(--ink-2); font-weight: var(--w-text); }
+.reveal .md-tr-ov { color: var(--ink-2); }
+.reveal .md-transcript.md-tr-overlay {
+  background: var(--pal-paper);
+  border: 0;
+  border-radius: 0;
+  border-top: var(--head-rule) solid var(--rule);
+  box-shadow: 0 calc(12 * var(--px)) calc(30 * var(--px)) var(--card-shadow);
+}
+
+/* =====================================================================
+   @refs: leading closed up inside an entry, space between entries
+   ===================================================================== */
+.reveal .slides section.md-refs { font-size: 1em; }
+.reveal .slides section.md-refs h2 { margin-bottom: calc(34 * var(--px)); }
+.reveal .slides section.md-refs ul {
+  font-size: calc(32 / 46 * 1em);
+  line-height: 1.22;
+  max-width: none;
+  padding-left: 1.4em;
+  text-indent: -1.4em;
+}
+.reveal .slides section.md-refs ul > li { padding-left: 0; margin: 0 0 calc(12 * var(--px)); }
+.reveal .slides section.md-refs ul > li::before { display: none; }
+
+/* =====================================================================
+   @slide contrast: the section colour carries a content slide;
+   @slide activity: the quiet ground with a bar in the mark
+   ===================================================================== */
+.reveal .slide-background.md-contrast { background-color: var(--pal-section); }
+.reveal .slides section.md-contrast {
+  --ink: var(--pal-on-section);
+  --ink-2: color-mix(in srgb, var(--pal-on-section) 78%, var(--pal-section));
+  --head-ink: var(--pal-on-section);
+  --rule: var(--pal-on-section);
+  --mark: var(--pal-series);
+  --accent-ink: var(--pal-series);
+  color: var(--pal-on-section);
+}
+.reveal .slide-background.md-activity {
+  background-color: var(--pal-quiet);
+  background-image: linear-gradient(to right, var(--pal-mark) 0 calc(14 * var(--px)), transparent calc(14 * var(--px)));
+}
+
+/* =====================================================================
+   The card (@card, @quote ... card): a light sheet in every palette,
+   its top right corner turned down, a quiet edge and a lift on light
+   palettes; on dark ones the edge goes and the shadow deepens. Inside
+   it everything reads as on a light ground: the accent, the highlight,
+   the weights and the grammar and colour marks take their light values.
+   ===================================================================== */
+.reveal .md-slip {
+  --ink: var(--pal-card-ink);
+  --ink-2: var(--pal-card-ink2);
+  --head-ink: var(--pal-card-ink);
+  --rule: var(--pal-card-ink);
+  --accent: var(--pal-card-accent);
+  --accent-ink: var(--pal-card-accent);
+  --mark: var(--pal-card-accent);
+  --hl: var(--pal-card-highlight);
+  --hl-ink: var(--pal-card-ink);
+  --r-highlight: var(--pal-card-highlight);
+  --r-highlight-ink: var(--pal-card-ink);
+  --r-font-color: var(--pal-card-ink);
+  --r-subtle-color: var(--pal-card-ink2);
+  --w-text: 420; --w-head: 620; --w-strong: 600; --w-passage: 520; --w-cj: 780;
+  --fold: calc(56 * var(--px));
+  --slip-corner: var(--fold);
+  position: relative;
+  align-self: flex-start;
+  color: var(--ink);
+  font-weight: var(--w-text);
+  margin: 0;
+  padding: calc(44 * var(--px)) calc(104 * var(--px)) calc(48 * var(--px)) calc(60 * var(--px));
+  clip-path: none;
+  box-shadow: none;
+  background: linear-gradient(225deg, transparent calc(var(--fold) * 0.7071), var(--pal-card) calc(var(--fold) * 0.7071));
+  filter: drop-shadow(2px 0 0 var(--pal-card-fold)) drop-shadow(-2px 0 0 var(--pal-card-fold))
+          drop-shadow(0 2px 0 var(--pal-card-fold)) drop-shadow(0 -2px 0 var(--pal-card-fold))
+          drop-shadow(0 12px 18px var(--card-shadow));
+}
+.reveal .md-slip::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: var(--fold); height: var(--fold);
+  background: linear-gradient(225deg, transparent 50%, var(--pal-card-fold) 50%);
+  filter: drop-shadow(-3px 4px 3px var(--slip-fold-shadow));
+}
+html.pal-dark .reveal .md-slip {
+  --g-subject: #0303B5; --g-predicator: #9C3A0A; --g-object: #057B89;
+  --g-complement: #8448F4; --g-adverbial: #A88200;
+  --pt-red: var(--p-red); --pt-orange: var(--p-orange); --pt-gold: var(--p-gold);
+  --pt-green: var(--p-green); --pt-teal: var(--p-teal); --pt-blue: var(--p-blue);
+  --pt-navy: var(--p-navy); --pt-purple: var(--p-purple); --pt-pink: var(--p-pink);
+  --pt-grey: var(--p-grey);
+  --on-item: var(--p-white);
+  filter: drop-shadow(0 16px 26px rgba(0, 0, 0, 0.5));
+}
+.reveal .md-slip > :first-child { margin-top: 0; }
+.reveal .md-slip > :last-child { margin-bottom: 0; }
+.reveal .md-slip .md-transcript { row-gap: calc(22 * var(--px)); font-size: calc(58 / 46 * 1em); }
+.reveal .md-slip .md-g.conjunction { font-weight: 780; }
+/* the quotation on a card */
+/* a card quotation with no heading stays at the optical middle, as the
+   plain quotation does (base.css lets it flow) */
+.reveal section.md-quote:not(:has(h2, h3)) .md-quote-inner.md-slip { position: absolute; top: 46%; }
+.reveal .md-quote-inner.md-slip {
+  font-size: calc(54 * var(--px));
+  padding: calc(52 * var(--px)) calc(104 * var(--px)) calc(56 * var(--px)) calc(72 * var(--px));
+}
+.reveal .md-quote-inner.md-slip .md-source { margin-top: calc(34 * var(--px)); }
+.reveal section.md-quote:has(h2, h3) .md-quote-inner.md-slip { position: static; font-size: calc(52 * var(--px)); max-width: calc(1600 * var(--px)); }
+.reveal .md-split .md-slip { align-self: start; }
+.reveal .md-split-body .md-slip p { font-size: calc(50 / 46 * 1em); }

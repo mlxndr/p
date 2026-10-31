@@ -1,0 +1,565 @@
+@import url('base.css');
+@import url('palettes.css');
+
+/* ===========================================================
+   Attested Forms (form B02). Two voices: the apparatus in
+   Concourse (headings in true small caps, labels, glosses) and
+   the evidence in Bitter (cited forms, quotations, passages,
+   transcripts). Every colour comes from the palette roles
+   (palettes.css); default palettes silver-claret (light) and
+   navy-gold (dark).
+   Roles: paper ground; ink text, heading and title rules; ink2
+   glosses, sources, unchosen column heads; mark bullets and
+   source bars; accent the current column's bar; accent-ink the
+   series name, table heads, speaker labels; rule hairlines;
+   tint the current column, quiet the others; section, on-section
+   and series the divider; card roles the turned-corner card.
+   =========================================================== */
+
+:root {
+    --r-main-font: 'Concourse', 'Noto Sans', 'Helvetica Neue', sans-serif;
+    --r-heading-font: 'Concourse', 'Noto Sans', 'Helvetica Neue', sans-serif;
+    --r-heading-bold-font: 'Concourse', 'Noto Sans', 'Helvetica Neue', sans-serif;
+    --r-serif-font: 'Bitter', 'Noto Serif', Georgia, serif;
+    --af-ev: 'Bitter', 'Noto Serif', Georgia, serif;     /* the evidence voice */
+    --tag-caps: all-small-caps;
+}
+html.mga-form {
+    --af-dim: color-mix(in srgb, var(--pal-ink2) 78%, var(--pal-paper));      /* unlit menu items */
+    --af-form-ink: color-mix(in srgb, var(--pal-ink2) 80%, var(--pal-paper)); /* parse form labels */
+    --af-on-section-2: color-mix(in srgb, var(--pal-on-section) 80%, var(--pal-section));
+    --r-border-color: var(--pal-rule);
+}
+
+/* ---------- ground and running text ---------- */
+.reveal { background-color: var(--pal-paper) !important; color: var(--pal-ink); font-weight: 400; line-height: 1.32; }
+.reveal-viewport { background-color: var(--pal-paper); }
+.reveal .slides section { font-variant-numeric: oldstyle-nums proportional-nums; font-kerning: normal; }
+.reveal strong, .reveal b { font-weight: 600; }
+
+/* the evidence voice: cited forms in Bitter italic */
+.reveal em { font-family: var(--af-ev); font-style: italic; font-weight: 450; font-size: 0.95em; }
+.reveal .md-source em, .reveal .md-refs em, .reveal .md-head-sub em,
+.reveal section.title-slide em, .reveal .md-series em {
+    font-family: inherit; font-size: 1em; font-weight: inherit;
+}
+
+/* ---------- headings: Concourse semibold small caps over one ink rule ---------- */
+.reveal h1, .reveal h2, .reveal h3 {
+    font-family: var(--r-heading-font);
+    color: var(--pal-ink);
+    font-weight: 600;
+    font-variant-caps: small-caps;
+    letter-spacing: 0.005em;
+}
+.reveal .slides section h2 {
+    font-size: 1.435em;
+    line-height: 1.05;
+    padding-bottom: 0.36em;
+    margin: 0 0 0.66em;
+    border-bottom: 4px solid var(--pal-ink);
+}
+.reveal .slides section h3 { border-bottom: none; }
+.reveal .slides section.md-plain h2 { border-bottom: none; }
+.reveal .md-head-sub {
+    font-size: 0.576em;          /* 38px in a 66px heading */
+    color: var(--pal-ink2);
+    margin-top: 0.3em;
+    letter-spacing: 0;
+}
+
+/* ---------- lists: square marks in the mark colour ---------- */
+.reveal .slides section ul { list-style: none; padding-left: 0; margin: 0; line-height: 1.32; }
+.reveal .slides section ul > li { position: relative; padding-left: 1.13em; margin: 0 0 0.39em; }
+.reveal .slides section ul > li::before {
+    content: ""; position: absolute; left: 0.13em; top: 0.5em;
+    width: 0.3em; height: 0.3em; background: var(--pal-mark);
+}
+.reveal .slides section ul ul { font-size: 0.913em; margin: 0.22em 0 0; }
+.reveal .slides section ul ul > li { padding-left: 1.1em; margin-bottom: 0.19em; }
+.reveal .slides section ul ul > li::before {
+    width: 0.48em; height: 0.095em; top: 0.64em; left: 0.1em; background: var(--pal-ink2);
+}
+.reveal .slides section ol { margin: 0; padding-left: 1.3em; }
+.reveal .slides section ol > li::marker { color: var(--pal-accent-ink); font-weight: 600; }
+
+/* set names in running text (text sets): semibold small caps in their colour */
+.reveal .md-settext { font-weight: 600; font-variant-caps: small-caps; letter-spacing: 0.02em; }
+
+/* ==========================================================
+   Title and closing slides: the series at the head, the title
+   low on the slide, one ink rule, names and the logo below it
+   ========================================================== */
+.reveal .slide-background.title-slide { background-color: var(--pal-paper); }
+.reveal .slides section.title-slide[style*="display: block"],
+html.print-pdf .reveal .slides section.title-slide {
+    display: flex !important;
+    flex-direction: column;
+    height: 100%;
+    padding: 1.1em 0 0.9em;
+    box-sizing: border-box;
+}
+.reveal section.title-slide > br { display: none; }
+.reveal section.title-slide .pres-series {
+    margin: 0; text-align: left;
+}
+.reveal .md-series-name {
+    font-family: var(--r-main-font);
+    font-weight: 600;
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.08em;
+    font-size: 1.3em;
+    line-height: 1;
+    color: var(--pal-accent-ink);
+}
+.reveal .md-series-sub {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 0.913em;
+    color: var(--pal-ink2);
+    margin-top: 0.28em;
+}
+.reveal section.title-slide h1,
+.reveal section.title-slide .pres-title-headingfont {
+    margin: auto 0 0.54em !important;
+    font-family: var(--r-heading-font);
+    font-size: 2.565em !important;   /* 118px over 46px */
+    font-weight: 600 !important;
+    line-height: 1.02;
+    font-variant-caps: small-caps !important;
+    letter-spacing: 0.01em;
+    color: var(--pal-ink);
+    text-align: left;
+}
+.reveal section.title-slide .pres-subtitle-mainfont {
+    text-align: left !important;
+    font-weight: 400 !important;
+    font-size: 1em !important;
+    color: var(--pal-ink2);
+    margin: -0.6em 0 1.2em;
+    padding: 0 !important;
+}
+.reveal section.title-slide .titlebr {
+    position: static;
+    width: 100%;
+    margin: 0;
+    font-size: 1em;
+    border: none;
+}
+.reveal section.title-slide .titlebr td { padding: 0; vertical-align: bottom; }
+.reveal section.title-slide .titlebr hr {
+    border: none; border-top: 4px solid var(--pal-ink); margin: 0 0 0.78em; height: 0;
+}
+.reveal section.title-slide .tpa4-l {
+    font-weight: 600; font-size: 1.087em; line-height: 1.2; color: var(--pal-ink);
+}
+.reveal section.title-slide .tpa4-l .subtle {
+    display: inline-block; font-weight: 400; font-size: 0.8em; color: var(--pal-ink2); margin-top: 0.15em;
+}
+.reveal section.title-slide .tpa4-r { font-weight: 400; color: var(--pal-ink2); }
+.reveal section.title-slide .titlebr:not(:has(.tpa4-l img)) .tpa4-r .theme-logo { height: 131px; width: auto; max-width: none; max-height: none; }
+
+/* ==========================================================
+   @section: the palette's section ground, series then title,
+   set left and centred down the slide
+   ========================================================== */
+.reveal .slide-background.md-section { background-color: var(--pal-section); }
+.reveal .slides section.md-section[style*="display: block"],
+html.print-pdf .reveal .slides section.md-section {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 0.85em;
+    box-sizing: border-box;
+}
+.reveal .slides section.md-section { color: var(--pal-on-section); }
+.reveal .slides section.md-section .md-section-series {
+    position: static; text-align: left; font-size: 1em; margin-bottom: 1.22em;
+}
+.reveal .slides section.md-section .md-series-name { color: var(--pal-series); font-size: 1em; }
+.reveal .slides section.md-section .md-section-series .md-series-sub {
+    color: var(--af-on-section-2); opacity: 1; font-size: 0.826em;
+}
+.reveal .slides section.md-section h1 {
+    position: static; transform: none;
+    text-align: left;
+    font-size: 2.348em;               /* 108px over 46px */
+    line-height: 1.04;
+    letter-spacing: 0.01em;
+    color: var(--pal-on-section);
+}
+.reveal .slides section.md-section h1::after { content: none; }
+/* the corporate-style card body under a section heading, if any */
+.reveal .slides section.md-section > :not(h1):not(.md-section-series) { color: var(--pal-on-section); }
+
+/* ==========================================================
+   Ribbon headings and tags
+   ========================================================== */
+.reveal .md-tag { font-weight: 600; }
+.reveal .slides section h2:has(> .md-ribbon) { margin-bottom: 0.68em; }
+.reveal .md-tag.md-ribbon {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.38em;
+    margin-left: 0;
+    min-width: 0;
+    padding: 0.18em 1.5em 0.22em 0.55em;
+    border-left: 0.22em solid var(--tag-tail);
+    font-size: 1em;
+    font-variant-caps: small-caps;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 0.62em) 50%, 100% 100%, 0 100%);
+    --tag-tail: color-mix(in oklab, var(--tag-bg) 55%, black);
+}
+.reveal .md-tag.md-ribbon.md-bg-light-gold { --tag-tail: var(--p-gold); }
+.reveal .md-tag.md-ribbon::before, .reveal .md-tag.md-ribbon::after { content: none; }
+.reveal .md-tag.md-ribbon .md-tag-icon { margin: 0; font-size: 0.78em; --fa-secondary-opacity: 0.45; }
+
+/* ==========================================================
+   @menu (strip): rings for the unlit items, the lit item filled
+   and larger, a stem from it down to the heading beneath
+   ========================================================== */
+.reveal .md-menu-strip {
+    display: grid;
+    grid-template-columns: repeat(var(--n, 10), minmax(0, 1fr));
+    gap: 0;
+    height: 136px;
+    align-items: center;
+    margin: 0;
+}
+.reveal .md-menu-strip .md-menu-item {
+    justify-self: center;
+    width: 104px; height: 104px;
+    flex: none;
+    box-sizing: border-box;
+    background: transparent;
+    border: 5px solid var(--af-dim);
+    color: var(--af-dim);
+    box-shadow: none;
+    container-type: normal;
+}
+.reveal .md-menu-strip .md-menu-item .md-icon,
+.reveal .md-menu-strip .md-menu-initial { font-size: 44px; --fa-secondary-opacity: 0.4; }
+.reveal .md-menu-strip .md-menu-item.is-dim { background: transparent; color: var(--af-dim); }
+.reveal .md-menu-strip .md-menu-item.is-lit {
+    width: 136px; height: 136px;
+    border: none;
+    background: var(--tag-bg);
+    color: var(--tag-ink);
+}
+.reveal .md-menu-strip .md-menu-item.is-lit .md-icon,
+.reveal .md-menu-strip .md-menu-item.is-lit .md-menu-initial { font-size: 60px; --fa-secondary-opacity: 0.55; }
+/* the stem: from the lit item down to its heading */
+.reveal .md-menu-strip[data-md-lit] .md-menu-item.is-lit::after {
+    content: ""; position: absolute; top: 136px; left: calc(50% - 3px);
+    width: 6px; height: 54px; background: var(--tag-bg);
+}
+/* the heading under its item: its edge on the stem. The stem's place is
+   known from the grid (item i of n is centred at (i + 0.5) / n), so the
+   heading is placed here rather than by positionMenuHeads */
+.reveal .md-menu-strip[data-md-lit] + .md-menu-head {
+    --stem: calc((var(--lit, 0) + 0.5) / var(--n, 10) * 100%);
+    border-bottom: none;
+    padding: 0.06em 0 0.06em 0.35em;
+    margin-top: 54px;
+    margin-bottom: 0.54em;
+    margin-left: calc(var(--stem) - 3px) !important;
+    border-left: 6px solid var(--lit-c, var(--pal-ink));
+}
+/* near the right-hand end the heading sits to the left of its stem */
+.reveal .md-menu-strip[data-md-lit]:has(> .is-lit:nth-last-child(1):nth-child(n+2)) + .md-menu-head,
+.reveal .md-menu-strip[data-md-lit]:has(> .is-lit:nth-last-child(2):nth-child(n+3)) + .md-menu-head,
+.reveal .md-menu-strip[data-md-lit]:has(> .is-lit:nth-last-child(3):nth-child(n+4)) + .md-menu-head,
+.reveal .md-menu-strip[data-md-lit]:has(> .is-lit:nth-last-child(4):nth-child(n+5)) + .md-menu-head {
+    margin-left: auto !important;
+    margin-right: calc(100% - var(--stem) - 3px);
+    border-left: none;
+    border-right: 6px solid var(--lit-c, var(--pal-ink));
+    padding: 0.06em 0.35em 0.06em 0;
+    text-align: right !important;
+}
+/* which item is lit, and how many there are (the heading is the menu's
+   sibling, so it cannot inherit them) */
+.md-menu-strip[data-md-lit="0"] + .md-menu-head { --lit: 0; }
+.md-menu-strip[data-md-lit="1"] + .md-menu-head { --lit: 1; }
+.md-menu-strip[data-md-lit="2"] + .md-menu-head { --lit: 2; }
+.md-menu-strip[data-md-lit="3"] + .md-menu-head { --lit: 3; }
+.md-menu-strip[data-md-lit="4"] + .md-menu-head { --lit: 4; }
+.md-menu-strip[data-md-lit="5"] + .md-menu-head { --lit: 5; }
+.md-menu-strip[data-md-lit="6"] + .md-menu-head { --lit: 6; }
+.md-menu-strip[data-md-lit="7"] + .md-menu-head { --lit: 7; }
+.md-menu-strip[data-md-lit="8"] + .md-menu-head { --lit: 8; }
+.md-menu-strip[data-md-lit="9"] + .md-menu-head { --lit: 9; }
+.md-menu-strip[data-md-lit="10"] + .md-menu-head { --lit: 10; }
+.md-menu-strip[data-md-lit="11"] + .md-menu-head { --lit: 11; }
+.md-menu-strip[data-md-lit="12"] + .md-menu-head { --lit: 12; }
+.md-menu-strip[data-md-lit="13"] + .md-menu-head { --lit: 13; }
+.md-menu-strip[data-md-lit="14"] + .md-menu-head { --lit: 14; }
+.md-menu-strip:has(> :last-child:nth-child(2)) + .md-menu-head { --n: 2; }
+.md-menu-strip:has(> :last-child:nth-child(3)) + .md-menu-head { --n: 3; }
+.md-menu-strip:has(> :last-child:nth-child(4)) + .md-menu-head { --n: 4; }
+.md-menu-strip:has(> :last-child:nth-child(5)) + .md-menu-head { --n: 5; }
+.md-menu-strip:has(> :last-child:nth-child(6)) + .md-menu-head { --n: 6; }
+.md-menu-strip:has(> :last-child:nth-child(7)) + .md-menu-head { --n: 7; }
+.md-menu-strip:has(> :last-child:nth-child(8)) + .md-menu-head { --n: 8; }
+.md-menu-strip:has(> :last-child:nth-child(9)) + .md-menu-head { --n: 9; }
+.md-menu-strip:has(> :last-child:nth-child(10)) + .md-menu-head { --n: 10; }
+.md-menu-strip:has(> :last-child:nth-child(11)) + .md-menu-head { --n: 11; }
+.md-menu-strip:has(> :last-child:nth-child(12)) + .md-menu-head { --n: 12; }
+.md-menu-strip:has(> :last-child:nth-child(13)) + .md-menu-head { --n: 13; }
+.md-menu-strip:has(> :last-child:nth-child(14)) + .md-menu-head { --n: 14; }
+.md-menu-strip:has(> :last-child:nth-child(15)) + .md-menu-head { --n: 15; }
+/* the stem's colour: the lit item's */
+.md-menu-strip:has(> .is-lit.md-bg-red) + .md-menu-head { --lit-c: var(--p-red); }
+.md-menu-strip:has(> .is-lit.md-bg-orange) + .md-menu-head { --lit-c: var(--p-orange); }
+.md-menu-strip:has(> .is-lit.md-bg-gold) + .md-menu-head { --lit-c: var(--p-gold); }
+.md-menu-strip:has(> .is-lit.md-bg-green) + .md-menu-head { --lit-c: var(--p-green); }
+.md-menu-strip:has(> .is-lit.md-bg-teal) + .md-menu-head { --lit-c: var(--p-teal); }
+.md-menu-strip:has(> .is-lit.md-bg-blue) + .md-menu-head { --lit-c: var(--p-blue); }
+.md-menu-strip:has(> .is-lit.md-bg-navy) + .md-menu-head { --lit-c: var(--p-navy); }
+.md-menu-strip:has(> .is-lit.md-bg-purple) + .md-menu-head { --lit-c: var(--p-purple); }
+.md-menu-strip:has(> .is-lit.md-bg-pink) + .md-menu-head { --lit-c: var(--p-pink); }
+.md-menu-strip:has(> .is-lit.md-bg-grey) + .md-menu-head { --lit-c: var(--p-grey); }
+.md-menu-strip:has(> .is-lit.md-bg-black) + .md-menu-head { --lit-c: var(--p-black); }
+.md-menu-strip:has(> .is-lit.md-bg-light-red) + .md-menu-head { --lit-c: var(--p-light-red); }
+.md-menu-strip:has(> .is-lit.md-bg-light-orange) + .md-menu-head { --lit-c: var(--p-light-orange); }
+.md-menu-strip:has(> .is-lit.md-bg-light-gold) + .md-menu-head { --lit-c: var(--p-light-gold); }
+.md-menu-strip:has(> .is-lit.md-bg-light-green) + .md-menu-head { --lit-c: var(--p-light-green); }
+.md-menu-strip:has(> .is-lit.md-bg-light-teal) + .md-menu-head { --lit-c: var(--p-light-teal); }
+.md-menu-strip:has(> .is-lit.md-bg-light-blue) + .md-menu-head { --lit-c: var(--p-light-blue); }
+.md-menu-strip:has(> .is-lit.md-bg-light-navy) + .md-menu-head { --lit-c: var(--p-light-navy); }
+.md-menu-strip:has(> .is-lit.md-bg-light-purple) + .md-menu-head { --lit-c: var(--p-light-purple); }
+.md-menu-strip:has(> .is-lit.md-bg-light-pink) + .md-menu-head { --lit-c: var(--p-light-pink); }
+.md-menu-strip:has(> .is-lit.md-bg-light-grey) + .md-menu-head { --lit-c: var(--p-light-grey); }
+.md-menu-strip:has(> .is-lit.md-menu-accent) + .md-menu-head { --lit-c: var(--pal-accent); }
+.reveal .md-menu .md-menu-accent { --tag-bg: var(--pal-accent); --tag-ink: var(--pal-on-accent); }
+/* other menu styles: the unlit items in the quiet tone */
+.reveal .md-menu {
+    --menu-off: var(--pal-quiet);
+    --menu-off-ink: var(--af-dim);
+}
+
+/* ==========================================================
+   @cards and @columns: panels on the quiet ground under a thin
+   edge; the current column (accent) on the tint under a 14 px
+   bar, the others' headings quieter
+   ========================================================== */
+.reveal .md-style-box .md-card,
+.reveal .md-style-stat .md-card {
+    background: var(--pal-quiet);
+    border: none;
+    border-top: 6px solid var(--pal-rule);
+    border-radius: 0;
+    padding: 0.6em 0.6em 0.68em 0.64em;
+}
+.reveal .md-style-box .md-card-accent,
+.reveal .md-style-stat .md-card-accent {
+    background: var(--pal-tint);
+    border: none;
+    border-top: 14px solid var(--pal-accent);
+    padding-top: 0.45em;
+}
+.reveal .md-card > h3 { font-variant-caps: small-caps; letter-spacing: 0; color: var(--pal-ink); }
+.reveal .md-cards:has(> .md-card-accent) > .md-card:not(.md-card-accent):not(.md-card-filled) > h3 { color: var(--pal-ink2); }
+.reveal .md-card li { line-height: 1.24; }
+.reveal .slides section .md-card ul > li { padding-left: 0.87em; margin-bottom: 0.46em; }
+.reveal .slides section .md-card ul > li::before { width: 0.28em; height: 0.28em; left: 0.05em; top: 0.48em; background: var(--pal-ink2); }
+.reveal .slides section .md-card-accent ul > li::before { background: var(--pal-mark); }
+.reveal .slides section .md-card-filled ul > li::before { background: currentColor; }
+/* @columns: unboxed, a quiet rule above each heading, the current one
+   under the accent bar */
+.reveal .md-style-plain .md-card > h3 { border-top: 6px solid var(--pal-rule); padding-top: 0.4em; }
+.reveal .md-style-plain .md-card-accent > h3 { border-top: 14px solid var(--pal-accent); color: var(--pal-ink); padding-top: 0.32em; }
+.reveal .md-style-bar .md-card { border-radius: 0; }
+.reveal .md-card-tag .md-tag { font-size: 0.8em; }
+
+/* ==========================================================
+   Tables: heads in the accent ink over the ink rule, hairlines
+   between rows, none at the foot; a row head in ink2
+   ========================================================== */
+.reveal .slides section .md-table table,
+.reveal .slides section:not(.title-slide) > table {
+    width: 100%;
+    font-size: 0.957em;
+    border: none;
+}
+.reveal .slides section table th {
+    font-weight: 600;
+    color: var(--pal-accent-ink);
+    padding: 0 0.55em 0.36em;
+    border-bottom: 4px solid var(--pal-ink);
+    vertical-align: bottom;
+}
+.reveal .slides section table td {
+    padding: 0.34em 0.55em 0.32em;
+    border-bottom: 2px solid var(--pal-rule);
+}
+.reveal .slides section table tr:last-child td { border-bottom: none; }
+.reveal .slides section .md-table-rowhead td:first-child,
+.reveal .slides section .md-table-rowhead th:first-child {
+    text-align: center; padding-left: 0; padding-right: 0; width: 2em;
+}
+.reveal .slides section .md-table-rowhead td:first-child { font-weight: 600; color: var(--pal-ink2); }
+.reveal .slides section section.title-slide table td { border: none; }
+
+/* ---------- sources and attributions: a short bar in the mark colour ---------- */
+.reveal .md-source { font-size: 0.696em; color: var(--pal-ink2); line-height: 1.3; text-align: left; }
+.reveal .md-source > p { text-align: left; }
+.reveal p.md-source::before,
+.reveal div.md-source > p:first-child::before {
+    content: ""; display: inline-block; width: 1.1em; height: 0.17em; background: var(--pal-mark);
+    vertical-align: 0.3em; margin-right: 0.5em;
+}
+.reveal .slides section > div.md-source,
+.reveal .slides section > p.md-source { margin-top: 1.2em; }
+
+/* @note: a quiet sidenote with a hairline */
+.reveal .md-note { color: var(--pal-ink2); border-left: 4px solid var(--pal-rule); padding-left: 0.6em; }
+
+/* ==========================================================
+   Parse: the framework's arrangement, untouched. Words and labels in
+   Bitter; function labels lead, word labels next, form labels quietest
+   ========================================================== */
+.reveal .pz {
+    --pz-label-font: var(--af-ev);
+    --pz-word-label: var(--pal-ink2);
+    --pz-phrase-label: var(--af-form-ink);
+    font-family: var(--af-ev);
+}
+.reveal .pz-w { font-weight: 420; }
+.reveal .pz .pz-fn { font-weight: 700; }
+
+/* ==========================================================
+   @passage and its key: the passage in Bitter; a swatch before
+   each function in the key
+   ========================================================== */
+.reveal .md-passage p { font-family: var(--af-ev); font-size: 1.217em; line-height: 1.5; font-weight: 400; }
+.reveal .slides section > p:has(+ .md-passage) { margin: 0 0 0.85em; }
+.reveal .slides section > p:has(+ .md-passage) .md-g { white-space: nowrap; }
+.reveal .slides section > p:has(+ .md-passage) .md-g::before {
+    content: ""; display: inline-block; width: 0.6em; height: 0.6em; background: currentColor;
+    margin: 0 0.3em 0 0; vertical-align: -0.02em;
+}
+.reveal .slides section > p:has(+ .md-passage) .md-g ~ .md-g::before { margin-left: 0.3em; }
+
+/* ==========================================================
+   @terms: the term in Bitter, the gloss in ink2, hairlines between
+   ========================================================== */
+.reveal dl.md-terms { column-gap: 1.2em; row-gap: 0; margin: 0.2em 0 0; }
+.reveal dl.md-terms dt, .reveal dl.md-terms dd {
+    padding: 0.5em 0 0.46em; border-bottom: 2px solid var(--pal-rule); line-height: 1.2;
+}
+.reveal dl.md-terms dt:last-of-type, .reveal dl.md-terms dd:last-of-type { border-bottom: none; }
+.reveal dl.md-terms dt { font-family: var(--af-ev); font-weight: 600; font-size: 1.13em; line-height: 1.06; }
+.reveal dl.md-terms dd { color: var(--pal-ink2); }
+.reveal dl.md-terms-sc dt { font-family: var(--r-main-font); }
+
+/* ==========================================================
+   Quotations: the evidence face on the plain ground, no margin
+   bracket; the attribution under its short bar
+   ========================================================== */
+.reveal blockquote {
+    font-family: var(--af-ev);
+    border-left: none;
+    padding: 0;
+    margin: 0.6em 0;
+}
+.reveal blockquote::before { content: none; }
+.reveal .md-quote-inner { max-width: 30em; font-size: 1em; }
+.reveal .md-quote-inner blockquote { margin: 0; font-size: 1.13em; line-height: 1.42; font-weight: 400; }
+.reveal .md-quote-inner blockquote p { text-indent: -0.42em; }
+.reveal .md-quote-inner .md-source { margin-top: 1.25em; font-size: 0.826em; text-align: left; }
+
+/* ==========================================================
+   Image beside text; full-bleed images keep their own layouts
+   ========================================================== */
+.reveal .md-split-body p { font-family: var(--af-ev); line-height: 1.46; }
+
+/* ==========================================================
+   @transcript: speaker labels in the accent ink, small caps;
+   the turns in Bitter
+   ========================================================== */
+.reveal .md-transcript { column-gap: 0.9em; row-gap: 0.4em; }
+.reveal .md-tr-label {
+    font-weight: 600; font-size: 1.04em; color: var(--pal-accent-ink);
+    font-variant-caps: all-small-caps; letter-spacing: 0.06em; min-width: 1.4em;
+}
+.reveal .md-tr-text { font-family: var(--af-ev); font-size: 1.04em; line-height: 1.3; }
+.reveal .md-tr-num { color: var(--pal-ink2); }
+.reveal .md-tr-pause, .reveal .md-tr-gap .md-tr-text { color: var(--pal-ink2); font-weight: 400; }
+.reveal .md-tr-mono .md-tr-text { font-family: var(--r-code-font); }
+
+/* ==========================================================
+   @refs: hanging indents, apparatus face, no marks
+   ========================================================== */
+.reveal .slides section.md-refs { font-size: 0.74em; }
+.reveal .slides section.md-refs h2 { margin-bottom: 0.5em; }
+.reveal .slides section.md-refs ul { line-height: 1.24; max-width: none; }
+.reveal .slides section.md-refs ul > li { padding-left: 1.6em; text-indent: -1.6em; margin-bottom: 0.32em; }
+.reveal .slides section.md-refs ul > li::before { content: none; }
+
+/* ==========================================================
+   Highlight, contrast, statement, activity
+   ========================================================== */
+.reveal .md-hl, .reveal mark { background: var(--pal-highlight); color: var(--pal-highlight-ink); }
+.reveal .slides section.md-contrast { --pal-mark: var(--pal-series); }
+.reveal .slides section.md-contrast h2 { border-bottom-color: var(--pal-on-section); }
+.reveal .slides section.md-contrast .md-source,
+.reveal .slides section.md-contrast .md-head-sub,
+.reveal .slides section.md-contrast dd { color: var(--af-on-section-2); }
+.reveal .slides section.md-contrast .md-series-name,
+.reveal .slides section.md-contrast .md-tr-label { color: var(--pal-series); }
+.reveal .slides section.md-statement > p,
+.reveal .slides section.md-statement > blockquote { font-family: var(--af-ev); }
+.reveal .slide-background.md-activity { background-color: var(--pal-quiet); }
+
+/* ==========================================================
+   The turned-corner card: object language on a card of its own,
+   the top right corner cut so the ground shows through and its
+   underside drawn in the card's fold; a hairline lift on light only.
+   Inside the card the inks are the card's.
+   ========================================================== */
+.reveal .md-slip {
+    --slip-corner: 50px;
+    --pal-ink: var(--pal-card-ink);
+    --pal-ink2: var(--pal-card-ink2);
+    --pal-mark: var(--pal-card-accent);
+    --pal-accent-ink: var(--pal-card-accent);
+    --pal-highlight: var(--pal-card-highlight);
+    --pal-highlight-ink: var(--pal-card-ink);
+    --pal-rule: color-mix(in srgb, var(--pal-card-ink) 18%, var(--pal-card));
+    --r-font-color: var(--pal-card-ink);
+    --r-subtle-color: var(--pal-card-ink2);
+    background: linear-gradient(225deg, transparent 0 calc(var(--slip-corner) * 0.7071), var(--pal-card) calc(var(--slip-corner) * 0.7071));
+    color: var(--pal-card-ink);
+    clip-path: none;
+    box-shadow: none;
+    padding: 0.8em 1.25em 0.85em 1.05em;
+    margin: 0.4em 0;
+}
+html.pal-light .reveal .md-slip {
+    filter: drop-shadow(0 0 1px color-mix(in srgb, var(--pal-card-ink) 45%, transparent))
+            drop-shadow(0 18px 20px color-mix(in srgb, var(--pal-card-ink) 16%, transparent));
+}
+.reveal .md-slip::after {
+    top: 0; right: 0;
+    width: var(--slip-corner); height: var(--slip-corner);
+    background: linear-gradient(to left bottom, transparent calc(50% - 1px), var(--pal-card-fold) calc(50% - 1px));
+}
+/* a light card on a dark palette: the light sets of grammar and colour marks */
+html.pal-dark .reveal .md-slip {
+    --g-subject: #0303B5; --g-predicator: #9C3A0A; --g-object: #057B89;
+    --g-complement: #8448F4; --g-adverbial: #A88200;
+    --pt-red: var(--p-red); --pt-orange: var(--p-orange); --pt-gold: var(--p-gold);
+    --pt-green: var(--p-green); --pt-teal: var(--p-teal); --pt-blue: var(--p-blue);
+    --pt-navy: var(--p-navy); --pt-purple: var(--p-purple); --pt-pink: var(--p-pink);
+    --pt-grey: var(--p-grey);
+}
+/* the quotation card */
+.reveal .md-quote-inner.md-slip { padding: 1.1em 2em 1.15em 1.7em; max-width: 24em; margin-left: auto; margin-right: auto; }
+.reveal .md-quote-inner.md-slip .md-source { color: var(--pal-card-ink2); }
+.reveal .md-slip .md-transcript { margin: 0; }
+.reveal .md-slip:has(> .md-transcript) { width: fit-content; min-width: 50%; }
+/* a quotation card under a heading is static in base.css; its corner
+   needs the card itself as its containing block */
+.reveal section.md-quote:has(h2) .md-quote-inner.md-slip,
+.reveal section.md-quote:has(h3) .md-quote-inner.md-slip { position: relative; top: auto; left: auto; right: auto; }

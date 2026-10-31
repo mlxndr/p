@@ -135,7 +135,8 @@ html.corp-cards-template {
    ground belongs to the slide */
 html.corp body, html.corp .reveal-viewport, html.corp .reveal { background: #000 !important; }
 html.corp .reveal .slides > section,
-html.corp .reveal .slides > section > section {
+html.corp .reveal .slides > section > section,
+html.corp .reveal .slides .pdf-page > section {
     background: #FFFFFF;
     width: 1920px; height: 1080px;
     padding: 0 !important; margin: 0;

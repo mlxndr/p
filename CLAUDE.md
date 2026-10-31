@@ -3,7 +3,7 @@
 **Repository:** mlxndr/p
 **Purpose:** Academic presentation platform (mga.is)
 **Owner:** Marc Alexander, University of Glasgow
-**Last updated:** 2026-10-30 (phase 4: corporate mode)
+**Last updated:** 2026-10-31 (phase 5: export page)
 
 ## Overview
 
@@ -15,7 +15,9 @@ the browser. CI: `.github/workflows/build-manifest.yml` regenerates
 `manifest.json` (used by the landing page) from each folder's `meta.json`
 on push; `.github/workflows/slides-pdf.yml` exports each changed deck to
 `<deck>/slides.pdf` (DeckTape, 1920x1080, fragments shown, spares at the
-end) and can be run by hand to rebuild every deck after inc/ changes.
+end, `pdfTheme` if set) and `<deck>/slides-handout.pdf` (the student
+version, two slides to an A4 page, via `scripts/handout-nup.py`), and
+can be run by hand to rebuild every deck after inc/ changes.
 
 Test locally with any static server, e.g. `python3 -m http.server 8000`,
 then open `http://localhost:8000/{presentation}/`. Deployment is automatic
@@ -44,6 +46,8 @@ inc/
   directives.js             @-directive expander, builds, morph, @zoom
                             positioner, autofit, corporate layout
   revconfig.js              Reveal.initialize + menu config
+  export.js                 The export page (?export) and the print
+                            views it opens (handout sheets, Print bar)
   qr.js                     QR code library
   handout.js, marked.min.js Handout rendering
   css/
@@ -51,6 +55,7 @@ inc/
     fonts.css               @font-face for self-hosted WOFF2 fonts
     animations.css          Easing tokens, keyframes, Ken Burns family
     handout.css             Print-optimised handout styles
+    export.css              Export page, print bar, handout sheets
     light.css, dark.css     Colour-mode variable sets
     colourful.css           Shared structure of the Colourful themes
     corp-uog.css            Corporate mode (University of Glasgow 2026
@@ -78,6 +83,8 @@ inc/
 archive/                    Old presentations (note: their ../inc/ paths
                             are broken one level deep — known issue)
 f/                          Binary file storage (PDF/PPTX exports)
+scripts/                    build-manifest.js (CI); handout-nup.py (CI:
+                            slides.pdf to an A4 handout, N per page)
 img/uog_block.png           The template's logo block (corporate mode)
 specimen-uog/               Corporate specimen deck (unlisted)
 ```
@@ -686,6 +693,45 @@ warning and, in local preview, a red dashed outline: split it. Opt a
 slide out with `<!-- .slide: data-autofit="off" -->`. Image layouts keep
 their own autofit (split text columns); title slides and @section
 dividers are never scaled.
+
+## Export
+
+`?export` on a deck's address opens the export page in place of the
+slides (head.js reads the options into `window.MGA_EXPORT`;
+script-loader.js loads `inc/export.js`); the menu's top band links to
+it ("Export"). It offers: the slides for printing, final state or a page
+for every build; a handout of 1, 2, 3 or 6 slides to an A4 page, framed
+and numbered, optionally with lines for notes; the text handout
+(`handout.html`, where the deck has one); the source files (content.md,
+meta.json, title.md, every `@include`d file); links to the CI's
+`slides.pdf` and `slides-handout.pdf` where they exist. Theme and layout
+are chosen on the page (default `pdfTheme`, else the deck's theme);
+corporate decks print in the template.
+
+The print views are reveal's print mode (`?print-pdf`) with these
+options: `fragments=false` (final state), `builds=1` (a page per build:
+`pdfSeparateFragments`), `handout=1|2|3|6`, `lines=1`, `student=1`,
+`spares=0`, plus `theme=`/`layout=`. A bar at the top (not printed)
+holds the Print button, enabled once pages, fonts and images are ready;
+then refitSlides is frozen (`MGA_PRINT_FROZEN`), since the print
+dialogue resizes the window. Handout sheets hold reveal's pages scaled
+with `zoom` (a `transform` made Chrome shrink every sheet). Each printed
+page takes `.reveal`'s ground (the themes paint it there; reveal copies
+the body's, which printed dark themes white). In print a slide keeps the
+slide's height and `--bleed-x/y` are the page margin; Spine's padding is
+restated for print (reveal's print CSS clears section padding).
+Per-build pages: `@marks` re-applies its marks on `pdf-ready`; video
+cues and `@refs` items take no page.
+
+The student version (`student=1`; the default in `handout.html`, where
+`?student=0` gives the full copy) removes `@slide nohandout` slides and
+blanks answers (`{answer x}`, `@terms answers`, a card's `answer`): an
+answer stops being a build and keeps its space, inline answers as a
+ruled blank. `spares=0` leaves out spare slides (`handout.html` leaves
+them out unless `?spares=1`). Hidden slides never appear. Corporate
+decks have the slide handouts but no text handout. Chrome gives the
+most faithful PDFs; Safari 18.2 and later honour the page size (not
+tested here).
 
 ## Theming
 

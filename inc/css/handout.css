@@ -111,6 +111,8 @@ a {
 /* Images */
 img {
     max-width: 100%;
+    max-height: 12cm;   /* a portrait or a page scan stays a figure, not a page */
+    width: auto;
     height: auto;
     display: block;
     margin: 1rem auto;
@@ -341,3 +343,14 @@ video.md-video { display: block; max-width: 60%; height: auto; margin: 0.5em 0; 
 .pz-leech .pz-open .pz-b, .pz-leech .pz-open .pz-t { padding-right: 0.4em; }
 .pz-leech .pz-t { font-style: italic; }
 .md-pmarks { display: none; }
+
+/* Phase 5: the student version (the default; ?student=0 for the full
+   copy) blanks the answers, keeping their space for writing in; an
+   answer in running text is a ruled blank */
+.mga-student .md-answer { visibility: hidden; }
+.mga-student span.md-answer {
+    visibility: visible;
+    color: transparent !important;
+    border-bottom: 1px solid #888;
+}
+.mga-student span.md-answer * { visibility: hidden; }

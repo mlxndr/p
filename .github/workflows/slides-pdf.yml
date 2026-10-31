@@ -1,7 +1,11 @@
 name: Slides PDFs
 
 # Exports each deck to <deck>/slides.pdf: one full-size (1920x1080) page
-# per slide, fragments shown, in the deck's own default theme and layout.
+# per slide, fragments shown, in the deck's own default theme and layout
+# (or its "pdfTheme", which head.js uses whenever fragments=false), spare
+# slides at the end. Also <deck>/slides-handout.pdf: the student version
+# (no @slide nohandout or spare slides, answers blanked), two slides to
+# an A4 page, framed and numbered (scripts/handout-nup.py), for Moodle.
 #
 # - On push to main: rebuilds only the decks whose content, metadata or
 #   images changed in that push.
@@ -44,6 +48,14 @@ jobs:
           PUPPETEER_SKIP_DOWNLOAD: 'true'
         run: npm install -g decktape@3
 
+      - name: Set up Python (for the handouts)
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install pypdf and reportlab
+        run: pip install pypdf reportlab
+
       - name: Work out which decks to export
         id: decks
         run: |
@@ -77,6 +89,15 @@ jobs:
               --chrome-arg=--no-sandbox \
               "http://localhost:8000/$d/?fragments=false" \
               "$d/slides.pdf"
+            decktape reveal \
+              --size 1920x1080 \
+              --load-pause 4000 \
+              --pause 800 \
+              --chrome-path "$(which google-chrome)" \
+              --chrome-arg=--no-sandbox \
+              "http://localhost:8000/$d/?fragments=false&student=1&spares=0" \
+              "$RUNNER_TEMP/$d-student.pdf"
+            python3 scripts/handout-nup.py "$RUNNER_TEMP/$d-student.pdf" "$d/slides-handout.pdf" 2
             echo "::endgroup::"
           done
 
@@ -85,11 +106,11 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add */slides.pdf
+          git add */slides.pdf */slides-handout.pdf
           if git diff --staged --quiet; then
             echo "No PDFs changed"
           else
-            git commit -m "Update slides PDFs"
+            git commit -m "Update slides PDFs and handouts"
             git pull --rebase
             git push
           fi

@@ -70,3 +70,11 @@
     color: inherit;
     --L-fit-heading: 0;
 }
+
+/* Print views: reveal's print stylesheet clears every slide's padding
+   (with !important), which put the text over the band; there a
+   percentage would be of the page, which is wider than the slide */
+html.reveal-print .reveal .slides section:not(.title-slide):not(.md-section):not(.stack):is(:has(> h2), :has(> .md-fill-inner > h2)):not(:has(> h2 > .md-ribbon)) {
+    padding-left: calc(var(--slide-width, 1920px) * 0.27) !important;
+    padding-top: 0.45em !important;
+}

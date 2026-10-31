@@ -38,7 +38,10 @@
     maxScale: 2.0,        // maximum scaling
     navigationMode: 'linear',
     showSlideNumber: 'print',
-    pdfSeparateFragments: false,
+    // print views opened from the export page (SPEC 10): builds=1 gives
+    // one page per build; a slide never runs onto a second page
+    pdfSeparateFragments: !!(window.MGA_EXPORT && window.MGA_EXPORT.builds),
+    pdfMaxPagesPerSlide: 1,
     controls: false,
     progress: !corp,
     center: false,
@@ -114,6 +117,13 @@
             jd.title = 'All presentations';
             jd.setAttribute('aria-label', 'All presentations');
             bar.appendChild(jd);
+            // the export page (PDFs, handouts, the markdown source)
+            const ex = document.createElement('a');
+            ex.className = 'menu-export';
+            ex.href = '?export';
+            ex.textContent = 'Export';
+            ex.title = 'PDFs, handouts and the markdown source';
+            bar.appendChild(ex);
             menuEl.appendChild(bar);
         }
 

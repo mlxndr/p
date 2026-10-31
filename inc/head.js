@@ -183,6 +183,43 @@
     window.MGA_LAYOUT = layout.key;
     window.MGA_THEME_FROM_URL = !!fromUrl;
 
+    /* Export (SPEC 10). ?export opens the export page in place of the
+       slides (inc/export.js). The print views it opens are reveal's print
+       mode (?print-pdf) with these options:
+         fragments=false   final state (reveal's own option)
+         builds=1          one page per build
+         handout=1|2|3|6   slides per A4 page, framed and numbered
+         lines=1           lines for notes beside or beneath each slide
+         student=1         leaves out @slide nohandout and hides answers
+         spares=0          leaves out @slide spare slides
+       handout.html reads student and spares too, with the student
+       version as its default. */
+    var q = null;
+    try { q = new URLSearchParams(location.search); } catch (e) {}
+    function opt(k, dflt) {
+        if (!q || !q.has(k)) return dflt;
+        return !/^(0|false|no|off)$/i.test(q.get(k));
+    }
+    var perPage = q ? parseInt(q.get('handout'), 10) : 0;
+    var X = {
+        page: !!(q && q.has('export')),
+        print: !!(q && q.has('print-pdf')),
+        final: !!(q && q.get('fragments') === 'false'),
+        builds: opt('builds', false),
+        handout: [1, 2, 3, 6].indexOf(perPage) !== -1 ? perPage : 0,
+        lines: opt('lines', false),
+        student: opt('student', false),
+        spares: opt('spares', true)
+    };
+    if (q && q.has('handout') && !X.handout) console.warn('[export] handout= takes 1, 2, 3 or 6 slides per page');
+    if (!X.print) X.handout = 0;
+    window.MGA_EXPORT = X;
+    var rcx = document.documentElement.classList;
+    if (X.student) rcx.add('mga-student');
+    if (X.handout) rcx.add('mga-handout', 'mga-handout-' + X.handout);
+    if (X.handout && X.lines) rcx.add('mga-lines');
+    if (X.page) rcx.add('mga-export-page');
+
     /* The head itself */
     var h = [
         '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
@@ -206,6 +243,7 @@
         '<link rel="stylesheet" href="' + chosen.href + '" id="theme">',
         '<link rel="stylesheet" href="' + layout.href + '" id="layout">'
     ];
+    if (X.page || X.print) h.push('<link rel="stylesheet" href="' + CSS + 'export.css">');
     document.write(h.join('\n'));
 
     /* Offline copies (see /sw.js). Not on a local preview server, where a

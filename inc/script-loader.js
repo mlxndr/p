@@ -19,13 +19,25 @@ function loadScripts() {
     document.body.appendChild(errorDiv);
   }
 
+  // ?export: the export page replaces the slides (inc/export.js)
+  const X = window.MGA_EXPORT || {};
+  if (X.page) {
+    loadScript('../inc/export.js')
+      .then(() => mgaExportPage())
+      .catch(error => showError(error.message));
+    return;
+  }
+
   // Load core script first
   loadScript(scriptConfig.core)
     .then(() => {
-      // After core loads, load enabled plugins in parallel
+      // After core loads, load enabled plugins in parallel (and, in a
+      // print view, inc/export.js, which lays out handouts and offers
+      // the Print button)
       const enabledPlugins = Object.entries(scriptConfig.plugins)
         .filter(([_, plugin]) => plugin.enabled)
         .map(([_, plugin]) => plugin.path);
+      if (X.print) enabledPlugins.push('../inc/export.js');
 
       return Promise.all(enabledPlugins.map(loadScript));
     })
@@ -90,6 +102,9 @@ function loadScripts() {
 // boxes, menu headings, the split-column autofit, and the text-slide autofit. Each pass resets before measuring,
 // so running it again is always safe.
 function refitSlides() {
+  // A print view, once laid out for printing, keeps its measurements:
+  // opening the print dialogue resizes the window
+  if (window.MGA_PRINT_FROZEN) return;
   // In overview mode every slide is scaled and laid out differently, so
   // measurements would be wrong; overviewhidden (below) refits on exit
   if (window.Reveal && Reveal.isOverview && Reveal.isOverview()) return;
@@ -247,6 +262,7 @@ function cacheDeckForOffline() {
     add(location.pathname);
     add('./content.md'); add('./meta.json'); add('./title.md');
     add('../inc/site.json');
+    add('../inc/export.js'); add('../inc/css/export.css');   // export page
     (window.MGA_INCLUDES || []).forEach(add);          // @include files
     document.querySelectorAll('img[src]').forEach(function (i) { add(i.getAttribute('src')); });
     document.querySelectorAll('[data-background-image]').forEach(function (e) { add(e.getAttribute('data-background-image')); });

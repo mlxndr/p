@@ -1,0 +1,237 @@
+/* export.css — the export page (?export) and the print views it opens
+   (?print-pdf), SPEC 10. Loaded by head.js only on those addresses. */
+
+/* ===========================================
+   The export page: the menu's paper and type (Century Supra headings,
+   Concourse text, the theme accent as the one colour)
+   =========================================== */
+
+html.mga-export-page,
+html.mga-export-page body {
+    background: #FAF7F0 !important;
+    height: auto !important;
+    overflow: auto !important;
+}
+body.mga-export-body {
+    margin: 0;
+    color: #1B1815;
+    font-family: 'Concourse', 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: 19px;
+    line-height: 1.45;
+    font-variant-numeric: oldstyle-nums;
+}
+.mga-export {
+    max-width: 44em;
+    margin: 0 auto;
+    padding: 1.4em 1.5em 4em;
+    --ex-accent: var(--r-accent, #C2502F);
+    --ex-muted: rgba(27, 24, 21, 0.6);
+    --ex-rule: rgba(27, 24, 21, 0.14);
+}
+.mga-export a { color: inherit; text-decoration-color: var(--ex-accent); text-underline-offset: 0.15em; }
+.mga-export a:hover { color: var(--ex-accent); }
+.mga-export code { font-family: 'Monaspace Neon', ui-monospace, monospace; font-size: 0.82em; }
+.ex-sc { font-variant-caps: all-small-caps; }
+
+.ex-nav {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.06em;
+    font-size: 0.85em;
+}
+.ex-jackdaw {
+    width: 42px;
+    height: 39px;
+    background: url('../../img/jackdaw2.png') no-repeat center / contain;
+    opacity: 0.9;
+}
+.ex-nav a:not(.ex-jackdaw) { text-decoration: none; color: var(--ex-muted); }
+.ex-nav a:not(.ex-jackdaw):hover { color: #1B1815; }
+
+.ex-head { margin: 2.2em 0 0.6em; }
+.ex-head h1 {
+    font-family: 'Century Supra', Georgia, serif;
+    font-weight: 400;
+    font-size: 2em;
+    line-height: 1.15;
+    margin: 0;
+    text-wrap: balance;
+}
+.ex-meta { margin: 0.5em 0 0; color: var(--ex-muted); }
+
+.ex-sec {
+    border-top: 1px solid var(--ex-rule);
+    margin-top: 1.8em;
+    padding-top: 1.1em;
+}
+.ex-sec h2 {
+    font-family: 'Century Supra', Georgia, serif;
+    font-weight: 400;
+    font-size: 1.3em;
+    margin: 0 0 0.25em;
+}
+.ex-desc { margin: 0 0 0.8em; color: var(--ex-muted); }
+.ex-note { color: var(--ex-muted); }
+.ex-note::before { content: '('; }
+.ex-note::after { content: ')'; }
+
+.ex-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6em 1.4em; margin: 0.6em 0; }
+.ex-col { display: flex; flex-direction: column; gap: 0.35em; margin: 0.7em 0; }
+.ex-label { color: var(--ex-muted); margin-right: -0.4em; }
+
+.ex-field { display: flex; flex-direction: column; gap: 0.2em; }
+.ex-field > span {
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.06em;
+    font-size: 0.85em;
+    color: var(--ex-muted);
+}
+.ex-field select {
+    font: inherit;
+    font-size: 0.95em;
+    padding: 0.3em 0.5em;
+    min-width: 13em;
+    border: 1px solid rgba(27, 24, 21, 0.3);
+    border-radius: 3px;
+    background: #FFFDF8;
+    color: inherit;
+}
+
+.ex-choice, .ex-check { display: inline-flex; align-items: baseline; gap: 0.45em; cursor: pointer; }
+.ex-choice input, .ex-check input { accent-color: var(--ex-accent); margin: 0; transform: translateY(0.1em); }
+
+/* slides per page: a row of numbered buttons */
+.ex-per .ex-choice { gap: 0; }
+.ex-per .ex-choice input { position: absolute; opacity: 0; pointer-events: none; }
+.ex-per .ex-choice span {
+    display: inline-block;
+    min-width: 2.2em;
+    padding: 0.2em 0.4em;
+    text-align: center;
+    border: 1px solid rgba(27, 24, 21, 0.3);
+    border-radius: 3px;
+    font-variant-numeric: lining-nums;
+}
+.ex-per .ex-choice input:checked + span { background: #1B1815; border-color: #1B1815; color: #FAF7F0; }
+.ex-per .ex-choice input:focus-visible + span { outline: 2px solid var(--ex-accent); outline-offset: 2px; }
+
+.ex-go {
+    display: inline-block;
+    margin-top: 0.2em;
+    padding: 0.45em 0.9em;
+    border-radius: 3px;
+    background: #1B1815;
+    color: #FAF7F0 !important;
+    text-decoration: none;
+}
+.ex-go:hover { background: var(--ex-accent); }
+.ex-ready { margin: 0.6em 0 0; color: var(--ex-muted); }
+.ex-ready a { color: #1B1815; }
+
+.ex-files { margin: 0; padding-left: 1.2em; }
+.ex-files li { margin: 0.2em 0; }
+.ex-help ul { padding-left: 1.2em; }
+.ex-help li { margin: 0.35em 0; }
+.ex-help p { margin: 0.5em 0; }
+
+/* ===========================================
+   Print views: the bar with the Print button (screen only)
+   =========================================== */
+
+.mga-print-bar {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px;
+    background: #FAF7F0;
+    color: #1B1815;
+    border: 1px solid rgba(27, 24, 21, 0.16);
+    border-radius: 4px;
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+    font: 16px/1.3 'Concourse', 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-variant-numeric: oldstyle-nums;
+}
+.mga-print-bar button {
+    font: inherit;
+    padding: 6px 12px;
+    border: 0;
+    border-radius: 3px;
+    background: #1B1815;
+    color: #FAF7F0;
+    cursor: pointer;
+}
+.mga-print-bar button:hover { background: var(--r-accent, #C2502F); }
+.mga-print-bar button:disabled { opacity: 0.4; cursor: default; background: #1B1815; }
+.mga-print-bar a { color: rgba(27, 24, 21, 0.6); }
+
+@media print {
+    .mga-print-bar { display: none !important; }
+}
+
+/* ===========================================
+   Handouts: A4 sheets holding reveal's pages, scaled
+   =========================================== */
+
+html.mga-handout .reveal .slides .ho-sheet {
+    position: relative;
+    overflow: hidden;
+    background: #FFF;
+    box-sizing: border-box;
+    break-after: page;
+    page-break-after: always;
+}
+html.mga-handout .reveal .slides .ho-sheet:last-child {
+    break-after: auto;
+    page-break-after: auto;
+}
+html.mga-handout .reveal .slides .ho-frame {
+    position: absolute;
+    overflow: hidden;
+    outline: 0.25mm solid #1B1815;
+}
+html.mga-handout .reveal .slides .ho-frame > .pdf-page {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform-origin: 0 0;
+    page-break-after: auto;
+    break-after: auto;
+}
+html.mga-handout .ho-num,
+html.mga-handout .ho-page {
+    position: absolute;
+    font: 8.5pt/1 'Concourse', 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-variant-numeric: lining-nums;
+    color: #1B1815;
+}
+html.mga-handout .ho-lines { position: absolute; }
+html.mga-handout .ho-lines > div {
+    box-sizing: border-box;
+    border-bottom: 0.25mm solid #A8A49C;
+}
+
+/* on screen, the sheets as a preview on a grey ground (only once laid
+   out: reveal copies the ground behind the slides onto each page) */
+@media screen {
+    html.mga-handout.mga-print-ready,
+    html.mga-handout.mga-print-ready body,
+    html.mga-handout.mga-print-ready .reveal-viewport {
+        background: #8C8984 !important;
+    }
+    html.mga-handout.mga-print-ready body { padding: 24px 0 !important; box-sizing: content-box; }
+    html.mga-handout .reveal .slides .ho-sheet {
+        margin: 0 auto 24px;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.3);
+    }
+}
+@media print {
+    html.mga-handout.mga-print-ready,
+    html.mga-handout.mga-print-ready body,
+    html.mga-handout.mga-print-ready .reveal-viewport { background: #FFF !important; }
+}

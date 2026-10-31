@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', async function() {
             const inline = s => String(s).replace(/\s*\|\s*/g, ' ')
                 .replace(/\*([^*]+)\*/g, '<i>$1</i>')
                 .replace(/\^\^([^^]+)\^\^/g, '<span class="md-sc">$1</span>');
-            const full = m.title + (m.subtitle ? ': ' + m.subtitle : '');
+            // a title ending in ? or ! takes the subtitle after a space
+            const full = m.title + (m.subtitle ? (/[?!:.]\s*$/.test(m.title) ? ' ' : ': ') + m.subtitle : '');
             document.title = full.replace(/\*|\^\^/g, '').replace(/\s*\|\s*/g, ' ');
             const h1 = document.getElementById('handout-title');
             if (h1) h1.innerHTML = inline(full);
@@ -73,10 +74,21 @@ document.addEventListener('DOMContentLoaded', async function() {
             mdContent = expandDirectives(mdContent, { name: 'content.md' }).markdown;
         }
 
-        // Slides marked @slide hidden or nohandout are not in the handout
+        // The student version (the default; ?student=0 for the full copy)
+        // leaves out @slide nohandout slides and blanks the answers. Hidden
+        // slides are never in the handout; spare slides only with ?spares=1.
+        const q = new URLSearchParams(location.search);
+        const student = !/^(0|false|no|off)$/i.test(q.get('student') || '');
+        const spares = q.has('spares') && !/^(0|false|no|off)$/i.test(q.get('spares'));
+        document.documentElement.classList.toggle('mga-student', student);
+        const drop = new RegExp('<!--\\s*\\.slide:[^>]*\\bmd-(hidden' +
+            (student ? '|nohandout' : '') + (spares ? '' : '|spare') + ')\\b');
         mdContent = mdContent.split(/(^\n---?\n)/m).filter(function (part, i, all) {
             if (/^\n---?\n$/.test(part)) return true;
-            return !/<!--\s*\.slide:[^>]*\bmd-(hidden|nohandout)\b/.test(part);
+            return !drop.test(part);
+        }).map(function (part) {
+            // speaker notes run from notes: to the end of the slide
+            return /^\n---?\n$/.test(part) ? part : part.replace(/(^|\n)notes:[\s\S]*$/, '$1');
         }).join('').replace(/(\n---?\n){2,}/g, '$1');
 
         // Process the markdown content

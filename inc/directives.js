@@ -2656,7 +2656,8 @@
                     // @slide spare: move those slides to a section of their
                     // own at the very end, after the closing slide, where
                     // reveal leaves them out of the count and progress bar
-                    if (split.spares) {
+                    // (an export with spares=0 leaves them out altogether)
+                    if (split.spares && (window.MGA_EXPORT || {}).spares !== false) {
                         const spare = sec.cloneNode(false);
                         const stpl = document.createElement('script');
                         stpl.type = 'text/template';
@@ -2930,7 +2931,9 @@
             if (sec.querySelector('section')) return;
             const own = ownedBy(sec);
             const lis = Array.prototype.filter.call(sec.querySelectorAll('li'), own);
-            const isStatic = sec.classList.contains('md-static');
+            // @refs: list items never build (the stylesheet always showed
+            // them, so they took clicks that changed nothing)
+            const isStatic = sec.classList.contains('md-static') || sec.classList.contains('md-refs');
             if (isStatic || (!listBuild && !sec.classList.contains('md-build'))) {
                 lis.forEach(function (li) { li.classList.remove('fragment'); });
             } else if (sec.classList.contains('md-build') && !sec.classList.contains('md-refs')) {
@@ -3449,15 +3452,22 @@
         deck.on('ready', function () {
             document.querySelectorAll('.reveal .slides .md-marks-slide').forEach(applyMarks);
         });
+        // a print view with a page per build: each page is a copy of the
+        // slide with its own builds shown, so each takes its own marks
+        deck.on('pdf-ready', function () {
+            document.querySelectorAll('.reveal .slides .md-marks-slide').forEach(applyMarks);
+        });
         document.querySelectorAll('.reveal .slides .md-marks-slide').forEach(applyMarks);
     }
 
     /* @video: the hidden cue fragment plays the video once from the start
        (it stops on its last frame); stepping back stops it and rewinds */
     function wireVideos(deck) {
-        // export: every video shows its poster
-        if (document.documentElement.classList.contains('mga-final')) {
+        // export and print views: every video shows its poster
+        if (document.documentElement.classList.contains('mga-final') || (window.MGA_EXPORT || {}).print) {
             document.querySelectorAll('.reveal video[data-autoplay]').forEach(function (v) { v.removeAttribute('data-autoplay'); });
+            // the cue that plays a video changes nothing on paper
+            document.querySelectorAll('.reveal .md-video-cue').forEach(function (c) { c.classList.remove('fragment'); });
             return;
         }
         const each = function (e, fn) {
@@ -3486,6 +3496,12 @@
         if (!slides || !window.Reveal || !Reveal.getScale) return;
         const s = Reveal.getScale() || 1;
         const c = Reveal.getConfig();
+        // a print view: the page is the slide plus reveal's margin
+        if (Reveal.isPrintView && Reveal.isPrintView()) {
+            slides.style.setProperty('--bleed-x', (Math.floor(c.width * (1 + c.margin)) - c.width) / 2 + 'px');
+            slides.style.setProperty('--bleed-y', (Math.floor(c.height * (1 + c.margin)) - c.height) / 2 + 'px');
+            return;
+        }
         const viewport = document.querySelector('.reveal').getBoundingClientRect();
         slides.style.setProperty('--bleed-x', Math.max(0, (viewport.width / s - c.width) / 2).toFixed(1) + 'px');
         slides.style.setProperty('--bleed-y', Math.max(0, (viewport.height / s - c.height) / 2).toFixed(1) + 'px');
@@ -3840,9 +3856,30 @@
     window.corpLineBreaks = corpLineBreaks;
     window.corpFirstBaselines = corpFirstBaselines;
 
+    /* Student version (SPEC 10; student=1 in a print view): slides marked
+       @slide nohandout leave the deck, and answers ({answer x}, @terms
+       answers, a card's answer flag) are hidden. An answer stops being a
+       build, so it takes no click and, in a one-page-per-build export,
+       no page of its own. Its space stays, for writing in. */
+    function applyStudentVersion() {
+        if (!(window.MGA_EXPORT && window.MGA_EXPORT.student)) return;
+        document.querySelectorAll('.reveal .slides section.md-nohandout').forEach(function (s) {
+            const stack = s.parentElement && s.parentElement.tagName === 'SECTION' ? s.parentElement : null;
+            s.remove();
+            if (stack && !stack.querySelector('section')) stack.remove();
+        });
+        document.querySelectorAll('.reveal .slides .md-answer').forEach(function (a) {
+            a.classList.remove('fragment');
+            a.removeAttribute('data-fragment-index');
+            a.removeAttribute('data-md-step');
+            a.classList.add('md-answer-hidden');
+        });
+    }
+
     window.MgaBuilds = {
         id: 'mga-builds',
         init: function (deck) {
+            applyStudentVersion();
             corpWrapSlides();
             buildTranscriptOverlays();
             wireTranscriptOverlays(deck);

@@ -756,6 +756,45 @@ html body .slide-menu-wrapper .menu-jackdaw:hover {
     opacity: 1;
 }
 
+/* Export: a link to the deck's export page, beside the close */
+html body .slide-menu-wrapper .menu-export {
+    position: absolute;
+    top: 19px;
+    right: 52px;
+    padding: 4px 2px;
+    font-family: 'Concourse', 'Helvetica Neue', 'Helvetica', sans-serif;
+    font-size: 15px;
+    font-feature-settings: "smcp", "c2sc";
+    letter-spacing: 0.08em;
+    line-height: 1;
+    color: rgba(27, 24, 21, 0.52);
+    text-decoration: none;
+    pointer-events: auto;
+}
+html body .slide-menu-wrapper .menu-export:hover,
+html body .slide-menu-wrapper .menu-export:focus-visible {
+    color: #1B1815;
+    box-shadow: 0 2px 0 var(--r-accent, #C2502F);
+}
+
+/* Student version (SPEC 10; ?student=1): answers keep their space,
+   blank, for writing in; an answer in running text is a ruled blank */
+html.mga-student .reveal .md-answer-hidden { visibility: hidden; }
+html.mga-student .reveal span.md-answer-hidden {
+    visibility: visible;
+    color: transparent !important;
+    border-bottom: 0.06em solid currentColor;
+    border-bottom-color: var(--r-font-color, #444);
+}
+html.mga-student .reveal span.md-answer-hidden * { visibility: hidden; }
+
+/* Print views: backgrounds and colour print as on screen in every
+   browser (reveal sets only the WebKit form) */
+html.reveal-print, html.reveal-print * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+
 html body .slide-menu-wrapper .slide-menu {
     background: #FAF7F0 !important;
 
@@ -2894,3 +2933,10 @@ html.mga-final .reveal .md-passage .md-c { transition: none; }
 /* a theme whose highlight is coloured words rather than a ground
    (Charcoal) colours the banded words instead */
 .reveal .pz-c:has(> .pz-band.visible) > .pz-m { color: var(--r-highlight-ink, inherit); }
+
+/* Print views: a slide is the slide's height, as on screen; filling
+   reveal's page (the slide plus its margin) pushed full-bleed images
+   past the foot of the page and made autofit shrink them */
+html.reveal-print .reveal .slides .pdf-page > section:not(.stack) {
+    height: var(--slide-height, 1080px) !important;
+}

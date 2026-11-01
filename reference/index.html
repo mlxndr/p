@@ -430,7 +430,7 @@ table.pals td code { font-size: 0.78em; background: none; padding: 0; }
 <ol><li><a href="#c-changes">What changes</a></li><li><a href="#c-cards">Cards, panel, source</a></li><li><a href="#c-presets">Card presets</a></li><li><a href="#c-calibration">Calibration</a></li><li><a href="#c-6b">Hand-built decks (6b)</a></li></ol>
 </li>
 <li><a href="#export">Export page</a>
-<ol><li><a href="#x-options">What it offers</a></li><li><a href="#x-handouts">Handouts</a></li><li><a href="#x-builds">A page per build</a></li><li><a href="#x-student">Student version</a></li><li><a href="#x-addresses">Addresses</a></li><li><a href="#x-ci">Made automatically</a></li><li><a href="#x-browsers">Chrome and Safari</a></li></ol>
+<ol><li><a href="#x-options">What it offers</a></li><li><a href="#x-handouts">Handouts</a></li><li><a href="#x-builds">A page per build</a></li><li><a href="#x-student">Student version</a></li><li><a href="#x-addresses">Addresses</a></li><li><a href="#x-ci">Made automatically</a></li><li><a href="#x-browsers">Chrome, Safari and paper</a></li></ol>
 </li>
 <li><a href="#design">Designing for it</a>
 <ol><li><a href="#ds-strengths">What it does well</a></li><li><a href="#ds-replace">Instead of PowerPoint habits</a></li><li><a href="#ds-weak">Less well</a></li><li><a href="#ds-pushback">Raising it</a></li></ol>
@@ -1725,12 +1725,12 @@ Assessment Regulations §16.22 to §16.31</code></pre>
 <h2>Export page: <code>?export</code> <span class="status built" data-phase="5">Built · phase 5</span></h2>
 <p>Adding <code>?export</code> to a deck's address (for example <code>mga.is/icame47/?export</code>) opens the export page instead of the slides; <b>Export</b> at the top of the menu (press <code>m</code>) opens it too. It runs in the browser with no server, and works offline once the deck has been opened online.</p>
 
-<div class="example single"><figure><figcaption>The export page (icame47)</figcaption><img src="img/098d207c93.jpg" alt="The export page: the deck title, a theme and layout choice, then sections for the slides, the handout, the text handout, the source files and how to save as PDF"></figure></div>
+<div class="example single"><figure><figcaption>The export page (1A week 8), with the choice between slide-shaped pages and paper</figcaption><img src="img/p8-export-page.jpg" alt="The export page: the deck title, theme and palette, then sections for the slides (slide-shaped pages or on paper), the handout, the text handout, the source files and how to save as PDF"></figure></div>
 
 <h3 id="x-options">What it offers</h3>
 <div class="tablewrap"><table class="opts"><tr><th>Section</th><th>What it gives</th></tr>
 <tr><td>Appearance</td><td>Theme and palette for the slides and the handout (the layouts were retired in October 2026). The deck's <code>pdfTheme</code> is chosen to begin with, otherwise its own theme. Corporate decks print in the template.</td></tr>
-<tr><td>Slides</td><td>One slide to a page at screen size: the final state of each slide, or a page for every build. Student version off, spare slides on, unless you change them. Links to the CI's <code>slides.pdf</code> where it exists.</td></tr>
+<tr><td>Slides</td><td>One slide to a page: the final state of each slide, or a page for every build. Pages the shape of the slides (Chrome's Save as PDF only), or on paper, A4 or Letter, each slide across a sheet (for printers, and the only choice in Safari). Student version off, spare slides on, unless you change them. Links to the CI's <code>slides.pdf</code> where it exists.</td></tr>
 <tr><td>Handout</td><td>1, 2, 3 or 6 slides to an A4 page, each framed and numbered, the page number at the foot, final state; lines for notes if ticked. Student version on and spare slides off unless you change them. Links to the CI's <code>slides-handout.pdf</code> where it exists.</td></tr>
 <tr><td>Text handout</td><td><code>handout.html</code>, for decks that have one: the slides' text as a document. Student version on by default.</td></tr>
 <tr><td>Source</td><td><code>content.md</code>, <code>meta.json</code>, <code>title.md</code> if there is one, and every file pulled in with <code>@include</code>.</td></tr>
@@ -1759,14 +1759,18 @@ Assessment Regulations §16.22 to §16.31</code></pre>
    &amp;lines=1                                     lines for notes
    &amp;student=1                                   student version
    &amp;spares=0                                    no spare slides
+   &amp;paper=1                                     slides on paper (always, in Safari)
    &amp;theme=plate&amp;palette=petrol                  appearance
 handout.html?student=0&amp;spares=1                text handout, full copy with spares</code></pre>
 
 <h3 id="x-ci">Made automatically</h3>
 <p>On each push, CI makes <code>slides.pdf</code> (final state, spare slides at the end, the deck's <code>pdfTheme</code> if it has one) and now also <code>slides-handout.pdf</code>: the student version, two to an A4 page, framed and numbered as PowerPoint's handout print, for Moodle (<code>scripts/handout-nup.py</code>).</p>
 
-<h3 id="x-browsers">Chrome and Safari</h3>
-<p>Every PDF here was checked in Chrome: the final-state pages match the slides on screen, slide for slide, in Cream Serif and in corporate mode, and the handouts were checked in every layout. Safari could not be tested in this build. Safari 18.2 and later honour the page size the print views ask for; in its print dialogue, tick Print backgrounds and untick Print headers and footers. If a Safari PDF differs from the screen, make it in Chrome.</p>
+<h3 id="x-browsers">Chrome, Safari and paper <span class="status built" data-phase="8">Built · phase 8</span></h3>
+<p>Chrome's Save as PDF makes pages the shape of the slides, from the page size the print view asks for. Printing to paper is different in every browser: the page is laid out between the paper's width and one and a half times that width, and anything wider is cut off, so on A4 a slide-shaped page lost its right-hand fifth. Safari always prints on the paper sizes in its dialogue and ignores a page size set in CSS (it starts in A4 portrait), so it could not make a good slides PDF at all.</p>
+<p><b>Slides on paper</b> (<code>paper=1</code>, "On paper, A4 or Letter" on the export page) puts each slide on its own sheet, scaled to the sheet's width and set 83 px from the top: centred on landscape A4, near the top in portrait, on white paper. It works on A4 and Letter either way round, from any browser and to any printer. Safari always gets it; in Chrome it is a choice, and Chrome's slide-shaped PDFs are unchanged. The bar above the pages says what to choose in the dialogue: landscape for slides, the handout's orientation for a handout.</p>
+<p>Safari's print also has faults of its own, now worked round in Safari's print views only: a handout sheet exactly the paper's height gained a blank page after it; see-through parts of gradients printed black and CSS masks did not print, which blacked out turned card corners, folds, the activity bar, the arrows between cards, brace trees and concordance lines (the gradients are now repainted in solid colours blended as on screen, and the arrows and braces redrawn without masks); and <code>@marks</code> zoom steps printed unzoomed. Everything else matches Chrome, apart from small differences in where lines break. In Safari's dialogue, choose the orientation the bar names and untick Print headers and footers; Print backgrounds can be left as it is.</p>
+<div class="example single"><figure><figcaption>A Safari PDF of 1A week 8 before (left: the slide scaled to the sheet's height and cut off at the right) and after (right: the slide across a landscape A4 sheet)</figcaption><img src="img/p8-safari-paper.jpg" alt="Two A4 landscape pages from Safari: on the left the slide Meaning and Grammar runs off the right edge of the page; on the right the whole slide sits across the page with white paper above and below"></figure></div>
 <p>The text handout is not the slides: it reflows the markdown as a document, so charts drawn as slides, layouts and morph sequences belong in the slide handout. Corporate decks have the slide handouts and no text handout.</p>
 </section>
 <section id="design">

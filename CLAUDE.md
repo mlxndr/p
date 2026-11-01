@@ -3,7 +3,7 @@
 **Repository:** mlxndr/p
 **Purpose:** Academic presentation platform (mga.is)
 **Owner:** Marc Alexander, University of Glasgow
-**Last updated:** 2026-11-01 (phase 6c: pilots 1a/6 and 2b/5, 2b/sets.md, label steps in @parse, [x]{italic}, the mga-slides skill; phase 6b: corporate decks in uog/, research talks in research/, 2A series in 2a/, corporate pilots, title-photo library, reference/)
+**Last updated:** 2026-11-01 (phase 8: Safari printing, slides on paper (`paper=1`), WebKit print fixes; phase 6c: pilots 1a/6 and 2b/5, 2b/sets.md, label steps in @parse, [x]{italic}, the mga-slides skill; phase 6b: corporate decks in uog/, research talks in research/, 2A series in 2a/, corporate pilots, title-photo library, reference/)
 
 ## Overview
 
@@ -47,7 +47,8 @@ inc/
                             positioner, autofit, corporate layout
   revconfig.js              Reveal.initialize + menu config
   export.js                 The export page (?export) and the print
-                            views it opens (handout sheets, Print bar)
+                            views it opens (handout sheets, slides on
+                            paper, WebKit print fixes, Print bar)
   qr.js                     QR code library
   handout.js, marked.min.js Handout rendering
   css/
@@ -908,11 +909,12 @@ corporate decks print in the template.
 The print views are reveal's print mode (`?print-pdf`) with these
 options: `fragments=false` (final state), `builds=1` (a page per build:
 `pdfSeparateFragments`), `handout=1|2|3|6`, `lines=1`, `student=1`,
-`spares=0`, plus `theme=`/`palette=`. A bar at the top (not printed)
-holds the Print button, enabled once pages, fonts and images are ready;
-then refitSlides is frozen (`MGA_PRINT_FROZEN`), since the print
-dialogue resizes the window. Handout sheets hold reveal's pages scaled
-with `zoom` (a `transform` made Chrome shrink every sheet). Each printed
+`spares=0`, `paper=1`, plus `theme=`/`palette=`. A bar at the top (not
+printed) holds the Print button, enabled once pages, fonts and images are
+ready, and says which paper and orientation to choose; then refitSlides
+is frozen (`MGA_PRINT_FROZEN`), since the print dialogue resizes the
+window. Handout sheets hold reveal's pages scaled with `zoom` (a
+`transform` made Chrome shrink every sheet). Each printed
 page takes `.reveal`'s ground (the themes paint it there; reveal copies
 the body's, which printed dark themes white). In print a slide keeps the
 slide's height and `--bleed-x/y` are the page margin; Spine's padding is
@@ -926,9 +928,41 @@ blanks answers (`{answer x}`, `@terms answers`, a card's `answer`): an
 answer stops being a build and keeps its space, inline answers as a
 ruled blank. `spares=0` leaves out spare slides (`handout.html` leaves
 them out unless `?spares=1`). Hidden slides never appear. Corporate
-decks have the slide handouts but no text handout. Chrome gives the
-most faithful PDFs; Safari 18.2 and later honour the page size (not
-tested here).
+decks have the slide handouts but no text handout.
+
+Paper and Safari (phase 8). Slide-shaped pages (2073 x 1166 px, from
+reveal's `@page` rule) come only from Chrome's Save as PDF. Printing to
+paper, any browser lays a page out between the paper's width and 1.5
+times it and cuts off the rest, so a slide page lost its right-hand
+fifth on A4. `paper=1` (the export page's "On paper, A4 or Letter")
+puts each page on a sheet 1152 px wide (`.pp-sheet` > `.pp-slot`,
+`layoutPaper` in export.js), a width that fits A4 and Letter either way
+round, one sheet to a printed page, the slide 83 px from the top
+(centred on landscape A4), white paper round it; reveal's `@page` size
+is replaced by `@page { margin: 0 }`. Neither browser tells CSS the
+printed page's height (in WebKit `100vh` in print is the window's).
+WebKit (Safari, and any browser without "Chrome/" in its user agent:
+`MGA_WEBKIT`, `html.mga-webkit`) ignores a CSS page size and offers
+only real paper, so head.js sets `paper=1` for every WebKit slide view.
+WebKit print faults handled in export.js and export.css, WebKit only,
+so Chrome output is unchanged: a sheet exactly the paper's height
+gains a blank page after it (handout sheets are 1 px shorter);
+gradient stops lose their transparency (a transparent stop prints
+black) and CSS masks do not print, so `flattenForWebKit` repaints every
+gradient with see-through stops blended over the colour behind it
+(card corners and folds, accent bars), drops gradient masks (the
+concordance fades), and export.css redraws the arrows between cards
+and brace trees with clip-path and borders; a transform inside a zoomed
+element is ignored and a zoomed element inside a transformed one is
+laid out wrongly, so a page holding `@marks` is scaled with a transform
+and every other page with `zoom` (`scalePage`). `vw`/`vh` in WebKit
+print are the window's, so images capped by them (the old `66vh`) can
+print smaller than in Chrome. Test WebKit printing with the headless
+printer `wkprint` (994 Agents/2026-10-30-mga-slides-build/phase8/tools;
+it reproduces Safari's PDFs exactly), never by guessing. export.css and
+export.js load with a version in their address (`MGA_EXPORT_V`, set in
+head.js, `?v=8`): Safari kept an old export.css with a new export.js,
+so bump it whenever either changes.
 
 ## Theming
 

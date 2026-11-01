@@ -242,8 +242,15 @@
          lines=1           lines for notes beside or beneath each slide
          student=1         leaves out @slide nohandout and hides answers
          spares=0          leaves out @slide spare slides
+         paper=1           each slide on a sheet of the paper chosen in
+                           the print dialogue (A4 or Letter, either way
+                           round), scaled to its width and centred
        handout.html reads student and spares too, with the student
-       version as its default. */
+       version as its default.
+
+       Safari (and every WebKit browser) prints only on the paper sizes
+       its dialogue offers and ignores a page size set in CSS, so its
+       slide views always take paper=1 (phase 8). */
     var q = null;
     try { q = new URLSearchParams(location.search); } catch (e) {}
     function opt(k, dflt) {
@@ -259,12 +266,20 @@
         handout: [1, 2, 3, 6].indexOf(perPage) !== -1 ? perPage : 0,
         lines: opt('lines', false),
         student: opt('student', false),
-        spares: opt('spares', true)
+        spares: opt('spares', true),
+        paper: opt('paper', false)
     };
     if (q && q.has('handout') && !X.handout) console.warn('[export] handout= takes 1, 2, 3 or 6 slides per page');
     if (!X.print) X.handout = 0;
+    var ua = navigator.userAgent || '';
+    var WEBKIT = /AppleWebKit\//.test(ua) && !/(Chrome|Chromium|Edg|OPR)\//.test(ua);
+    window.MGA_WEBKIT = WEBKIT;
+    if (X.print && WEBKIT) X.paper = true;
+    if (!X.print || X.handout) X.paper = false;
     window.MGA_EXPORT = X;
     var rcx = document.documentElement.classList;
+    if (WEBKIT) rcx.add('mga-webkit');
+    if (X.paper) rcx.add('mga-paper');
     if (X.student) rcx.add('mga-student');
     if (X.handout) rcx.add('mga-handout', 'mga-handout-' + X.handout);
     if (X.handout && X.lines) rcx.add('mga-lines');
@@ -292,7 +307,11 @@
         '<link rel="manifest" href="' + ROOT + 'site.webmanifest">',
         '<link rel="stylesheet" href="' + chosen.href + '" id="theme">'
     ];
-    if (X.page || X.print) h.push('<link rel="stylesheet" href="' + CSS + 'export.css">');
+    /* the export files carry a version in their address, so a browser
+       holding an old copy (Safari kept an old export.css with a new
+       export.js, phase 8) fetches the new one: change it with them */
+    window.MGA_EXPORT_V = '?v=8';
+    if (X.page || X.print) h.push('<link rel="stylesheet" href="' + CSS + 'export.css' + window.MGA_EXPORT_V + '">');
     document.write(h.join('\n'));
 
     /* Offline copies (see /sw.js). Not on a local preview server, where a

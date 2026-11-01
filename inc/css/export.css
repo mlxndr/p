@@ -235,3 +235,119 @@ html.mga-handout .ho-lines > div {
     html.mga-handout.mga-print-ready body,
     html.mga-handout.mga-print-ready .reveal-viewport { background: #FFF !important; }
 }
+
+/* ===========================================
+   Slides on paper (paper=1; always in WebKit, phase 8): each of
+   reveal's pages on its own printed page, as wide as PAPER_W in
+   export.js. Neither browser tells CSS the printed page's height (in
+   WebKit, 100vh in print is the window's), so the slide sits 83 px
+   from the top: centred on landscape A4, near the top on portrait.
+   =========================================== */
+
+html.mga-paper .reveal .slides .pp-sheet {
+    position: relative;
+    width: 1152px;
+    padding-top: 83px;
+    overflow: hidden;
+    background: #FFF;
+    box-sizing: border-box;
+    break-after: page;
+    page-break-after: always;
+    break-inside: avoid;
+}
+html.mga-paper .reveal .slides .pp-sheet:last-child {
+    break-after: auto;
+    page-break-after: auto;
+}
+html.mga-paper .reveal .slides .pp-slot {
+    width: 1152px;
+    overflow: hidden;
+}
+html.mga-paper .reveal .slides .pp-slot > .pdf-page {
+    page-break-after: auto;
+    break-after: auto;
+}
+@media screen {
+    /* on screen, a preview of A4 landscape sheets */
+    html.mga-paper .reveal .slides .pp-sheet {
+        height: calc(1152px * 210 / 297);
+        margin: 0 auto 24px;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.3);
+    }
+    html.mga-paper.mga-print-ready,
+    html.mga-paper.mga-print-ready body,
+    html.mga-paper.mga-print-ready .reveal-viewport,
+    html.mga-paper.mga-print-ready .reveal {
+        background: #8C8984 !important;
+    }
+    html.mga-paper.mga-print-ready body { padding: 24px 0 !important; box-sizing: content-box; }
+}
+@media print {
+    /* the themes paint their ground on .reveal, which runs the length
+       of the document: white, so the paper round each slide is white */
+    html.mga-paper.mga-print-ready,
+    html.mga-paper.mga-print-ready body,
+    html.mga-paper.mga-print-ready .reveal-viewport,
+    html.mga-paper.mga-print-ready .reveal { background: #FFF !important; }
+}
+
+/* ===========================================
+   WebKit print (phase 8): CSS masks do not print, so the shapes drawn
+   with them are redrawn with clip-path and borders; gradients are
+   repainted by flattenForWebKit in export.js
+   =========================================== */
+
+/* the arrow between cards: a block arrow cut from the arrow's colour */
+html.mga-webkit.reveal-print .reveal .md-arrows > .md-card:not(:last-child)::after {
+    -webkit-mask: none;
+    mask: none;
+    clip-path: polygon(10% 44%, 60% 44%, 60% 24%, 92% 50%, 60% 76%, 60% 56%, 10% 56%);
+}
+/* corporate arrows: the template's block arrow, and the Boards deck's
+   connector with its arrowhead */
+html.mga-webkit.reveal-print.corp .reveal .md-arrows > .md-card:not(:last-child)::after {
+    clip-path: polygon(0 25%, 50% 25%, 50% 0, 100% 50%, 50% 100%, 50% 75%, 0 75%);
+}
+html.mga-webkit.reveal-print.corp-cards-boards .reveal .md-arrows > .md-card:not(:last-child)::after {
+    clip-path: polygon(9.83% 35.42%, 40.17% 35.42%, 40.17% 0, 90.17% 50%, 40.17% 100%, 40.17% 64.58%, 9.83% 64.58%);
+}
+/* brace trees: the curves drawn with rounded borders */
+html.mga-webkit.reveal-print .reveal .md-brace > i:is(:nth-child(1), :nth-child(3), :nth-child(5)) {
+    -webkit-mask: none;
+    mask: none;
+    background: none;
+    position: relative;
+    box-sizing: border-box;
+}
+html.mga-webkit.reveal-print .reveal .md-brace > i:nth-child(1) {
+    margin-left: calc(50% - 0.03em);
+    border-top: 0.06em solid currentColor;
+    border-left: 0.06em solid currentColor;
+    border-top-left-radius: 100% 100%;
+}
+html.mga-webkit.reveal-print .reveal .md-brace > i:nth-child(5) {
+    margin-left: calc(50% - 0.03em);
+    border-bottom: 0.06em solid currentColor;
+    border-left: 0.06em solid currentColor;
+    border-bottom-left-radius: 100% 100%;
+}
+html.mga-webkit.reveal-print .reveal .md-brace > i:nth-child(3)::before,
+html.mga-webkit.reveal-print .reveal .md-brace > i:nth-child(3)::after {
+    content: '';
+    position: absolute;
+    left: 0.08em;
+    width: calc(50% - 0.05em);
+    height: 50%;
+    box-sizing: border-box;
+    border-right: 0.06em solid currentColor;
+}
+html.mga-webkit.reveal-print .reveal .md-brace > i:nth-child(3)::before {
+    top: 0;
+    border-bottom: 0.06em solid currentColor;
+    border-bottom-right-radius: 100% 100%;
+}
+html.mga-webkit.reveal-print .reveal .md-brace > i:nth-child(3)::after {
+    bottom: 0;
+    border-top: 0.06em solid currentColor;
+    border-top-right-radius: 100% 100%;
+}

@@ -21,6 +21,7 @@
     const X = window.MGA_EXPORT || {};
     const META = window.MGA_META || {};
     const CORP = !!window.MGA_CORPORATE;
+    const WEBKIT = !!window.MGA_WEBKIT;      // Safari and every WebKit browser
     const MM = 96 / 25.4;                    // CSS px per mm
 
     function esc(s) {
@@ -136,7 +137,16 @@
 
             '<section class="ex-sec" aria-labelledby="ex-h-slides">' +
                 '<h2 id="ex-h-slides">Slides</h2>' +
-                '<p class="ex-desc">One slide to a page, at the size of the screen.</p>' +
+                '<p class="ex-desc">One slide to a page.</p>' +
+                '<div class="ex-row" role="radiogroup" aria-label="Page size">' +
+                    radio('shape', 'slide', 'Slide-shaped pages' + (WEBKIT ? ' <span class="ex-note">Chrome only</span>' : ''), !WEBKIT) +
+                    radio('shape', 'paper', 'On paper, A4 or Letter', WEBKIT) +
+                '</div>' +
+                '<p class="ex-desc" id="ex-shape-note">' + (WEBKIT
+                    ? 'Safari prints only on the paper sizes in its dialogue, so the slides come one to a sheet of paper, ' +
+                      'scaled to its width.'
+                    : 'Slide-shaped pages need Chrome’s Save as PDF. On paper, each slide fills the width of a sheet: ' +
+                      'for printing, and for PDFs from any browser.') + '</p>' +
                 '<div class="ex-row" role="radiogroup" aria-label="Builds">' +
                     radio('builds', 'final', 'Final state of each slide', true) +
                     radio('builds', 'each', 'A page for every build', false) +
@@ -185,16 +195,16 @@
 
             '<section class="ex-sec ex-help" aria-labelledby="ex-h-help">' +
                 '<h2 id="ex-h-help">Saving as PDF</h2>' +
-                '<p>Each Open button shows the pages in a new tab, with a Print button at the top once they are ready. ' +
-                    'In the print dialogue:</p>' +
+                '<p>Each Open button shows the pages in a new tab, with a Print button at the top once they are ready; ' +
+                    'the bar beside it says which paper and orientation to choose. In the print dialogue:</p>' +
                 '<ul>' +
-                    '<li><b>Chrome</b>: choose Save as PDF as the destination; under More settings, leave Margins at Default ' +
-                        'and Scale at Default, and tick Background graphics.</li>' +
-                    '<li><b>Safari</b>: open Show Details, tick Print backgrounds and untick Print headers and footers, ' +
-                        'then choose Save as PDF from the PDF menu. Safari 18.2 and later honour the page size.</li>' +
+                    '<li><b>Chrome</b>: for slide-shaped pages, choose Save as PDF as the destination; under More settings, ' +
+                        'leave Margins and Scale at Default and tick Background graphics. For slides on paper, or a handout, ' +
+                        'choose the paper and orientation the bar names.</li>' +
+                    '<li><b>Safari</b>: choose the orientation the bar names (landscape for slides, portrait for most handouts; ' +
+                        'Safari starts in portrait), untick Print headers and footers under Safari, then choose Save as PDF ' +
+                        'from the PDF menu. Print backgrounds can be left as it is: the pages print their colours either way.</li>' +
                 '</ul>' +
-                '<p>Chrome gives the most faithful result. If a PDF from Safari differs from the screen (fonts, colours, ' +
-                    'page breaks), make it in Chrome.</p>' +
             '</section>';
         document.body.appendChild(main);
         document.body.classList.add('mga-export-body');
@@ -231,6 +241,7 @@
         function update() {
             const builds = val('builds') === 'each';
             document.getElementById('ex-go-slides').href = '?print-pdf' + (builds ? '&builds=1' : '&fragments=false') + look() +
+                (!WEBKIT && val('shape') === 'paper' ? '&paper=1' : '') +
                 (on('s-student') ? '&student=1' : '') + (on('s-spares') ? '' : '&spares=0');
             const n = parseInt(val('per'), 10) || 2;
             document.getElementById('ex-go-handout').href = '?print-pdf&fragments=false&handout=' + n +
@@ -242,6 +253,7 @@
             document.getElementById('ex-go-text').href = './handout.html' + (t.length ? '?' + t.join('&') : '');
             savePrefs({ perPage: n, lines: on('h-lines') });
         }
+        if (WEBKIT) form.querySelector('input[name="shape"][value="slide"]').disabled = true;
         form.addEventListener('change', update);
         update();
 
@@ -331,6 +343,24 @@
 
     const LINE_GAP = 8;   // mm between ruled lines
 
+    /* A page scaled onto a sheet: with zoom, which also scales the
+       layout box (a transformed page still counted at full width made
+       Chrome shrink every sheet). WebKit's print gets two things wrong
+       here: it ignores a transform inside a zoomed element, and lays out
+       a zoomed element inside a transformed one at the wrong size. So
+       in WebKit a page holding @marks (which zooms and places with
+       transforms) is scaled with a transform inside a clipped box, and
+       every other page (Thumb Index titles and autofit use zoom) with
+       zoom. */
+    function scalePage(page, k) {
+        if (WEBKIT && page.querySelector('.md-marks-frame')) {
+            page.style.transformOrigin = '0 0';
+            page.style.transform = 'scale(' + k + ')';
+        } else {
+            page.style.zoom = String(k);
+        }
+    }
+
     /* Reveal gives each printed page the ground of the viewport (body),
        but the themes paint theirs on .reveal, so dark and tinted grounds
        printed as white. Each page takes .reveal's ground instead. */
@@ -367,7 +397,9 @@
                 const sheet = document.createElement('div');
                 sheet.className = 'ho-sheet ho-' + plan.orient;
                 sheet.style.width = plan.PW + 'mm';
-                sheet.style.height = plan.PH + 'mm';
+                // WebKit adds a blank page after a sheet exactly the
+                // paper's height; a pixel less keeps one sheet a page
+                sheet.style.height = WEBKIT ? 'calc(' + plan.PH + 'mm - 1px)' : plan.PH + 'mm';
                 const num = document.createElement('div');
                 num.className = 'ho-page';
                 num.textContent = String(sheets.length + 1);
@@ -385,9 +417,7 @@
             frame.style.width = c.w + 'mm';
             frame.style.height = c.h + 'mm';
             page.style.width = pw + 'px';
-            // zoom, which also scales the layout box: a transformed page
-            // still counted at full width made Chrome shrink every sheet
-            page.style.zoom = String(c.w * MM / pw);
+            scalePage(page, c.w * MM / pw);
             frame.appendChild(page);
             sheet.appendChild(frame);
             const no = document.createElement('div');
@@ -421,6 +451,147 @@
         const st = document.createElement('style');
         st.textContent = '@page { size: A4 ' + plan.orient + '; margin: 0; }';
         document.head.appendChild(st);
+    }
+
+    /* Slides on paper (paper=1; always in WebKit). Browsers print a
+       page on the paper chosen in the dialogue, laying it out between
+       the paper's width and 1.5 times that width, and cut off anything
+       wider: reveal's 2073 px pages lost their right-hand fifth on A4.
+       Each page goes on a sheet PAPER_W wide, a width inside that range
+       for A4 and Letter either way round, one sheet to a printed page;
+       the slide is scaled to the sheet's width (export.css places it). */
+    const PAPER_W = 1152;
+    function layoutPaper() {
+        const slides = document.querySelector('.reveal .slides');
+        const pages = Array.prototype.slice.call(slides.querySelectorAll(':scope > .pdf-page'));
+        if (!pages.length) return;
+        const pw = pages[0].offsetWidth;
+        const ph = parseFloat(pages[0].style.height) || pages[0].offsetHeight;
+        pages.forEach(function (page) {
+            const sheet = document.createElement('div');
+            sheet.className = 'pp-sheet';
+            const slot = document.createElement('div');
+            slot.className = 'pp-slot';
+            slot.style.height = (ph * PAPER_W / pw) + 'px';
+            page.parentNode.insertBefore(sheet, page);
+            page.style.width = pw + 'px';
+            scalePage(page, PAPER_W / pw);
+            slot.appendChild(page);
+            sheet.appendChild(slot);
+        });
+        document.body.style.width = PAPER_W + 'px';
+        document.body.style.height = 'auto';
+        // the paper is the dialogue's, not the slide's shape
+        Array.prototype.forEach.call(document.querySelectorAll('head style'), function (el) {
+            if (/^\s*@page\b/.test(el.textContent)) el.remove();
+        });
+        const st = document.createElement('style');
+        st.textContent = '@page { margin: 0; }';
+        document.head.appendChild(st);
+    }
+
+    /* WebKit's print drops the transparency of gradient colour stops
+       (a transparent stop prints black, a translucent one solid) and
+       ignores CSS masks, so turned card corners, folds, accent bars and
+       concordance fades printed as black shapes. Solid colours, rgba
+       colours, clip-path and shadows print correctly. In WebKit print
+       views each gradient with see-through stops is repainted with
+       every stop blended over the colour behind it, which is what the
+       screen shows; masked gradients (the concordance fades) lose the
+       mask; the arrows and brace trees, drawn with SVG masks, have
+       clip-path and border versions in export.css. */
+    function parseColour(c) {
+        let m = /^rgba?\(([^)]+)\)$/.exec(c);
+        if (m) {
+            const v = m[1].split(/[\s,\/]+/).filter(Boolean).map(parseFloat);
+            return { r: v[0], g: v[1], b: v[2], a: v.length > 3 ? v[3] : 1 };
+        }
+        m = /^color\(srgb\s+([^)]+)\)$/.exec(c);
+        if (m) {
+            const v = m[1].split(/[\s\/]+/).filter(Boolean).map(parseFloat);
+            return { r: v[0] * 255, g: v[1] * 255, b: v[2] * 255, a: v.length > 3 ? v[3] : 1 };
+        }
+        if (c === 'transparent') return { r: 0, g: 0, b: 0, a: 0 };
+        return null;
+    }
+    function over(c, back) {
+        const a = c.a;
+        return 'rgb(' + [c.r * a + back.r * (1 - a), c.g * a + back.g * (1 - a), c.b * a + back.b * (1 - a)]
+            .map(function (x) { return Math.round(x); }).join(', ') + ')';
+    }
+    const COLOUR_RE = /rgba?\([^)]*\)|color\(srgb[^)]*\)|\btransparent\b/g;
+    function backdrop(el) {
+        // the first opaque ground behind el (a slide's own background
+        // is a sibling layer in its page, so look there too)
+        for (let e = el; e && e.nodeType === 1; e = e.parentElement) {
+            if (e.classList.contains('pdf-page')) {
+                const bg = e.querySelector(':scope > .slide-background');
+                const c = bg && parseColour(getComputedStyle(bg).backgroundColor);
+                if (c && c.a === 1) return c;
+            }
+            const c = parseColour(getComputedStyle(e).backgroundColor);
+            if (c && c.a === 1) return c;
+        }
+        return { r: 255, g: 255, b: 255, a: 1 };
+    }
+    function flatten(image, back) {
+        let changed = false;
+        const out = image.replace(COLOUR_RE, function (tok) {
+            const c = parseColour(tok);
+            if (!c || c.a >= 1) return tok;
+            changed = true;
+            return over(c, back);
+        });
+        return changed ? out : null;
+    }
+    function flattenForWebKit() {
+        const root = document.querySelector('.reveal .slides');
+        if (!root) return;
+        const rules = [];
+        let n = 0;
+        root.querySelectorAll('*').forEach(function (el) {
+            const cs = getComputedStyle(el);
+            if (cs.backgroundImage.indexOf('gradient') !== -1) {
+                const own = parseColour(cs.backgroundColor);
+                const fixed = flatten(cs.backgroundImage, own && own.a === 1 ? own : backdrop(el.parentElement));
+                if (fixed) el.style.backgroundImage = fixed;
+            }
+            const mask = cs.webkitMaskImage || cs.maskImage || '';
+            if (mask.indexOf('gradient') !== -1) {
+                el.style.webkitMaskImage = 'none';
+                el.style.maskImage = 'none';
+            }
+            ['::before', '::after'].forEach(function (pe) {
+                const ps = getComputedStyle(el, pe);
+                if (ps.content === 'none' || ps.backgroundImage.indexOf('gradient') === -1) return;
+                const own = parseColour(ps.backgroundColor);
+                // a fold sits in its card's cut corner: behind it is what
+                // lies behind the card where the card is clipped away
+                const fixed = flatten(ps.backgroundImage, own && own.a === 1 ? own :
+                    backdrop(cs.clipPath && cs.clipPath !== 'none' ? el.parentElement : el));
+                if (!fixed) return;
+                const cls = 'mga-wk' + (++n);
+                el.classList.add(cls);
+                rules.push('html .reveal .' + cls + pe + ' { background-image: ' + fixed + ' !important; }');
+            });
+        });
+        if (rules.length) {
+            const st = document.createElement('style');
+            st.textContent = rules.join('\n');
+            document.head.appendChild(st);
+        }
+    }
+
+    /* What to choose in the print dialogue, for the bar */
+    function dialogueAdvice() {
+        if (X.handout) {
+            const land = X.handout === 1 && !X.lines;
+            return 'In the print dialogue, choose A4, ' + (land ? 'landscape' : 'portrait') + '.';
+        }
+        if (X.paper) {
+            return 'In the print dialogue, choose landscape' + (WEBKIT ? ' (Safari starts in portrait)' : '') + '.';
+        }
+        return 'In Chrome, choose Save as PDF.';
     }
 
     function setupPrintView() {
@@ -463,13 +634,15 @@
                 })
                 .then(function () {
                     groundPages();
+                    if (WEBKIT) flattenForWebKit();
                     if (X.handout) layoutHandout();
+                    else if (X.paper) layoutPaper();
                     window.MGA_PRINT_FROZEN = true;
                     return frames(2);
                 })
                 .then(function () {
-                    const n = document.querySelectorAll(X.handout ? '.ho-sheet' : '.reveal .slides > .pdf-page').length;
-                    bar.querySelector('.mga-print-status').textContent = n + (n === 1 ? ' page' : ' pages') + ' ready.';
+                    const n = document.querySelectorAll(X.handout ? '.ho-sheet' : X.paper ? '.pp-sheet' : '.reveal .slides > .pdf-page').length;
+                    bar.querySelector('.mga-print-status').textContent = n + (n === 1 ? ' page' : ' pages') + ' ready. ' + dialogueAdvice();
                     btn.disabled = false;
                     document.documentElement.classList.add('mga-print-ready');
                 })

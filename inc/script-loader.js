@@ -22,7 +22,7 @@ function loadScripts() {
   // ?export: the export page replaces the slides (inc/export.js)
   const X = window.MGA_EXPORT || {};
   if (X.page) {
-    loadScript((window.MGA_ROOT || '../') + 'inc/export.js')
+    loadScript((window.MGA_ROOT || '../') + 'inc/export.js' + (window.MGA_EXPORT_V || ''))
       .then(() => mgaExportPage())
       .catch(error => showError(error.message));
     return;
@@ -37,7 +37,7 @@ function loadScripts() {
       const enabledPlugins = Object.entries(scriptConfig.plugins)
         .filter(([_, plugin]) => plugin.enabled)
         .map(([_, plugin]) => plugin.path);
-      if (X.print) enabledPlugins.push((window.MGA_ROOT || '../') + 'inc/export.js');
+      if (X.print) enabledPlugins.push((window.MGA_ROOT || '../') + 'inc/export.js' + (window.MGA_EXPORT_V || ''));
 
       return Promise.all(enabledPlugins.map(loadScript));
     })
@@ -271,7 +271,7 @@ function cacheDeckForOffline() {
     add(location.pathname);
     add('./content.md'); add('./meta.json'); add('./title.md');
     add((window.MGA_ROOT || '../') + 'inc/site.json');
-    add((window.MGA_ROOT || '../') + 'inc/export.js'); add((window.MGA_ROOT || '../') + 'inc/css/export.css');   // export page
+    add((window.MGA_ROOT || '../') + 'inc/export.js' + (window.MGA_EXPORT_V || '')); add((window.MGA_ROOT || '../') + 'inc/css/export.css' + (window.MGA_EXPORT_V || ''));   // export page
     (window.MGA_INCLUDES || []).forEach(add);          // @include files
     document.querySelectorAll('img[src]').forEach(function (i) { add(i.getAttribute('src')); });
     document.querySelectorAll('[data-background-image]').forEach(function (e) { add(e.getAttribute('data-background-image')); });

@@ -1,11 +1,15 @@
 // Build config with user preference support
 (function() {
     // Deck defaults from meta.json (read by head.js): "transition" between
-    // slides (corporate decks: none), "listBuild" (lists build item by
+    // slides (corporate decks: none unless "fade"), "listBuild" (lists build item by
     // item; default true, corporate false). Reduced motion: no transition.
     const meta = window.MGA_META || {};
     const TRANSITIONS = ['none', 'fade', 'slide', 'convex', 'concave', 'zoom'];
-    let deckTransition = meta.corporate ? 'none' : (meta.transition || 'slide');
+    // corporate decks: none, or "transition": "fade" (Marc, 1 November)
+    let deckTransition = meta.corporate ? (meta.transition === 'fade' ? 'fade' : 'none') : (meta.transition || 'slide');
+    if (meta.corporate && meta.transition && meta.transition !== 'fade' && meta.transition !== 'none') {
+        console.warn('[meta] a corporate deck takes "transition": "fade" or none; using none');
+    }
     if (TRANSITIONS.indexOf(deckTransition) === -1) {
         console.warn('[meta] "transition" must be one of ' + TRANSITIONS.join(', ') + '; using slide');
         deckTransition = 'slide';

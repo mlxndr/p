@@ -86,6 +86,10 @@
     --L-accent: #A60367;
     --title-logos: white;
 
+    /* one corner radius for every rounded shape (cards, panels, headers,
+       strips, bars); Marc, 1 November. PowerPoint's own is 3.553% of each
+       shape's shorter side, which varies from shape to shape */
+    --corp-radius: 16px;
     /* PowerPoint "single" spacing */
     --corp-lh: 1.2;
     /* 90% spacing (title and content placeholders) */
@@ -128,12 +132,21 @@ html.corp-cards-template {
     --cc-text: 40px;            /* 20 pt */
     --cc-p-before: 0px;
     --cc-p-after: 12px;
+    /* tables as in the ETS deck: 20 pt, rows 75.91 px, inset 12 x 6 px */
+    --cc-table: 40px;
+    --cc-table-row: 75.91px;
+    --cc-table-pad: 6px 12px;
+    /* grade strips as in the Dumfries deck: 32 pt */
+    --cc-strip: 64px;
 }
 
 /* ---------- the frame ---------- */
 /* PowerPoint letterboxes in black when the screen is not 16:9; the white
    ground belongs to the slide */
 html.corp body, html.corp .reveal-viewport, html.corp .reveal { background: #000 !important; }
+/* the slide area itself is white, so a fade ("transition": "fade") passes
+   from slide to slide without dipping towards the black letterbox */
+html.corp .reveal .slides { background: #FFFFFF; }
 html.corp .reveal .slides > section,
 html.corp .reveal .slides > section > section,
 html.corp .reveal .slides .pdf-page > section {
@@ -340,9 +353,10 @@ html.corp .reveal .md-cards .md-card {
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
 }
 html.corp .reveal .md-cards .md-card > * { margin: 0; }
-html.corp .reveal .md-cards .md-card > h3 {
+html.corp .reveal .md-cards .md-card > h3,
+html.corp .reveal .md-cards .md-card > .md-card-head > h3 {
     font-family: var(--r-heading-font);
-    font-size: var(--cards-head, var(--cc-head));
+    font-size: var(--cards-fit-head, var(--cards-head, var(--cc-head)));
     font-weight: 700; line-height: var(--corp-lh);
     margin: 0 0 var(--cc-head-after);
     color: inherit; border: none; padding: 0;
@@ -352,11 +366,14 @@ html.corp .reveal .md-cards .md-card > h3 {
    reproduce existing slides); after it, the light subtitle (Noto Sans
    Light, 2 pt below the heading, 12 pt after) */
 html.corp .reveal .md-cards .md-card > h4 {
-    font-size: var(--cards-text, var(--cc-text)); font-weight: 400; line-height: var(--corp-lh);
+    font-size: 1em; font-weight: 400; line-height: var(--corp-lh);
     color: inherit; margin: 0 0 4px; font-variant-caps: normal; letter-spacing: 0; text-transform: none; border: none;
 }
 html.corp .reveal .md-cards .md-card > h3:has(+ h4) { margin-bottom: 4px; }
-html.corp .reveal .md-cards .md-card > h3 + h4 { font-weight: 300; margin: 0 0 24px; font-family: var(--r-main-font); }
+/* the small line above a heading: 70% of the text size, bold (Dumfries
+   19: 14 pt over the 28 pt heading) */
+html.corp .reveal .md-cards .md-card > h4:has(+ h3) { font-size: 0.7em; font-weight: 700; margin-bottom: 2px; }
+html.corp .reveal .md-cards .md-card > h3 + h4 { font-weight: 300; margin: 0 0 0.6em; font-family: var(--r-main-font); }
 html.corp .reveal .md-cards .md-card :is(p, li) { color: inherit; }
 html.corp .reveal .md-cards .md-card > p,
 html.corp .reveal .md-cards .md-card > ul > li,
@@ -377,7 +394,10 @@ html.corp .reveal .md-cards .md-card ol > li::before { content: counter(corpc) '
 html.corp .reveal .slides section .md-card-filled :is(h3, h4, strong, b, em, a, code) { color: inherit; }
 /* the first card with no `::` line before it is a plain text column */
 html.corp .reveal .md-cards .md-card:not(.md-card-filled) { background: none; padding: 0; color: var(--uog-blue); }
-html.corp .reveal .md-cards .md-card:not(.md-card-filled) > p { font-size: var(--cards-text, var(--corp-lead)); }
+/* its text at the lead size, set on the column so that it shrinks with
+   the cards (corpFitCards) */
+html.corp .reveal .md-cards .md-card:not(.md-card-filled):has(> p) { font-size: var(--cards-text, var(--corp-lead)); }
+html.corp .reveal .md-cards .md-card:not(.md-card-filled) > p { font-size: inherit; }
 /* white cards (the Boards deck's open stages) take a University Blue edge */
 html.corp .reveal .md-cards .md-card.md-bg-white { box-shadow: 0 0 0 1.5px var(--uog-blue), inset 0 0 0 1.5px var(--uog-blue); }
 html.corp .reveal .md-cards .md-card.md-card-foot > :last-child { margin-top: auto; }
@@ -450,7 +470,12 @@ html.corp .reveal .md-style-stat .md-stat-note { font-size: 24px; color: inherit
 html.corp .reveal .md-stats .md-card:not(.md-card-filled) { background: var(--uog-blue); color: #FFFFFF; padding: 14.4px; }
 
 /* style=strip: grade strips (a narrow coloured column of grades) */
-html.corp .reveal .md-style-strip .md-strip { padding: 14.4px 28px; font-size: 40px; font-weight: 700; }
+html.corp .reveal .md-style-strip .md-strip { padding: 14.4px 28px; font-size: var(--cc-strip, 40px); font-weight: 700; }
+/* the grades centred in the strip; two grades in one token (~~D3~~ C3,
+   a reassessed grade) smaller and on one line, in the same row height */
+html.corp .reveal .slides section .md-style-strip .md-strip-token,
+html.corp .reveal .slides section .md-style-strip .md-strip-token > p { text-align: center; }
+html.corp .reveal .md-style-strip .md-strip-pair > p { font-size: 0.6em; line-height: calc(var(--corp-lh) / 0.6); white-space: nowrap; }
 html.corp .reveal .md-style-strip .md-card:not(.md-strip) { background: none; padding: 0; justify-content: center; }
 
 /* ---------- the takeaway panel (@note): E8E8E8, full width, 15 pt,
@@ -518,11 +543,11 @@ html.corp .reveal .corp-body > .corp-part > * + * { margin-top: 24px; }
 html.corp .reveal .corp-body .md-table { margin: 0; }
 html.corp .reveal .corp-body table {
     border-collapse: collapse; width: 100%; margin: 0;
-    font-size: 28px; line-height: var(--corp-lh);
+    font-size: var(--cc-table, 28px); line-height: var(--corp-lh);
     font-variant-numeric: normal;
 }
 html.corp .reveal .corp-body table :is(th, td) {
-    padding: 7.2px 18px; height: 45.28px; box-sizing: border-box;
+    padding: var(--cc-table-pad, 7.2px 18px); height: var(--cc-table-row, 45.28px); box-sizing: border-box;
     vertical-align: middle; border: none;
     /* each cell's 1 pt line is centred on its edge, as PowerPoint draws
        a shape's outline: half inside, half outside, so the text keeps
@@ -614,7 +639,9 @@ html.corp .reveal section.corp-title .corp-photo {
 /* logo: off -276139,0 ext 3211423 x 1728181 */
 html.corp .reveal section.corp-title .corp-logo {
     position: absolute;
-    left: -43.49px; top: 0; width: 505.74px; height: 272.15px;
+    /* the same size and place as on the content slides (Marc, 1
+       November; the template's title logo is 7% larger) */
+    left: -40.14px; top: 6.30px; width: 472.00px; height: 254.00px;
     max-width: none; max-height: none; margin: 0;
 }
 /* Rectangle: off 0,4902627 ext 12192000 x 1331327; gradient at 180
@@ -650,3 +677,95 @@ html.corp .reveal .slides section .fragment { transform: none !important; }
 
 /* Lining figures in data, as everywhere in PowerPoint */
 html.corp .reveal table { font-variant-numeric: normal; }
+
+/* ---------- phase 6b: constructions from the ETS and Dumfries decks ---------- */
+
+/* height=auto written out: the block keeps its content height (a band
+   above or below the main cards, ETS 3, 5, 9) */
+html.corp .reveal .corp-body .md-cards.md-height-set.md-height-auto { flex: 0 0 auto; }
+
+/* style=header (Dumfries 2, 5, 6, 20): a rounded coloured header,
+   centred 28 pt bold, the column's text below it on the white slide */
+html.corp .reveal .md-cards.md-style-header .md-card {
+    background: none; padding: 0; border-radius: 0; overflow: visible;
+    color: var(--uog-blue);
+}
+html.corp .reveal .slides section .md-cards.md-style-header .md-card > h3,
+html.corp .reveal .slides section .md-cards.md-style-header .md-card > .md-card-head {
+    display: flex; align-items: center; justify-content: center; gap: 20px;
+    box-sizing: border-box; min-height: 107.35px;
+    margin: 0 0 12px; padding: 14.4px 28.8px;
+    border-radius: var(--corp-radius);
+    background: var(--tag-bg, var(--uog-blue)); color: var(--tag-ink, #FFFFFF);
+    font-size: var(--cards-fit-head, var(--cards-head, var(--cc-head))); text-align: center;
+}
+html.corp .reveal .slides section .md-cards.md-style-header .md-card > .md-card-head > h3 { background: none; padding: 0; min-height: 0; }
+html.corp .reveal .md-cards.md-style-header .md-card > :not(h3):not(.md-card-head) { color: var(--uog-blue); }
+html.corp .reveal .md-cards.md-style-header .md-card > h3 + * { margin-top: 0; }
+
+/* icons beside a card heading (Dumfries 14, 29); disc=COLOUR puts the
+   icon on a disc as in Dumfries 14 (83 px disc, 37 px icon) */
+html.corp .reveal .md-cards .md-card > .md-card-head { display: flex; align-items: center; gap: 24px; margin: 0 0 var(--cc-head-after); }
+html.corp .reveal .md-cards .md-card > .md-card-head > h3 { margin: 0; }
+html.corp .reveal .md-card-head .md-card-icon { font-size: 72px; --fa-secondary-opacity: 0.55; }
+html.corp .reveal .md-card-head .md-icon-disc { width: 83.17px; height: 83.17px; }
+html.corp .reveal .md-card-head .md-icon-disc .md-card-icon { font-size: 37.42px; }
+
+/* @rule (Dumfries 2, 5, 6): a 1 pt University Blue line, 1476 px long,
+   centred on the slide */
+html.corp .reveal .corp-body > .md-rule {
+    align-self: center; width: 1476px; margin: 0;
+    border-top: 2px solid var(--rule-colour, var(--uog-blue));
+}
+
+/* @stats (Dumfries 16): the figure 90 pt bold, the label 20 pt Light,
+   the note (written as a tag, [[109 files → 4 files]]{green}) a rounded
+   bar beneath in its colour; the Session decks' bands are @cards style=stat */
+html.corp .reveal .corp-body .md-cards.md-stats { flex: 0 0 auto; gap: 18.9px 72px; }
+html.corp .reveal .corp-body > .md-stats:only-child,
+html.corp .reveal .corp-body > .md-stats:last-child:first-child { margin: auto 0; }
+html.corp .reveal .md-cards.md-stats .md-card,
+html.corp .reveal .md-cards.md-stats .md-card:not(.md-card-filled) {
+    height: auto; background: none; color: var(--uog-blue); padding: 0;
+    justify-content: flex-start;
+}
+html.corp .reveal .md-cards.md-stats .md-card > .md-stat-num { font-size: 180px; line-height: 1.1; font-weight: 700; }
+html.corp .reveal .md-cards.md-stats .md-card > .md-stat-label { font-size: 40px; font-weight: 300; margin: 6px 0 0; }
+html.corp .reveal .md-stats .md-stat-note { align-self: stretch; margin: 34px 0 0; opacity: 1; font-size: 40px; }
+html.corp .reveal .md-stats .md-stat-note .md-tag {
+    display: block; box-sizing: border-box; width: 100%;
+    padding: 30px 36px; border-radius: var(--corp-radius);
+    font-size: 40px; line-height: var(--corp-lh); font-variant-caps: normal; letter-spacing: 0;
+    background: var(--tag-bg, var(--uog-blue)); color: var(--tag-ink, #FFFFFF);
+}
+
+/* @slide contrast (ETS 15, the contacts slide): the slide on University
+   Blue, text white, links Light Blue */
+html.corp { --r-contrast-bg: #011451; --r-contrast-ink: #FFFFFF; }
+html.corp .reveal .slides section.corp-content.md-contrast { background: var(--uog-blue); color: #FFFFFF; }
+html.corp .reveal .slides section.corp-content.md-contrast > h2,
+html.corp .reveal .slides section.corp-content.md-contrast > .corp-body,
+html.corp .reveal .slides section.corp-content.md-contrast > .corp-body :is(p, li, strong, em) { color: #FFFFFF; }
+html.corp .reveal .slides section.corp-content.md-contrast a { color: var(--p-light-blue); text-decoration: none; }
+
+/* the title on a coloured bar (## [[x]]{light-purple}), Marc's choice
+   B of 1 November: a bar the height of the logo block (y 46 to 220),
+   from beside it to the slide's right edge, square, the title at full
+   size and centred in it vertically */
+html.corp .reveal .slides section.corp-content > h2:has(> .md-ribbon) {
+    left: 405px; top: 46px; width: 1515px; height: 174px; padding: 0;
+}
+html.corp .reveal .slides section.corp-content > h2 > .md-ribbon {
+    display: flex; align-items: center; width: 100%; height: 100%;
+    padding: 0 36px; border-radius: 0; font-size: 1em;
+}
+
+/* an @pause leaves an empty marker in the body: it takes no gap */
+html.corp .reveal .corp-body > .md-pause { display: none; }
+
+/* a table inside a card (the Dumfries roadmap): the card's text size,
+   rows as tall as their text, shrinking with the card */
+html.corp .reveal .corp-body .md-card table { font-size: inherit; }
+html.corp .reveal .corp-body .md-card table :is(td, th) { height: auto; padding: 0.15em 0.4em; }
+html.corp .reveal .corp-body .md-card table td:last-child { white-space: nowrap; font-weight: 700; }
+html.corp .reveal .md-cards .md-card > table + p { margin-top: 0.5em; }

@@ -1,0 +1,14 @@
+{
+  "corporate": {
+    "template": "uog",
+    "cards": "template"
+  },
+  "title": "Changes to the *Assessment Regulations:* 2026-27",
+  "subtitle": "Edinburgh Theological Seminary, August 2026",
+  "photo": "../../img/bg/alma-mater-sculpture.jpg",
+  "closing": false,
+  "unlisted": true,
+  "photoFocus": "50,45",
+  "photoAlt": "The Alma Mater sculpture, a bronze loop on a dark plinth, on the lawn of the West Quadrangle.",
+  "transition": "fade"
+}

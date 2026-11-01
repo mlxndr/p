@@ -36,7 +36,8 @@
     'use strict';
 
     /* The site root, relative to the deck: '../' for a deck one folder
-       down (icame47/), '../../' for one two down (1a/7/). Taken from the
+       down (specimen/), '../../' for one two down (research/icame47/, 1a/7/), '../../../'
+       for one three down (2a/words/2/). Taken from the
        path the deck's own index.html gives for this file. */
     var me = document.currentScript && document.currentScript.getAttribute('src');
     var ROOT = (me && /inc\/head\.js/.test(me)) ? me.replace(/inc\/head\.js.*$/, '') : '../';

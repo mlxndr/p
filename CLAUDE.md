@@ -3,7 +3,7 @@
 **Repository:** mlxndr/p
 **Purpose:** Academic presentation platform (mga.is)
 **Owner:** Marc Alexander, University of Glasgow
-**Last updated:** 2026-11-01 (phase 6: nested teaching decks, conversions, review fixes)
+**Last updated:** 2026-11-01 (phase 6b: corporate decks in uog/, research talks in research/, 2A series in 2a/, corporate pilots, title-photo library, reference/)
 
 ## Overview
 
@@ -12,15 +12,15 @@ GitHub Pages at `mga.is`. Each presentation lives in its own folder and is
 authored in markdown. There is no build step: files are served as they are,
 and everything (markdown loading, directive expansion, theming) happens in
 the browser. CI: `.github/workflows/build-manifest.yml` regenerates
-`manifest.json` (used by the landing page) from each folder's `meta.json`
-on push; `.github/workflows/slides-pdf.yml` exports each changed deck to
+`manifest.json` (used by the landing page, and its `series` lists by the
+series index pages) from each folder's `meta.json` on push; `.github/workflows/slides-pdf.yml` exports each changed deck to
 `<deck>/slides.pdf` (DeckTape, 1920x1080, fragments shown, spares at the
 end, `pdfTheme` if set) and `<deck>/slides-handout.pdf` (the student
 version, two slides to an A4 page, via `scripts/handout-nup.py`), and
 can be run by hand to rebuild every deck after inc/ changes.
 
 Test locally with any static server, e.g. `python3 -m http.server 8000`,
-then open `http://localhost:8000/{presentation}/`. Deployment is automatic
+then open `http://localhost:8000/research/icame47/` (or any deck's folder). Deployment is automatic
 on push to main.
 
 ## Directory structure
@@ -75,16 +75,39 @@ inc/
     bg/                     Theme background JPEGs
   reveal.js/                Vendored reveal.js 5.2.1 dist + plugins
 {series}/{n}/               Teaching decks two folders down, e.g. 1a/8
-                            (1A, week 8), words/2, sol/3, 2b/3; laid out
-                            as a presentation folder below, with
-                            ../../inc/ in index.html and handout.html;
-                            "unlisted": true keeps them off the landing page
-{series}/index.html         A series index (1a/, 2a/, 2b/, words/, sol/):
-                            inc/series.js lists the numbered decks of the
-                            folders named in <main data-series="words:English
-                            Words,sol:..."> by fetching N/meta.json (1 to 20);
-                            not linked from the landing page
-{presentation}/             e.g. icame47, cilc25
+                            (1A, week 8), 2b/3; laid out as a presentation
+                            folder below, with ../../inc/ in index.html and
+                            handout.html; "unlisted": true keeps them off
+                            the landing page
+2a/{series}/{n}/            The 2A series one folder further down (moved
+                            1 Nov 2026): 2a/words/2 (English Words),
+                            2a/sol/3 (Story of Linguistics), with
+                            ../../../inc/
+uog/{YYYYMMDD-slug}/        Corporate decks (talks in the University
+                            template, phase 6b), e.g. uog/20260819-ets,
+                            uog/20260523-dumfries: the date of the talk, then
+                            the audience; laid out like a teaching deck
+                            (../../inc/), unlisted, no handout.html
+{series}/index.html         A series index (1a/, 2a/, 2b/, 2a/words/,
+                            2a/sol/, uog/): inc/series.js lists the decks
+                            of the folders named (as paths from the site
+                            root) in <main data-series="2a/words:English
+                            Words,2a/sol:..."> from manifest.json's "series"
+                            lists (numbered folders by number, named ones
+                            newest first), falling back to fetching
+                            N/meta.json (1 to 20); not linked from the
+                            landing page
+reference/                  The syntax reference (index.html, img/): every
+                            construction with a picture, its options and
+                            the PowerPoint device it replaces; served at
+                            mga.is/reference/ (noindex). Moved from the
+                            Agents folder 1 Nov 2026; replaces
+                            markdown-guide.md. Keep it current with
+                            CLAUDE.md when adding or changing syntax
+research/{presentation}/    Research and conference talks, e.g. research/icame47,
+                            research/cilc25 (moved from the root, 1 Nov 2026;
+                            listed on the landing page; ../../inc/ in
+                            index.html and handout.html)
   index.html                Thin generic shell: two data-meta placeholder
                             sections (title/closing) + the content section
   content.md                Slides, in markdown with @-directives
@@ -103,6 +126,11 @@ scripts/                    build-manifest.js (CI); handout-nup.py (CI:
                             slides.pdf to an A4 handout, N per page);
                             build-palettes.py (by hand: palettes.css)
 img/uog_block.png           The template's logo block (corporate mode)
+img/bg/                     Title-slide photographs for corporate decks
+                            (3840 x 2160 JPEG; photos.json gives each one's
+                            alt text, place, season, tags, photoFocus and
+                            credit): "photo": "../../img/bg/NAME.jpg" with
+                            that alt and focus
 specimen-uog/               Corporate specimen deck (unlisted)
 ```
 
@@ -239,6 +267,8 @@ Slide modifiers (expand to classes; combine flags freely):
   @slide activity           room activity: lighter ground, accent bar at
                             the screen edge (not used in Marc's lectures:
                             leave it out when converting)
+  @slide shrink=N           this slide may shrink to fit down to N% (40 to
+                            100) instead of 72% (corporate: 70%)
   @slide text=N, placeholder, textbox   corporate decks: body size in
                             pt; the template's content placeholder or a
                             text box (see Corporate mode)
@@ -346,7 +376,7 @@ consecutive slides with a menu of the same set morph by themselves:
   edge (so Abbreviation to Abbrev. changes in place). Autofit never
   zooms a menu.
   style=strip (circles with icons; the default when every item has an
-  icon), tabs (a stack of ribbon tabs), steps (boxes with arrows; the
+  icon), tabs (a stack of ribbon tabs, plain rectangles), steps (boxes with arrows; the
   default otherwise). Icons must have a codepoint pair in base.css
   (any icon in the licensed font may be added; see Fonts).
 ```
@@ -394,7 +424,7 @@ builds, `?fragments=false` shows its final state.
 ```
 Cards and columns (markdown body, cards separated by `::` lines, closed
 by @end or the end of the slide):
-  @cards [cols=N] [widths=62,38] [style=box|plain|bar|stat|strip]
+  @cards [cols=N] [widths=62,38] [style=box|plain|bar|header|stat|strip]
          [height=auto|fill] [h= text= head= radius=  (px)] [arrows] [stack] [build]
   ### Heading
   text
@@ -402,16 +432,25 @@ by @end or the end of the slide):
   ### Next card
   @end
   Card flags after `::`: a palette colour (strong colours take white
-  ink), icon=NAME, wide, accent, dim, foot (pinned to the card's foot),
-  answer, build. A first line [[TAG]]{colour} becomes the card's tag.
+  ink), icon=NAME, disc=COLOUR (the icon on a disc of that colour,
+  beside the heading), wide, accent, dim, foot (pinned to the card's
+  foot), answer, build. A first line [[TAG]]{colour} becomes the card's
+  tag.
   @columns is @cards with style=plain by default; @columns cols=2 with no
   `::` lines flows the content into CSS columns (cols only).
-  style=bar: the card colour fills a heading bar. style=strip: two cards, the
+  style=bar: the card colour fills a heading bar. style=header: the colour
+  fills a rounded header holding the ###, centred, and the text sits
+  below it with no box. style=strip: two cards, the
   first holding tokens on one line (`A3, B2, C1, ~~D3~~ C3`), the second
-  the text. arrows: an arrow between cards; stack: one per row, centred,
+  the text; `{~~D3~>C3~~}` as a token keeps D3 struck through beside C3
+  after a click, at the pair size, and every replacement in one strip
+  changes on the same click. arrows: an arrow between cards; stack: one per row, centred,
   each card wider than the one above (arrows point down). height=fill:
   the cards stretch to the slide foot. Autofit works inside cards and
-  columns.
+  columns. In corporate mode a block takes the body's free space unless
+  height=auto is written out (a band above or below the main cards).
+Horizontal rule between blocks (--- would end the slide):
+  @rule [COLOUR] [build]
 Terms (item lines):
   @terms [sc] [build | build=columns] [answers]
     hovercraft :: hover + craft
@@ -667,15 +706,22 @@ data-meta="title" placeholder; both mechanisms coexist.
 
 ### Creating a new presentation
 
-Copy icame47 (the reference example), edit meta.json, and write
+Copy research/icame47 (the reference example), edit meta.json, and write
 content.md — index.html and handout.html are generic and should not need
-editing. A teaching deck goes two folders down (`1a/8/`, `words/2/`):
-copy `words/2/index.html` and `handout.html`, which point at
-`../../inc/`. head.js takes the site root from that path and sets
-`window.MGA_ROOT` ('../' or '../../'); everything in inc/ that names a
+editing. A corporate deck goes in `uog/YYYYMMDD-slug/` (copy
+`uog/20260819-ets/index.html`; no handout.html) with `"corporate"` and
+`"unlisted": true` in meta.json and a title photo from `img/bg/`. A teaching deck goes two folders down (`1a/8/`, `2b/3/`), or three for
+the 2A series (`2a/words/2/`, `2a/sol/3/`): copy `1a/8/index.html` and
+`handout.html`, which point at `../../inc/` (`../../../inc/` three down).
+head.js takes the site root from that path and sets
+`window.MGA_ROOT` ('../', '../../' or '../../../'); everything in inc/ that names a
 site file goes through it, so never write a literal `../inc/` or
-`../img/` in inc/. The landing page and CI find decks at either depth. Keep `<meta charset="utf-8">` as the first thing in `<head>`,
-followed by `<script src="../inc/head.js"></script>`. A deck's own
+`../img/` in inc/. The landing page and CI find decks one, two or three folders down. Keep `<meta charset="utf-8">` as the first thing in `<head>`,
+followed by `<script src="../../inc/head.js"></script>` (`../inc/` for a
+deck one folder down, such as specimen/). Every deck is now two folders
+down except the specimens and the 2A series (three down, in 2a/):
+research talks in research/, corporate talks in uog/, teaching decks in
+their series. A deck's own
 default theme and palette go in meta.json: `"theme": "plate"`,
 `"palette": "petrol"` (keys in inc/head.js). head.js reads meta.json
 synchronously so the theme is right before first paint (the browser's
@@ -691,7 +737,9 @@ deck reproduce the University of Glasgow 2026 PowerPoint template.
 head.js loads `inc/css/corp-uog.css` in place of a theme and
 locks it (no saved theme, no ?theme, no menu theme panel); revconfig.js
 drops the margin (letterboxed in black), progress bar, menu disc and
-transitions, and a click on the slide advances. Lists appear whole and
+transitions (`"transition": "fade"` in meta.json keeps a fade; the slide
+area is white, so a fade never dips towards the letterbox), and a click
+on the slide advances. Lists appear whole and
 builds appear instantly unless the deck says otherwise. Automatic morph
 links (menus, morpheme words) are not made; an explicit `@slide morph`
 still works. The palette names resolve to brand values (navy is
@@ -705,7 +753,7 @@ The same markdown, dressed as the template (SPEC 8):
 ```
 meta.json: "photo", "photoFrame": "x,y,w" (percent) or "photoFocus",
   "photoAlt": the title slide's photograph; the band holds title and
-  subtitle. No photo: the band on University Blue. The closing slide
+  subtitle; the logo is the same size and place as on content slides. No photo: the band on University Blue. The closing slide
   repeats the title slide unless "closing": false.
 ## Heading                the title placeholder (44 pt bold), beside
                           the logo block
@@ -718,8 +766,19 @@ meta.json: "photo", "photoFrame": "x,y,w" (percent) or "photoFocus",
                           type; a bare `::` takes the next cardColours
                           colour; content before the first `::` is a plain
                           text column; white cards take a blue edge;
-                          arrows, stack, style=bar|stat|strip; text that
-                          overflows a card shrinks to 70% (corpFitCards)
+                          arrows, stack, style=bar|header|stat|strip;
+                          icons sit beside the heading (disc= on a disc);
+                          a slide's cards, tables and own text shrink
+                          together, 1 pt at a time, to 70% when anything
+                          runs past the body (corpFitCards), and text
+                          slides likewise (corpFitText); text may run on
+                          to 24 px from the foot, as PowerPoint's taller
+                          text boxes do; @slide shrink=N lets one dense
+                          slide go below 70% (to N%). Every rounded shape
+                          takes one radius, --corp-radius (16 px); a
+                          table inside a card takes the card's size.
+                          #### before ### in a card: a small bold line
+                          (70%) above the heading
 @note text                the grey takeaway panel at the foot (consecutive
                           notes are paragraphs of one panel)
 @source text              11 pt grey, bottom right
@@ -728,8 +787,20 @@ meta.json: "photo", "photoFrame": "x,y,w" (percent) or "photoFocus",
 @menu set 2>3 (steps)     the progress tracker: grey boxes, lit box Dark
                           Green, lit arrow Dark Red unless the set says
 @table head=navy band     navy header, banded rows, D9D9D9 hairlines
-@stats                    navy bands, labels in Noto Sans Light
-## [[Name]]{light-purple} the title on a coloured bar
+@stats                    90 pt figures, labels in Noto Sans Light, a note
+                          written as a tag ([[x]]{green}) a coloured bar
+                          beneath (Dumfries 16); the Session decks' navy
+                          bands are @cards style=stat
+## [[Name]]{light-purple} the title on a coloured bar the height of the
+                          logo block, running off the right edge
+@rule                     a 1 pt University Blue line, 1476 px, centred
+@slide contrast           the slide on University Blue, white text, links
+                          Light Blue (a contacts slide)
+cards: template           the hand-built decks' preset (ETS, Dumfries):
+                          heading 28 pt, text 20 pt, tables 20 pt with
+                          76 px rows, grade strips 32 pt (grades centred;
+                          a token of two grades, ~~D3~~ C3, smaller and on
+                          one line)
 @image (with a heading)   fills the body below the title; with no heading
                           it covers the slide, logo included
 ```
@@ -742,6 +813,16 @@ block's top) on @cards, @note, @table and @stats; `h=` on @cards, cards
 `middle` on a card (text anchored at the centre); and `@slide y= gap=
 inset=` (where the body starts, the space between its blocks, the text
 inset of a rounded text box).
+
+Converting a corporate deck: `994 Agents/2026-10-30-mga-slides-build/
+phase6b/tools/corp2md.py` reads a hand-built pptx by geometry (cards,
+headers, strips, stats, tables, rules, icons, the title slide) and
+writes content.md and meta.json with sizes normalised to the preset (no
+converter numbers, so the fit can work); `finish.py` holds what it cannot
+know for the two pilots (builds, a contacts slide, alt text) and
+`convert.sh` reruns both. Speaker notes go to `For Claude/Cue Sheets/`.
+Old decks' theme colours (the older UofG palette, tints) map onto the
+2026 names.
 
 Exactness: PowerPoint for Mac rounds glyph advances to 1/8 pt and breaks
 lines on those widths; corpLineBreaks reproduces its breaks by nudging
@@ -776,7 +857,9 @@ each theme and form after any change to inc/. Keep it current when
 adding a directive. `specimen-uog/` (unlisted) does the same for
 corporate mode: text boxes, the placeholder, cards in each style, the
 takeaway panel, source lines, a Part divider, the tracker, tables,
-statistics, grade strips, a ribbon title and images.
+statistics, grade strips, headers over text with a rule, a band above
+cards, icons on discs, a contacts slide (contrast), a ribbon title and
+images.
 
 ### Spare slides
 
@@ -1032,7 +1115,7 @@ any of them may be used: add the codepoint pair in base.css
   sentences; @kwic build=context; @transcript overlay; @image hold for
   a chart under changing commentary; @video for explanatory motion.
   Weak here: hand-placed boxes, rotated text, decorative motion, more
-  than about eight list items. (reference.html in the Agents folder,
+  than about eight list items. (reference/index.html,
   "Designing for the framework", has the full table.)
 
 - Use the @-directives for all image slides; do not hand-write layout divs

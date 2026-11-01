@@ -439,6 +439,23 @@ Classification thresholds and GPA requirements
 
 --
 
+## Headers over Text, Discs and a Rule
+
+@cards style=header
+:: navy icon=graduation-cap disc=light-pink
+### Undergraduate
+Replaces 34 regulation files
+:: green icon=calendar-check disc=light-green
+### Taught postgraduate
+Replaces 43 regulation files
+@end
+
+@rule
+
+The degree regulations apply from entry to the programme.
+
+--
+
 ## Arrows, One Card per Click
 
 @cards arrows build

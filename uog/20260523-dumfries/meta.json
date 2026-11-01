@@ -1,0 +1,12 @@
+{
+  "corporate": {
+    "template": "uog",
+    "cards": "template"
+  },
+  "title": "Changes to Policy and Regulations",
+  "subtitle": "School of Social & Environmental Sustainability, May 2026",
+  "photo": "./img/title.jpg",
+  "unlisted": true,
+  "photoAlt": "A red sandstone University building beside a modern extension of glass and steel",
+  "transition": "fade"
+}

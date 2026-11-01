@@ -1,7 +1,7 @@
 {
   "presentations": [
     {
-      "dirName": "cilc25",
+      "dirName": "research/cilc25",
       "title": "‘up yours at the end of life’",
       "subtitle": "Opposition, Emotion, and Overlap in a | Corpus of Scottish Debates on Assisted Dying",
       "date": "May 2025",
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "dirName": "icame47",
+      "dirName": "research/icame47",
       "title": "The Fairest in the Land?",
       "subtitle": "Verbatim Transcriptions and Paralinguistic Features | in the *Mirror of Parliament Corpus*",
       "date": "May 2026",
@@ -37,7 +37,7 @@
       "location": "Koblenz"
     },
     {
-      "dirName": "mainz25",
+      "dirName": "research/mainz25",
       "title": "University of Glasgow: | Academic Quality Processes",
       "authors": [
         {
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "dirName": "oup25",
+      "dirName": "research/oup25",
       "title": "HT and HTOED: | Draft Guiding Principles",
       "date": "July 2025",
       "event": "^^OUP^^",
@@ -66,7 +66,7 @@
       "closing": false
     },
     {
-      "dirName": "scsai25",
+      "dirName": "research/scsai25",
       "title": "Some AI updates",
       "date": "March 2025",
       "author": [],
@@ -77,7 +77,7 @@
       "closing": false
     },
     {
-      "dirName": "waw-me26",
+      "dirName": "research/waw-me26",
       "title": "Folk/Lore",
       "subtitle": "The Question of the ‘Intelligent Average Individual’",
       "date": "January 2026",
@@ -88,5 +88,244 @@
         "uog"
       ]
     }
-  ]
+  ],
+  "series": {
+    "1a": [
+      {
+        "dirName": "1a/4",
+        "title": "From Clauses to Sentences",
+        "series": "English Language & Linguistics 1^^A^^ | Meaning and Structure",
+        "date": "Week 4",
+        "theme": "plate",
+        "palette": "terracotta",
+        "lockTheme": true,
+        "unlisted": true,
+        "transition": "fade",
+        "logos": [
+          "uog"
+        ],
+        "closing": false
+      },
+      {
+        "dirName": "1a/8",
+        "title": "Everyone Needs More Meaning in Their Life",
+        "series": "English Language & Linguistics 1^^A^^ | Meaning and Structure",
+        "date": "Week 8",
+        "theme": "plate",
+        "palette": "cream-oxblood",
+        "lockTheme": true,
+        "unlisted": true,
+        "transition": "fade",
+        "logos": [
+          "uog"
+        ],
+        "closing": false
+      },
+      {
+        "dirName": "1a/10",
+        "title": "Change in Meaning",
+        "series": "English Language & Linguistics 1^^A^^ | Meaning and Structure",
+        "date": "Week 10",
+        "theme": "plate",
+        "palette": "burgundy",
+        "lockTheme": true,
+        "unlisted": true,
+        "transition": "fade",
+        "logos": [
+          "uog"
+        ],
+        "closing": false
+      }
+    ],
+    "2a/sol": [
+      {
+        "dirName": "2a/sol/3",
+        "title": "The Machine Turn",
+        "subtitle": "distributional meaning, word vectors and language models, 1950s to now",
+        "series": "English Language & Linguistics 2^^A^^ | The Story of Linguistics",
+        "date": "Lecture 3 of 3",
+        "theme": "fair-copy",
+        "palette": "charcoal-coral",
+        "lockTheme": true,
+        "transition": "fade",
+        "listBuild": false,
+        "unlisted": true,
+        "logos": [
+          "uog"
+        ],
+        "closing": false
+      }
+    ],
+    "2a/words": [
+      {
+        "dirName": "2a/words/2",
+        "title": "Taking Words to Pieces",
+        "series": "English Words | History, Meaning, and Structure",
+        "event": "English Language & Linguistics 2A",
+        "date": "Week 3",
+        "logos": [
+          "uog"
+        ],
+        "theme": "thumb",
+        "palette": "petrol",
+        "lockTheme": true,
+        "transition": "fade",
+        "closing": "title",
+        "unlisted": true
+      },
+      {
+        "dirName": "2a/words/5",
+        "title": "Neologisms: | New and Improved",
+        "series": "English Words | History, Meaning, and Structure",
+        "event": "English Language & Linguistics 2A",
+        "date": "Week 5",
+        "logos": [
+          "uog"
+        ],
+        "theme": "thumb",
+        "palette": "petrol",
+        "lockTheme": true,
+        "transition": "fade",
+        "closing": "title",
+        "unlisted": true
+      }
+    ],
+    "2b": [
+      {
+        "dirName": "2b/3",
+        "title": "Faces and Threats",
+        "series": "English Language & Linguistics 2^^B^^ | Analysing Conversation",
+        "date": "Week 3",
+        "logos": [
+          "uog"
+        ],
+        "theme": "attested",
+        "palette": "silver-claret",
+        "lockTheme": true,
+        "transition": "fade",
+        "unlisted": true,
+        "closing": false
+      }
+    ],
+    "research": [
+      {
+        "dirName": "research/waw-me26",
+        "title": "Folk/Lore",
+        "subtitle": "The Question of the ‘Intelligent Average Individual’",
+        "date": "January 2026",
+        "event": "^^WAW-ME^^",
+        "location": "Zürich",
+        "logos": [
+          "ht",
+          "uog"
+        ]
+      },
+      {
+        "dirName": "research/scsai25",
+        "title": "Some AI updates",
+        "date": "March 2025",
+        "author": [],
+        "affiliation": [],
+        "email": [],
+        "event": "SCS School Collective",
+        "logos": [],
+        "closing": false
+      },
+      {
+        "dirName": "research/oup25",
+        "title": "HT and HTOED: | Draft Guiding Principles",
+        "date": "July 2025",
+        "event": "^^OUP^^",
+        "location": "Oxford",
+        "author": [],
+        "affiliation": [],
+        "email": [],
+        "logos": [],
+        "closing": false
+      },
+      {
+        "dirName": "research/mainz25",
+        "title": "University of Glasgow: | Academic Quality Processes",
+        "authors": [
+          {
+            "name": "Professor Marc Alexander"
+          },
+          {
+            "name": "Dr Andrew Struan"
+          }
+        ],
+        "event": "University of Mainz",
+        "date": "7 July 2025",
+        "logos": [
+          "uog"
+        ]
+      },
+      {
+        "dirName": "research/icame47",
+        "title": "The Fairest in the Land?",
+        "subtitle": "Verbatim Transcriptions and Paralinguistic Features | in the *Mirror of Parliament Corpus*",
+        "date": "May 2026",
+        "event": "^^ICAME47^^",
+        "logos": [
+          "leverhulme",
+          "uog"
+        ],
+        "location": "Koblenz"
+      },
+      {
+        "dirName": "research/cilc25",
+        "title": "‘up yours at the end of life’",
+        "subtitle": "Opposition, Emotion, and Overlap in a | Corpus of Scottish Debates on Assisted Dying",
+        "date": "May 2025",
+        "event": "^^CILC16^^",
+        "location": "Salamanca",
+        "logos": [
+          "leverhulme",
+          "uog"
+        ],
+        "authors": [
+          {
+            "name": "Marc Alexander",
+            "affiliation": "University of Glasgow",
+            "email": "marc.alexander@glasgow.ac.uk"
+          },
+          {
+            "name": "James Balfour",
+            "affiliation": "University of Glasgow",
+            "email": "james.balfour@glasgow.ac.uk"
+          }
+        ]
+      }
+    ],
+    "uog": [
+      {
+        "dirName": "uog/20260819-ets",
+        "corporate": {
+          "template": "uog",
+          "cards": "template"
+        },
+        "title": "Changes to the *Assessment Regulations:* 2026-27",
+        "subtitle": "Edinburgh Theological Seminary, August 2026",
+        "photo": "../../img/bg/alma-mater-sculpture.jpg",
+        "closing": false,
+        "unlisted": true,
+        "photoFocus": "50,45",
+        "photoAlt": "The Alma Mater sculpture, a bronze loop on a dark plinth, on the lawn of the West Quadrangle.",
+        "transition": "fade"
+      },
+      {
+        "dirName": "uog/20260523-dumfries",
+        "corporate": {
+          "template": "uog",
+          "cards": "template"
+        },
+        "title": "Changes to Policy and Regulations",
+        "subtitle": "School of Social & Environmental Sustainability, May 2026",
+        "photo": "./img/title.jpg",
+        "unlisted": true,
+        "photoAlt": "A red sandstone University building beside a modern extension of glass and steel",
+        "transition": "fade"
+      }
+    ]
+  }
 }

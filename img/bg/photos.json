@@ -1,0 +1,734 @@
+[
+  {
+    "file": "cloisters-fairy-lights.jpg",
+    "alt": "The Cloisters seen from the West Quadrangle at dusk, their pillars wrapped in warm fairy lights.",
+    "place": "The Cloisters, Gilbert Scott Building",
+    "season": "winter",
+    "tags": [
+      "main building",
+      "cloisters",
+      "christmas",
+      "dusk",
+      "festive"
+    ],
+    "photoFocus": "50,55",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2019 Photographic Unit, University of Glasgow",
+    "original": "Cloisters lights 05.jpg"
+  },
+  {
+    "file": "east-quad-blue-hour.jpg",
+    "alt": "The East Quadrangle and the floodlit tower at blue hour, with lit windows and bare trees.",
+    "place": "East Quadrangle, Gilbert Scott Building",
+    "season": "winter",
+    "tags": [
+      "main building",
+      "tower",
+      "quadrangle",
+      "blue hour",
+      "evening"
+    ],
+    "photoFocus": "65,35",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2020 Photographic Unit, University of Glasgow",
+    "original": "Gilbert Scott Building 018.jpg"
+  },
+  {
+    "file": "main-building-snow.jpg",
+    "alt": "The Gilbert Scott Building seen from Kelvingrove Park in snow, under a blue sky.",
+    "place": "Kelvingrove Park",
+    "season": "winter",
+    "tags": [
+      "main building",
+      "tower",
+      "snow",
+      "kelvingrove park",
+      "daytime"
+    ],
+    "photoFocus": "55,30",
+    "width": 3840,
+    "height": 2160,
+    "credit": "University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Main Building Snow 016.jpg"
+  },
+  {
+    "file": "snow-park-tower.jpg",
+    "alt": "Snow-covered trees in Kelvingrove Park with the University tower above them under a clear sky.",
+    "place": "Kelvingrove Park",
+    "season": "winter",
+    "tags": [
+      "main building",
+      "tower",
+      "snow",
+      "kelvingrove park",
+      "daytime"
+    ],
+    "photoFocus": "68,35",
+    "width": 2048,
+    "height": 1152,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Main Building 120.JPG"
+  },
+  {
+    "file": "snow-signpost.jpg",
+    "alt": "Two people photographing the University tower beside a park signpost in the snow.",
+    "place": "Kelvingrove Park",
+    "season": "winter",
+    "tags": [
+      "main building",
+      "tower",
+      "snow",
+      "kelvingrove park",
+      "people",
+      "daytime"
+    ],
+    "photoFocus": "45,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Main Building Snow 019.jpg"
+  },
+  {
+    "file": "aerial-kelvingrove-morning.jpg",
+    "alt": "An aerial view over Kelvingrove Park to the Gilbert Scott Building and the West End in hazy morning light.",
+    "place": "Gilbert Scott Building and Kelvingrove Park, from the air",
+    "season": "spring",
+    "tags": [
+      "main building",
+      "tower",
+      "aerial",
+      "drone",
+      "kelvingrove park",
+      "morning"
+    ],
+    "photoFocus": "48,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Hawk Aye (www.hawkaye.com)",
+    "copyright": "© University of Glasgow",
+    "original": "Gilbert Scott Building drone 003.jpg"
+  },
+  {
+    "file": "aerial-main-building-evening.jpg",
+    "alt": "An aerial view of the Gilbert Scott Building in evening light above trees in fresh leaf.",
+    "place": "Gilbert Scott Building, from the air",
+    "season": "spring",
+    "tags": [
+      "main building",
+      "tower",
+      "aerial",
+      "drone",
+      "evening"
+    ],
+    "photoFocus": "45,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Gilbert Scott Building drone 047.jpg"
+  },
+  {
+    "file": "aerial-spire-south.jpg",
+    "alt": "An aerial view past the top of the University tower, south over Kelvingrove Park to the Hydro and the SEC Armadillo.",
+    "place": "Gilbert Scott Building and Kelvingrove Park, from the air",
+    "season": "spring",
+    "tags": [
+      "main building",
+      "tower",
+      "aerial",
+      "drone",
+      "city",
+      "sec",
+      "external",
+      "evening"
+    ],
+    "photoFocus": "48,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Gilbert Scott Building drone 042.jpg"
+  },
+  {
+    "file": "aerial-sunset-orange.jpg",
+    "alt": "The University tower against an orange sunset, with the city and hills behind.",
+    "place": "Gilbert Scott Building, from the air",
+    "season": "spring",
+    "tags": [
+      "main building",
+      "tower",
+      "aerial",
+      "drone",
+      "sunset"
+    ],
+    "photoFocus": "50,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Gilbert Scott Building drone 052.jpg"
+  },
+  {
+    "file": "clarice-pears-building.jpg",
+    "alt": "The red-panelled frontage of the Clarice Pears Building on Byres Road in spring sunshine.",
+    "place": "Clarice Pears Building, Byres Road",
+    "season": "spring",
+    "tags": [
+      "exterior",
+      "modern",
+      "mvls",
+      "health and wellbeing",
+      "western campus",
+      "daytime"
+    ],
+    "photoFocus": "55,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2025 Photographic Unit, University of Glasgow",
+    "original": "Clarice Pears Building 034.jpg"
+  },
+  {
+    "file": "cloister-arch-students.jpg",
+    "alt": "Students walking past a lamp post in the quadrangle, framed by a stone arch of the Cloisters.",
+    "place": "Quadrangles, Gilbert Scott Building",
+    "season": "spring",
+    "tags": [
+      "main building",
+      "cloisters",
+      "quadrangle",
+      "students",
+      "people",
+      "daytime"
+    ],
+    "photoFocus": "45,50",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2025 Photographic Unit, University of Glasgow",
+    "original": "Students in Quadrangles 035.JPG"
+  },
+  {
+    "file": "graduates-staircase.jpg",
+    "alt": "Graduates in black gowns with purple hoods walking down a patterned carpeted staircase, seen from above.",
+    "place": "Interior staircase (location not recorded)",
+    "season": "spring",
+    "tags": [
+      "graduation",
+      "students",
+      "ceremony",
+      "interior",
+      "people"
+    ],
+    "photoFocus": "45,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2023 Photographic Unit, University of Glasgow",
+    "original": "Graduation 023.jpg"
+  },
+  {
+    "file": "learning-hub-exterior.jpg",
+    "alt": "The James McCune Smith Learning Hub and the Wolfson Medical School Building under a blue sky with white clouds.",
+    "place": "James McCune Smith Learning Hub and Wolfson Medical School Building",
+    "season": "spring",
+    "tags": [
+      "learning hub",
+      "modern",
+      "students",
+      "learning and teaching",
+      "mvls",
+      "daytime"
+    ],
+    "photoFocus": "55,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2024 Photographic Unit, University of Glasgow",
+    "original": "JMS Learning Hub 098.jpg"
+  },
+  {
+    "file": "main-building-rhododendrons.jpg",
+    "alt": "A turreted wing of the Gilbert Scott Building behind rhododendrons in flower.",
+    "place": "Gilbert Scott Building",
+    "season": "spring",
+    "tags": [
+      "main building",
+      "flowers",
+      "daytime"
+    ],
+    "photoFocus": "60,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2025 Photographic Unit, University of Glasgow",
+    "original": "Gilbert Scott Building 238.jpg"
+  },
+  {
+    "file": "sundial-south-front.jpg",
+    "alt": "The stone sundial on the South Front, with the Gilbert Scott Building and its tower behind.",
+    "place": "South Front, Gilbert Scott Building",
+    "season": "spring",
+    "tags": [
+      "main building",
+      "tower",
+      "sundial",
+      "history of science",
+      "daytime"
+    ],
+    "photoFocus": "30,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2024 Photographic Unit, University of Glasgow",
+    "original": "Sundial 005.JPG"
+  },
+  {
+    "file": "tower-cherry-blossom.jpg",
+    "alt": "The University tower behind branches of pink cherry blossom against a blue sky.",
+    "place": "Gilbert Scott Building, south front",
+    "season": "spring",
+    "tags": [
+      "main building",
+      "tower",
+      "blossom",
+      "daytime"
+    ],
+    "photoFocus": "72,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2022 Photographic Unit, University of Glasgow",
+    "original": "Gilbert Scott Building 189.jpg"
+  },
+  {
+    "file": "tower-sun-silhouette.jpg",
+    "alt": "The spire of the University tower silhouetted against an orange sky, with the sun shining through it.",
+    "place": "Gilbert Scott Building, from the air",
+    "season": "spring",
+    "tags": [
+      "main building",
+      "tower",
+      "aerial",
+      "drone",
+      "sunset"
+    ],
+    "photoFocus": "50,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Gilbert Scott Building drone 053.jpg"
+  },
+  {
+    "file": "university-gardens-blossom.jpg",
+    "alt": "A blossom tree in front of the sandstone terrace of University Gardens.",
+    "place": "University Gardens",
+    "season": "spring",
+    "tags": [
+      "university gardens",
+      "coah",
+      "critical studies",
+      "ell",
+      "terrace",
+      "daytime"
+    ],
+    "photoFocus": "55,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2022 Photographic Unit, University of Glasgow",
+    "original": "Flowers on campus 011.jpg"
+  },
+  {
+    "file": "alma-mater-sculpture.jpg",
+    "alt": "The Alma Mater sculpture, a bronze loop on a dark plinth, on the lawn of the West Quadrangle.",
+    "place": "West Quadrangle, Gilbert Scott Building",
+    "season": "summer",
+    "tags": [
+      "main building",
+      "quadrangle",
+      "sculpture",
+      "alumni",
+      "daytime"
+    ],
+    "photoFocus": "50,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2022 Photographic Unit, University of Glasgow",
+    "original": "Alma Mater sculpture 003.jpg"
+  },
+  {
+    "file": "arc-rain-garden.jpg",
+    "alt": "The Mazumdar-Shaw Advanced Research Centre seen across the tall grasses of its rain garden under a bright, cloudy sky.",
+    "place": "Mazumdar-Shaw Advanced Research Centre (ARC)",
+    "season": "summer",
+    "tags": [
+      "exterior",
+      "modern",
+      "research",
+      "sustainability",
+      "cose",
+      "arc",
+      "daytime"
+    ],
+    "photoFocus": "55,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2023 Photographic Unit, University of Glasgow",
+    "original": "ARC Rain Garden 002.jpg"
+  },
+  {
+    "file": "cloisters-sunlight.jpg",
+    "alt": "Sunlight falling across the empty Cloisters of the Gilbert Scott Building, with green quadrangles beyond the arches.",
+    "place": "The Cloisters, Gilbert Scott Building",
+    "season": "summer",
+    "tags": [
+      "main building",
+      "cloisters",
+      "heritage",
+      "daytime"
+    ],
+    "photoFocus": "50,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Cloisters 010.jpg"
+  },
+  {
+    "file": "cloisters-walkers.jpg",
+    "alt": "Two people walking through the sunlit Cloisters of the Gilbert Scott Building.",
+    "place": "The Cloisters, Gilbert Scott Building",
+    "season": "summer",
+    "tags": [
+      "main building",
+      "cloisters",
+      "heritage",
+      "people",
+      "daytime"
+    ],
+    "photoFocus": "40,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2019 Photographic Unit, University of Glasgow",
+    "original": "Cloisters 013.jpg"
+  },
+  {
+    "file": "east-quad-cloisters.jpg",
+    "alt": "The tall windows and cloister arches of the East Quadrangle, beside a tree in full leaf.",
+    "place": "East Quadrangle, Gilbert Scott Building",
+    "season": "summer",
+    "tags": [
+      "main building",
+      "quadrangle",
+      "cloisters",
+      "daytime"
+    ],
+    "photoFocus": "35,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2018 Photographic Unit, University of Glasgow",
+    "original": "Main Building 314.jpg"
+  },
+  {
+    "file": "main-building-lawns.jpg",
+    "alt": "Trees and sunlit lawns with the University tower rising behind them.",
+    "place": "Lawns near the Gilbert Scott Building",
+    "season": "summer",
+    "tags": [
+      "main building",
+      "tower",
+      "trees",
+      "daytime"
+    ],
+    "photoFocus": "68,35",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2021 Photographic Unit, University of Glasgow",
+    "original": "Gilbert Scott Building 158.jpg"
+  },
+  {
+    "file": "quadrangle-summer.jpg",
+    "alt": "A large tree in full leaf in the Quadrangles of the Gilbert Scott Building on a sunny day.",
+    "place": "Quadrangles, Gilbert Scott Building",
+    "season": "summer",
+    "tags": [
+      "main building",
+      "quadrangle",
+      "daytime"
+    ],
+    "photoFocus": "50,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2019 Photographic Unit, University of Glasgow",
+    "original": "Gilbert Scott Building 085.JPG"
+  },
+  {
+    "file": "tower-dusk-silhouette.jpg",
+    "alt": "The University tower silhouetted against a streaked dusk sky behind dark trees.",
+    "place": "Gilbert Scott Building",
+    "season": "summer",
+    "tags": [
+      "main building",
+      "tower",
+      "dusk",
+      "silhouette"
+    ],
+    "photoFocus": "80,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2016 Photographic Unit, University of Glasgow",
+    "original": "Main Building 271.jpg"
+  },
+  {
+    "file": "clyde-armadillo-hydro.jpg",
+    "alt": "The SEC Armadillo and the Hydro beside the River Clyde, with the University tower on the skyline between them.",
+    "place": "River Clyde and the SEC",
+    "season": "autumn",
+    "tags": [
+      "city",
+      "glasgow",
+      "clyde",
+      "sec",
+      "conference",
+      "external",
+      "daytime"
+    ],
+    "photoFocus": "50,60",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2013 Photographic Unit, University of Glasgow",
+    "original": "City View 104.jpg"
+  },
+  {
+    "file": "kelvin-bridge-autumn.jpg",
+    "alt": "A stone bridge over the River Kelvin among autumn trees, with the University tower above.",
+    "place": "River Kelvin, Kelvingrove Park",
+    "season": "autumn",
+    "tags": [
+      "main building",
+      "tower",
+      "kelvingrove park",
+      "river kelvin",
+      "daytime"
+    ],
+    "photoFocus": "50,25",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2021 Photographic Unit, University of Glasgow",
+    "original": "Gilbert Scott Building 170.jpg"
+  },
+  {
+    "file": "main-building-from-learning-hub.jpg",
+    "alt": "The Gilbert Scott Building seen from the roof terrace of the James McCune Smith Learning Hub on a clear autumn afternoon.",
+    "place": "Gilbert Scott Building from the James McCune Smith Learning Hub",
+    "season": "autumn",
+    "tags": [
+      "main building",
+      "tower",
+      "learning hub",
+      "students",
+      "learning and teaching",
+      "daytime"
+    ],
+    "photoFocus": "70,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2021 Photographic Unit, University of Glasgow",
+    "original": "Gilbert Scott Building 150.jpg"
+  },
+  {
+    "file": "rooftops-autumn.jpg",
+    "alt": "The Gilbert Scott Building seen over sandstone rooftops, with autumn trees and the city beyond.",
+    "place": "Gilbert Scott Building",
+    "season": "autumn",
+    "tags": [
+      "main building",
+      "tower",
+      "city",
+      "daytime"
+    ],
+    "photoFocus": "35,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2016 Photographic Unit, University of Glasgow",
+    "original": "Main Building 267.jpg"
+  },
+  {
+    "file": "tower-golden-haze.jpg",
+    "alt": "The University tower in golden haze, reflected in the glass of the University Library.",
+    "place": "Gilbert Scott Building from the University Library",
+    "season": "autumn",
+    "tags": [
+      "main building",
+      "tower",
+      "library",
+      "haze",
+      "morning"
+    ],
+    "photoFocus": "38,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2019 Photographic Unit, University of Glasgow",
+    "original": "Gilbert Scott Building 092.jpg"
+  },
+  {
+    "file": "university-avenue-dusk.jpg",
+    "alt": "An aerial view along University Avenue towards the University tower at dusk, with lights coming on.",
+    "place": "University Avenue, from the air",
+    "season": "autumn",
+    "tags": [
+      "main building",
+      "tower",
+      "university avenue",
+      "aerial",
+      "drone",
+      "dusk"
+    ],
+    "photoFocus": "60,35",
+    "width": 3840,
+    "height": 2160,
+    "credit": "University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Gilmorehill campus drone 04.jpg"
+  },
+  {
+    "file": "university-avenue-learning-hub-dusk.jpg",
+    "alt": "University Avenue and the James McCune Smith Learning Hub from the air at sunset.",
+    "place": "University Avenue, from the air",
+    "season": "autumn",
+    "tags": [
+      "learning hub",
+      "university avenue",
+      "modern",
+      "aerial",
+      "drone",
+      "students",
+      "sunset"
+    ],
+    "photoFocus": "40,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Gilmorehill campus drone 02.jpg"
+  },
+  {
+    "file": "arc-atrium.jpg",
+    "alt": "Looking up through the glass roof of the Mazumdar-Shaw Advanced Research Centre atrium, with ring-shaped lights hanging in the space.",
+    "place": "Mazumdar-Shaw Advanced Research Centre (ARC)",
+    "season": "none",
+    "tags": [
+      "interior",
+      "modern",
+      "research",
+      "cose",
+      "arc",
+      "daytime"
+    ],
+    "photoFocus": "50,35",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2022 Photographic Unit, University of Glasgow",
+    "original": "ARC 075.JPG"
+  },
+  {
+    "file": "chapel-interior.jpg",
+    "alt": "The interior of the University Chapel, looking towards the stained-glass east window under a timber roof.",
+    "place": "University Chapel",
+    "season": "none",
+    "tags": [
+      "main building",
+      "interior",
+      "chapel",
+      "ceremony",
+      "heritage"
+    ],
+    "photoFocus": "50,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "Chapel interior 01.jpg"
+  },
+  {
+    "file": "clarice-pears-atrium.jpg",
+    "alt": "Stairs, a planted wall and study spaces in the bright atrium of the Clarice Pears Building, seen from above.",
+    "place": "Clarice Pears Building",
+    "season": "none",
+    "tags": [
+      "interior",
+      "modern",
+      "mvls",
+      "health and wellbeing",
+      "students"
+    ],
+    "photoFocus": "50,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2023 Photographic Unit, University of Glasgow",
+    "original": "Clarice Pears Building interior 008.JPG"
+  },
+  {
+    "file": "hydro-night.jpg",
+    "alt": "The Hydro lit in green and red at night, with the floodlit University on the hill behind.",
+    "place": "River Clyde and the SEC",
+    "season": "none",
+    "tags": [
+      "city",
+      "glasgow",
+      "sec",
+      "conference",
+      "night",
+      "external"
+    ],
+    "photoFocus": "45,45",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© University of Glasgow",
+    "original": "City View 77.jpg"
+  },
+  {
+    "file": "lord-kelvin-bust.jpg",
+    "alt": "A bronze bust of Lord Kelvin in the Hunterian Museum, with the gallery out of focus behind.",
+    "place": "Hunterian Museum",
+    "season": "none",
+    "tags": [
+      "hunterian",
+      "museum",
+      "interior",
+      "cose",
+      "physics",
+      "history of science"
+    ],
+    "photoFocus": "75,40",
+    "width": 3840,
+    "height": 2160,
+    "credit": "Photographic Unit, University of Glasgow",
+    "copyright": "© 2024 Photographic Unit, University of Glasgow",
+    "original": "Lord Kelvin at the Hunterian 005.JPG"
+  }
+]

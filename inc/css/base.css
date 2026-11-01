@@ -849,6 +849,21 @@ html.mga-final .reveal .md-sub .md-sub-b { margin-left: 0.25em; }
 /* two stars side by side (compound words): both layers carry both glyphs */
 .fa-star-double::before { content: '\f005\f005'; }
 .fa-star-double::after { content: '\10f005\10f005'; }
+/* corporate pilots (phase 6b): Dumfries 14 and 29 */
+.fa-graduation-cap::before { content: '\f19d'; }
+.fa-graduation-cap::after { content: '\10f19d'; }
+.fa-prescription-bottle-alt::before { content: '\f486'; }
+.fa-prescription-bottle-alt::after { content: '\10f486'; }
+.fa-prescription-bottle::before { content: '\f485'; }
+.fa-prescription-bottle::after { content: '\10f485'; }
+.fa-calendar-check::before { content: '\f274'; }
+.fa-calendar-check::after { content: '\10f274'; }
+.fa-books::before { content: '\f5db'; }
+.fa-books::after { content: '\10f5db'; }
+.fa-stopwatch::before { content: '\f2f2'; }
+.fa-stopwatch::after { content: '\10f2f2'; }
+.fa-analytics::before { content: '\f643'; }
+.fa-analytics::after { content: '\10f643'; }
 
 
 /* ===========================================
@@ -2145,6 +2160,40 @@ html.mga-build-appear .reveal .slides section .fragment { transition: none !impo
     print-color-adjust: exact;
 }
 
+/* style=header: the colour fills a rounded header holding the ###,
+   centred; the text below sits on the slide, with no box */
+.reveal .slides section .md-cards.md-style-header .md-card,
+.reveal .slides section .md-cards.md-style-header .md-card.md-card-filled { background: none !important; border: none !important; box-shadow: none; padding: 0; color: inherit; }
+.reveal .slides section .md-style-header .md-card > .md-card-head,
+.reveal .slides section .md-style-header .md-card > h3 {
+    background: var(--tag-bg, var(--L-ground));
+    color: var(--tag-ink, var(--L-on-ground));
+    text-align: center;
+    margin: 0 0 0.5em;
+    padding: 0.35em 0.6em;
+    border-radius: var(--cards-radius, 0.25em);
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+}
+.reveal .slides section .md-style-header .md-card-head { justify-content: center; }
+.reveal .slides section .md-style-header .md-card-head > h3 { flex: 0 1 auto; background: none; padding: 0; margin: 0; color: inherit; border: none; }
+
+/* an icon beside a card's heading (corporate mode, or with disc=) */
+.reveal .md-card-head { display: flex; align-items: center; gap: 0.45em; margin: 0 0 0.4em; }
+.reveal .md-card-head > h3 { margin: 0 !important; }
+.reveal .md-card-head .md-card-icon { margin: 0; flex: 0 0 auto; }
+/* disc=COLOUR: the icon on a disc, in the disc's ink */
+.reveal .md-icon-disc {
+    display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto;
+    width: 2em; height: 2em; border-radius: 50%;
+    background: var(--tag-bg); color: var(--tag-ink, #FFFFFF);
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+.reveal .md-icon-disc .md-card-icon { font-size: 1em; margin: 0; --fa-secondary-opacity: 0.55; }
+
+/* @rule: a horizontal rule between blocks */
+.reveal .md-rule { border: none; border-top: 2px solid var(--rule-colour, var(--r-border-color)); height: 0; margin: 0.5em 0; }
+
 /* style=stat (and @stats): big number, label, note, centred */
 .reveal .md-style-stat .md-card { align-items: center; justify-content: center; text-align: center; }
 .reveal .md-style-stat .md-card p { text-align: center; }
@@ -2176,6 +2225,16 @@ html.mga-build-appear .reveal .slides section .fragment { transition: none !impo
     font-size: 1.15em;
 }
 .reveal .md-strip-token > p { margin: 0; text-align: center; }
+/* two grades in one token (~~D3~~ C3): smaller, on one line, same row height */
+.reveal .md-strip-pair > p { font-size: 0.6em; line-height: 2; white-space: nowrap; }
+/* a grade replaced on a click in a strip ({~~D3~>C3~~}): the old grade
+   stays, struck through, beside the new one, both at the pair size */
+.reveal .md-strip-token .md-sub { white-space: nowrap; transition: font-size 0.5s ease; }
+.reveal .md-strip-token .md-sub.visible,
+html.mga-final .reveal .md-strip-token .md-sub { font-size: 0.6em; }
+.reveal .md-strip-token .md-sub.visible .md-sub-a { grid-template-columns: 1fr; opacity: 1; text-decoration: line-through; }
+.reveal .md-strip-token .md-sub.visible .md-sub-b,
+html.mga-final .reveal .md-strip-token .md-sub .md-sub-b { margin-left: 0.25em; color: inherit; }
 .reveal .md-style-strip .md-card:not(.md-strip) { justify-content: center; }
 
 /* arrows: an arrow between neighbouring cards (down, in a stack) */
@@ -2514,8 +2573,8 @@ html.mga-final .reveal .md-tr-leaving, html.print-pdf .reveal .md-tr-leaving { d
 
 /* Ribbon: ## [[Discovery]] (a heading that is one tag), and the tabs of
    @menu style=tabs, which share the shape so a tab can morph into the
-   heading. A rectangle with a pointed right end and a folded tail in
-   the darker partner colour below its left end. */
+   heading: a plain rectangle with slightly rounded corners (the pointed
+   end and folded tail were removed, Nov 2026) */
 .reveal h2:has(> .md-ribbon),
 .reveal h1:has(> .md-ribbon),
 .reveal h3:has(> .md-ribbon) { border-bottom: none; padding-bottom: 0; }
@@ -2526,35 +2585,12 @@ html.mga-final .reveal .md-tr-leaving, html.print-pdf .reveal .md-tr-leaving { d
     align-items: center;
     justify-content: space-between;
     gap: 0.9em;
-    margin-left: 0.5em;
-    padding: 0.2em 0.5em 0.24em 0.75em;
-    border-radius: 0;
+    padding: 0.2em 0.6em 0.24em 0.6em;
+    border-radius: 0.14em;
     line-height: 1.2;
     vertical-align: baseline;
-    --tag-tail: color-mix(in oklab, var(--tag-bg) 70%, black);
 }
 .reveal .md-tag.md-ribbon { font-size: 0.86em; min-width: 7em; }
-.reveal .md-tag.md-ribbon::after,
-.reveal .md-menu-tabs .md-menu-item::after {
-    content: '';
-    position: absolute;
-    top: 0; bottom: 0;
-    right: -0.62em;
-    width: 0.63em;
-    background: var(--tag-bg);
-    clip-path: polygon(0 0, 100% 50%, 0 100%);
-}
-.reveal .md-tag.md-ribbon::before,
-.reveal .md-menu-tabs .md-menu-item::before {
-    content: '';
-    position: absolute;
-    left: -0.5em;
-    top: 0.3em;
-    bottom: -0.3em;
-    width: 0.5em;
-    background: var(--tag-tail);
-    clip-path: polygon(0 0, 100% 0, 100% calc(100% - 0.3em), 0 100%);
-}
 .reveal .md-tag.md-ribbon .md-tag-icon { margin-left: 0.8em; }
 
 /* ---------- @menu ---------- */
@@ -2595,10 +2631,8 @@ html.mga-final .reveal .md-tr-leaving, html.print-pdf .reveal .md-tr-leaving { d
 .reveal .md-menu-tabs .md-menu-item.is-dim {
     background: var(--menu-off);
     color: var(--menu-off-ink);
-    --tag-tail: color-mix(in srgb, var(--menu-off) 80%, black);
     box-shadow: none;
 }
-.reveal .md-menu-tabs .md-menu-item.is-dim::after { background: var(--menu-off); }
 .reveal .md-menu-label { display: none; }
 .reveal .md-menu-labels { margin-bottom: 0; }
 .reveal .md-menu-labels .md-menu-label {
@@ -2633,7 +2667,7 @@ html.mga-final .reveal .md-tr-leaving, html.print-pdf .reveal .md-tr-leaving { d
     gap: 0.3em;
     width: fit-content;
     margin: 0.5em auto;
-    padding-left: 0.5em;
+    padding-left: 0;
 }
 .reveal .md-menu-tabs .md-menu-item {
     font-size: 1.3em;

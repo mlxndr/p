@@ -25,6 +25,10 @@ on:
       - '*/*/title.md'
       - '*/*/meta.json'
       - '*/*/img/**'
+      - '*/*/*/content.md'
+      - '*/*/*/title.md'
+      - '*/*/*/meta.json'
+      - '*/*/*/img/**'
   workflow_dispatch:
 
 permissions:
@@ -65,12 +69,12 @@ jobs:
         id: decks
         run: |
           is_deck() { case "$1" in archive/*|_to_delete/*|.*) return 1;; esac; [ -f "$1/index.html" ] && [ -f "$1/content.md" ] && [ "$1" != "specimen" ]; }
-          # a deck is one folder down (icame47) or two (1a/7)
+          # a deck is one, two or three folders down (specimen, 1a/7, 2a/words/2)
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event.before }}" = "0000000000000000000000000000000000000000" ]; then
-            candidates=$(ls -d */ */*/ 2>/dev/null | sed 's|/$||')
+            candidates=$(ls -d */ */*/ */*/*/ 2>/dev/null | sed 's|/$||')
           else
             changed=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}")
-            candidates=$( (echo "$changed" | cut -d/ -f1; echo "$changed" | grep '/.*/' | cut -d/ -f1-2) | sort -u)
+            candidates=$( (echo "$changed" | cut -d/ -f1; echo "$changed" | grep '/.*/' | cut -d/ -f1-2; echo "$changed" | grep '/.*/.*/' | cut -d/ -f1-3) | sort -u)
           fi
           decks=""
           for d in $candidates; do is_deck "$d" && decks="$decks $d"; done

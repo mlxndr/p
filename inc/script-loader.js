@@ -118,6 +118,7 @@ function refitSlides() {
   try {
     if (typeof corpRadii === 'function') corpRadii();
     if (typeof corpFitCards === 'function') corpFitCards();
+    if (typeof corpFitText === 'function') corpFitText();
     if (typeof corpLineBreaks === 'function') corpLineBreaks();
     if (typeof corpFirstBaselines === 'function') corpFirstBaselines();
     if (typeof setBleedExtents === 'function') setBleedExtents();

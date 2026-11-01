@@ -1,5 +1,5 @@
 // Define available plugins and their paths (MGA_ROOT, from head.js, is
-// '../' for a deck one folder down and '../../' for one two down)
+// '../' for a deck one folder down and '../../' for one two down, '../../../' three)
 const MGA_R = window.MGA_ROOT || '../';
 const scriptConfig = {
   core: MGA_R + "inc/reveal.js/dist/reveal.js",

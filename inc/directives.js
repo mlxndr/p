@@ -854,9 +854,10 @@
         }
         for (const k of Object.keys(opts)) {
             if (k.charAt(0) === '_') continue;
-            if (['bg', 'id', 'build', 'text', 'words', 'duration', 'morphemes', 'y', 'gap', 'inset'].indexOf(k) === -1) {
-                return err('Unknown @slide option `' + esc(k) + '`. Valid: bg=, id=, build=auto, text=N, words=loose, duration=N, morphemes=STATE (and, from a converter, y=, gap= and inset= in px).');
+            if (['bg', 'id', 'build', 'text', 'words', 'duration', 'morphemes', 'y', 'gap', 'inset', 'shrink'].indexOf(k) === -1) {
+                return err('Unknown @slide option `' + esc(k) + '`. Valid: bg=, id=, build=auto, text=N, shrink=N, words=loose, duration=N, morphemes=STATE (and, from a converter, y=, gap= and inset= in px).');
             }
+            if (k === 'shrink' && !(/^\d+$/.test(opts[k]) && +opts[k] >= 40 && +opts[k] <= 100)) return err('`shrink=` is how far this slide may shrink to fit, in percent from 40 to 100 (the usual limit is 70 in corporate decks, 72 elsewhere), e.g. shrink=55.');
             if ((k === 'y' || k === 'gap' || k === 'inset') && !/^\d+(\.\d+)?$/.test(opts[k])) return err('`' + k + '=` takes px, e.g. ' + k + '=256.');
         }
         // @slide morph [words | words=loose] [duration=1.5] (SPEC 6.3):
@@ -889,7 +890,7 @@
         if (opts.bg && !/^[#\w][\w#(),.%\- ]*$/.test(opts.bg)) {
             return err('bg= does not look like a CSS colour.');
         }
-        if (!classes.length && !opts.bg && !transition && opts.text === undefined && opts.morphemes === undefined &&
+        if (!classes.length && !opts.bg && !transition && opts.text === undefined && opts.morphemes === undefined && opts.shrink === undefined &&
             opts.y === undefined && opts.gap === undefined && opts.inset === undefined) {
             return err('@slide needs at least one flag (' + SLIDE_FLAGS.filter(function (x) { return x !== 'centered'; }).join(', ') + ') or bg=&lt;colour&gt;.');
         }
@@ -903,6 +904,9 @@
         if (opts.duration !== undefined) attrs += ' data-auto-animate-duration="' + parseFloat(opts.duration) + '"';
         if (opts.morphemes !== undefined) attrs += ' data-md-morphemes="' + opts.morphemes + '"';
         if (opts.text !== undefined) attrs += ' data-corp-text="' + esc(opts.text) + '"';
+        // how far the slide may shrink to fit (percent): autofit and the
+        // corporate fit stop there instead of at 72% or 70%
+        if (opts.shrink !== undefined) attrs += ' data-fit-floor="' + esc(opts.shrink) + '"';
         // corporate, converter-only: where the body starts and the space
         // between its blocks (px)
         if (opts.y !== undefined) attrs += ' data-corp-y="' + esc(opts.y) + '"';
@@ -1238,6 +1242,22 @@
         }
     });
 
+    /* @rule [COLOUR] [build]: a horizontal rule between blocks (a line
+       written as --- would end the slide). Corporate mode draws the
+       Dumfries deck's centred University Blue line. */
+    registerDirective('rule', {
+        body: 'line', positional: 1, build: [],
+        emit: function (d, api) {
+            let st = '';
+            if (d.positional.length) {
+                const c = colourValue(d.positional[0].value);
+                if (!c) api.fail('`' + esc(d.positional[0].value) + '` is not a palette colour or #RRGGBB.');
+                st = ' style="--rule-colour:' + (c.name ? 'var(--p-' + c.name + ')' : c.hex) + '"';
+            }
+            return '\n<div class="md-rule' + (d.build ? ' fragment' : '') + '"' + st + ' role="separator"></div>\n';
+        }
+    });
+
     /* Converter-only placement (corporate mode, SPEC 8): y= is the slide
        position of a block's top and h= its height, in px of the
        1920 x 1080 slide, as measured from a PowerPoint original. Written
@@ -1303,7 +1323,7 @@
        is `::` alone (optionally followed by flags) opens the next card or
        column; content before the first such line is the first card. */
     const CARD_FLAGS = ['wide', 'build', 'accent', 'dim', 'foot', 'answer', 'middle'];
-    const CARD_STYLES = ['box', 'plain', 'bar', 'stat', 'strip'];
+    const CARD_STYLES = ['box', 'plain', 'bar', 'header', 'stat', 'strip'];
 
     function splitCards(body, api) {
         const cards = [];
@@ -1322,6 +1342,13 @@
             c.flags.forEach(function (f) {
                 const kv = /^icon=([a-z0-9-]+)$/.exec(f);
                 if (kv) { c.opts.icon = kv[1]; return; }
+                // disc=COLOUR: the icon white (or ink) on a disc of that colour
+                const dv = /^disc=(\S+)$/.exec(f);
+                if (dv) {
+                    const dc = colourValue(dv[1]);
+                    if (!dc) api.fail('`disc=' + esc(dv[1]) + '` on the line `' + esc(c.src) + '` is not a palette colour or #RRGGBB.');
+                    c.opts.disc = dc; return;
+                }
                 // converter-only sizes for one card (px), as on the block
                 const sz = /^(h|text|head)=(\d+(?:\.\d+)?)$/.exec(f);
                 if (sz) { c.opts[sz[1]] = parseFloat(sz[2]); return; }
@@ -1329,7 +1356,7 @@
                 const col = colourValue(f);
                 if (col && !c.opts.colour) { c.opts.colour = col; return; }
                 api.fail('unknown card flag `' + esc(f) + '` on the line `' + esc(c.src) + '`. Card flags: a colour (' +
-                    PALETTE_HUES.join(', ') + ', light-…, or #RRGGBB), ' + CARD_FLAGS.join(', ') + ', icon=NAME (and, from a converter, h=, text=, head= in px).');
+                    PALETTE_HUES.join(', ') + ', light-…, or #RRGGBB), ' + CARD_FLAGS.join(', ') + ', icon=NAME, disc=COLOUR (and, from a converter, h=, text=, head= in px).');
             });
         });
         return cards;
@@ -1361,6 +1388,9 @@
             }
             const n = d.opts.cols || (d.flags.indexOf('stack') !== -1 ? 1 : Math.min(cards.length, 4));
             const cls = ['md-cards', 'md-style-' + style, 'md-height-' + height, 'md-ncols-' + n];
+            // height=auto written out: in corporate mode the block keeps its
+            // content height instead of sharing the body's free space
+            if (d.opts.height) cls.push('md-height-set');
             if (d.flags.indexOf('arrows') !== -1) cls.push('md-arrows');
             if (d.flags.indexOf('stack') !== -1) cls.push('md-stack');
             let style_ = '--cols:' + n + ';';
@@ -1407,12 +1437,31 @@
                 if (style === 'strip' && i === 0) {
                     const tokens = lines.join(' ').trim().split(/\s*,\s*/).filter(Boolean);
                     if (!tokens.length) api.fail('the strip card needs its tokens on one line, separated by `, `.');
-                    inner = tokens.map(function (t) { return cell('div', 'md-strip-token', t); }).join('');
+                    // two grades in one token (~~D3~~ C3): smaller, on one line
+                    inner = tokens.map(function (t) { return cell('div', 'md-strip-token' + (/\s/.test(t.trim()) ? ' md-strip-pair' : ''), t); }).join('');
                     cc.push('md-strip');
                 } else {
                     inner = api.expand(lines).trim() + '\n';
                 }
-                const icon = c.opts.icon ? '<i class="fad fa-' + c.opts.icon + ' md-icon md-card-icon" aria-hidden="true"></i>\n' : '';
+                let icon = '';
+                if (c.opts.icon) {
+                    icon = '<i class="fad fa-' + c.opts.icon + ' md-icon md-card-icon" aria-hidden="true"></i>';
+                    if (c.opts.disc) {
+                        const df = fillOf(c.opts.disc);
+                        icon = '<span class="md-icon-disc' + df.cls + '" style="' + df.style + '">' + icon + '</span>';
+                    }
+                    icon += '\n';
+                } else if (c.opts.disc) {
+                    api.fail('`disc=` on the line `' + esc(c.src) + '` needs an icon=NAME to go on it.');
+                }
+                // corporate mode, or with a disc: the icon sits beside the
+                // card's heading (Dumfries 14 and 29) rather than above it
+                const headLine = lines.findIndex(function (l) { return l.trim(); });
+                if (icon && (window.MGA_CORPORATE || c.opts.disc) && headLine !== -1 && /^###\s/.test(lines[headLine])) {
+                    const rest = lines.slice(); const h = rest.splice(headLine, 1)[0];
+                    inner = '<div class="md-card-head">\n' + icon + '\n' + h + '\n\n</div>\n\n' + api.expand(rest).trim() + '\n';
+                    icon = '';
+                }
                 html += '<div class="' + cc.join(' ') + f.cls + '"' + attrs + '>\n' + tag + icon + '\n' + inner + '\n</div>\n';
             });
             return html + '</div>\n';
@@ -2890,13 +2939,14 @@
        <!-- .slide: data-autofit="off" -->. */
     function autofitTextSlides() {
         const H = (window.Reveal && Reveal.getConfig) ? Reveal.getConfig().height : 1080;
-        const STEP = 0.04, FLOOR = 0.72;
+        const STEP = 0.04, FLOOR_USUAL = 0.72;
         const skip = '.title-slide, .md-fill, .md-section, .directive-error-slide, [data-autofit="off"]';
         document.querySelectorAll('.reveal .slides section').forEach(function (section) {
             if (section.querySelector('section')) return;          // a vertical stack
             if (section.matches(skip)) return;
             if (!section.children.length) return;
             const restore = unhideForMeasuring(section);
+            const FLOOR = fitFloor(section, FLOOR_USUAL);
             section.classList.remove('md-fit', 'md-overflow');
             section.style.removeProperty('--fit');
             // Content height = the lowest bottom edge among the slide's own
@@ -3135,9 +3185,19 @@
                 }
             });
 
+            // a strip's click marks (grades replaced at reassessment,
+            // {~~D3~>C3~~}) change together on one click
+            let stripped = 0;
+            Array.prototype.filter.call(sec.querySelectorAll('.md-strip'), own).forEach(function (strip, k) {
+                const fs = strip.querySelectorAll('.fragment');
+                if (fs.length < 2) return;
+                stripped++;
+                fs.forEach(function (f) { f.setAttribute('data-md-group', 'strip-' + k); });
+            });
+
             // explicit order where needed
             const stepped = Array.prototype.filter.call(sec.querySelectorAll('[data-md-step]'), own);
-            if (!markers.length && !stepped.length) return;
+            if (!markers.length && !stepped.length && !stripped) return;
             // @parse paired: the list just before the analysis names its
             // steps; item k arrives with step k (the last step takes any
             // items beyond the number of steps)
@@ -3865,7 +3925,12 @@
             sec.querySelectorAll(CORP_ROUND).forEach(function (el) {
                 el.style.borderRadius = '';
                 el.style.padding = '';
-                const r = 0.03553 * Math.min(el.offsetWidth, el.offsetHeight);
+                // style=header: the header is the shape, the card has none
+                if (el.closest('.md-style-header')) return;
+                // one radius for every rounded shape (Marc, 1 November;
+                // PowerPoint's 3.553% of each shape's shorter side varied)
+                const fixed = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--corp-radius'));
+                const r = fixed > 0 ? Math.min(fixed, Math.min(el.offsetWidth, el.offsetHeight) / 2) : 0.03553 * Math.min(el.offsetWidth, el.offsetHeight);
                 if (!r) return;
                 const cs = getComputedStyle(el), k = 0.29289 * r;
                 el.style.borderRadius = r.toFixed(2) + 'px';
@@ -3882,30 +3947,123 @@
        time, to 70% of the preset size; every card in the block takes the
        same size. A block or card with a converter's text=, h= or y= is
        left alone. */
+    /* How far a corporate slide's body may run past its box: as in
+       PowerPoint, text may run on below the body (its text boxes are
+       taller than the body box: Session 1 slide 3), to 24 px from the
+       slide's foot; with a takeaway panel, not at all. */
+    function corpBodyOver(sec, body) {
+        if (!body) return false;
+        const slack = sec.classList.contains('corp-has-note') ? 0 :
+            Math.max(0, sec.offsetHeight - body.offsetTop - body.clientHeight - 24);
+        return body.scrollHeight > body.clientHeight + slack + 1;
+    }
+
+    /* @slide shrink=N: how far a slide may shrink to fit (N percent) */
+    function fitFloor(sec, usual) {
+        const n = parseFloat(sec.getAttribute('data-fit-floor'));
+        return n >= 40 && n <= 100 ? n / 100 : usual;
+    }
+
     function corpFitCards() {
         if (!window.MGA_CORPORATE) return;
-        document.querySelectorAll('.reveal .slides section.corp-content .md-cards').forEach(function (block) {
+        // every card block on a slide shrinks together (phase 6b: a band
+        // above the cards gives up its space too, ETS 9 and 12)
+        document.querySelectorAll('.reveal .slides section.corp-content').forEach(function (sec) {
             // a converter's numbers (text=, h=, y=) mean the sizes are PowerPoint's
-            const conv = /--cards-(text|h)|--corp-y/;
-            if (conv.test(block.getAttribute('style') || '')) return;
-            const cards = Array.prototype.filter.call(block.children, function (c) {
-                return c.classList.contains('md-card') && !conv.test(c.getAttribute('style') || '');
+            const conv = /--cards-(text|h):|--corp-y/;
+            const blocks = Array.prototype.filter.call(sec.querySelectorAll('.md-cards'), function (block) {
+                return !conv.test(block.getAttribute('style') || '');
             });
+            const cards = [];
+            blocks.forEach(function (block) {
+                Array.prototype.forEach.call(block.children, function (c) {
+                    if (c.classList.contains('md-card') && !conv.test(c.getAttribute('style') || '')) cards.push(c);
+                });
+            });
+            sec.classList.remove('md-overflow');
             if (!cards.length) return;
-            const restore = unhideForMeasuring(block);
-            block.style.removeProperty('--corp-fit');
-            cards.forEach(function (c) { c.style.removeProperty('font-size'); });
-            const base = parseFloat(getComputedStyle(cards[0]).fontSize);
-            const over = function () { return cards.some(function (c) { return c.scrollHeight > c.clientHeight + 1; }); };
-            let size = base;
-            while (over() && size - 2 >= base * 0.7) {
-                size -= 2;
-                cards.forEach(function (c) { c.style.fontSize = size + 'px'; });
+            const restore = unhideForMeasuring(sec);
+            cards.forEach(function (c) { c.style.removeProperty('font-size'); c.style.removeProperty('--cards-fit-head'); });
+            // the slide's own text beside the cards (a lead, notes below)
+            // shrinks with them, through --corp-text
+            const body = sec.querySelector(':scope > .corp-body');
+            const setText = parseFloat(sec.getAttribute('data-corp-text'));
+            if (setText > 0) sec.style.setProperty('--corp-text', (2 * setText) + 'px'); else sec.style.removeProperty('--corp-text');
+            const leadEl = body && Array.prototype.find.call(body.children, function (el) { return /^(P|UL|OL)$/.test(el.tagName); });
+            // tables beside the cards (ETS 7) too, unless a converter set their rows
+            const tables = body ? Array.prototype.filter.call(body.querySelectorAll('table'), function (t) {
+                return !t.closest('[data-corp-rows]');
+            }) : [];
+            tables.forEach(function (t) { t.style.removeProperty('font-size'); t.style.removeProperty('--cc-table-row'); });
+            const tBase = tables.map(function (t) {
+                return [parseFloat(getComputedStyle(t).fontSize), parseFloat(getComputedStyle(t).getPropertyValue('--cc-table-row')) || 0];
+            });
+            const lead = leadEl ? parseFloat(getComputedStyle(leadEl).fontSize) : 0;
+            const bodyOver = function () { return corpBodyOver(sec, body); };
+            const bases = cards.map(function (c) { return parseFloat(getComputedStyle(c).fontSize); });
+            // headings shrink with the text (only where no converter set them)
+            const heads = cards.map(function (c) {
+                const h = c.querySelector(':scope > h3, :scope > .md-card-head > h3');
+                return h && !/--cards-head/.test(c.getAttribute('style') || '') ? parseFloat(getComputedStyle(h).fontSize) : 0;
+            });
+            const over = function () { return bodyOver() || cards.some(function (c) { return c.scrollHeight > c.clientHeight + 1; }); };
+            // 1 pt at a time on the first card's size, to 70% (or @slide shrink=)
+            const step = 2 / bases[0];
+            const floor = fitFloor(sec, 0.7);
+            let f = 1;
+            while (over() && f - step >= floor - 1e-9) {
+                f -= step;
+                cards.forEach(function (c, i) {
+                    c.style.fontSize = (bases[i] * f).toFixed(2) + 'px';
+                    if (heads[i]) c.style.setProperty('--cards-fit-head', (heads[i] * f).toFixed(2) + 'px');
+                });
+                if (lead) sec.style.setProperty('--corp-text', (lead * f).toFixed(2) + 'px');
+                tables.forEach(function (t, i) {
+                    t.style.fontSize = (tBase[i][0] * f).toFixed(2) + 'px';
+                    if (tBase[i][1]) t.style.setProperty('--cc-table-row', (tBase[i][1] * f).toFixed(2) + 'px');
+                });
             }
             if (over()) {
-                console.warn('[corporate] card text still overflows at 70%: "' +
-                    ((block.closest('section').querySelector('h1, h2') || {}).textContent || '').trim() + '"');
-                block.closest('section').classList.add('md-overflow');
+                console.warn('[corporate] card text still overflows at ' + Math.round(floor * 100) + '%: "' +
+                    ((sec.querySelector('h1, h2') || {}).textContent || '').trim() + '"');
+                sec.classList.add('md-overflow');
+            }
+            restore();
+        });
+    }
+
+    /* Text slides (no cards, table or statistics) whose text runs past
+       the body shrink too, 1 pt at a time to 70% of their size, through
+       --corp-text (phase 6b: Dumfries 23, 30 to 33); autofit is off on
+       corporate slides. */
+    function corpFitText() {
+        if (!window.MGA_CORPORATE) return;
+        document.querySelectorAll('.reveal .slides section.corp-content').forEach(function (sec) {
+            const body = sec.querySelector(':scope > .corp-body');
+            if (!body || body.querySelector('.md-cards, table, .md-stats, figure, [data-corp-top]')) return;
+            const restore = unhideForMeasuring(sec);
+            sec.style.removeProperty('--corp-text');
+            body.style.removeProperty('--corp-para-after');
+            body.style.removeProperty('gap');
+            const after = parseFloat(getComputedStyle(body).getPropertyValue('--corp-para-after')) || 0;
+            const gap = parseFloat(getComputedStyle(body).rowGap) || 0;
+            const set = parseFloat(sec.getAttribute('data-corp-text'));
+            if (set > 0) sec.style.setProperty('--corp-text', (2 * set) + 'px');
+            const base = parseFloat(getComputedStyle(body).fontSize);
+            const over = function () { return corpBodyOver(sec, body); };
+            let size = base;
+            const floor = fitFloor(sec, 0.7);
+            while (over() && size - 2 >= base * floor - 1e-9) {
+                size -= 2;
+                sec.style.setProperty('--corp-text', size + 'px');
+                // the space between paragraphs shrinks with the text
+                if (after) body.style.setProperty('--corp-para-after', (after * size / base).toFixed(2) + 'px');
+                if (gap) body.style.gap = (gap * size / base).toFixed(2) + 'px';
+            }
+            if (over()) {
+                console.warn('[corporate] text still overflows at ' + Math.round(floor * 100) + '%: "' +
+                    ((sec.querySelector('h1, h2') || {}).textContent || '').trim() + '"');
+                sec.classList.add('md-overflow');
             }
             restore();
         });
@@ -4071,6 +4229,7 @@
     }
     window.corpRadii = corpRadii;
     window.corpFitCards = corpFitCards;
+    window.corpFitText = corpFitText;
     window.corpLineBreaks = corpLineBreaks;
     window.corpFirstBaselines = corpFirstBaselines;
 

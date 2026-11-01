@@ -150,12 +150,15 @@ The detail for each programme, approved by a Board of Studies
 
 ---
 
-## Statistics and a table
+## Statistics
 
 @stats
-  96% :: Fewer files :: 83 files to 3
-  93% :: Reduction in text :: about 9,800 words now
-  4 :: Consolidated documents
+  96% :: Fewer files :: [[109 files → 4 files]]{green}
+  89% :: Reduction in text :: [[185,320 words → about 19,800 words]]{red}
+
+---
+
+## A table
 
 @table head=navy band rowhead widths=30,25,25,20
 | Code | Meaning | Effect | When |
@@ -235,6 +238,75 @@ An orange strip with white grades (converted decks: the old light-yellow strips)
 * One set of regulations
 * Exceptions in the course specification
 @end
+
+---
+
+## Headers over text and a rule
+
+@cards style=header
+:: navy
+### The problems
+* Inconsistent degree calculation spreadsheets
+* No institutional training on the Code of Assessment
+:: navy
+### The instructions
+* Regulation simplification
+* New Award of Credit rules
+:: navy
+### The core direction
+* A shift to greater standardisation
+@end
+
+@rule
+
+The University has submitted and agreed a public Action Plan with QAA.
+
+---
+
+## A band above the cards
+
+@cards height=auto
+:: orange
+### The question award of credit answers
+**“Should this course count towards the student’s degree?”** This is separate from the grade itself.
+@end
+
+@cards
+:: purple
+### Course-level credit
+Credit for a course when the student achieves D3 or above.
+:: green
+### Session-level credit
+D3 or above in two-thirds or more of a session’s courses gives credit for every course in the session.
+@end
+
+---
+
+## Icons on discs
+
+@cards cols=4
+:: navy icon=graduation-cap disc=light-pink
+### UG
+Replaces 34 individual regulation files.
+:: navy icon=prescription-bottle-alt disc=light-blue
+### UG-Clin
+Replaces 6 regulation files.
+:: navy icon=calendar-check disc=light-green
+### PGT
+Replaces 43 regulation files.
+:: navy icon=books disc=orange
+### PGR
+Replaces 26 regulation files.
+@end
+
+---
+
+@slide contrast
+
+**Marc Alexander** (Convener of Academic Regulations)
+[marc.alexander@glasgow.ac.uk](mailto:marc.alexander@glasgow.ac.uk)
+
+**Project Compass:** [projectcompass@glasgow.ac.uk](mailto:projectcompass@glasgow.ac.uk)
 
 ---
 

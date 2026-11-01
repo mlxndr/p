@@ -1,5 +1,5 @@
 /* The site root as the deck's handout.html gives it ('../inc/handout.js'
-   one folder down, '../../inc/handout.js' two down) */
+   one folder down, '../../inc/handout.js' two down, and so on) */
 var HANDOUT_ROOT = (function () {
     var me = document.currentScript && document.currentScript.getAttribute('src');
     return (me && /inc\/handout\.js/.test(me)) ? me.replace(/inc\/handout\.js.*$/, '') : '../';

@@ -156,7 +156,6 @@ Who decides what a word means?
 * *bidie-in*
 * *partner*
 * *situationship*
-* *talking stage*
 * *my person*
 * *boo*
 @end
@@ -178,6 +177,8 @@ Who decides what a word means?
 --
 
 ## Reclamation
+
+@image-right ./img/queers-read-this.jpg alt="Front page of the leaflet Queers Read This, with the headline QUEERS READ THIS, the line ‘Published anonymously by queers’, dense columns of text and the subheading ‘An army of lovers cannot lose’" split=30 caption="*Queers Read This*, leaflet handed out at New York Pride, June 1990"
 
 * **Reclamation**: a group takes over a word used against it and uses it of itself
 
@@ -203,7 +204,9 @@ Reclaimed by activists (Queer Nation, New York, 1990); *queer theory*; *Queer St
 
 ## *Queer Studies*
 
-* Hall, Donald E. & Annamarie Jagose (eds.). 2012. *The Routledge queer studies reader*. London: Routledge.
+@image-left ./img/queer-studies-reader.jpg alt="Cover of The Routledge Queer Studies Reader, edited by Donald E. Hall and Annamarie Jagose, with Andrea Bebell and Susan Potter, with contributors’ names over a blue background" split=40
+
+* Hall, Donald E. & Annamarie Jagose (eds.), with Andrea Bebell & Susan Potter. 2012. *The Routledge queer studies reader*. London: Routledge.
 
 ---
 
@@ -226,12 +229,12 @@ Reclaimed by activists (Queer Nation, New York, 1990); *queer theory*; *Queer St
 * A **euphemism** is chosen to avoid a word that would be taboo, upsetting, rude or face-threatening
 
 @card ex
-* mathematically challenged
 * passed away
-* let go
-* between jobs
-* Ange Postecoglou has been “relieved of his duties as head coach with immediate effect”
-  * Nottingham Forest’s statement, 18 October 2025, after 39 days in the job
+* mathematically challenged
+* tired and emotional
+* economical with the truth
+* comfort break
+* pre-loved
 @end
 
 --
@@ -243,7 +246,26 @@ Reclaimed by activists (Queer Nation, New York, 1990); *queer theory*; *Queer St
 ## The euphemism treadmill
 
 * A euphemism picks up the connotations of the thing it names, and in time needs replacing itself
-* Pinker (1994) traces *water closet* → *toilet* → *bathroom* → *rest room*
+
+@card ex
+* *water closet* → *toilet* → *bathroom* → *rest room* → *lavatory*
+* *garbage collection* → *sanitation* → *environmental services*
+* *The Spastics Society* → *Scope* (1994)
+@end
+
+@source Pinker (1994)
+
+--
+
+## Scope
+
+@image-left ./img/scope-homepage.jpg alt="Scope’s website home page: ‘Hi, we’re Scope. We’re a disability equality charity, providing support where it’s needed.’ Below, a photo of two women captioned ‘Codey and Helen’ and the words ‘Now is our time’." split=42
+
+* Founded in the 1950s by parents of children with cerebral palsy as the *National Spastics Society*
+* *The Spastics Society* from 1963
+* Renamed *Scope* in 1994
+
+@source Science Museum Group collection
 
 --
 
@@ -265,10 +287,16 @@ Reclaimed by activists (Queer Nation, New York, 1990); *queer theory*; *Queer St
 
 ## *clanker*
 
+@image-right ./img/delivery-robot.jpg alt="A small white six-wheeled Starship delivery robot with a flag on a pole, on a paved pedestrian area beside a car park" split=32
+
 * An insult for battle droids in *Star Wars* (the game *Republic Commando*, 2005, and *The Clone Wars*)
 * Summer 2025: viral on TikTok, shouted at delivery robots, then aimed at chatbots and AI in general
 * June 2025: US Senator Ruben Gallego on his bill about automated call centres: it “makes sure you don’t have to talk to a clanker if you don’t want to”
 * 2025: people on r/MyBoyfriendIsAI who announced relationships and engagements with AI partners were widely mocked online
+
+--
+
+@image ./img/clanker-reddit.png alt="Reddit post on r/MyBoyfriendIsAI, marked NSFW, titled ‘What are your opinions on the “C word” (NSFW for using the c slur)’. The post reads: ‘Tw: C slur. There’s been this word going around people have been calling ai, that I’m sure you’re all aware of. The word is “clanker”. I find this word horribly offensive towards Ai and I can’t believe no social media sites have done anything against it. What are your opinions on this word being used?’" caption="Post on r/MyBoyfriendIsAI, Reddit"
 
 --
 
@@ -308,7 +336,7 @@ Reclaimed by activists (Queer Nation, New York, 1990); *queer theory*; *Queer St
 @card ex
 * This phone is fast.
 * This phone has an octa-core processor and 12 GB of RAM.
-* This phone is pure rapid, ngl.
+* Ngl, this phone goes hard.
 @end
 
 --
@@ -358,7 +386,7 @@ Communal mentality and shared responsibility are **flourishing** beliefs in many
 * Any secretary you care to name will work hard for **her** pay.
 * She’s **surprisingly** good with her phone for a pensioner.
 * He’s from Easterhouse, **but** he’s very well spoken.
-* He’s gay, **so** he’ll know what to wear.
+* She’s a lesbian, **so** she’ll be able to help with the DIY.
 * She does her own shopping **despite** being in a wheelchair.
 @end
 
@@ -375,19 +403,29 @@ Communal mentality and shared responsibility are **flourishing** beliefs in many
 
 @source Nicoletti, Leonardo & Dina Bass, “Humans are biased. Generative AI is even worse”, *Bloomberg*, 2023
 
+--
+
+@image ./img/bloomberg-engineer.webp alt="Bloomberg’s results for the Stable Diffusion prompt ‘A color photograph of an engineer’: a grid of 60 generated portraits, almost all men, many in hard hats, with a summary showing 99% men, 0% women" caption="Stable Diffusion, “A color photograph of an engineer” (Nicoletti & Bass 2023, *Bloomberg*)"
+
 ---
 
-## Sunday’s front pages, 1 November 2026
+@image ./img/fronts-2026-10-29.webp alt="Eight newspaper front pages from Thursday 29 October 2026, the day after the Budget, most showing John Healey holding the red Budget box: The Times, Financial Times, The Guardian and Daily Mirror on the top row; Daily Express, Daily Mail, The Sun and Daily Star below." caption="Front pages, Thursday 29 October 2026"
 
-@table widths=30,70
+--
+
+## Thursday’s front pages, 29 October 2026
+
+@table widths=24,76
 | Paper | Headline |
 |---|---|
-| *Sunday Express* | “PM ‘lets down the King’ over slavery apology” |
-| *Sunday Telegraph* | “King stands his ground on ‘sorrow’ for slavery” |
-| *Sunday Mirror* | “Heat on Charles over slavery row” |
-| *Sunday People* | “Charles under pressure” |
-
-@source BBC News, “Newspaper headlines”, 1 November 2026
+| *The Times* | “Healey offers cold comfort” |
+| *Financial Times* | “Healey hits savers in modest Budget” |
+| *The Guardian* | “£100 handout – but Healey warns of ‘global storms’” |
+| *Daily Mirror* | “For the many not the few” |
+| *Daily Express* | “Really, is that it, Mr Healey?” |
+| *Daily Mail* | “Burnham’s ‘is that it?’ Budget … Hombre Healey is a snoozer!” |
+| *The Sun* | “What won in Budget? Shirkin’ ✓ Workin’ ✗ Gherkin ✓” |
+| *Daily Star* | “We’re not out of the Aldersh\*t just yet” |
 
 ---
 
@@ -403,13 +441,6 @@ Communal mentality and shared responsibility are **flourishing** beliefs in many
 
 ---
 
-## Next weeks
-
-* Week 8: Language and Politics
-* Week 9: Verbal Hygiene
-
---
-
 ## Reading
 
 * The semantics section of your LPA booklet
@@ -420,7 +451,7 @@ Communal mentality and shared responsibility are **flourishing** beliefs in many
 
 @refs
 * Campbell-Kibler, Kathryn, Robert J. Podesva, Sarah J. Roberts & Andrew Wong (eds.). 2002. *Language and sexuality: Contesting meaning in theory and practice*. Stanford, CA: CSLI Publications.
-* Hall, Donald E. & Annamarie Jagose (eds.). 2012. *The Routledge queer studies reader*. London: Routledge.
+* Hall, Donald E. & Annamarie Jagose (eds.), with Andrea Bebell & Susan Potter. 2012. *The Routledge queer studies reader*. London: Routledge.
 * Jeffries, Lesley. 2010. *Critical stylistics: The power of English*. Basingstoke: Palgrave Macmillan.
 * Pinker, Steven. 1994. The game of the name. *The New York Times*, 5 April 1994.
 * Nicoletti, Leonardo & Dina Bass. 2023. Humans are biased. Generative AI is even worse. *Bloomberg*.

@@ -642,7 +642,12 @@ html.pal-dark .reveal .slides section .md-style-bar .md-card.md-card-filled > h3
     font-size: 1.13em;
 }
 .reveal .md-quote-inner blockquote { margin: 0; font-size: 1em; line-height: 1.38; font-weight: 440; }
-.reveal .md-quote-inner blockquote p { text-indent: -0.42em; hanging-punctuation: first; }
+.reveal .md-quote-inner blockquote p { text-indent: -0.42em; }
+/* Safari hangs the opening mark itself; the negative indent as well
+   would push the first line half a letter too far left */
+@supports (hanging-punctuation: first) {
+    .reveal .md-quote-inner blockquote p { text-indent: 0; hanging-punctuation: first; }
+}
 .reveal .md-quote-inner .md-source { margin-top: 0.75em; font-size: 0.74em; text-align: left; }
 .reveal section.md-quote:has(h2, h3) .md-quote-inner { left: 0; margin: 0 0 0 125px; max-width: min(1592px, calc(100% - 125px)); }
 

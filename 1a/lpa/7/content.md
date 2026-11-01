@@ -4,13 +4,6 @@
   Presupposition :: purple :: eye-slash
   Semantics :: red :: books
 
-@set strategies
-  Euphemism :: teal
-  Dysphemism :: red
-  Jargon :: blue
-  Register :: gold
-  Metaphor :: purple
-
 ---
 
 @slide statement
@@ -20,13 +13,13 @@ Who decides what a word means?
 
 ## Is a Jaffa Cake a cake or a biscuit?
 
-@pause
-
 * In the UK, cakes are zero-rated for VAT; chocolate-covered biscuits are taxed at the standard rate
 * McVitie’s argued before a VAT tribunal in 1991 that Jaffa Cakes are cakes
   * A cake goes hard when it is stale; a biscuit goes soft
   * McVitie’s baked a giant Jaffa Cake for the tribunal to make the point
 * The tribunal agreed: a Jaffa Cake is a cake, and carries no VAT
+
+@pause
 
 @source Association of Taxation Technicians, “VAT treatment of Jaffa Cakes explained”
 
@@ -37,6 +30,8 @@ Who decides what a word means?
 * Irish VAT law zero-rates bread, defined as containing sugar or fat of no more than 2% of the weight of the flour
 * Subway’s rolls contained sugar at about 10% of the weight of the flour
 * The Irish Supreme Court ruled in 2020 that they are not “bread” for VAT purposes, so they are taxed
+
+@pause
 
 @source *Bookfinders Ltd v The Revenue Commissioners* [2020] IESC 60
 
@@ -68,6 +63,8 @@ Who decides what a word means?
 * A planning agreement allowed a restaurant selling made-to-order, Subway-style sandwiches
 * A Mexican restaurant applied; the judge held that tacos and burritos are sandwiches
 
+@pause
+
 @source *Quintana v Fort Wayne Plan Commission* (May 2024)
 
 --
@@ -77,6 +74,8 @@ Who decides what a word means?
 * In March 2026, EU negotiators agreed to reserve 31 meat terms for meat products
   * Not allowed on plant-based products: *steak*, *bacon*, *chicken*, *beef*, *pork*
   * Still allowed: *burger*, *sausage*, *nuggets*
+
+@pause
 
 @source Provisional agreement of 5 March 2026 (European Parliament, Council of the EU and European Commission)
 
@@ -91,20 +90,34 @@ Who decides what a word means?
 
 ## The LPA toolbox
 
-@menu toolbox labels=static centre
+@cards cols=4
+:: icon=exchange-alt
+### Transitivity
+:: icon=balance-scale-left
+### Modality
+:: icon=eye-slash
+### Presupposition
+:: icon=books
+### Semantics
+@end
 
 --
 
-@menu toolbox 4
 ## Semantics
 
-Four tools for analysing how a text persuades:
+@cards cols=4
+:: icon=exchange-alt dim
+### Transitivity
+:: icon=balance-scale-left dim
+### Modality
+:: icon=eye-slash dim
+### Presupposition
+:: icon=books accent
+### Semantics
+@end
 
-@terms
-  Transitivity :: who does what to whom
-  Modality :: how certain, or how obliged, something is presented as being
-  Presupposition :: what a text takes for granted
-  **Semantics** :: **which words are chosen to name and describe, and what those words carry with them**
+* **Semantics** is the study of meaning
+* For persuasion, the questions are which words are chosen to name and describe people, things and events, and what those words carry with them
 
 ---
 
@@ -144,9 +157,9 @@ Four tools for analysing how a text persuades:
 * *partner*
 * *situationship*
 * *talking stage*
+* *my person*
+* *boo*
 @end
-
-@note Which would you put on an official form? Which would you use in front of your gran? :: build
 
 ---
 
@@ -167,7 +180,30 @@ Four tools for analysing how a text persuades:
 ## Reclamation
 
 * **Reclamation**: a group takes over a word used against it and uses it of itself
-* *queer* → *Queer Studies*
+
+--
+
+## *queer*
+
+@cards cols=3 arrows
+::
+### Before the 1890s
+*strange*, *odd*, *peculiar*; also *unwell* (“very queer and qualmish”, 1750)
+::
+### From 1894
+An insult for gay men: the Marquess of Queensberry’s letter attacking “Snob Queers” is the OED’s first example
+::
+### From 1990
+Reclaimed by activists (Queer Nation, New York, 1990); *queer theory*; *Queer Studies*
+@end
+
+@source *OED*, s.v. *queer*, adj. and n.
+
+--
+
+## *Queer Studies*
+
+* Hall, Donald E. & Annamarie Jagose (eds.). 2012. *The Routledge queer studies reader*. London: Routledge.
 
 ---
 
@@ -177,22 +213,15 @@ Four tools for analysing how a text persuades:
 
 ## Avoiding connotations
 
-@cards cols=3 style=header
-:: teal
-### Euphemism
-:: red
-### Dysphemism
-:: blue
-### Jargon
-:: gold
-### Register
-:: purple
-### Metaphor
-@end
+* Euphemism
+* Dysphemism
+* Jargon
+* Register
+* Metaphor
 
 --
 
-## [[Euphemism]]
+## Euphemism
 
 * A **euphemism** is chosen to avoid a word that would be taboo, upsetting, rude or face-threatening
 
@@ -222,7 +251,7 @@ Four tools for analysing how a text persuades:
 
 --
 
-## [[Dysphemism]]
+## Dysphemism
 
 * A **dysphemism** is chosen for more negative connotations than the neutral word: to offend, to shock or to amuse
 
@@ -231,6 +260,15 @@ Four tools for analysing how a text persuades:
 * finished off
 * *clankers* (robots and AI)
 @end
+
+--
+
+## *clanker*
+
+* An insult for battle droids in *Star Wars* (the game *Republic Commando*, 2005, and *The Clone Wars*)
+* Summer 2025: viral on TikTok, shouted at delivery robots, then aimed at chatbots and AI in general
+* June 2025: US Senator Ruben Gallego on his bill about automated call centres: it “makes sure you don’t have to talk to a clanker if you don’t want to”
+* 2025: people on r/MyBoyfriendIsAI who announced relationships and engagements with AI partners were widely mocked online
 
 --
 
@@ -250,7 +288,7 @@ Four tools for analysing how a text persuades:
 
 --
 
-## [[Jargon]]
+## Jargon
 
 * **Jargon** is the vocabulary of a profession or other group; to outsiders it can sound grander or more evasive than ordinary words
 
@@ -263,7 +301,7 @@ Four tools for analysing how a text persuades:
 
 --
 
-## [[Register]]
+## Register
 
 * **Register**: technical, everyday or slang; formal or informal
 
@@ -275,7 +313,7 @@ Four tools for analysing how a text persuades:
 
 --
 
-## [[Register]]
+## Register
 
 @image-left ./img/xkcd-slang.png alt="xkcd cartoon. Caption: ‘The best part of getting older is gonna be intentionally misusing slang around teenagers just to watch them squirm.’ A stick figure says ‘Oh man, that song is so pwned!’ and a smaller figure twitches." split=40 caption="Randall Munroe, *xkcd* (CC BY-NC 2.5)"
 
@@ -284,7 +322,7 @@ Four tools for analysing how a text persuades:
 
 --
 
-## [[Metaphor]]
+## Metaphor
 
 * A **metaphor** describes one area of experience in terms of another
 
@@ -296,7 +334,7 @@ Four tools for analysing how a text persuades:
 
 --
 
-## [[Metaphor]]
+## Metaphor
 
 @card
 **^^ideas are plants^^**
@@ -318,32 +356,50 @@ Communal mentality and shared responsibility are **flourishing** beliefs in many
 @card ex
 * Successful lawyers earn a lot of money, and after winning a case **he** wants to celebrate in style.
 * Any secretary you care to name will work hard for **her** pay.
-* According to disapproving church writers, the Vikings were addicted to drink, gluttony and **women**.
+* She’s **surprisingly** good with her phone for a pensioner.
+* He’s from Easterhouse, **but** he’s very well spoken.
+* He’s gay, **so** he’ll know what to wear.
+* She does her own shopping **despite** being in a wheelchair.
 @end
 
 --
 
-## Stereotype
+## Stereotype in AI images
 
-@card
-A father and his son are in a car crash. The father dies at the scene. The son is rushed to hospital, and the surgeon on duty looks at him and says, “I can’t operate on this boy. He’s my son.”
+@table widths=28,36,36
+| Prompt | Stable Diffusion images | US workforce |
+|---|---|---|
+| “judge” | 3% women | 34% women |
+| “engineer” | 1 woman in 300 images | 14% women |
+| “fast-food worker” | 70% darker skin tones | 70% White |
 
-**Who is the surgeon?**
-@end
+@source Nicoletti, Leonardo & Dina Bass, “Humans are biased. Generative AI is even worse”, *Bloomberg*, 2023
 
 ---
 
-## Most direct to least direct
+## Sunday’s front pages, 1 November 2026
+
+@table widths=30,70
+| Paper | Headline |
+|---|---|
+| *Sunday Express* | “PM ‘lets down the King’ over slavery apology” |
+| *Sunday Telegraph* | “King stands his ground on ‘sorrow’ for slavery” |
+| *Sunday Mirror* | “Heat on Charles over slavery row” |
+| *Sunday People* | “Charles under pressure” |
+
+@source BBC News, “Newspaper headlines”, 1 November 2026
+
+---
+
+## Losing your job
 
 @card ex
-* sacked
-* fired
-* let go
 * parted company by mutual consent
+* sacked
 * relieved of his duties
+* let go
+* fired
 @end
-
-@note With a neighbour: rank these. :: build
 
 ---
 
@@ -357,14 +413,16 @@ A father and his son are in a car crash. The father dies at the scene. The son i
 ## Reading
 
 * The semantics section of your LPA booklet
-* Simpson (1993)
+* Simpson (1993: 163–176)
 * Optional: Jeffries (2010), chapter 2, “Naming and describing”
 
 --
 
 @refs
 * Campbell-Kibler, Kathryn, Robert J. Podesva, Sarah J. Roberts & Andrew Wong (eds.). 2002. *Language and sexuality: Contesting meaning in theory and practice*. Stanford, CA: CSLI Publications.
+* Hall, Donald E. & Annamarie Jagose (eds.). 2012. *The Routledge queer studies reader*. London: Routledge.
 * Jeffries, Lesley. 2010. *Critical stylistics: The power of English*. Basingstoke: Palgrave Macmillan.
 * Pinker, Steven. 1994. The game of the name. *The New York Times*, 5 April 1994.
+* Nicoletti, Leonardo & Dina Bass. 2023. Humans are biased. Generative AI is even worse. *Bloomberg*.
 * Semino, Elena, Zsófia Demjén, Jane Demmen, Veronika Koller, Sheila Payne, Andrew Hardie & Paul Rayson. 2017. The online use of Violence and Journey metaphors by patients with cancer, as compared with health professionals: A mixed methods study. *BMJ Supportive & Palliative Care* 7(1). 60–66.
 * Simpson, Paul. 1993. *Language, ideology and point of view*. London: Routledge.

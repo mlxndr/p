@@ -7,6 +7,10 @@ name: Slides PDFs
 # slides at the end. Also <deck>/slides-handout.pdf: the student version
 # (no @slide nohandout or spare slides, answers blanked), two slides to
 # an A4 page, framed and numbered (scripts/handout-nup.py), for Moodle.
+# Where the deck has a handout.html (not corporate decks): <deck>/text-handout.pdf,
+# the text handout (student version, no spares), and <deck>/notes.pdf, the
+# notes in two columns (full copy), both printed by headless Chrome
+# (scripts/text-handout-pdf.js).
 #
 # - On push to main: rebuilds only the decks whose content, metadata or
 #   images changed in that push.
@@ -52,10 +56,10 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install DeckTape (uses the runner's own Chrome)
+      - name: Install DeckTape and puppeteer-core (both use the runner's own Chrome)
         env:
           PUPPETEER_SKIP_DOWNLOAD: 'true'
-        run: npm install -g decktape@3
+        run: npm install -g decktape@3 puppeteer-core@23
 
       - name: Set up Python (for the handouts)
         uses: actions/setup-python@v5
@@ -109,6 +113,12 @@ jobs:
               "http://localhost:8000/$d/?fragments=false&student=1&spares=0" \
               "$RUNNER_TEMP/${d//\//_}-student.pdf"
             python3 scripts/handout-nup.py "$RUNNER_TEMP/${d//\//_}-student.pdf" "$d/slides-handout.pdf" 2
+            if [ -f "$d/handout.html" ]; then
+              NODE_PATH="$(npm root -g)" node scripts/text-handout-pdf.js \
+                "http://localhost:8000/$d/handout.html?spares=0" "$d/text-handout.pdf" "$(which google-chrome)"
+              NODE_PATH="$(npm root -g)" node scripts/text-handout-pdf.js \
+                "http://localhost:8000/$d/handout.html?style=notes&spares=0" "$d/notes.pdf" "$(which google-chrome)"
+            fi
             echo "::endgroup::"
           done
 
@@ -117,7 +127,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A -- '*slides.pdf' '*slides-handout.pdf'
+          git add -A -- '*slides.pdf' '*slides-handout.pdf' '*/text-handout.pdf' '*/notes.pdf'
           if git diff --staged --quiet; then
             echo "No PDFs changed"
           else

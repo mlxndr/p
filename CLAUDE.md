@@ -3,7 +3,7 @@
 **Repository:** mlxndr/p
 **Purpose:** Academic presentation platform (mga.is)
 **Owner:** Marc Alexander, University of Glasgow
-**Last updated:** 2026-11-01 (phase 8: Safari printing, slides on paper (`paper=1`), WebKit print fixes; phase 6c: pilots 1a/6 and 2b/5, 2b/sets.md, label steps in @parse, [x]{italic}, the mga-slides skill; phase 6b: corporate decks in uog/, research talks in research/, 2A series in 2a/, corporate pilots, title-photo library, reference/)
+**Last updated:** 2026-11-01 (phase 8b: the text handout as a document, handout and notes styles, text-handout.pdf and notes.pdf from CI; phase 8: Safari printing, slides on paper (`paper=1`), WebKit print fixes; phase 6c: pilots 1a/6 and 2b/5, 2b/sets.md, label steps in @parse, [x]{italic}, the mga-slides skill; phase 6b: corporate decks in uog/, research talks in research/, 2A series in 2a/, corporate pilots, title-photo library, reference/)
 
 ## Overview
 
@@ -16,8 +16,12 @@ the browser. CI: `.github/workflows/build-manifest.yml` regenerates
 series index pages) from each folder's `meta.json` on push; `.github/workflows/slides-pdf.yml` exports each changed deck to
 `<deck>/slides.pdf` (DeckTape, 1920x1080, fragments shown, spares at the
 end, `pdfTheme` if set) and `<deck>/slides-handout.pdf` (the student
-version, two slides to an A4 page, via `scripts/handout-nup.py`), and
-can be run by hand to rebuild every deck after inc/ changes.
+version, two slides to an A4 page, via `scripts/handout-nup.py`), and,
+where the deck has a handout.html, `<deck>/text-handout.pdf` (the text
+handout, student version) and `<deck>/notes.pdf` (the notes in two
+columns, full copy), printed by headless Chrome with
+`scripts/text-handout-pdf.js`; it can be run by hand to rebuild every
+deck after inc/ changes.
 
 Test locally with any static server, e.g. `python3 -m http.server 8000`,
 then open `http://localhost:8000/research/icame47/` (or any deck's folder). Deployment is automatic
@@ -50,12 +54,14 @@ inc/
                             views it opens (handout sheets, slides on
                             paper, WebKit print fixes, Print bar)
   qr.js                     QR code library
-  handout.js, marked.min.js Handout rendering
+  handout.js, marked.min.js The text handout (handout.html): the deck
+                            as a document on A4 sheets (see Export)
   css/
     base.css                Core styles, menu styling, directive layouts
     fonts.css               @font-face for self-hosted WOFF2 fonts
     animations.css          Easing tokens, keyframes, Ken Burns family
-    handout.css             Print-optimised handout styles
+    handout.css             The text handout: sheets, the handout and
+                            notes styles, constructions in final state
     export.css              Export page, print bar, handout sheets
     light.css, dark.css     Colour-mode variable sets
     colourful.css           Shared structure of the Colourful themes
@@ -120,7 +126,8 @@ research/{presentation}/    Research and conference talks, e.g. research/icame47
   title.md                  OPTIONAL bespoke title slide; a deck that has
                             one keeps a data-markdown section for it
                             instead of the data-meta="title" placeholder
-  handout.html              Printable version (optional, generic)
+  handout.html              The text handout (optional, generic; loads
+                            handout.css and handout.js with ?v=8b)
   img/                      Presentation-specific images
   media/                    Videos for @video (optional)
 archive/                    Old presentations (note: their ../inc/ paths
@@ -128,6 +135,8 @@ archive/                    Old presentations (note: their ../inc/ paths
 f/                          Binary file storage (PDF/PPTX exports)
 scripts/                    build-manifest.js (CI); handout-nup.py (CI:
                             slides.pdf to an A4 handout, N per page);
+                            text-handout-pdf.js (CI: handout.html to PDF
+                            in headless Chrome, with puppeteer-core);
                             build-palettes.py (by hand: palettes.css)
 img/uog_block.png           The template's logo block (corporate mode)
 img/bg/                     Title-slide photographs for corporate decks
@@ -902,7 +911,8 @@ for every build; a handout of 1, 2, 3 or 6 slides to an A4 page, framed
 and numbered, optionally with lines for notes; the text handout
 (`handout.html`, where the deck has one); the source files (content.md,
 meta.json, title.md, every `@include`d file); links to the CI's
-`slides.pdf` and `slides-handout.pdf` where they exist. Theme and palette
+`slides.pdf`, `slides-handout.pdf`, `text-handout.pdf` and `notes.pdf`
+where they exist. Theme and palette
 are chosen on the page (default `pdfTheme`, else the deck's theme);
 corporate decks print in the template.
 
@@ -929,6 +939,38 @@ answer stops being a build and keeps its space, inline answers as a
 ruled blank. `spares=0` leaves out spare slides (`handout.html` leaves
 them out unless `?spares=1`). Hidden slides never appear. Corporate
 decks have the slide handouts but no text handout.
+
+The text handout (phase 8b; `handout.html`, `inc/handout.js`,
+`inc/css/handout.css`). Each slide is rendered with the slides' own
+expander, then merged into a document: slides under the same heading
+become one numbered section (a slide with no heading joins the section
+before); every build shows its final state (a held image, `hold id=`,
+keeps only its last frame, wherever its run ends; a list or transcript
+that grows keeps its longest version; a block repeated on a later slide,
+or retitled on the next, appears once); image slides become figures,
+numbered in reading order and captioned with their caption or else
+their alt text (so write both); consecutive figures share a row;
+`@section` is a part heading; `@refs` go at the end; menus, overlay
+copies, hidden and spare slides and speaker notes are left out, and
+`@slide nohandout` slides too in the student version (use it for
+atmosphere images and anything that only works in the room). Two
+styles: the handout (default; Equity, one 116 mm column with a 48 mm
+margin holding figure captions, sources and split-layout pictures, the
+space students write in; the student version unless `?student=0`) and
+the notes (`?style=notes`; two columns, sources as numbered notes at
+the end, compact, for revision; the full copy unless `?student=1`).
+handout.js lays the document out on its own A4 sheets, each with a
+running head (series and title) and "N of M": WebKit prints no `@page`
+margin boxes and repeats no fixed elements, and CSS columns print
+wrongly there, so the notes' two columns are two boxes the script fills
+in turn. Lists and tables split across pages, headings and part titles
+never end a page or column, a quotation keeps its attribution, a short
+line before an `@parse` analysis stays with it, answer blanks are at
+least 30 mm wide. Sheets are 1 px short in WebKit. The page adds
+`html.mga-print-ready` when laid out (wkprint and CI wait for it) and
+a bar on screen (not printed) with the other style and Print. Every
+handout.html loads handout.css and handout.js as `?v=8b`: bump it in
+all of them when either changes (Safari keeps old copies).
 
 Paper and Safari (phase 8). Slide-shaped pages (2073 x 1166 px, from
 reveal's `@page` rule) come only from Chrome's Save as PDF. Printing to

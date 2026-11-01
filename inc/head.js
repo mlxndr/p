@@ -310,7 +310,7 @@
     /* the export files carry a version in their address, so a browser
        holding an old copy (Safari kept an old export.css with a new
        export.js, phase 8) fetches the new one: change it with them */
-    window.MGA_EXPORT_V = '?v=8';
+    window.MGA_EXPORT_V = '?v=8b';
     if (X.page || X.print) h.push('<link rel="stylesheet" href="' + CSS + 'export.css' + window.MGA_EXPORT_V + '">');
     document.write(h.join('\n'));
 

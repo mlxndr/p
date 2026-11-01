@@ -179,12 +179,19 @@
 
             '<section class="ex-sec" aria-labelledby="ex-h-text" id="ex-text" hidden>' +
                 '<h2 id="ex-h-text">Text handout</h2>' +
-                '<p class="ex-desc">The slides’ text as a document, for reading and printing.</p>' +
+                '<p class="ex-desc">The slides as a document on A4: sections, figures and the final state of every build. ' +
+                    'The handout has one column and a wide margin for writing in; the notes have two columns, ' +
+                    'with sources as numbered notes, for revision.</p>' +
+                '<div class="ex-row" role="radiogroup" aria-label="Text handout style">' +
+                    '<span class="ex-label">Style</span>' +
+                    radio('tstyle', 'handout', 'Handout', true) + radio('tstyle', 'notes', 'Notes, two columns', false) +
+                '</div>' +
                 '<div class="ex-col">' +
                     check('t-student', 'Student version', true, STUDENT_NOTE) +
                     check('t-spares', 'Spare slides', false) +
                 '</div>' +
                 '<p><a class="ex-go" id="ex-go-text" target="_blank" rel="noopener">Open the text handout</a></p>' +
+                '<p class="ex-ready" id="ex-ready-text" hidden></p>' +
             '</section>' +
 
             '<section class="ex-sec" aria-labelledby="ex-h-source">' +
@@ -248,7 +255,11 @@
                 (on('h-lines') ? '&lines=1' : '') + look() +
                 (on('h-student') ? '&student=1' : '') + (on('h-spares') ? '' : '&spares=0');
             const t = [];
-            if (!on('t-student')) t.push('student=0');
+            const notes = val('tstyle') === 'notes';
+            if (notes) t.push('style=notes');
+            // the handout is the student version unless student=0; the
+            // notes are the full copy unless student=1
+            if (notes ? on('t-student') : !on('t-student')) t.push(notes ? 'student=1' : 'student=0');
             if (on('t-spares')) t.push('spares=1');
             document.getElementById('ex-go-text').href = './handout.html' + (t.length ? '?' + t.join('&') : '');
             savePrefs({ perPage: n, lines: on('h-lines') });
@@ -261,6 +272,21 @@
         exists('./slides.pdf').then(function (ok) { document.getElementById('ex-ready-slides').hidden = !ok; });
         exists('./slides-handout.pdf').then(function (ok) { document.getElementById('ex-ready-handout').hidden = !ok; });
         exists('./handout.html').then(function (ok) { document.getElementById('ex-text').hidden = !ok; });
+        Promise.all([exists('./text-handout.pdf'), exists('./notes.pdf')]).then(function (r) {
+            const files = [];
+            if (r[0]) files.push('<a href="./text-handout.pdf">text-handout.pdf</a> (the handout, student version)');
+            if (r[1]) files.push('<a href="./notes.pdf">notes.pdf</a> (the notes, full copy)');
+            const p = document.getElementById('ex-ready-text');
+            p.innerHTML = 'Ready-made: ' + files.join(' and ') + ', made each time the deck is published.';
+            p.hidden = !files.length;
+        });
+        // choosing the notes style suggests the full copy, the handout the student version
+        form.querySelectorAll('input[name="tstyle"]').forEach(function (r) {
+            r.addEventListener('change', function () {
+                const st = form.querySelector('input[name="t-student"]');
+                if (st) { st.checked = r.value === 'handout'; update(); }
+            });
+        });
 
         /* the source files */
         const files = document.getElementById('ex-files');

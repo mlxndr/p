@@ -105,6 +105,7 @@ The turned-corner card holds any markdown, here a transcript:
 ## Example Sentences
 
 * A simple sentence has one Predicator; [Bill **is** happy.]{ex} is one.
+* A [self-initiated]{italic} repair: italic in the running face.
 
 @card ex
 * He **awoke** in the night and **discovered** he **loved** grammar.
@@ -962,6 +963,13 @@ A reporter for the *Mirror of Parliament*
 
 @parse layout=leech
   [MCl (^S_NP His^M_d family^H_N) (^P_VP bought^H_V) (^O_NP a^M_d house^H_N) (^A_AvP there.^H_Av)]
+
+--
+
+## Labels on Their Own Steps
+
+@parse plain steps="class class2 brackets mh form function"
+  (^S_NP He^H_pn) (^P_VP must^M_a@class2 have^M_a@class2 read^H_V) (^O_NP some^M_d@class2 (^M@function_AjP very^M_Av angry^H_Aj) emails.^H_N)
 
 --
 

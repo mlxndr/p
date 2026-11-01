@@ -864,6 +864,25 @@ html.mga-final .reveal .md-sub .md-sub-b { margin-left: 0.25em; }
 .fa-stopwatch::after { content: '\10f2f2'; }
 .fa-analytics::before { content: '\f643'; }
 .fa-analytics::after { content: '\10f643'; }
+/* 2B Analysing Conversation topic strip (phase 6c) */
+.fa-people-carry::before { content: '\f4ce'; }
+.fa-people-carry::after { content: '\10f4ce'; }
+.fa-map-signs::before { content: '\f277'; }
+.fa-map-signs::after { content: '\10f277'; }
+.fa-comment-slash::before { content: '\f4b3'; }
+.fa-comment-slash::after { content: '\10f4b3'; }
+.fa-sign-in::before { content: '\f090'; }
+.fa-sign-in::after { content: '\10f090'; }
+.fa-random::before { content: '\f074'; }
+.fa-random::after { content: '\10f074'; }
+.fa-arrow-to-right::before { content: '\f340'; }
+.fa-arrow-to-right::after { content: '\10f340'; }
+.fa-house-leave::before { content: '\e00f'; }
+.fa-house-leave::after { content: '\10e00f'; }
+.fa-exclamation::before { content: '\f12a'; }
+.fa-exclamation::after { content: '\10f12a'; }
+.fa-tools::before { content: '\f7d9'; }
+.fa-tools::after { content: '\10f7d9'; }
 
 
 /* ===========================================
@@ -1808,6 +1827,14 @@ html body .slide-menu-button {
 .reveal .slides section:not(.title-slide) > blockquote {
     max-width: 33em;
 }
+/* the faded copy under a @transcript overlay keeps the slide's measure,
+   so its lines break where the slide's did */
+.reveal .slides section > .md-overlay-under > p,
+.reveal .slides section > .md-overlay-under > ul,
+.reveal .slides section > .md-overlay-under > ol,
+.reveal .slides section > .md-overlay-under > blockquote {
+    max-width: 33em;
+}
 
 /* Title-slide metadata tables are layout, not data: no theme's table
    rules (row hairlines, header fills) may leak into them, and they keep
@@ -1827,7 +1854,7 @@ html body .slide-menu-button {
    zoom (not transform) so layout, and therefore the measurement,
    shrinks too.
    =========================================== */
-.reveal .slides section.md-fit > :not(h1):not(h2):not(h3):not(aside):not(.md-menu) {
+.reveal .slides section.md-fit > :not(h1):not(h2):not(h3):not(aside):not(.md-menu):not(.md-morph-ghosts):not(.md-tr-leaving) {
     zoom: var(--fit, 1);
 }
 
@@ -1838,6 +1865,17 @@ html body .slide-menu-button {
 .reveal .slides section.md-fit:not(.title-slide) > ul,
 .reveal .slides section.md-fit:not(.title-slide) > ol,
 .reveal .slides section.md-fit:not(.title-slide) > blockquote {
+    max-width: calc(33em / var(--fit, 1));
+}
+
+/* the faded copy under an overlay, when its slide was shrunk */
+.reveal .slides .md-overlay-under.md-fit > :not(h1):not(h2):not(h3):not(aside):not(.md-menu) {
+    zoom: var(--fit, 1);
+}
+.reveal .slides .md-overlay-under.md-fit > p,
+.reveal .slides .md-overlay-under.md-fit > ul,
+.reveal .slides .md-overlay-under.md-fit > ol,
+.reveal .slides .md-overlay-under.md-fit > blockquote {
     max-width: calc(33em / var(--fit, 1));
 }
 
@@ -1897,6 +1935,7 @@ html:not(.corp) .reveal .slides section .md-note.md-note-float {
     border-radius: 0 8px 8px 0;
     font-style: normal;
     text-align: left;
+    z-index: 2;   /* over a @transcript overlay panel */
 }
 html:not(.corp) .reveal .slides section .md-note.md-note-float em { font-style: italic; }
 html:not(.corp) .reveal .slides section .md-note.md-note-float > p { margin: 0 !important; }
@@ -2265,6 +2304,15 @@ html.mga-final .reveal .md-strip-token .md-sub .md-sub-b { margin-left: 0.25em; 
 .reveal .md-flow { columns: var(--cols, 2); column-gap: 2em; width: 100%; }
 .reveal .md-flow li, .reveal .md-flow p, .reveal .md-flow blockquote { break-inside: avoid; }
 .reveal .md-flow > :first-child { margin-top: 0; }
+.reveal .md-flow.md-flow-list { columns: auto; }
+.reveal .md-flow.md-flow-list > ul,
+.reveal .md-flow.md-flow-list > ol {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: repeat(var(--cols, 2), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--rows, 1), auto);
+    column-gap: 2em;
+}
 
 /* ---------- @terms ---------- */
 .reveal dl.md-terms {
@@ -2498,9 +2546,11 @@ html.mga-final .reveal .md-strip-token .md-sub .md-sub-b { margin-left: 0.25em; 
     padding: inherit;
     opacity: 0.2;
     pointer-events: none;
+    z-index: 0;
 }
 .reveal .md-transcript.md-tr-overlay {
     position: absolute;
+    z-index: 1;   /* always over the copy, whatever the morph composites */
     left: 0; right: 0; top: 18%; bottom: 2%;
     margin: 0;
     padding: 0.9em 1.3em;
@@ -2514,6 +2564,9 @@ html.mga-final .reveal .md-strip-token .md-sub .md-sub-b { margin-left: 0.25em; 
    sets md-tr-arrive; between overlay slides, md-tr-hold: no movement) */
 .reveal .slides section.present.md-tr-arrive > .md-tr-overlay { animation: md-tr-up 0.6s ease both; }
 .reveal .slides section.present.md-tr-arrive > .md-overlay-under { animation: md-under-fade 0.6s ease both; }
+/* a floating note on an overlay slide waits for the panel to arrive */
+.reveal .slides section.present.md-tr-arrive > .md-note-float { animation: md-note-late 0.6s ease both; }
+@keyframes md-note-late { 0%, 80% { opacity: 0; } to { opacity: 1; } }
 @keyframes md-tr-up { from { transform: translateY(110%); } to { transform: none; } }
 @keyframes md-under-fade { from { opacity: 1; } to { opacity: 0.2; } }
 /* leaving for a slide that is not an overlay: the panel slides down in a
@@ -3246,3 +3299,7 @@ html.mga-final .reveal td .md-ins { color: inherit; }
     font-family: var(--r-main-font);
     color: var(--r-subtle-color, inherit);
 }
+
+/* [x]{italic}: italic in the running face (the forms that set *x* as a
+   cited form leave this alone) */
+.reveal .md-it { font-style: italic; }

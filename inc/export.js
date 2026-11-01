@@ -106,7 +106,7 @@
                             esc(t.name) + '</option>';
                     }).join('') + '</optgroup>';
                 }).join('') + '</select></label>' +
-                '<label class="ex-field"><span>Palette <span class="ex-note">(forms)</span></span><select name="palette">' +
+                '<label class="ex-field"><span>Palette <span class="ex-note">forms</span></span><select name="palette">' +
                 '<option value="">The form’s own</option>' +
                 ['light', 'dark'].map(function (m) {
                     return '<optgroup label="' + (m === 'light' ? 'Light' : 'Dark') + '">' +

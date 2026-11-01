@@ -644,6 +644,12 @@
                 literal();
                 continue;
             }
+            if (brace && brace[1] === 'italic' && content.trim()) {
+                // [a term]{italic}: italic in the running face, where the
+                // form sets *x* as a cited form (Attested Forms)
+                s = before + tag('<span class="md-it">') + content + tag('</span>') + after.slice(brace[0].length);
+                continue;
+            }
             if (brace && brace[1] === 'ex' && content.trim()) {
                 // [an example sentence]{ex}: the example face, inline
                 s = before + tag('<span class="md-exs">') +
@@ -921,8 +927,10 @@
        name in small caps, after | a smaller second line */
     function seriesHtml(series, cls) {
         const sp = String(series).split('|');
-        return '<div class="md-series ' + cls + '"><span class="md-series-name">' + esc(sp[0].trim()) + '</span>' +
-            (sp.length > 1 ? '<span class="md-series-sub">' + esc(sp.slice(1).join('|').trim()) + '</span>' : '') + '</div>';
+        // ^^x^^ is small caps here too, as on the title slide (1^^A^^)
+        const sc = t => esc(t).replace(/\^\^([^^]+)\^\^/g, '<span class="md-sc">$1</span>');
+        return '<div class="md-series ' + cls + '"><span class="md-series-name">' + sc(sp[0].trim()) + '</span>' +
+            (sp.length > 1 ? '<span class="md-series-sub">' + sc(sp.slice(1).join('|').trim()) + '</span>' : '') + '</div>';
     }
     window.mgaSeriesHtml = seriesHtml;
 
@@ -2216,6 +2224,9 @@
         C: 'complement', Cs: 'complement', Co: 'complement', A: 'adverbial' };
     const PZ_CLAUSE = /^(MCl|SCl|NCl|CCl|RCl|ACl|Cl|Se)(?=$|[\^_!])/;
     const PZ_PAIRS = { '(': ')', '[': ']', '{': '}', '<': '>' };
+    // a tier, or a later stage of one (class2: word classes added in a
+    // second step), for steps=, show= and a label's own @tier
+    const pzTierOk = function (t) { const m = /^([a-z]+)([2-9])?$/.exec(t); return !!m && PZ_TIERS.indexOf(m[1]) !== -1; };
 
     function pzLabels(spec) {
         // "^S_NP!" -> { above: 'S', below: 'NP', hl: true }; ^ and _ in any order
@@ -2224,8 +2235,11 @@
         const re = /([\^_])((?:\\.|[^\^_])*)/g;
         let m;
         while ((m = re.exec(spec)) !== null) {
-            const v = m[2].replace(/\\(.)/g, '$1');
-            if (m[1] === '^') out.above = v; else out.below = v;
+            let v = m[2].replace(/\\(.)/g, '$1'), tier = '';
+            // a label may name the step it arrives on: a^_a@class2, (^M@function_AjP
+            const at = /^(.*?)@([a-z]+[2-9]?)$/.exec(v);
+            if (at) { v = at[1]; tier = at[2]; }
+            if (m[1] === '^') { out.above = v; out.aboveTier = tier; } else { out.below = v; out.belowTier = tier; }
         }
         return out;
     }
@@ -2249,7 +2263,7 @@
                 if (ch === '(') {
                     if (/^[\^_!]/.test(rest)) {
                         const l = pzLabels(rest);
-                        col = { kind: 'open', ch: ch, above: l.above, below: l.below, hl: l.hl ? ++hlCount : 0 };
+                        col = { kind: 'open', ch: ch, above: l.above, below: l.below, aboveTier: l.aboveTier, belowTier: l.belowTier, hl: l.hl ? ++hlCount : 0 };
                         rest = '';
                     } else col = { kind: 'open', ch: ch, above: '', below: '', hl: 0 };
                 } else {
@@ -2258,7 +2272,7 @@
                     if (cm) { inline = cm[1]; rest = rest.slice(cm[1].length); }
                     let l = { above: '', below: '', hl: false };
                     if (/^[\^_!]/.test(rest)) { l = pzLabels(rest); rest = ''; }
-                    col = { kind: 'open', ch: ch, inline: inline, above: l.above, below: l.below, hl: l.hl ? ++hlCount : 0 };
+                    col = { kind: 'open', ch: ch, inline: inline, above: l.above, below: l.below, aboveTier: l.aboveTier, belowTier: l.belowTier, hl: l.hl ? ++hlCount : 0 };
                 }
                 col.hls = hls();
                 stack.push(col);
@@ -2277,7 +2291,7 @@
                 const lm = /^((?:\\.|[^\^_])*)(.*)$/.exec(tok);
                 const l = pzLabels(lm[2]);
                 if (lm[1] || l.above || l.below) {
-                    cur().push({ kind: 'word', text: lm[1], above: l.above, below: l.below, dim: dimHere, hls: hls() });
+                    cur().push({ kind: 'word', text: lm[1], above: l.above, below: l.below, aboveTier: l.aboveTier, belowTier: l.belowTier, dim: dimHere, hls: hls() });
                 }
             }
             for (const c of closers) {
@@ -2298,7 +2312,7 @@
             const groups = d.opts.steps || [];
             groups.forEach(function (g) {
                 g.forEach(function (t) {
-                    if (PZ_TIERS.indexOf(t) === -1) api.fail('`' + esc(t) + '` is not a tier. Tiers: ' + PZ_TIERS.join(', ') + ' (+ joins two into one click).');
+                    if (!pzTierOk(t)) api.fail('`' + esc(t) + '` is not a tier. Tiers: ' + PZ_TIERS.join(', ') + ' (+ joins two into one click; class2 and the like are a later stage of a tier, for labels written word^_a@class2).');
                 });
             });
             if (d.flags.indexOf('paired') !== -1 && !groups.length) api.fail('`paired` brings in the list before the analysis with its steps, so it needs steps="...".');
@@ -2318,14 +2332,17 @@
             parsed.forEach(function (lines) {
                 lines.forEach(function (line) {
                     line.forEach(function (c) {
-                        if (c.kind === 'word') { if (c.below) used['class'] = 1; if (c.above) used.mh = 1; }
+                        [c.aboveTier, c.belowTier].forEach(function (t) {
+                            if (t && !pzTierOk(t)) api.fail('`@' + esc(t) + '` on a label is not a tier. Tiers: ' + PZ_TIERS.join(', ') + ', or a later stage such as class2.');
+                        });
+                        if (c.kind === 'word') { if (c.below) used[c.belowTier || 'class'] = 1; if (c.above) used[c.aboveTier || 'mh'] = 1; }
                         else if (c.ch === '(' || c.ch === ')') {
                             used.brackets = 1;
-                            if (c.below) used.form = 1;
-                            if (c.above) used[PZ_FN[c.above] ? 'function' : 'mh'] = 1;
+                            if (c.below) used[c.belowTier || 'form'] = 1;
+                            if (c.above) used[c.aboveTier || (PZ_FN[c.above] ? 'function' : 'mh')] = 1;
                         } else {
                             used[c.ch === '{' || c.ch === '}' ? 'sentence' : 'clauses'] = 1;
-                            if (c.above) used[PZ_FN[c.above] ? 'function' : 'mh'] = 1;
+                            if (c.above) used[c.aboveTier || (PZ_FN[c.above] ? 'function' : 'mh')] = 1;
                         }
                         if (c.hl) used.highlight = 1;
                     });
@@ -2346,7 +2363,7 @@
             // (show=words: the words alone, every tier reserved)
             const shown = d.opts.show ? String(d.opts.show).split(/[\s,+]+/).filter(function (t) { return t && t !== 'words'; }) : null;
             if (shown) shown.forEach(function (t) {
-                if (PZ_TIERS.indexOf(t) === -1) api.fail('`' + esc(t) + '` in show= is not a tier. Tiers: ' + PZ_TIERS.join(', ') + '.');
+                if (!pzTierOk(t)) api.fail('`' + esc(t) + '` in show= is not a tier. Tiers: ' + PZ_TIERS.join(', ') + '.');
             });
             const st = function (tier) {
                 if (tier in stepOf) return ' fragment" data-md-step="' + stepOf[tier];
@@ -2363,7 +2380,7 @@
             const above = function (c) {
                 if (!c.above) return lab('pz-t', 'mh', '');
                 const fn = PZ_FN[c.above];
-                return fn ? lab('pz-t pz-fn' + (plain ? ' pz-plain' : ' ' + fn), 'function', c.above) : lab('pz-t pz-mh', 'mh', c.above);
+                return fn ? lab('pz-t pz-fn' + (plain ? ' pz-plain' : ' ' + fn), c.aboveTier || 'function', c.above) : lab('pz-t pz-mh', c.aboveTier || 'mh', c.above);
             };
             const cls = ['pz'];
             if (d.opts.layout === 'leech') cls.push('pz-leech');
@@ -2386,11 +2403,11 @@
                             const mid = '<span class="pz-m pz-br' + (round ? '' : ' pz-cl') + st(tier) + '">' +
                                 (c.inline ? '<span class="pz-inl">' + esc(c.inline) + '</span>' : '') + esc(c.ch) + '</span>';
                             cluster += '<span class="pz-c pz-open' + (round ? '' : ' pz-sq') + '">' + above(c) + mid +
-                                lab('pz-b pz-form', round ? 'form' : tier, c.below) + band(c, nx, pv) + '</span>';
+                                lab('pz-b pz-form', c.belowTier || (round ? 'form' : tier), c.below) + band(c, nx, pv) + '</span>';
                         } else if (c.kind === 'word') {
                             cluster += '<span class="pz-c pz-word">' + above(c) +
                                 '<span class="pz-m pz-w' + (c.dim ? ' pz-dim' : '') + '">' + (c.text ? pzWord(c.text) : '&nbsp;') + '</span>' +
-                                lab('pz-b pz-class', 'class', c.below) + band(c, nx, pv) + '</span>';
+                                lab('pz-b pz-class', c.belowTier || 'class', c.below) + band(c, nx, pv) + '</span>';
                         } else {
                             const round = c.ch === ')';
                             cluster += '<span class="pz-c pz-close' + (round ? '' : ' pz-sq') + '"><span class="pz-t pz-empty"></span>' +
@@ -2940,7 +2957,7 @@
     function autofitTextSlides() {
         const H = (window.Reveal && Reveal.getConfig) ? Reveal.getConfig().height : 1080;
         const STEP = 0.04, FLOOR_USUAL = 0.72;
-        const skip = '.title-slide, .md-fill, .md-section, .directive-error-slide, [data-autofit="off"]';
+        const skip = '.title-slide, .md-fill, .md-section, .directive-error-slide, .md-tr-overlay-slide, [data-autofit="off"]';
         document.querySelectorAll('.reveal .slides section').forEach(function (section) {
             if (section.querySelector('section')) return;          // a vertical stack
             if (section.matches(skip)) return;
@@ -2984,6 +3001,13 @@
                 }
             }
             restore();
+        });
+        // the faded copy under a @transcript overlay shrinks as its slide did
+        document.querySelectorAll('.reveal .slides .md-overlay-under').forEach(function (u) {
+            const src = u.mgaSource;
+            const fit = src && src.classList.contains('md-fit') ? src.style.getPropertyValue('--fit') : '';
+            u.classList.toggle('md-fit', !!fit);
+            if (fit) u.style.setProperty('--fit', fit); else u.style.removeProperty('--fit');
         });
     }
     const autofitWarned = {};
@@ -3134,6 +3158,26 @@
                         if (/^(UL|OL)$/.test(el.tagName)) { el.querySelectorAll('li').forEach(function (li) { li.classList.add('fragment'); }); return; }
                         if (el.classList.contains('md-fill-inner')) { walk(el); return; }
                         if (el.matches('.md-table-build')) return;
+                        // a block whose text is all in lists (@columns
+                        // flowing a list): its items build one by one, and
+                        // the block takes no click of its own
+                        const lists = Array.prototype.filter.call(el.querySelectorAll('ul, ol'), function (l) { return !l.parentElement.closest('li'); });
+                        if (lists.length && el.textContent.replace(/\s+/g, '') === lists.map(function (l) { return l.textContent; }).join('').replace(/\s+/g, '')) {
+                            el.querySelectorAll('li').forEach(function (li) { li.classList.add('fragment'); });
+                            return;
+                        }
+                        // likewise a block whose every word is in builds of
+                        // its own (@cards build): nothing would show on its click
+                        if (el.querySelector('.fragment')) {
+                            const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+                            let bare = false;
+                            for (let t = tw.nextNode(); t && !bare; t = tw.nextNode()) {
+                                if (!t.nodeValue.trim()) continue;
+                                const f = t.parentElement.closest('.fragment');
+                                if (!f || !el.contains(f)) bare = true;
+                            }
+                            if (!bare) return;
+                        }
                         // a block holding builds of its own (a table of
                         // answers) arrives first, then its builds in turn
                         el.classList.add('fragment');
@@ -3289,6 +3333,12 @@
             under.querySelectorAll('[id]').forEach(function (e) { e.removeAttribute('id'); });
             under.querySelectorAll('.fragment').forEach(function (e) { e.classList.remove('fragment'); });
             under.querySelectorAll('[data-id]').forEach(function (e) { e.removeAttribute('data-id'); });
+            // each element of the copy keeps one id through a run of overlay
+            // slides, so the morph between them holds the whole copy still
+            // every element of the copy, not only its blocks: reveal's own
+            // matching by text then has nothing left to miss (a list item
+            // left unmatched faded in again on every overlay slide)
+            Array.prototype.forEach.call(under.querySelectorAll('*'), function (c, k) { c.setAttribute('data-id', 'md-tr-under-' + j + '-' + k); });
             sec.insertBefore(under, sec.firstChild);
         });
     }
@@ -3345,8 +3395,12 @@
             const layer = document.createElement('div');
             layer.className = 'md-tr-leaving' + (back ? ' md-tr-back' : '');
             layer.setAttribute('aria-hidden', 'true');
-            ['padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'font-size', 'line-height', 'text-align']
+            ['padding-top', 'padding-right', 'padding-bottom', 'padding-left', 'font-size', 'text-align']
                 .forEach(function (k) { layer.style.setProperty(k, cs.getPropertyValue(k)); });
+            // line height as a ratio: a computed value is in pixels, which
+            // smaller text inside (card text) would inherit unscaled
+            const lh = parseFloat(cs.lineHeight), fs = parseFloat(cs.fontSize);
+            if (lh && fs) layer.style.lineHeight = String(lh / fs);
             if (under && !back) {
                 // the slide's own ground, and the copy's own colours (the
                 // incoming slide may be dark)
@@ -3369,7 +3423,7 @@
                     if (d) ['color', 'font-family', 'font-weight', 'font-variant-caps', 'letter-spacing']
                         .forEach(function (key) { d.style.setProperty(key, cs2.getPropertyValue(key)); });
                 });
-                [u].concat(Array.prototype.slice.call(u.querySelectorAll('[data-auto-animate-target]'))).forEach(function (x) {
+                [u].concat(Array.prototype.slice.call(u.querySelectorAll('[data-id], [data-auto-animate-target]'))).forEach(function (x) {
                     x.removeAttribute('data-id'); x.removeAttribute('data-auto-animate-target');
                 });
                 layer.appendChild(u);
@@ -3512,11 +3566,28 @@
         const inBuild = function (el, scope) { const f = el.closest('.fragment'); return f && scope.contains(f); };
         const pairs = this.getAutoAnimatePairs(from, to).filter(function (p) {
             if (p.to.closest('.md-mp-gone') || p.from.closest('.md-mp-gone')) return false;
+            // the faded copy under an overlay morphs only with another copy;
+            // matched by text with the slide it copies, its blocks were
+            // stretched between the two (the copy fades in and out itself)
+            if (!p.from.closest('.md-overlay-under') !== !p.to.closest('.md-overlay-under')) return false;
             if (hiddenBuild(p.to, to) && !inBuild(p.from, from)) return false;
             return true;
         });
+        // reveal measures by offsetLeft/offsetTop (center: false), which
+        // are relative to the nearest positioned ancestor: an item in a
+        // menu centred absolutely (@menu ... centre) then seemed not to
+        // move. Such pairs are measured against their slide instead.
+        const slideOf = function (el) { return el.closest('section'); };
+        const measure = function (el) {
+            const sec = slideOf(el), sr = sec.getBoundingClientRect(), r = el.getBoundingClientRect();
+            const k = sec.offsetWidth ? sr.width / sec.offsetWidth : 1, S = window.Reveal ? Reveal.getScale() : 1;
+            return { x: (r.left - sr.left) / k * S, y: (r.top - sr.top) / k * S, width: r.width / k * S, height: r.height / k * S };
+        };
         pairs.forEach(function (p) {
             if (p.to.matches('.md-word, .md-mp, .md-loose')) p.options = Object.assign({}, p.options, { scale: false });
+            if (p.from.offsetParent !== slideOf(p.from) || p.to.offsetParent !== slideOf(p.to)) {
+                p.options = Object.assign({}, p.options, { measure: measure });
+            }
         });
         lastMorph = { from: from, to: to, pairs: pairs };
         return pairs;
@@ -3525,8 +3596,14 @@
 
     const GHOST_SKIP = '.md-pause, aside, .notes, .visually-hidden, .md-alt-missing, .md-video-cue, .md-mark-step, ' +
         'script, style, .md-morph-ghosts, .fragment:not(.visible)';
+    // the ghost leaves its siblings behind, so rules that place it by a
+    // sibling (a heading under a lit menu item: its stem, no rule beneath)
+    // no longer reach it: its borders and padding go with it
     const GHOST_STYLES = ['font-family', 'font-size', 'font-weight', 'font-style', 'font-variant-caps', 'line-height',
-        'letter-spacing', 'color', 'text-align', 'text-transform', 'background-color', 'border-radius'];
+        'letter-spacing', 'color', 'text-align', 'text-transform', 'background-color', 'border-radius'].concat(
+        ['top', 'right', 'bottom', 'left'].reduce(function (a, side) {
+            return a.concat(['border-' + side + '-width', 'border-' + side + '-style', 'border-' + side + '-color', 'padding-' + side]);
+        }, []));
     function clearGhosts() {
         document.querySelectorAll('.reveal .md-morph-ghosts').forEach(function (g) { g.remove(); });
     }
@@ -3575,10 +3652,17 @@
                 g.style.position = 'absolute';
                 g.style.boxSizing = 'border-box';
                 g.style.margin = '0';
-                g.style.left = ((r.left - fr.left) / scale) + 'px';
-                g.style.top = ((r.top - fr.top) / scale) + 'px';
-                g.style.width = (r.width / scale) + 'px';
-                g.style.height = (r.height / scale) + 'px';
+                // a block shrunk by autofit (zoom) keeps its zoom; its box
+                // is then given in its own, zoomed, pixels
+                const z = parseFloat(cs.zoom) || 1;
+                if (z !== 1) g.style.zoom = z;
+                g.style.left = ((r.left - fr.left) / scale / z) + 'px';
+                g.style.top = ((r.top - fr.top) / scale / z) + 'px';
+                g.style.width = (r.width / scale / z) + 'px';
+                g.style.height = (r.height / scale / z) + 'px';
+                // CSS columns at a fixed height fill one column at a time in
+                // some browsers: let a multi-column ghost keep its own height
+                if (cs.columnCount !== 'auto') g.style.height = 'auto';
                 g.style.transform = 'none';
                 layer.appendChild(top);
             });
@@ -3600,8 +3684,10 @@
             const h = menu.nextElementSibling;
             if (!h || !/^H[1-3]$/.test(h.tagName)) return;
             h.classList.add('md-menu-head');
-            h.setAttribute('data-id', 'md-menu-head-' + menu.getAttribute('data-md-menu'));
-            if (menu.getAttribute('data-md-heading') === 'build') h.classList.add('fragment');
+            // the copy under an overlay keeps its own ids (buildTranscriptOverlays)
+            if (!menu.closest('.md-overlay-under')) h.setAttribute('data-id', 'md-menu-head-' + menu.getAttribute('data-md-menu'));
+            // heading=build makes a click, except in the static copy under an overlay
+            if (menu.getAttribute('data-md-heading') === 'build' && !menu.closest('.md-overlay-under')) h.classList.add('fragment');
         });
     }
     function positionMenuHeads() {
@@ -4285,6 +4371,21 @@
         });
     }
 
+    /* @columns cols=N flowing one list: the list is laid out as a grid
+       filled down each column (md-flow-list), not as CSS columns, so the
+       columns start level in every browser (Safari kept a gap at the top
+       of the second) and a morph ghost of the block keeps its layout */
+    function flowLists() {
+        document.querySelectorAll('.reveal .slides .md-flow').forEach(function (f) {
+            const kids = Array.prototype.filter.call(f.children, function (c) { return !c.classList.contains('md-pause'); });
+            if (kids.length !== 1 || !/^(UL|OL)$/.test(kids[0].tagName)) return;
+            const cols = parseInt(getComputedStyle(f).getPropertyValue('--cols'), 10) || parseInt(f.style.getPropertyValue('--cols'), 10) || 2;
+            const n = kids[0].querySelectorAll(':scope > li').length;
+            f.classList.add('md-flow-list');
+            f.style.setProperty('--rows', Math.max(1, Math.ceil(n / cols)));
+        });
+    }
+
     window.MgaBuilds = {
         id: 'mga-builds',
         init: function (deck) {
@@ -4296,6 +4397,7 @@
             wireTranscriptOverlays(deck);
             markMenuHeads();
             linkMorphSlides();
+            flowLists();
             applyBuilds();
             wireAutoBuilds(deck);
             wireMarks(deck);

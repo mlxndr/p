@@ -3,7 +3,7 @@
 **Repository:** mlxndr/p
 **Purpose:** Academic presentation platform (mga.is)
 **Owner:** Marc Alexander, University of Glasgow
-**Last updated:** 2026-11-01 (phase 6b: corporate decks in uog/, research talks in research/, 2A series in 2a/, corporate pilots, title-photo library, reference/)
+**Last updated:** 2026-11-01 (phase 6c: pilots 1a/6 and 2b/5, 2b/sets.md, label steps in @parse, [x]{italic}, the mga-slides skill; phase 6b: corporate decks in uog/, research talks in research/, 2A series in 2a/, corporate pilots, title-photo library, reference/)
 
 ## Overview
 
@@ -78,7 +78,10 @@ inc/
                             (1A, week 8), 2b/3; laid out as a presentation
                             folder below, with ../../inc/ in index.html and
                             handout.html; "unlisted": true keeps them off
-                            the landing page
+                            the landing page. A series folder may hold
+                            files its lectures share: 2b/sets.md (the
+                            eleven conversation topics, a @set with
+                            icons), pulled in with @include ../sets.md
 2a/{series}/{n}/            The 2A series one folder further down (moved
                             1 Nov 2026): 2a/words/2 (English Words),
                             2a/sol/3 (Story of Linguistics), with
@@ -254,7 +257,9 @@ Slide modifiers (expand to classes; combine flags freely):
                             reading order (paragraphs, h3s, tables, list
                             items one by one); a block with builds of its
                             own (a table of answers) arrives, then those
-                            builds; menus and source lines stay put
+                            builds; a block that is only a list (@columns
+                            flowing one) takes no click of its own; menus
+                            and source lines stay put
   @slide morph              auto-animate from the slide before (written on
                             this slide only); words: every word a piece
                             (words=loose ignores punctuation and case);
@@ -437,7 +442,9 @@ by @end or the end of the slide):
   foot), answer, build. A first line [[TAG]]{colour} becomes the card's
   tag.
   @columns is @cards with style=plain by default; @columns cols=2 with no
-  `::` lines flows the content into CSS columns (cols only).
+  `::` lines flows the content into CSS columns (cols only); a single
+  list is laid out filling each column in turn (md-flow-list, a grid),
+  so the columns start level in every browser.
   style=bar: the card colour fills a heading bar. style=header: the colour
   fills a rounded header holding the ###, centred, and the text sits
   below it with no box. style=strip: two cards, the
@@ -524,6 +531,10 @@ Clause and phrase analysis (one item line per analysed line):
     [MCl (^S_NP His^M_d family^H_N) (^P_VP bought^H_V) (^O_NP a^M_d house^H_N)]
   word^A_B          A above the word, B below it (either may be empty:
                     has^_a, Bob^H_)
+  must^M_a@class2   a label that arrives on another step: @ and a tier,
+                    or a later stage of one (class2, mh2 ...) named in
+                    steps= (steps="class class2 brackets"); (^M@function_AjP
+                    puts a phrase's M on the functions' click
   (^S_NP ... )      a phrase: function above, form below, at the bracket;
                     (^P_VP! ...) also takes the highlight band
   [MCl ... ]        a clause, its label inline before the bracket
@@ -581,6 +592,8 @@ straight after a closing bracket styles the bracketed text.
   ==x==            highlight (--r-highlight; light-gold by default)
   [x]{name}        text in a palette colour; {accent} = the theme accent
   [x]{ex}          an example sentence, in the form's example face
+  [x]{italic}      italic in the running face (Attested Forms sets
+                   *x* as a cited form; this is for a term or emphasis)
   [S x]            grammar function: S P O Od Oi C Cs Co A cj, then a
                    space. Colour at the text's own weight (bold with
                    **[S x]**); Od/Oi take the object colour, Cs/Co the
@@ -1101,12 +1114,17 @@ any of them may be used: add the codepoint pair in base.css
 
 ## Conventions for AI assistants
 
+- Converting or writing a deck: the mga-slides skill carries the method
+  (sources, converters in the build folder's phase6/tools/ and
+  phase6b/tools/, the checks, meta.json per series, copying into the
+  repository). This file stays authoritative for syntax.
 - Converting a deck: reproduce the original, then list at the end of the
   report the slides that would work better with another construction,
   with one line each on what it would change for the room. Revising a
   deck: propose those changes first and build once Marc agrees. Never
   change what a slide says, only how it is shown. Strong constructions
-  to offer: @parse steps (words never move) instead of copied slides
+  to offer: @parse steps (words never move; the whole analysis on one
+  slide, a click per stage, as in 1a/6) instead of copied slides
   with labels added; @marks and @zoom instead of annotated screenshots;
   {++ -- ~~ ==} inline changes and {answer} on one slide instead of
   slide runs; @set with @menu for orientation in long topics; morpheme

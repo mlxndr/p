@@ -206,6 +206,17 @@ blockquote {
 .md-bg-navy { background: #0D2F61; color: #fff; } .md-bg-purple { background: #8A50AE; color: #fff; }
 .md-bg-pink { background: #AA3B73; color: #fff; } .md-bg-grey { background: #5F6061; color: #fff; }
 .md-bg-black { background: #111; color: #fff; }
+/* the deep partners (as --p-NAME-deep: 72% of the colour, mixed with black) */
+.md-bg-red-deep { background: color-mix(in oklab, #BB3339 72%, black); color: #fff; } .md-c-red-deep { color: color-mix(in oklab, #BB3339 72%, black); }
+.md-bg-orange-deep { background: color-mix(in oklab, #8C5300 72%, black); color: #fff; } .md-c-orange-deep { color: color-mix(in oklab, #8C5300 72%, black); }
+.md-bg-gold-deep { background: color-mix(in oklab, #7B6A00 72%, black); color: #fff; } .md-c-gold-deep { color: color-mix(in oklab, #7B6A00 72%, black); }
+.md-bg-green-deep { background: color-mix(in oklab, #346704 72%, black); color: #fff; } .md-c-green-deep { color: color-mix(in oklab, #346704 72%, black); }
+.md-bg-teal-deep { background: color-mix(in oklab, #005F5C 72%, black); color: #fff; } .md-c-teal-deep { color: color-mix(in oklab, #005F5C 72%, black); }
+.md-bg-blue-deep { background: color-mix(in oklab, #333ECE 72%, black); color: #fff; } .md-c-blue-deep { color: color-mix(in oklab, #333ECE 72%, black); }
+.md-bg-navy-deep { background: color-mix(in oklab, #0D2F61 72%, black); color: #fff; } .md-c-navy-deep { color: color-mix(in oklab, #0D2F61 72%, black); }
+.md-bg-purple-deep { background: color-mix(in oklab, #8A50AE 72%, black); color: #fff; } .md-c-purple-deep { color: color-mix(in oklab, #8A50AE 72%, black); }
+.md-bg-pink-deep { background: color-mix(in oklab, #AA3B73 72%, black); color: #fff; } .md-c-pink-deep { color: color-mix(in oklab, #AA3B73 72%, black); }
+.md-bg-grey-deep { background: color-mix(in oklab, #5F6061 72%, black); color: #fff; } .md-c-grey-deep { color: color-mix(in oklab, #5F6061 72%, black); }
 .md-bg-light-red { background: #FFCAC7; } .md-bg-light-orange { background: #FBD5B0; }
 .md-bg-light-gold { background: #F3E3A2; } .md-bg-light-green { background: #CAE9BB; }
 .md-bg-light-teal { background: #B3E9E5; } .md-bg-light-blue { background: #D2DAFF; }
@@ -363,3 +374,5 @@ video.md-video { display: block; max-width: 60%; height: auto; margin: 0.5em 0; 
 .md-slip.md-ex-card ul { list-style: none; padding-left: 0; }
 .md-slip.md-ex-card li li { font-family: inherit; color: #555; }
 .md-note.md-note-float { position: static; }
+
+.md-it { font-style: italic; }

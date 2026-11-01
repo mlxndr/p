@@ -87,12 +87,6 @@
         "ht",
         "uog"
       ]
-    },
-    {
-      "dirName": "sol"
-    },
-    {
-      "dirName": "words"
     }
   ],
   "series": {
@@ -104,6 +98,21 @@
         "date": "Week 4",
         "theme": "plate",
         "palette": "terracotta",
+        "lockTheme": true,
+        "unlisted": true,
+        "transition": "fade",
+        "logos": [
+          "uog"
+        ],
+        "closing": false
+      },
+      {
+        "dirName": "1a/6",
+        "title": "Structure: Putting It All Together",
+        "series": "English Language & Linguistics 1^^A^^ | Meaning and Structure",
+        "date": "Week 7",
+        "theme": "plate",
+        "palette": "slate",
         "lockTheme": true,
         "unlisted": true,
         "transition": "fade",
@@ -134,6 +143,23 @@
         "date": "Week 10",
         "theme": "plate",
         "palette": "burgundy",
+        "lockTheme": true,
+        "unlisted": true,
+        "transition": "fade",
+        "logos": [
+          "uog"
+        ],
+        "closing": false
+      }
+    ],
+    "1a/lpa": [
+      {
+        "dirName": "1a/lpa/7",
+        "title": "Semantics",
+        "series": "English Language & Linguistics 1^^A^^ | Language, Power and Society",
+        "date": "Week 7",
+        "theme": "plate",
+        "palette": "silver-claret",
         "lockTheme": true,
         "unlisted": true,
         "transition": "fade",
@@ -202,6 +228,22 @@
         "title": "Faces and Threats",
         "series": "English Language & Linguistics 2^^B^^ | Analysing Conversation",
         "date": "Week 3",
+        "logos": [
+          "uog"
+        ],
+        "theme": "attested",
+        "palette": "silver-claret",
+        "lockTheme": true,
+        "transition": "fade",
+        "unlisted": true,
+        "closing": false
+      },
+      {
+        "dirName": "2b/5",
+        "title": "Conversation 2",
+        "subtitle": "Starts, Ends, and Errors",
+        "series": "English Language & Linguistics 2^^B^^ | Analysing Conversation",
+        "date": "Week 5",
         "logos": [
           "uog"
         ],

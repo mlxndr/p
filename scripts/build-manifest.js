@@ -53,7 +53,7 @@ const presentations = top
 
 // Every deck in a series folder, unlisted ones included, for the series
 // index pages (inc/series.js): { "uog": [...], "2a/words": [...] }.
-// Numbered folders (1a/7) sort by number; named ones (uog/20260819-ets)
+// Numbered folders (1a/7, 1a/6b) sort by number; named ones (uog/20260819-ets)
 // newest first, since they start with the date.
 const series = {};
 const collect = (rel, depth) => {
@@ -62,8 +62,10 @@ const collect = (rel, depth) => {
     const subs = kids.filter(d => isDeck(path.join(rootDir, d)));
     if (subs.length) {
         const leaf = d => d.split('/').pop();
-        const numbered = subs.every(d => /^\d+$/.test(leaf(d)));
-        subs.sort((a, b) => numbered ? leaf(a) - leaf(b) : leaf(b).localeCompare(leaf(a)));
+        // a lecture number may carry a letter (1a/6b, a variant beside 1a/6)
+        const numbered = subs.every(d => /^\d{1,3}[a-z]?$/.test(leaf(d)));
+        const natural = (a, b) => leaf(a).localeCompare(leaf(b), 'en', { numeric: true });
+        subs.sort((a, b) => numbered ? natural(a, b) : natural(b, a));
         series[rel] = subs.map(readMeta);
     }
     kids.forEach(d => collect(d, depth + 1));

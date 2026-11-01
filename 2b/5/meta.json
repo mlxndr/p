@@ -1,0 +1,15 @@
+{
+  "title": "Conversation 2",
+  "subtitle": "Starts, Ends, and Errors",
+  "series": "English Language & Linguistics 2^^B^^ | Analysing Conversation",
+  "date": "Week 5",
+  "logos": [
+    "uog"
+  ],
+  "theme": "attested",
+  "palette": "silver-claret",
+  "lockTheme": true,
+  "transition": "fade",
+  "unlisted": true,
+  "closing": false
+}

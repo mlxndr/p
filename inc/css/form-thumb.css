@@ -464,6 +464,8 @@ html.pal-dark .reveal .slides section > .md-menu-strip:not(.md-menu-centre):has(
     margin-left: calc(-1 * var(--tb-tabin));
     column-gap: 24px;
 }
+/* room for the arrow between cards (base.css draws it in the gap) */
+.reveal .slides section > .md-cards.md-arrows:not(.md-stack):not(.md-style-stat):not(.md-style-strip) { column-gap: 2.2em; }
 .reveal .md-style-box .md-card,
 .reveal .md-style-plain .md-card,
 .reveal .md-style-bar .md-card {
@@ -794,6 +796,7 @@ html.pal-dark .reveal .md-slip {
     height: 100%;
     top: 0;
     transform: none;
+    translate: none;
 }
 .reveal .slides section.md-centred:has(> h2) > h2,
 .reveal .slides section.md-statement:has(> h2) > h2 {
@@ -822,3 +825,47 @@ html.pal-dark .reveal .md-menu-labels .md-menu-label { color: var(--set-light, v
     background: color-mix(in srgb, var(--pal-card-fold) 45%, var(--pal-card));
     color: var(--pal-card-ink);
 }
+
+/* Menu tabs and tags used as headings (### [[Free]]) are drawn as the same
+   tab the heading ribbon becomes (the set's light colour, the icon first,
+   rounded corners), not as arrowed ribbons: what the room sees in the
+   contents is what it later sees at the head of each slide */
+.reveal .md-menu-tabs .md-menu-item,
+.reveal .slides section h3 > .md-tag.md-ribbon {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    gap: 0.45em;
+    margin-left: 0;
+    padding: 0.32em 0.9em 0.36em 0.7em;
+    min-width: 0;
+    border-radius: var(--tb-radius);
+    background: var(--set-light, var(--tag-bg));
+    color: var(--p-ink);
+    font-weight: 700;
+    font-variant-caps: normal;
+    letter-spacing: 0;
+    text-transform: none;
+}
+.reveal .md-menu-tabs .md-menu-item::before,
+.reveal .md-menu-tabs .md-menu-item::after,
+.reveal .slides section h3 > .md-tag.md-ribbon::before,
+.reveal .slides section h3 > .md-tag.md-ribbon::after { display: none; }
+.reveal .md-menu-tabs .md-menu-item .md-icon,
+.reveal .slides section h3 > .md-tag.md-ribbon .md-tag-icon {
+    margin: 0;
+    font-size: 0.86em;
+    --fa-primary-color: var(--set-strong, currentColor);
+    --fa-secondary-color: var(--set-strong, currentColor);
+    --fa-secondary-opacity: 0.45;
+}
+.reveal .md-menu-tabs { gap: 0.4em; }
+.reveal .md-menu-tabs .md-menu-item.is-dim { background: var(--pal-quiet); color: var(--pal-ink2); }
+.reveal .md-menu-tabs .md-menu-item.is-dim .md-icon { --fa-primary-color: var(--pal-ink2); --fa-secondary-color: var(--pal-ink2); }
+html.pal-dark .reveal .md-menu-tabs .md-menu-item,
+html.pal-dark .reveal .slides section h3 > .md-tag.md-ribbon {
+    background: color-mix(in srgb, var(--set-strong, var(--tag-bg)) 34%, var(--pal-paper));
+    color: var(--set-light, var(--pal-ink));
+}
+
+/* example sentences (@card ex, [x]{ex}): the contrasting face */
+.reveal { --ex-scale: 1.15; --ex-font: 'Concourse', 'Noto Sans', sans-serif; }

@@ -103,9 +103,15 @@
         return out;
     }
 
+    /* Captions take *italic* and **bold** (book titles, species names);
+       everything else in them is escaped as before */
+    function capHtml(text) {
+        return esc(text).replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>').replace(/\*([^*]+)\*/g, '<em>$1</em>');
+    }
+
     function captionBlock(opts) {
         return opts.caption
-            ? '<figcaption class="bg-caption subtle">' + esc(opts.caption) + '</figcaption>\n'
+            ? '<figcaption class="bg-caption subtle">' + capHtml(opts.caption) + '</figcaption>\n'
             : '';
     }
 
@@ -170,14 +176,14 @@
         if (has(opts, 'hold')) {
             const dataId = opts.id || 'held-image';
             const sid = allocId(slugify(opts._path));
-            const alt = esc(opts.alt || opts.caption || '');
+            const alt = esc(opts.alt || (opts.caption || '').replace(/\*/g, ''));
             return { md: '<!-- .slide: data-auto-animate class="md-fill md-image-held" id="' + esc(sid) + '" -->\n' +
                 (opts.alt || opts.caption ? '' : altBlock(opts, '@image')) +
                 '<div class="md-zoom-frame' + (fit === 'cover' ? ' md-image-cover' : '') + '">\n' +
                 '<img data-id="' + esc(dataId) + '" data-md-fit src="' + esc(opts._path) + '" alt="' + alt + '"' +
                 (fit === 'cover' ? ' style="object-position:' + focusPosition(opts.focus) + '"' : '') +
                 ' onerror="' + IMG_ONERROR + '">\n</div>\n' +
-                (opts.caption ? '<figcaption class="md-frame-caption">' + esc(opts.caption) + '</figcaption>\n' : '') };
+                (opts.caption ? '<figcaption class="md-frame-caption">' + capHtml(opts.caption) + '</figcaption>\n' : '') };
         }
         const id = opts.id || allocId(slugify(opts._path));
         let attrs = 'data-background-image="' + esc(opts._path) + '" data-background-size="' + fit + '" id="' + esc(id) + '"';
@@ -245,16 +251,16 @@
             (opts.poster ? ' poster="' + esc(opts.poster) + '"' : '') +
             ' preload="metadata" playsinline' + (has(opts, 'muted') ? ' muted' : '') + (has(opts, 'loop') ? ' loop' : '') +
             (auto ? ' data-autoplay' : '') +
-            ' aria-label="' + esc(opts.alt || opts.caption || '') + '"></video>\n' +
+            ' aria-label="' + esc(opts.alt || (opts.caption || '').replace(/\*/g, '')) + '"></video>\n' +
             (auto ? '' : '<span class="fragment md-video-cue" data-md-video="' + esc(vid) + '" aria-hidden="true"></span>\n');
-        const caption = opts.caption ? '<figcaption class="md-frame-caption">' + esc(opts.caption) + '</figcaption>\n' : '';
+        const caption = opts.caption ? '<figcaption class="md-frame-caption">' + capHtml(opts.caption) + '</figcaption>\n' : '';
         const alt = opts.alt || opts.caption ? '' : altBlock(opts, '@video');
         const body = bodyLines.join('\n').trim();
         let md = '<!-- .slide: class="md-fill md-video-slide" id="' + esc(sid) + '" -->\n' + alt;
         if (body) {
             const inner = expandChunk(body, deck, lineNo);
             md += '<div class="md-split md-video-split"' + (split ? ' style="--split:' + split + '%"' : '') + '>\n' +
-                '<figure class="md-split-img">\n' + video + (opts.caption ? '<figcaption>' + esc(opts.caption) + '</figcaption>\n' : '') + '</figure>\n' +
+                '<figure class="md-split-img">\n' + video + (opts.caption ? '<figcaption>' + capHtml(opts.caption) + '</figcaption>\n' : '') + '</figure>\n' +
                 '<div class="md-split-body">\n\n' + inner.md.trim() + '\n\n</div>\n</div>\n';
             return { md: md, isError: inner.hadError };
         }
@@ -275,7 +281,7 @@
         const baseId = opts.id || allocId(slugify(opts._path));
         const detailId = allocId(baseId + '-detail');
         const dataId = 'z-' + baseId;
-        const alt = esc(opts.alt || opts.caption || '');
+        const alt = esc(opts.alt || (opts.caption || '').replace(/\*/g, ''));
         const srcA = esc(opts._path);
         const srcB = esc(opts.to || opts._path);
 
@@ -294,10 +300,10 @@
         //    always equal the visible image; only the enlarged slide-B
         //    image needs runtime pixel maths (positionZoomImages).
         const captionA = opts['caption-start']
-            ? '<figcaption class="md-frame-caption">' + esc(opts['caption-start']) + '</figcaption>\n'
+            ? '<figcaption class="md-frame-caption">' + capHtml(opts['caption-start']) + '</figcaption>\n'
             : '';
         const captionEnd = opts.caption
-            ? '<figcaption class="md-frame-caption">' + esc(opts.caption) + '</figcaption>\n'
+            ? '<figcaption class="md-frame-caption">' + capHtml(opts.caption) + '</figcaption>\n'
             : '';
         const slideA =
             '<!-- .slide: data-auto-animate data-auto-animate-duration="1.2" class="md-fill" id="' + esc(baseId) + '" -->\n' +
@@ -336,7 +342,7 @@
             '<!-- .slide: class="md-fill" id="' + esc(id) + '" -->\n' +
             altBlock(opts, '@kenburns') +
             '<div class="md-zoom-frame md-kenburns">\n' +
-            '<img src="' + esc(opts._path) + '" alt="' + esc(opts.alt || opts.caption || '') + '" onerror="' + IMG_ONERROR + '" style="animation-name:' + anim + ';animation-duration:' + dur + '">\n' +
+            '<img src="' + esc(opts._path) + '" alt="' + esc(opts.alt || (opts.caption || '').replace(/\*/g, '')) + '" onerror="' + IMG_ONERROR + '" style="animation-name:' + anim + ';animation-duration:' + dur + '">\n' +
             '</div>\n' + captionBlock(opts) };
     }
 
@@ -359,14 +365,14 @@
             (has(opts, 'fragment') || has(opts, 'build') ? 'class="fragment" ' : '') +
             (dataId ? 'data-id="' + esc(dataId) + '" ' : '') +
             (bleed || opts.focus ? 'style="object-position:' + focusPosition(opts.focus) + '" ' : '') +
-            'src="' + esc(opts._path) + '" alt="' + esc(opts.alt || opts.caption || '') + '" onerror="' + IMG_ONERROR + '"';
+            'src="' + esc(opts._path) + '" alt="' + esc(opts.alt || (opts.caption || '').replace(/\*/g, '')) + '" onerror="' + IMG_ONERROR + '"';
         let md =
             '<!-- .slide: ' + slideAttrs + ' -->\n' +
             (opts.alt || opts.caption ? '' : altBlock(opts, '@' + kind)) +
             '<div class="md-split' + side + (bleed ? ' md-bleed' : '') + '"' + (split ? ' style="--split:' + split + '%"' : '') + '>\n' +
             '<figure class="md-split-img">\n' +
             '<img ' + imgAttrs + '>\n' +
-            (opts.caption ? '<figcaption>' + esc(opts.caption) + '</figcaption>\n' : '') +
+            (opts.caption ? '<figcaption>' + capHtml(opts.caption) + '</figcaption>\n' : '') +
             '</figure>\n' +
             '<div class="md-split-body">\n\n' +
             bodyLines.join('\n').trim() + '\n\n' +
@@ -455,6 +461,7 @@
         'navy', 'purple', 'pink', 'grey'];
     const PALETTE_NAMES = PALETTE_HUES
         .concat(PALETTE_HUES.map(function (h) { return 'light-' + h; }))
+        .concat(PALETTE_HUES.map(function (h) { return h + '-deep'; }))
         .concat(['white', 'black']);
     /* University of Glasgow brand names (and two spellings) accepted
        everywhere; corporate mode (phase 4) maps the names to brand values */
@@ -477,7 +484,8 @@
         return n ? { name: n } : null;
     }
     const MORPHEME_STATES = ['plain', 'split', 'apart', 'jigsaw', 'bases', 'affixes'];
-    /* the colour cycle for the pieces of a morpheme word, by position */
+    /* the colour cycle for morpheme pieces: each new piece in a deck takes
+       the next colour, and keeps it wherever it appears again */
     const MORPHEME_COLOURS = ['red', 'green', 'teal', 'navy', 'orange', 'purple', 'gold', 'blue', 'pink'];
     const GRAMMAR_CODES = {
         S: 'subject', P: 'predicator', O: 'object', Od: 'object', Oi: 'object',
@@ -582,7 +590,7 @@
 
         // Morpheme words (SPEC 5.4): pieces split at " + ", a leading or
         // trailing hyphen marks the affix side, ~ hides a piece but keeps
-        // its id. Colour by position from a cycle, id from word and piece,
+        // its id. Colour by the piece's text, deck-wide; id from word and piece,
         // so the same word on two morph slides animates every change.
         // @slide morphemes=STATE sets the state for the whole slide.
         const morphemeWord = function (content, state) {
@@ -601,7 +609,9 @@
             const hy = tag('<span class="md-mp-hy">') + '-' + tag('</span>');
             let html = tag('<span class="md-mw md-mw-' + st + '" data-word="' + esc(word) + '">');
             raw.forEach(function (r, i) {
-                const c = MORPHEME_COLOURS[i % MORPHEME_COLOURS.length];
+                const c = ctx.pieceColour
+                    ? ctx.pieceColour((r.pre ? '-' : '') + r.core.toLowerCase() + (r.post ? '-' : ''))
+                    : MORPHEME_COLOURS[i % MORPHEME_COLOURS.length];
                 const id = ctx.allocPiece('m-' + word + '-' + slugOf(r.core));
                 html += tag('<span class="md-mp md-mp-' + (r.pre || r.post ? 'affix' : 'base') +
                     (r.gone ? ' md-mp-gone' : '') + (i === last ? ' md-mp-last' : '') +
@@ -632,6 +642,13 @@
                 }
                 ctx.warn('a morpheme word puts " + " between its pieces, as in [un- + help + -ful]{' + brace[1] + '], and ' + m[0] + brace[0] + ' has none');
                 literal();
+                continue;
+            }
+            if (brace && brace[1] === 'ex' && content.trim()) {
+                // [an example sentence]{ex}: the example face, inline
+                s = before + tag('<span class="md-exs">') +
+                    content.replace(/^'(?=(s|re|ve|m|ll|d|t)\b)/i, '\u2019') + tag('</span>') +
+                    after.slice(brace[0].length);
                 continue;
             }
             if (brace) {
@@ -718,7 +735,15 @@
             tag: deck && deck.tagIndex ? function (text) {
                 return deck.tagIndex[text.replace(/\u0000\d+\u0000/g, '').trim().toLowerCase()] || null;
             } : null,
-            morphemes: morphemes || null
+            morphemes: morphemes || null,
+            // a morpheme piece takes its colour from its text (help, -ful,
+            // un- ...): the same piece is the same colour throughout the
+            // deck, in the order pieces first appear
+            pieceColour: function (key) {
+                const map = deck ? (deck.pieceColours = deck.pieceColours || {}) : (this._pc = this._pc || {});
+                if (!(key in map)) map[key] = MORPHEME_COLOURS[Object.keys(map).length % MORPHEME_COLOURS.length];
+                return map[key];
+            }
         };
     }
 
@@ -796,6 +821,7 @@
          static                nothing builds unless marked
          build, build=auto     lists build even in a listBuild:false deck;
                                auto runs the slide's builds without clicks
+         build=all             every block after the heading builds, in order
          statement             one large centred sentence or quotation
          activity              room activity: lighter ground, accent bar
          text=N placeholder textbox   corporate decks (phase 4) */
@@ -850,9 +876,9 @@
         if (morph && transition) return err('`morph` is itself the transition into this slide, so it cannot take `' + (transition === 'fade' ? 'fade' : 'cut') + '` as well.');
         if (morph) classes.push('md-morph');
         if (opts.build !== undefined) {
-            if (opts.build !== 'auto') return err('`build=' + esc(opts.build) + '`: the only build order for a slide is build=auto (or a bare build).');
+            if (opts.build !== 'auto' && opts.build !== 'all') return err('`build=' + esc(opts.build) + '`: a slide builds with build=auto (its builds run without clicks) or build=all (every block after the heading arrives in reading order), or a bare build.');
             if (classes.indexOf('md-build') === -1) classes.push('md-build');
-            classes.push('md-build-auto');
+            classes.push(opts.build === 'all' ? 'md-build-all' : 'md-build-auto');
         }
         if (opts.text !== undefined && !/^\d+(\.\d+)?$/.test(opts.text)) {
             return err('`text=` takes a size in points, e.g. text=24.');
@@ -1204,9 +1230,10 @@
        the slide's heading (placeSlideNotes, at runtime); build gives it a
        click of its own instead of joining the list item before it. */
     registerDirective('note', {
-        body: 'line', text: true, flags: ['top'], build: [], keys: ['y', 'h'], numbers: ['y', 'h'],
+        body: 'line', text: true, flags: ['top', 'float'], build: [], keys: ['y', 'h'], numbers: ['y', 'h'],
         emit: function (d) {
-            const cls = 'md-note' + (d.flags.indexOf('top') !== -1 ? ' md-note-top' : '') + (d.build ? ' fragment' : '');
+            const cls = 'md-note' + (d.flags.indexOf('top') !== -1 ? ' md-note-top' : '') +
+                (d.flags.indexOf('float') !== -1 ? ' md-note-float' : '') + (d.build ? ' fragment' : '');
             return '\n<div class="' + cls + '"' + placeAttrs(d.opts) + '>\n\n' + d.text + '\n\n</div>\n';
         }
     });
@@ -1403,10 +1430,14 @@
        from the palette's card roles. `@quote ... card` puts a quotation on
        one. */
     registerDirective('card', {
-        body: 'markdown',
+        body: 'markdown', flags: ['ex'],
         emit: function (d, api) {
             if (!d.body.join('').trim()) api.fail('has no content.');
-            return '\n<div class="md-slip">\n\n' + api.expand(d.body).trim() + '\n\n</div>\n';
+            // ex: example sentences, set in the form's contrasting face
+            // (--ex-font); a list on it has no markers, a sub-item or a
+            // %%aside%% is a note in the body face
+            const ex = d.flags.indexOf('ex') !== -1;
+            return '\n<div class="md-slip' + (ex ? ' md-ex-card' : '') + '">\n\n' + api.expand(d.body).trim() + '\n\n</div>\n';
         }
     });
     registerDirective('columns', Object.assign({ body: 'markdown', emit: emitCards('columns') }, CARDS_SPEC));
@@ -1521,7 +1552,7 @@
        head=COLOUR band rowhead caps small widths=16,28,28,28 */
     registerDirective('table', {
         body: 'prefix', keys: ['head', 'widths', 'y', 'rows'], colours: ['head'], lists: ['widths', 'rows'], numbers: ['widths', 'y', 'rows'],
-        flags: ['band', 'rowhead', 'caps', 'small', 'bars'],
+        flags: ['band', 'rowhead', 'caps', 'small', 'bars'], build: [],
         emit: function (d, api) {
             if (!/^\s*\|/.test(d.block[0] || '')) api.fail('applies to a markdown table, and the next block is not one (it should start with |).');
             // bars: a cell ending in (N%) gets a bar of that length beneath
@@ -1540,6 +1571,9 @@
                 style += f.style;
             }
             d.flags.forEach(function (f) { cls.push('md-table-' + f); });
+            // build: one row per click; the table is laid out complete from
+            // the start, so nothing moves as the rows arrive (applyBuilds)
+            if (d.build) cls.push('md-table-build');
             if (d.opts.widths) {
                 const total = d.opts.widths.reduce(function (a, b) { return a + b; }, 0);
                 d.opts.widths.forEach(function (w, i) { style += '--w' + (i + 1) + ':' + (100 * w / total).toFixed(3) + '%;'; });
@@ -1619,7 +1653,7 @@
        build: one node per click, in reading order; build=level: a level
        per click (the roots stay); build=up: the deepest level first. */
     registerDirective('tree', {
-        body: 'items', keys: ['style'], build: ['level', 'up'],
+        body: 'items', keys: ['style'], flags: ['big'], build: ['level', 'up'],
         emit: function (d, api) {
             const style = d.opts.style || 'diagram';
             if (['diagram', 'outline'].indexOf(style) === -1) api.fail('`style=` is diagram or outline.');
@@ -1643,7 +1677,7 @@
                 return null;
             };
             const frag = function (k) { return k === null ? '' : ' fragment" data-md-step="' + k; };
-            let html = '\n<div class="md-tree md-tree-' + style + '"' + (d.build ? ' data-md-steps' : '') + '>\n';
+            let html = '\n<div class="md-tree md-tree-' + style + (d.flags.indexOf('big') !== -1 ? ' md-tree-big' : '') + '"' + (d.build ? ' data-md-steps' : '') + '>\n';
             if (style === 'outline') {
                 (function walk(list) {
                     list.forEach(function (n) {
@@ -2128,7 +2162,7 @@
        the list just before the analysis names the steps, item k arriving
        with step k (applyBuilds). The whole block is held back from the
        inline pass (md-raw), so its brackets are never read as marks. */
-    const PZ_TIERS = ['class', 'mh', 'brackets', 'form', 'function', 'clauses', 'highlight'];
+    const PZ_TIERS = ['class', 'mh', 'brackets', 'form', 'function', 'clauses', 'sentence', 'highlight'];
     const PZ_FN = { S: 'subject', P: 'predicator', O: 'object', Od: 'object', Oi: 'object',
         C: 'complement', Cs: 'complement', Co: 'complement', A: 'adverbial' };
     const PZ_CLAUSE = /^(MCl|SCl|NCl|CCl|RCl|ACl|Cl|Se)(?=$|[\^_!])/;
@@ -2209,7 +2243,7 @@
     }
 
     registerDirective('parse', {
-        body: 'items', keys: ['steps', 'layout'], sequences: ['steps'], flags: ['paired', 'left'],
+        body: 'items', keys: ['steps', 'layout', 'show'], sequences: ['steps'], flags: ['paired', 'left', 'plain', 'big'],
         emit: function (d, api) {
             if (d.opts.layout !== undefined && d.opts.layout !== 'leech') api.fail('`layout=` takes leech (labels at the left of each word); the default is the centred Corbett and Kay layout.');
             const groups = d.opts.steps || [];
@@ -2241,7 +2275,7 @@
                             if (c.below) used.form = 1;
                             if (c.above) used[PZ_FN[c.above] ? 'function' : 'mh'] = 1;
                         } else {
-                            used.clauses = 1;
+                            used[c.ch === '{' || c.ch === '}' ? 'sentence' : 'clauses'] = 1;
                             if (c.above) used[PZ_FN[c.above] ? 'function' : 'mh'] = 1;
                         }
                         if (c.hl) used.highlight = 1;
@@ -2256,7 +2290,20 @@
                 live.forEach(function (t) { stepOf[t] = n; });
                 n++;
             });
-            const st = function (tier) { return tier in stepOf ? ' fragment" data-md-step="' + stepOf[tier] : ''; };
+            // show="class mh": on a slide of a step-by-step series, only these
+            // tiers (and those in steps=) are visible; the others are laid
+            // out but invisible, so the words stand where they will stand
+            // when every tier is there
+            // (show=words: the words alone, every tier reserved)
+            const shown = d.opts.show ? String(d.opts.show).split(/[\s,+]+/).filter(function (t) { return t && t !== 'words'; }) : null;
+            if (shown) shown.forEach(function (t) {
+                if (PZ_TIERS.indexOf(t) === -1) api.fail('`' + esc(t) + '` in show= is not a tier. Tiers: ' + PZ_TIERS.join(', ') + '.');
+            });
+            const st = function (tier) {
+                if (tier in stepOf) return ' fragment" data-md-step="' + stepOf[tier];
+                return shown && shown.indexOf(tier) === -1 ? ' pz-reserved' : '';
+            };
+            const plain = d.flags.indexOf('plain') !== -1;
             const lab = function (cls, tier, text) {
                 return text ? '<span class="' + cls + st(tier) + '">' + esc(text) + '</span>' : '<span class="' + cls + ' pz-empty"></span>';
             };
@@ -2267,11 +2314,12 @@
             const above = function (c) {
                 if (!c.above) return lab('pz-t', 'mh', '');
                 const fn = PZ_FN[c.above];
-                return fn ? lab('pz-t pz-fn ' + fn, 'function', c.above) : lab('pz-t pz-mh', 'mh', c.above);
+                return fn ? lab('pz-t pz-fn' + (plain ? ' pz-plain' : ' ' + fn), 'function', c.above) : lab('pz-t pz-mh', 'mh', c.above);
             };
             const cls = ['pz'];
             if (d.opts.layout === 'leech') cls.push('pz-leech');
             if (d.flags.indexOf('left') !== -1) cls.push('pz-left');
+            if (d.flags.indexOf('big') !== -1) cls.push('pz-big');
             let html = '<div class="' + cls.join(' ') + '"' + (n ? ' data-md-steps' : '') +
                 (d.flags.indexOf('paired') !== -1 ? ' data-md-paired' : '') + '>';
             parsed.forEach(function (lines) {
@@ -2285,11 +2333,11 @@
                         if ((c.kind === 'open' || c.kind === 'word') && prev && (prev.kind === 'word' || prev.kind === 'close')) flush();
                         if (c.kind === 'open') {
                             const round = c.ch === '(';
-                            const tier = round ? 'brackets' : 'clauses';
+                            const tier = round ? 'brackets' : (c.ch === '{' ? 'sentence' : 'clauses');
                             const mid = '<span class="pz-m pz-br' + (round ? '' : ' pz-cl') + st(tier) + '">' +
                                 (c.inline ? '<span class="pz-inl">' + esc(c.inline) + '</span>' : '') + esc(c.ch) + '</span>';
                             cluster += '<span class="pz-c pz-open' + (round ? '' : ' pz-sq') + '">' + above(c) + mid +
-                                lab('pz-b pz-form', round ? 'form' : 'clauses', c.below) + band(c, nx, pv) + '</span>';
+                                lab('pz-b pz-form', round ? 'form' : tier, c.below) + band(c, nx, pv) + '</span>';
                         } else if (c.kind === 'word') {
                             cluster += '<span class="pz-c pz-word">' + above(c) +
                                 '<span class="pz-m pz-w' + (c.dim ? ' pz-dim' : '') + '">' + (c.text ? pzWord(c.text) : '&nbsp;') + '</span>' +
@@ -2297,7 +2345,7 @@
                         } else {
                             const round = c.ch === ')';
                             cluster += '<span class="pz-c pz-close' + (round ? '' : ' pz-sq') + '"><span class="pz-t pz-empty"></span>' +
-                                '<span class="pz-m pz-br' + (round ? '' : ' pz-cl') + st(round ? 'brackets' : 'clauses') + '">' + esc(c.ch) + '</span>' +
+                                '<span class="pz-m pz-br' + (round ? '' : ' pz-cl') + st(round ? 'brackets' : (c.ch === '}' ? 'sentence' : 'clauses')) + '">' + esc(c.ch) + '</span>' +
                                 '<span class="pz-b pz-empty"></span>' + band(c, nx, pv) + '</span>';
                         }
                         prev = c;
@@ -2503,8 +2551,30 @@
                 for (let j = i + 1; j < lines.length; j++) {
                     if (/^notes:/.test(lines[j])) { bodyEnd = j; break; }
                 }
-                const body = lines.slice(i + 1, bodyEnd);
+                let body = lines.slice(i + 1, bodyEnd);
+                // bleed: a heading written before the directive would sit
+                // under the image, so it moves to the top of the text column
+                if (has(opts, 'bleed')) {
+                    const lifted = [];
+                    for (let k = out.length - 1; k >= 0; k--) {
+                        if (/^ {0,3}#{1,6}\s/.test(out[k])) { lifted.unshift(out[k]); out.splice(k, 1); }
+                    }
+                    if (lifted.length) body = lifted.concat([''], body);
+                }
+                // the column's own directives (@pause, @columns, @note...) expand
+                // as on any slide; an @source line goes to the foot of the slide
+                const sources = body.filter(function (l) { return /^@source\b/.test(l); });
+                body = body.filter(function (l) { return !/^@source\b/.test(l); });
+                if (body.some(function (l) { return /^@/.test(l); })) {
+                    const sub = expandChunk(body.join('\n'), deck, lineOffset + i + 1);
+                    if (sub.hadError) hadError = true;
+                    body = sub.md.split('\n');
+                }
                 r = emitSplit(kind, opts, body, allocId, line, lineNo, name);
+                if (!r.isError && sources.length) {
+                    const f = expandChunk(sources.join('\n'), deck, lineOffset + i + 1);
+                    r.md += '\n' + f.md + '\n';
+                }
                 if (!r.isError) {
                     out.push(r.md);
                     // keep any notes: block after the emitted markup
@@ -2579,6 +2649,22 @@
         }).join('\n');
     }
 
+    /* A directive that makes several slides from one chunk (@zoom, a
+       transcript overlay...) still answers to the chunk's @slide hidden and
+       nohandout: they are carried to every slide it made. */
+    function carrySlideFlags(md) {
+        const pieces = md.split(/(\n---?\n)/);
+        if (pieces.length < 3) return md;
+        const first = /<!--\s*\.slide:[^>]*class="([^"]*)"/.exec(pieces[0]);
+        const carry = first ? first[1].split(/\s+/).filter(function (c) { return c === 'md-nohandout' || c === 'md-hidden'; }) : [];
+        if (!carry.length) return md;
+        return pieces.map(function (p, i) {
+            if (i === 0 || /^\n---?\n$/.test(p)) return p;
+            return mergeSlideComments('<!-- .slide: class="' + carry.join(' ') + '"' +
+                (carry.indexOf('md-hidden') !== -1 ? ' data-visibility="hidden"' : '') + ' -->\n' + p);
+        }).join('');
+    }
+
     function expandDirectives(src, meta) {
         const name = (meta && meta.name) || 'markdown';
         // @include first, so included slides and definitions expand with
@@ -2615,7 +2701,7 @@
             if (r.hadError) hadError = true;
             // a slide that held only definitions (@set) is not a slide
             if (!r.md.trim() && /^@set\b/m.test(part)) return null;
-            const merged = mergeSlideComments(r.md);
+            const merged = carrySlideFlags(mergeSlideComments(r.md));
             const mstate = /data-md-morphemes="(\w+)"/.exec(merged);
             return inlineMarks(wrapFillSlides(merged), makeInlineCtx(deck.warnings, deck, mstate && mstate[1]));
         });
@@ -2858,8 +2944,22 @@
     function alignSources() {
         document.querySelectorAll('.reveal .slides section .md-source').forEach(function (src) {
             src.style.removeProperty('max-width');
+            src.style.removeProperty('padding-left');
             const prev = src.previousElementSibling;
             if (!prev) return;
+            // after a displayed quotation, a left-aligned source starts
+            // where the quotation's text starts
+            if (prev.matches('blockquote') && getComputedStyle(src).textAlign.match(/left|start/)) {
+                const p = prev.querySelector('p') || prev;
+                const restoreQ = unhideForMeasuring(src);
+                const q = p.getBoundingClientRect().left, s0 = src.getBoundingClientRect().left;
+                const sec = src.closest('section'), sr = sec.getBoundingClientRect();
+                const scale = sec.offsetWidth ? sr.width / sec.offsetWidth : 1;
+                const d = (q - s0) / scale;
+                if (d > 1 && d < 300) src.style.paddingLeft = d.toFixed(1) + 'px';
+                restoreQ();
+                return;
+            }
             const table = prev.matches('table') ? prev : prev.querySelector(':scope > table');
             if (!table) return;
             const section = src.closest('section');
@@ -2883,6 +2983,7 @@
         let changed = false;
         document.querySelectorAll('.reveal .slides section .md-note').forEach(function (note) {
             if (note.classList.contains('fragment')) return;
+            if (note.classList.contains('md-note-float')) return;   // a reminder box shows from the start
             let prev = note.previousElementSibling;
             while (prev && !prev.querySelector('.fragment') && !prev.classList.contains('fragment')) {
                 prev = prev.previousElementSibling;
@@ -2967,6 +3068,30 @@
                 lis.forEach(function (li) { li.classList.add('fragment'); });
             }
 
+            // @table build: each body row is a click
+            Array.prototype.filter.call(sec.querySelectorAll('.md-table-build tbody > tr'), own).forEach(function (tr) {
+                tr.classList.add('fragment');
+            });
+            // @slide build=all: every block after the heading (headings,
+            // paragraphs, tables, figures; list items one by one) arrives
+            // in reading order
+            if (sec.classList.contains('md-build-all')) {
+                const walk = function (parent) {
+                    Array.prototype.forEach.call(parent.children, function (el) {
+                        if (/^(H1|H2)$/.test(el.tagName) || el.classList.contains('md-source') ||
+                            el.classList.contains('md-menu') || el.classList.contains('md-menu-head') ||
+                            el.tagName === 'ASIDE' || el.classList.contains('fragment')) return;
+                        if (/^(UL|OL)$/.test(el.tagName)) { el.querySelectorAll('li').forEach(function (li) { li.classList.add('fragment'); }); return; }
+                        if (el.classList.contains('md-fill-inner')) { walk(el); return; }
+                        if (el.matches('.md-table-build')) return;
+                        // a block holding builds of its own (a table of
+                        // answers) arrives first, then its builds in turn
+                        el.classList.add('fragment');
+                    });
+                };
+                walk(sec);
+            }
+
             // @note top
             Array.prototype.filter.call(sec.querySelectorAll('.md-note-top'), own).forEach(function (note) {
                 const scope = note.parentElement;
@@ -2978,6 +3103,20 @@
             // stat): lists inside it appear with it
             Array.prototype.filter.call(sec.querySelectorAll('.fragment[data-md-whole]'), own).forEach(function (w) {
                 w.querySelectorAll('li.fragment').forEach(function (li) { li.classList.remove('fragment'); });
+            });
+
+            // a card that holds nothing but a building list (@card ex with
+            // examples): the card arrives with its first item rather than
+            // standing empty before it
+            Array.prototype.filter.call(sec.querySelectorAll('.md-slip:not(.fragment)'), own).forEach(function (card) {
+                const first = card.firstElementChild;
+                if (!first || !/^(UL|OL)$/.test(first.tagName) || first.nextElementSibling) return;
+                const li = first.querySelector(':scope > li');
+                if (!li || !li.classList.contains('fragment')) return;
+                li.classList.remove('fragment');
+                card.classList.add('fragment');
+                const idx = li.getAttribute('data-fragment-index');
+                if (idx !== null) { card.setAttribute('data-fragment-index', idx); li.removeAttribute('data-fragment-index'); }
             });
 
             // @pause groups
@@ -3406,23 +3545,72 @@
         });
     }
     function positionMenuHeads() {
+        let prevStrip = null;
+        // the slide shown before this one (the previous sibling, or the
+        // last slide of the stack before)
+        const prevSlideOf = function (sec) {
+            let p = sec.previousElementSibling;
+            while (p && p.tagName !== 'SECTION') p = p.previousElementSibling;
+            if (!p && sec.parentElement.tagName === 'SECTION') {
+                p = sec.parentElement.previousElementSibling;
+                while (p && p.tagName !== 'SECTION') p = p.previousElementSibling;
+            }
+            if (p && p.querySelector(':scope > section')) {
+                const kids = p.querySelectorAll(':scope > section'); p = kids[kids.length - 1];
+            }
+            return p;
+        };
         document.querySelectorAll('.reveal .slides .md-menu-head').forEach(function (h) {
             const menu = h.previousElementSibling;
             if (!menu || !menu.matches('.md-menu')) return;
             h.style.removeProperty('margin-left');
-            if (getComputedStyle(h).position === 'absolute') return;      // Spine: the heading lives in the band
+            h.style.removeProperty('left');
+            h.style.removeProperty('transform');
             const item = menu.hasAttribute('data-md-arrow')
                 ? menu.querySelectorAll('.md-menu-arrow')[+menu.getAttribute('data-md-arrow')]
                 : menu.querySelectorAll('.md-menu-item')[+menu.getAttribute('data-md-lit')];
+            const sec = h.closest('section');
+            // layout positions (offsetLeft), not screen rectangles: while a
+            // morph or a fade is running the rectangles carry its
+            // transforms, and a heading placed then sat off its item
+            const offsetIn = function (el) {
+                let x = 0;
+                while (el && el !== sec) { x += el.offsetLeft; el = el.offsetParent; }
+                return x;
+            };
+            if (getComputedStyle(h).position === 'absolute') {
+                // a heading the form places under a strip's lit item
+                // (Thumb Index): centred under the item, kept inside the
+                // slide's side margins. Set here in pixels: the form's
+                // percentage translate inside min()/max() came out as none
+                // on most slides, leaving the heading starting at the stem
+                if (!item || !menu.matches('.md-menu-strip') || !sec) return;
+                const restoreA = unhideForMeasuring(h);
+                const pad = parseFloat(getComputedStyle(h).getPropertyValue('--tb-pad')) || 0;
+                const w = h.offsetWidth, W = sec.clientWidth;
+                const c = offsetIn(item) + item.offsetWidth / 2;
+                let x = Math.max(pad, Math.min(W - pad - w, c - w / 2));
+                // the same item lit on the slide before, morphing in: the
+                // heading keeps that slide's left edge, so a heading that
+                // changes (Abbreviation to Abbrev.) changes in place
+                const key = menu.getAttribute('data-md-menu') + ':' + menu.getAttribute('data-md-lit');
+                if (prevStrip && prevStrip.key === key && sec.hasAttribute('data-auto-animate') &&
+                    prevStrip.sec === prevSlideOf(sec)) {
+                    x = Math.max(pad, Math.min(W - pad - w, prevStrip.x));
+                }
+                prevStrip = { key: key, x: x, sec: sec };
+                h.style.left = x.toFixed(1) + 'px';
+                h.style.transform = 'none';
+                restoreA();
+                return;
+            }
             if (!item) return;
             const restore = unhideForMeasuring(h);
-            const sec = h.closest('section');
-            const scale = sec.offsetWidth ? sec.getBoundingClientRect().width / sec.offsetWidth : 1;
-            const hr = h.getBoundingClientRect(), ir = item.getBoundingClientRect();
             const avail = h.parentElement.clientWidth -
                 (parseFloat(getComputedStyle(h.parentElement).paddingLeft) || 0) - (parseFloat(getComputedStyle(h.parentElement).paddingRight) || 0);
-            const hw = hr.width / scale;
-            const left = (ir.left - hr.left) / scale, right = (ir.right - hr.left) / scale;
+            const hw = h.offsetWidth;
+            const hx = offsetIn(h), ix = offsetIn(item);
+            const left = ix - hx, right = ix + item.offsetWidth - hx;
             const centre = (left + right) / 2;
             // aligned with the item's nearer edge; a form that sets
             // --menu-head-align: centre centres it under the item instead
@@ -3906,10 +4094,44 @@
         });
     }
 
+    /* An affix written with a leading hyphen (-mageddon, -ness) must
+       not break after its hyphen when a narrow card or table cell wraps
+       it: a word joiner (U+2060) goes between the hyphen and the letter.
+       Only a hyphen at the start of a word, so compounds (fish-oil-pilled)
+       still break as usual. Not in corporate mode, whose line breaks
+       follow PowerPoint's. */
+    function joinAffixHyphens(root) {
+        if (document.documentElement.classList.contains('corp')) return;
+        const walker = document.createTreeWalker(root || document.querySelector('.reveal .slides') || document.body, NodeFilter.SHOW_TEXT, {
+            acceptNode: function (n) {
+                return n.nodeValue.indexOf('-') === -1 || (n.parentElement && n.parentElement.closest('code, pre, script, style'))
+                    ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+            }
+        });
+        const re = /(^|[\s(\[\u2018\u201C'"\/])-(?=\p{L})/gu;
+        let n;
+        while ((n = walker.nextNode())) {
+            const v = n.nodeValue.replace(re, '$1-\u2060');
+            if (v !== n.nodeValue) n.nodeValue = v;
+        }
+    }
+    window.joinAffixHyphens = joinAffixHyphens;
+
+    /* Some forms hang a quotation's first line into the margin so its
+       opening quotation mark sits outside the text. A quotation written
+       without one would hang its first word instead: unhang it. */
+    function unhangQuotes() {
+        document.querySelectorAll('.reveal .slides blockquote p, .reveal .slides .md-split-body > p:first-child').forEach(function (p) {
+            if (!/^[\s]*[\u2018\u201C'"\u00AB\u2039\u201E\u201A]/.test(p.textContent)) p.classList.add('md-no-hang');
+        });
+    }
+
     window.MgaBuilds = {
         id: 'mga-builds',
         init: function (deck) {
             applyStudentVersion();
+            joinAffixHyphens();
+            unhangQuotes();
             corpWrapSlides();
             buildTranscriptOverlays();
             wireTranscriptOverlays(deck);

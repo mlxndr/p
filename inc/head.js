@@ -35,7 +35,13 @@
 (function () {
     'use strict';
 
-    var CSS = '../inc/css/';
+    /* The site root, relative to the deck: '../' for a deck one folder
+       down (icame47/), '../../' for one two down (1a/7/). Taken from the
+       path the deck's own index.html gives for this file. */
+    var me = document.currentScript && document.currentScript.getAttribute('src');
+    var ROOT = (me && /inc\/head\.js/.test(me)) ? me.replace(/inc\/head\.js.*$/, '') : '../';
+    window.MGA_ROOT = ROOT;
+    var CSS = ROOT + 'inc/css/';
     var DEFAULT_THEME = 'terracotta';
 
     /* Theme catalogue, grouped into menu sections. Headers in the menu are
@@ -106,8 +112,11 @@
         for (var i = 0; i < all.length; i++) if (all[i].key === k) return all[i];
         return null;
     }
+    /* by filename, so a choice saved in a deck at one depth is found
+       from a deck at another */
     function byHref(h) {
-        for (var i = 0; i < all.length; i++) if (all[i].href === h) return all[i];
+        var f = (h || '').replace(/^.*\/inc\/css\//, '');
+        for (var i = 0; i < all.length; i++) if (all[i].file === f) return all[i];
         return null;
     }
 
@@ -264,22 +273,22 @@
     var h = [
         '<meta name="viewport" content="width=device-width, initial-scale=1.0">',
         '<meta name="author" content="Marc Alexander">',
-        '<link rel="stylesheet" href="../inc/reveal.js/dist/reveal.css">',
+        '<link rel="stylesheet" href="' + ROOT + 'inc/reveal.js/dist/reveal.css">',
         '<link rel="stylesheet" href="' + CSS + 'fonts.css">',
         '<link rel="stylesheet" href="' + CSS + 'base.css">',
         '<link rel="stylesheet" href="' + CSS + 'animations.css">',
-        '<link rel="stylesheet" href="../inc/reveal.js/plugin/highlight/monokai.css">',
+        '<link rel="stylesheet" href="' + ROOT + 'inc/reveal.js/plugin/highlight/monokai.css">',
         /* Noto Sans/Serif: glyph-coverage fallback only (IPA, non-Latin).
            Loaded without blocking the page, so a slow or absent network
            never holds up the slides. */
         '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
         '<link rel="stylesheet" media="print" onload="this.media=\'all\'" href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap">',
-        '<link rel="icon" type="image/png" href="../favicon-96x96.png" sizes="96x96">',
-        '<link rel="icon" type="image/svg+xml" href="../favicon.svg">',
-        '<link rel="shortcut icon" href="../favicon.ico">',
-        '<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">',
+        '<link rel="icon" type="image/png" href="' + ROOT + 'favicon-96x96.png" sizes="96x96">',
+        '<link rel="icon" type="image/svg+xml" href="' + ROOT + 'favicon.svg">',
+        '<link rel="shortcut icon" href="' + ROOT + 'favicon.ico">',
+        '<link rel="apple-touch-icon" sizes="180x180" href="' + ROOT + 'apple-touch-icon.png">',
         '<meta name="apple-mobile-web-app-title" content="mga.is">',
-        '<link rel="manifest" href="../site.webmanifest">',
+        '<link rel="manifest" href="' + ROOT + 'site.webmanifest">',
         '<link rel="stylesheet" href="' + chosen.href + '" id="theme">'
     ];
     if (X.page || X.print) h.push('<link rel="stylesheet" href="' + CSS + 'export.css">');

@@ -312,6 +312,7 @@ html.pal-dark .reveal .md-menu .md-menu-item.is-lit.md-bg-grey { --tag-bg: var(-
    at text weight over a rule ---------- */
 .reveal .md-cards { gap: 0.8em; }
 .reveal .md-cards.md-ncols-3 { font-size: 0.8em; column-gap: 1em; }
+.reveal .md-cards.md-ncols-3.md-arrows { column-gap: 2.2em; }
 .reveal .md-style-box .md-card {
     background: var(--pal-quiet);
     border: none;
@@ -586,3 +587,6 @@ html.pal-dark .reveal .md-slip {
 
 /* the menu heading centred under its lit item (positionMenuHeads) */
 .reveal .md-menu-head { --menu-head-align: centre; }
+
+/* example sentences (@card ex, [x]{ex}): the contrasting face */
+.reveal { --ex-font: 'Bitter', 'Noto Serif', Georgia, serif; }

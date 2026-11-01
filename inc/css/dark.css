@@ -42,3 +42,15 @@
     /* highlight: a dark gold, so light text keeps its contrast */
     --r-highlight: color-mix(in srgb, var(--p-gold) 70%, transparent);
 }
+
+/* deep colour marks read in the strong colour on dark grounds */
+.reveal .md-c-red-deep { color: var(--p-red); }
+.reveal .md-c-orange-deep { color: var(--p-orange); }
+.reveal .md-c-gold-deep { color: var(--p-gold); }
+.reveal .md-c-green-deep { color: var(--p-green); }
+.reveal .md-c-teal-deep { color: var(--p-teal); }
+.reveal .md-c-blue-deep { color: var(--p-blue); }
+.reveal .md-c-navy-deep { color: var(--p-navy); }
+.reveal .md-c-purple-deep { color: var(--p-purple); }
+.reveal .md-c-pink-deep { color: var(--p-pink); }
+.reveal .md-c-grey-deep { color: var(--p-grey); }

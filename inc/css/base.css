@@ -447,6 +447,38 @@ li::marker {
 .reveal .md-bg-pink { --tag-bg: var(--p-pink); --tag-ink: #FFFFFF; }
 .reveal .md-bg-grey { --tag-bg: var(--p-grey); --tag-ink: #FFFFFF; }
 .reveal .md-bg-black { --tag-bg: var(--p-black); --tag-ink: #FFFFFF; }
+/* the deep partners ([x]{red-deep}): text and fills; on dark grounds the
+   text is drawn in the strong colour, which reads there */
+.reveal .md-c-red-deep { color: var(--p-red-deep); }
+html.pal-dark .reveal .md-c-red-deep { color: var(--p-red); }
+.reveal .md-bg-red-deep { --tag-bg: var(--p-red-deep); --tag-ink: #FFFFFF; }
+.reveal .md-c-orange-deep { color: var(--p-orange-deep); }
+html.pal-dark .reveal .md-c-orange-deep { color: var(--p-orange); }
+.reveal .md-bg-orange-deep { --tag-bg: var(--p-orange-deep); --tag-ink: #FFFFFF; }
+.reveal .md-c-gold-deep { color: var(--p-gold-deep); }
+html.pal-dark .reveal .md-c-gold-deep { color: var(--p-gold); }
+.reveal .md-bg-gold-deep { --tag-bg: var(--p-gold-deep); --tag-ink: #FFFFFF; }
+.reveal .md-c-green-deep { color: var(--p-green-deep); }
+html.pal-dark .reveal .md-c-green-deep { color: var(--p-green); }
+.reveal .md-bg-green-deep { --tag-bg: var(--p-green-deep); --tag-ink: #FFFFFF; }
+.reveal .md-c-teal-deep { color: var(--p-teal-deep); }
+html.pal-dark .reveal .md-c-teal-deep { color: var(--p-teal); }
+.reveal .md-bg-teal-deep { --tag-bg: var(--p-teal-deep); --tag-ink: #FFFFFF; }
+.reveal .md-c-blue-deep { color: var(--p-blue-deep); }
+html.pal-dark .reveal .md-c-blue-deep { color: var(--p-blue); }
+.reveal .md-bg-blue-deep { --tag-bg: var(--p-blue-deep); --tag-ink: #FFFFFF; }
+.reveal .md-c-navy-deep { color: var(--p-navy-deep); }
+html.pal-dark .reveal .md-c-navy-deep { color: var(--p-navy); }
+.reveal .md-bg-navy-deep { --tag-bg: var(--p-navy-deep); --tag-ink: #FFFFFF; }
+.reveal .md-c-purple-deep { color: var(--p-purple-deep); }
+html.pal-dark .reveal .md-c-purple-deep { color: var(--p-purple); }
+.reveal .md-bg-purple-deep { --tag-bg: var(--p-purple-deep); --tag-ink: #FFFFFF; }
+.reveal .md-c-pink-deep { color: var(--p-pink-deep); }
+html.pal-dark .reveal .md-c-pink-deep { color: var(--p-pink); }
+.reveal .md-bg-pink-deep { --tag-bg: var(--p-pink-deep); --tag-ink: #FFFFFF; }
+.reveal .md-c-grey-deep { color: var(--p-grey-deep); }
+html.pal-dark .reveal .md-c-grey-deep { color: var(--p-grey); }
+.reveal .md-bg-grey-deep { --tag-bg: var(--p-grey-deep); --tag-ink: #FFFFFF; }
 .reveal .md-bg-light-red { --tag-bg: var(--p-light-red); --tag-ink: var(--p-ink); }
 .reveal .md-bg-light-orange { --tag-bg: var(--p-light-orange); --tag-ink: var(--p-ink); }
 .reveal .md-bg-light-gold { --tag-bg: var(--p-light-gold); --tag-ink: var(--p-ink); }
@@ -709,6 +741,114 @@ html.mga-final .reveal .md-sub .md-sub-b { margin-left: 0.25em; }
 
 .fa-undo::before { content: '\f0e2'; }
 .fa-undo::after { content: '\10f0e2'; }
+
+/* Added for 2A English Words (phase 6) */
+.fa-star::before { content: '\f005'; }
+.fa-star::after { content: '\10f005'; }
+
+.fa-star-half::before { content: '\f089'; }
+.fa-star-half::after { content: '\10f089'; }
+
+.fa-plus-square::before { content: '\f0fe'; }
+.fa-plus-square::after { content: '\10f0fe'; }
+
+.fa-holly-berry::before { content: '\f7aa'; }
+.fa-holly-berry::after { content: '\10f7aa'; }
+
+.fa-lock-open-alt::before { content: '\f3c2'; }
+.fa-lock-open-alt::after { content: '\10f3c2'; }
+
+.fa-lock-alt::before { content: '\f30d'; }
+.fa-lock-alt::after { content: '\10f30d'; }
+
+.fa-arrow-alt-from-right::before { content: '\f348'; }
+.fa-arrow-alt-from-right::after { content: '\10f348'; }
+
+.fa-arrow-alt-from-left::before { content: '\f347'; }
+.fa-arrow-alt-from-left::after { content: '\10f347'; }
+
+.fa-arrow-alt-from-bottom::before { content: '\f346'; }
+.fa-arrow-alt-from-bottom::after { content: '\10f346'; }
+
+.fa-scroll-old::before { content: '\f70f'; }
+.fa-scroll-old::after { content: '\10f70f'; }
+
+.fa-folder-tree::before { content: '\f802'; }
+.fa-folder-tree::after { content: '\10f802'; }
+
+.fa-waveform-path::before { content: '\f8f2'; }
+.fa-waveform-path::after { content: '\10f8f2'; }
+
+.fa-head-side-brain::before { content: '\f808'; }
+.fa-head-side-brain::after { content: '\10f808'; }
+
+.fa-ban::before { content: '\f05e'; }
+.fa-ban::after { content: '\10f05e'; }
+
+
+/* Icons used in Marc's source decks (phase 6). Every icon in the licensed
+   Font Awesome 5 Duotone font can be added the same way: its codepoint and
+   that codepoint plus 0x100000 for the secondary layer. */
+.fa-solar-system::before { content: '\e02f'; }
+.fa-solar-system::after { content: '\10e02f'; }
+
+.fa-people-arrows::before { content: '\e068'; }
+.fa-people-arrows::after { content: '\10e068'; }
+
+.fa-filter::before { content: '\f0b0'; }
+.fa-filter::after { content: '\10f0b0'; }
+
+.fa-users::before { content: '\f0c0'; }
+.fa-users::after { content: '\10f0c0'; }
+
+.fa-bolt::before { content: '\f0e7'; }
+.fa-bolt::after { content: '\10f0e7'; }
+
+.fa-star-exclamation::before { content: '\f2f3'; }
+.fa-star-exclamation::after { content: '\10f2f3'; }
+
+.fa-dna::before { content: '\f471'; }
+.fa-dna::after { content: '\10f471'; }
+
+.fa-dove::before { content: '\f4ba'; }
+.fa-dove::after { content: '\10f4ba'; }
+
+.fa-handshake-alt::before { content: '\f4c6'; }
+.fa-handshake-alt::after { content: '\10f4c6'; }
+
+.fa-truck-loading::before { content: '\f4de'; }
+.fa-truck-loading::after { content: '\10f4de'; }
+
+.fa-balance-scale-left::before { content: '\f515'; }
+.fa-balance-scale-left::after { content: '\10f515'; }
+
+.fa-blender::before { content: '\f517'; }
+.fa-blender::after { content: '\10f517'; }
+
+.fa-check-double::before { content: '\f560'; }
+.fa-check-double::after { content: '\10f560'; }
+
+.fa-grin::before { content: '\f580'; }
+.fa-grin::after { content: '\10f580'; }
+
+.fa-weight-hanging::before { content: '\f5cd'; }
+.fa-weight-hanging::after { content: '\10f5cd'; }
+
+.fa-layer-plus::before { content: '\f5ff'; }
+.fa-layer-plus::after { content: '\10f5ff'; }
+
+.fa-bullseye-arrow::before { content: '\f648'; }
+.fa-bullseye-arrow::after { content: '\10f648'; }
+
+.fa-sparkles::before { content: '\f890'; }
+.fa-sparkles::after { content: '\10f890'; }
+
+.fa-link::before { content: '\f0c1'; }
+.fa-link::after { content: '\10f0c1'; }
+
+/* two stars side by side (compound words): both layers carry both glyphs */
+.fa-star-double::before { content: '\f005\f005'; }
+.fa-star-double::after { content: '\10f005\10f005'; }
 
 
 /* ===========================================
@@ -1533,15 +1673,16 @@ html body .slide-menu-button {
 .reveal .slides section.md-plain h3 { border-bottom: none; }
 
 /* @slide centred — vertically centre short content (reveal pins sections
-   with inline display:block and top:0; nudging with top/transform is safe
-   because reveal only transforms .slides, never sections, with center:false).
+   with inline display:block and top:0; nudging with top/translate is safe
+   because reveal only transforms .slides with center:false).
    The section must shrink to its content (height: auto), or the move down
    by half the stage and back by half its own height cancel out. */
 .reveal .slides section.md-centred,
 .reveal .slides section.md-statement {
     height: auto;
     top: 50%;
-    transform: translateY(-50%);
+    translate: 0 -50%;   /* the translate property: reveal's fade
+                            transition sets transform: none on sections */
 }
 
 /* @section — a part-divider slide: one centred display heading with a
@@ -1671,7 +1812,7 @@ html body .slide-menu-button {
    zoom (not transform) so layout, and therefore the measurement,
    shrinks too.
    =========================================== */
-.reveal .slides section.md-fit > :not(h1):not(h2):not(h3):not(aside) {
+.reveal .slides section.md-fit > :not(h1):not(h2):not(h3):not(aside):not(.md-menu) {
     zoom: var(--fit, 1);
 }
 
@@ -1720,6 +1861,30 @@ html.mga-measuring *::after {
     max-width: calc(33em / 0.72);
 }
 .reveal .md-note > p { margin: 0; }
+/* @note ... :: float — a reminder box that floats at the foot of the
+   slide, centred, out of the flow: the slide's content does not move
+   when it is there (step slides with and without a reminder line up) */
+html:not(.corp) .reveal .slides section .md-note.md-note-float {
+    position: absolute;
+    left: 50%;
+    bottom: 58px;
+    translate: -50% 0;
+    width: max-content;
+    max-width: 1500px;
+    margin: 0;
+    padding: 0.4em 1.1em 0.45em 0.9em;
+    font-size: 0.84em;
+    line-height: 1.3;
+    color: var(--r-main-color, inherit);
+    background: color-mix(in srgb, var(--r-accent, #888) 11%, var(--r-background-color, #FFFFFF));
+    border: none;
+    border-left: 6px solid var(--r-accent, currentColor);
+    border-radius: 0 8px 8px 0;
+    font-style: normal;
+    text-align: left;
+}
+html:not(.corp) .reveal .slides section .md-note.md-note-float em { font-style: italic; }
+html:not(.corp) .reveal .slides section .md-note.md-note-float > p { margin: 0 !important; }
 
 /* Shared by the layout stylesheets (layout-*.css): the palette they
    draw on, taken from whichever theme is active. The contrast pair is
@@ -1823,6 +1988,9 @@ html.mga-build-appear .reveal .slides section .fragment { transition: none !impo
     line-height: 1.2;
 }
 .reveal .slides section.md-statement > blockquote { border-left: none; padding-left: 0; }
+/* a gloss line on a statement slide (class md-gloss, e.g. a paraphrase
+   above or below the sentence): centred at body size */
+.reveal .slides section.md-statement > p.md-gloss { font-size: 1em; max-width: 30em; margin-top: 0.9em; margin-bottom: 1.1em; }
 .reveal .slides section.md-statement > blockquote::before { display: none; }
 .reveal .slides section.md-statement > blockquote p { text-align: center; }
 .reveal .slides section.md-statement > h2,
@@ -2193,6 +2361,32 @@ html.mga-build-appear .reveal .slides section .fragment { transition: none !impo
     height: 0.45em;
     -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12' preserveAspectRatio='none'%3E%3Cpath d='M8 0V4.5C8 8.5 10.5 10.8 15 10.8' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E");
             mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 12' preserveAspectRatio='none'%3E%3Cpath d='M8 0V4.5C8 8.5 10.5 10.8 15 10.8' fill='none' stroke='black' stroke-width='1.6'/%3E%3C/svg%3E");
+}
+/* big: for a tree that is the slide's whole content */
+.reveal .md-tree.md-tree-big { font-size: 1.2em; }
+/* a node that is one tag ([[Free]]): a tinted block at the text's size,
+   icon first, like the tabs of @menu style=tabs */
+.reveal .md-tn-label:has(> .md-tag:only-child) { padding: 0.08em 0; }
+.reveal .md-tn-label > .md-tag:only-child {
+    display: inline-flex;
+    flex-direction: row-reverse;
+    align-items: baseline;
+    gap: 0.4em;
+    font-size: 1em;
+    font-weight: 600;
+    font-variant-caps: normal;
+    letter-spacing: 0;
+    padding: 0.14em 0.65em 0.18em 0.5em;
+    border-radius: 0.3em;
+    background: color-mix(in srgb, var(--tag-bg) 26%, var(--r-background-color, #FFFFFF));
+    color: var(--r-font-color, inherit);
+}
+.reveal .md-tn-label > .md-tag:only-child .md-tag-icon {
+    margin: 0;
+    color: var(--tag-bg);
+    --fa-primary-color: var(--tag-bg);
+    --fa-secondary-color: var(--tag-bg);
+    --fa-secondary-opacity: 0.45;
 }
 /* outline */
 .reveal .md-tree-outline .md-to-row { padding-left: calc(var(--d) * 1.4em); line-height: 1.4; }
@@ -2929,6 +3123,15 @@ html.mga-final .reveal .md-passage .md-c { transition: none; }
 html.reveal-print .reveal .slides .pdf-page > section:not(.stack) {
     height: var(--slide-height, 1080px) !important;
 }
+/* ...so a centred or statement slide centres its content in that height
+   (reveal's print CSS forces display: block and clears transforms) */
+html.reveal-print .reveal .slides .pdf-page > section:is(.md-centred, .md-statement):not(.stack) {
+    top: 0 !important;
+    translate: none;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+}
 
 /* ---------- @card: the turned-corner card ----------
    A callout with its top right corner turned down. This is the plain
@@ -2959,3 +3162,53 @@ html.reveal-print .reveal .slides .pdf-page > section:not(.stack) {
 
 /* @table bars: a bar beneath each "(N%)" cell; forms that draw bars style it */
 .reveal .md-table .md-bar { display: none; }
+
+/* Phase 6 fixes. An empty card or column (a gap kept on purpose) draws
+   nothing; a block straight after a source line keeps its distance. */
+.reveal .md-cards > .md-card:not(:has(> *)) { background: none !important; border-color: transparent !important; box-shadow: none !important; }
+.reveal .slides section .md-source + :is(p, ul, ol, blockquote, div, table, h3, h4) { margin-top: 0.9em; }
+/* @parse show=: tiers not yet shown keep their place, invisibly */
+.reveal .pz .pz-reserved { visibility: hidden; }
+/* @parse plain: clause functions underlined, in the ink, no grammar colours */
+.reveal .pz .pz-fn.pz-plain { color: var(--r-font-color, currentColor); }
+/* @parse big: labels larger, for an analysis taught from the back row */
+.reveal .pz.pz-big .pz-t,
+.reveal .pz.pz-big .pz-b,
+.reveal .pz.pz-big .pz-inl { font-size: 0.72em; }
+/* a lecture's title slide: the one logo at the top right */
+.reveal .title-slide .pres-logo-top { position: absolute; top: 0; right: 0; z-index: 2; line-height: 0; }
+.reveal .title-slide .pres-logo-top img { margin: 0; }
+/* Inserted text in a table cell takes its full width from the start (it
+   fades in, without opening out), so the table does not stretch as cells
+   fill; in the final-state export it is not set in the accent there */
+.reveal td .md-ins { grid-template-columns: 1fr; }
+html.mga-final .reveal td .md-ins { color: inherit; }
+/* a quotation that does not open with a quotation mark does not hang */
+.reveal .slides p.md-no-hang { text-indent: 0 !important; }
+
+/* ---------- example sentences (1 Nov) ----------
+   @card ex: examples on the turned-corner card, in the form's
+   contrasting face (--ex-font: a sans in a serif form, a serif in a
+   sans one). A list on it has no markers and builds as usual; a
+   sub-item or a %%aside%% is a note in the body face. [x]{ex} sets an
+   example inline (in a list, say) in the same face (class md-exs;
+   md-ex is @ex's numbered example). */
+.reveal .md-exs,
+.reveal .md-slip.md-ex-card { font-family: var(--ex-font, inherit); }
+.reveal .md-exs { font-size: var(--ex-scale, 1em); }
+.reveal .md-slip.md-ex-card > :is(p, ul, ol) { font-size: var(--ex-scale, 1em); }
+.reveal .slides section .md-slip.md-ex-card p { white-space: pre-line; }
+.reveal .slides section .md-slip.md-ex-card ul { list-style: none; margin: 0; padding: 0; max-width: none; }
+.reveal .slides section .md-slip.md-ex-card ul > li {
+    padding-left: 0 !important;
+    text-indent: 0 !important;
+    margin: 0 0 0.45em;
+}
+.reveal .slides section .md-slip.md-ex-card ul > li:last-child { margin-bottom: 0; }
+.reveal .slides section .md-slip.md-ex-card ul > li::before { content: none !important; display: none !important; }
+.reveal .slides section .md-slip.md-ex-card li > ul { margin: 0.25em 0 0.2em 1.2em; font-size: 0.86em; }
+.reveal .slides section .md-slip.md-ex-card li li,
+.reveal .md-slip.md-ex-card .md-subtle {
+    font-family: var(--r-main-font);
+    color: var(--r-subtle-color, inherit);
+}

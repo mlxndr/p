@@ -22,7 +22,7 @@ function loadScripts() {
   // ?export: the export page replaces the slides (inc/export.js)
   const X = window.MGA_EXPORT || {};
   if (X.page) {
-    loadScript('../inc/export.js')
+    loadScript((window.MGA_ROOT || '../') + 'inc/export.js')
       .then(() => mgaExportPage())
       .catch(error => showError(error.message));
     return;
@@ -37,7 +37,7 @@ function loadScripts() {
       const enabledPlugins = Object.entries(scriptConfig.plugins)
         .filter(([_, plugin]) => plugin.enabled)
         .map(([_, plugin]) => plugin.path);
-      if (X.print) enabledPlugins.push('../inc/export.js');
+      if (X.print) enabledPlugins.push((window.MGA_ROOT || '../') + 'inc/export.js');
 
       return Promise.all(enabledPlugins.map(loadScript));
     })
@@ -269,8 +269,8 @@ function cacheDeckForOffline() {
     };
     add(location.pathname);
     add('./content.md'); add('./meta.json'); add('./title.md');
-    add('../inc/site.json');
-    add('../inc/export.js'); add('../inc/css/export.css');   // export page
+    add((window.MGA_ROOT || '../') + 'inc/site.json');
+    add((window.MGA_ROOT || '../') + 'inc/export.js'); add((window.MGA_ROOT || '../') + 'inc/css/export.css');   // export page
     (window.MGA_INCLUDES || []).forEach(add);          // @include files
     document.querySelectorAll('img[src]').forEach(function (i) { add(i.getAttribute('src')); });
     document.querySelectorAll('[data-background-image]').forEach(function (e) { add(e.getAttribute('data-background-image')); });
@@ -288,15 +288,15 @@ function cacheDeckForOffline() {
      'woff2/century_supra_ot_b_bold.woff2', 'woff2/century_supra_ot_b_bold_italic.woff2',
      'woff2/Premiera-Book.woff2', 'woff2/Premiera-Italic.woff2', 'woff2/Premiera-Bold.woff2',
      'woff2/Bitter[wght].woff2', 'woff2/Bitter-Italic[wght].woff2'
-    ].forEach(function (f) { add('../inc/css/' + f); });
+    ].forEach(function (f) { add((window.MGA_ROOT || '../') + 'inc/css/' + f); });
     // corporate decks: the stylesheet, every Noto Sans face and the logo
     // block, whether or not the slides seen so far used them
     if (window.MGA_CORPORATE) {
       ['corp-uog.css', 'woff2/noto-sans/NotoSans-Light.woff2', 'woff2/noto-sans/NotoSans-LightItalic.woff2',
        'woff2/noto-sans/NotoSans-Regular.woff2', 'woff2/noto-sans/NotoSans-Italic.woff2',
        'woff2/noto-sans/NotoSans-SemiBold.woff2', 'woff2/noto-sans/NotoSans-Bold.woff2',
-       'woff2/noto-sans/NotoSans-BoldItalic.woff2'].forEach(function (f) { add('../inc/css/' + f); });
-      add('../img/uog_block.png');
+       'woff2/noto-sans/NotoSans-BoldItalic.woff2'].forEach(function (f) { add((window.MGA_ROOT || '../') + 'inc/css/' + f); });
+      add((window.MGA_ROOT || '../') + 'img/uog_block.png');
       if (window.MGA_META && window.MGA_META.photo) add(window.MGA_META.photo);
     }
     const worker = reg.active || navigator.serviceWorker.controller;

@@ -1098,3 +1098,6 @@ html.pal-dark .reveal .slides section:has(.md-menu .md-menu-item.is-lit.md-bg-li
 
 /* the menu heading centred under its lit item (positionMenuHeads) */
 .reveal .md-menu-head { --menu-head-align: centre; }
+
+/* example sentences (@card ex, [x]{ex}): the contrasting face */
+.reveal { --ex-font: 'Bitter', 'Noto Serif', Georgia, serif; }

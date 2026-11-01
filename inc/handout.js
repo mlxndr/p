@@ -1,3 +1,9 @@
+/* The site root as the deck's handout.html gives it ('../inc/handout.js'
+   one folder down, '../../inc/handout.js' two down) */
+var HANDOUT_ROOT = (function () {
+    var me = document.currentScript && document.currentScript.getAttribute('src');
+    return (me && /inc\/handout\.js/.test(me)) ? me.replace(/inc\/handout\.js.*$/, '') : '../';
+})();
 /**
  * Handout Generator
  * Converts presentation markdown to printable handout format using marked.js
@@ -21,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // wins; the generated one only appears if #handout-title exists.
     try {
         const [site, meta] = await Promise.all([
-            fetch('../inc/site.json').then(r => r.ok ? r.json() : {}).catch(() => ({})),
+            fetch(HANDOUT_ROOT + 'inc/site.json').then(r => r.ok ? r.json() : {}).catch(() => ({})),
             fetch('./meta.json').then(r => r.ok ? r.json() : null).catch(() => null)
         ]);
         if (meta) {

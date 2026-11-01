@@ -34,9 +34,9 @@
        theme-sync in script-loader.js swaps mono/white variants, keyed on
        the class names. */
     var LOGOS = {
-        leverhulme: { src: '../img/leverhulme_cmyk_black2.png', cls: 'theme-logo leverhulme-logo', h: 104, alt: 'Leverhulme Trust Logo' },
-        uog:        { src: '../img/uog_mono.png',               cls: 'theme-logo uog-logo',        h: 95,  alt: 'University of Glasgow Logo' },
-        ht:         { src: '../img/ht-black-colour.png',        cls: 'theme-logo ht-logo',         h: 95,  alt: 'Historical Thesaurus of English Logo' }
+        leverhulme: { src: (window.MGA_ROOT || '../') + 'img/leverhulme_cmyk_black2.png', cls: 'theme-logo leverhulme-logo', h: 104, alt: 'Leverhulme Trust Logo' },
+        uog:        { src: (window.MGA_ROOT || '../') + 'img/uog_mono.png',               cls: 'theme-logo uog-logo',        h: 95,  alt: 'University of Glasgow Logo' },
+        ht:         { src: (window.MGA_ROOT || '../') + 'img/ht-black-colour.png',        cls: 'theme-logo ht-logo',         h: 95,  alt: 'Historical Thesaurus of English Logo' }
     };
 
     function esc(s) {
@@ -110,6 +110,10 @@
         /* Small caps come from a class (base.css), not an inline style,
            so a theme can turn them off */
         var titleClass = single ? 'pres-title-headingfont' : 'pres-title-headingfont pres-title-sc';
+        /* A lecture in a series (teaching decks) with one logo: the logo
+           at the top right, level with the series line */
+        var logoTop = single && meta.series;
+        if (logoTop) html += '<div class="pres-logo-top">' + logos[0] + '</div>\n';
         html += (meta.series ? seriesHtml(meta.series) : '<br><br>') +
             '<h1 class="' + titleClass + '" style="font-size: 2.2em !important; font-weight: 700">' + emph(meta.title) + '</h1>\n';
         if (meta.subtitle) {
@@ -122,7 +126,7 @@
             html += '<tr><td colspan="2"><hr></td></tr>\n<tr>\n';
             html += '<td class="tpa4-l">' + namesLine(authors) +
                     (subLine ? '<br><span class="subtle">' + subLine + '</span>' : '') + '</td>\n';
-            html += '<td class="tpa4-r" style="vertical-align: bottom;">' + logos[0] + '</td>\n';
+            html += '<td class="tpa4-r" style="vertical-align: bottom;">' + (logoTop ? '' : logos[0]) + '</td>\n';
             html += '</tr>\n';
         } else {
             html += '<tr>\n';
@@ -160,7 +164,7 @@
             if (!meta.photoAlt) console.warn('[meta] "photo" needs "photoAlt", a description of the photograph');
             html += '<img class="corp-photo" src="' + esc(meta.photo) + '" alt="' + esc(meta.photoAlt || '') + '" style="' + st + '">';
         }
-        html += '<img class="corp-logo" src="../img/uog_block.png" alt="University of Glasgow">';
+        html += '<img class="corp-logo" src="' + (window.MGA_ROOT || '../') + 'img/uog_block.png" alt="University of Glasgow">';
         html += '<div class="corp-band"><h1>' + emph(meta.title) + '</h1>' +
             (meta.subtitle ? '<p>' + emph(meta.subtitle) + '</p>' : '') + '</div>';
         return html;
@@ -198,7 +202,7 @@
     function buildMetaSlides() {
         var wantsMeta = document.querySelector('section[data-meta]');
         return Promise.all([
-            fetchJson('../inc/site.json').catch(function () { return {}; }),
+            fetchJson((window.MGA_ROOT || '../') + 'inc/site.json').catch(function () { return {}; }),
             fetchJson('./meta.json').catch(function () { return null; })
         ]).then(function (res) {
             var site = res[0], deck = res[1];

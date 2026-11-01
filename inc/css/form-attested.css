@@ -563,3 +563,6 @@ html.pal-dark .reveal .md-slip {
    needs the card itself as its containing block */
 .reveal section.md-quote:has(h2) .md-quote-inner.md-slip,
 .reveal section.md-quote:has(h3) .md-quote-inner.md-slip { position: relative; top: auto; left: auto; right: auto; }
+
+/* example sentences (@card ex, [x]{ex}): the contrasting face */
+.reveal { --ex-font: var(--af-ev); }

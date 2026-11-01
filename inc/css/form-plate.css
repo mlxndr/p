@@ -97,7 +97,11 @@ html.pal-dark .reveal {
                                     section padding beneath absolutely placed layers */
   font-weight: var(--w-text);
 }
-.reveal .slides section:not(.stack):not(.title-slide):not(.md-section) > :last-child:not(.md-over):not(.md-overlay-under) { margin-bottom: 18px; }
+/* (a floating reminder, @note ... :: float, is out of the flow: the
+   block before it keeps the last child's margin, so the slide's content
+   sits where it would without the reminder) */
+.reveal .slides section:not(.stack):not(.title-slide):not(.md-section) > :last-child:not(.md-over):not(.md-overlay-under):not(.md-note-float),
+.reveal .slides section:not(.stack):not(.title-slide):not(.md-section) > :has(+ .md-note-float:last-child) { margin-bottom: 18px; }
 .reveal .slides section:not(.stack):not([style*="display: none"]) {
   display: flex !important;
   flex-direction: column;
@@ -578,6 +582,7 @@ html.pal-dark .reveal .md-menu-strip.md-menu-labels .md-menu-label { color: var(
 .reveal .md-cards { column-gap: calc(28 * var(--px)); row-gap: calc(28 * var(--px)); margin: 0 0 calc(20 * var(--px)); }
 .reveal .md-cards.md-ncols-3 { font-size: calc(38 / 46 * 1em); }
 .reveal .md-cards.md-ncols-4 { font-size: calc(34 / 46 * 1em); column-gap: calc(22 * var(--px)); }
+.reveal .md-cards.md-ncols-4.md-arrows { column-gap: 2.2em; }
 .reveal .md-cards.md-ncols-2 { font-size: calc(42 / 46 * 1em); }
 .reveal .md-card > h3 {
   font-family: var(--f-text);
@@ -847,13 +852,12 @@ html.pal-dark .reveal .md-menu-strip.md-menu-labels .md-menu-label { color: var(
 /* the faded copy under a transcript overlay is laid out as the slide was */
 .reveal .slides section > .md-overlay-under { display: flex; flex-direction: column; box-sizing: border-box; }
 
-/* a markdown blockquote in running text: a quiet rule in the secondary ink */
+/* a markdown blockquote in running text: the text on the body's left
+   edge, the quiet quotation mark hanging in the margin (as in a split
+   layout's text column; Marc preferred it to a rule, 1 Nov) */
 .reveal .slides section > blockquote {
-  border-left: calc(3 * var(--px)) solid var(--ink-2);
-  padding-left: calc(36 * var(--px));
   margin: 0 0 calc(24 * var(--px));
 }
-.reveal .slides section > blockquote::before { display: none; }
 /* a quotation slide with its own heading flows under it */
 .reveal section.md-quote:has(h2) .md-quote-inner { margin: 0; font-size: calc(52 * var(--px)); }
 
@@ -868,6 +872,12 @@ html.pal-dark .reveal .md-menu-strip.md-menu-labels .md-menu-label { color: var(
   margin: 0 auto calc(30 * var(--px));
   text-align: center;
   text-wrap: balance;
+}
+.reveal .slides section.md-statement > p.md-gloss {
+  font-family: var(--f-text); font-weight: 400;
+  font-size: calc(40 * var(--px)); line-height: 1.3;
+  max-width: calc(1300 * var(--px)) !important;
+  margin: calc(44 * var(--px)) auto calc(56 * var(--px));
 }
 .reveal .slides section.md-statement > h2 { border-bottom: 0; min-height: 0; text-align: center; align-self: center; }
 .reveal .slides section.md-statement > .md-source { margin: 0 auto; text-align: center; }
@@ -1032,3 +1042,6 @@ html.pal-dark .reveal .md-slip {
 .reveal section.md-quote:has(h2, h3) .md-quote-inner.md-slip { position: static; font-size: calc(52 * var(--px)); max-width: calc(1600 * var(--px)); }
 .reveal .md-split .md-slip { align-self: start; }
 .reveal .md-split-body .md-slip p { font-size: calc(50 / 46 * 1em); }
+
+/* example sentences (@card ex, [x]{ex}): the contrasting face */
+.reveal { --ex-scale: 1.15; --ex-font: var(--f-app); }

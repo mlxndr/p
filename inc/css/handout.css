@@ -354,3 +354,12 @@ video.md-video { display: block; max-width: 60%; height: auto; margin: 0.5em 0; 
     border-bottom: 1px solid #888;
 }
 .mga-student span.md-answer * { visibility: hidden; }
+
+/* Example sentences (@card ex, [x]{ex}) and a floating reminder
+   (@note ... :: float): in the handout, a ruled block without markers,
+   the examples in the serif (the handout is set in a sans); the reminder as an ordinary note */
+.md-slip.md-ex-card { border-left: 2px solid #ccc; padding-left: 0.8em; margin: 0.5em 0; }
+.md-slip.md-ex-card, .md-exs { font-family: 'Equity', 'Noto Serif', serif; }
+.md-slip.md-ex-card ul { list-style: none; padding-left: 0; }
+.md-slip.md-ex-card li li { font-family: inherit; color: #555; }
+.md-note.md-note-float { position: static; }

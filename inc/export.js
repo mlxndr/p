@@ -123,7 +123,7 @@
         const main = document.createElement('main');
         main.className = 'mga-export';
         main.innerHTML =
-            '<nav class="ex-nav"><a class="ex-jackdaw" href="../" title="All presentations" aria-label="All presentations"></a>' +
+            '<nav class="ex-nav"><a class="ex-jackdaw" href="' + (window.MGA_ROOT || '../') + '" title="All presentations" aria-label="All presentations"></a>' +
                 '<a href="./">Back to the slides</a></nav>' +
             '<header class="ex-head">' +
                 '<h1 id="ex-title"></h1>' +
@@ -200,7 +200,7 @@
         document.body.classList.add('mga-export-body');
 
         /* title and metadata (meta.json merged over the site defaults) */
-        fetch('../inc/site.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
+        fetch((window.MGA_ROOT || '../') + 'inc/site.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
             .then(function (site) {
                 const m = Object.assign({}, site, META);
                 const title = m.title || 'Presentation';

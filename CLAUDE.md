@@ -3,7 +3,7 @@
 **Repository:** mlxndr/p
 **Purpose:** Academic presentation platform (mga.is)
 **Owner:** Marc Alexander, University of Glasgow
-**Last updated:** 2026-10-31 (phase 5B: forms and palettes)
+**Last updated:** 2026-11-01 (phase 6: nested teaching decks, conversions, review fixes)
 
 ## Overview
 
@@ -74,6 +74,16 @@ inc/
                             commercially licensed — never hotlink or move)
     bg/                     Theme background JPEGs
   reveal.js/                Vendored reveal.js 5.2.1 dist + plugins
+{series}/{n}/               Teaching decks two folders down, e.g. 1a/8
+                            (1A, week 8), words/2, sol/3, 2b/3; laid out
+                            as a presentation folder below, with
+                            ../../inc/ in index.html and handout.html;
+                            "unlisted": true keeps them off the landing page
+{series}/index.html         A series index (1a/, 2a/, 2b/, words/, sol/):
+                            inc/series.js lists the numbered decks of the
+                            folders named in <main data-series="words:English
+                            Words,sol:..."> by fetching N/meta.json (1 to 20);
+                            not linked from the landing page
 {presentation}/             e.g. icame47, cilc25
   index.html                Thin generic shell: two data-meta placeholder
                             sections (title/closing) + the content section
@@ -139,7 +149,10 @@ split= sets the image column percentage, default 42):
 
   (@image-right mirrors it; add `build` (or the old `fragment`) to reveal
   the image on click; `bleed` runs the image to the screen edge, cropped,
-  with focus=x,y choosing what the crop keeps)
+  with focus=x,y choosing what the crop keeps, and a heading written
+  before the directive moves into the text column; the text column
+  takes directives (@columns, @cards, @note ...); a @source goes after
+  the split)
 
 Two images side by side:
   @compare
@@ -177,6 +190,9 @@ the image; the image stands alone first:
   all: every mark at once. Add ?coords to the address and click an image
   to see (and copy) the position of the click in percent.
 
+Captions on every image directive take *italic* and **bold**
+(book titles, species names); nothing else in them is markdown.
+
 Video (a click plays it once and it stops on its last frame; markdown
 after it becomes a side column as with @image-left; the poster is what
 the PDF shows; the file is kept for offline use):
@@ -198,20 +214,31 @@ Slide modifiers (expand to classes; combine flags freely):
   @slide hidden             kept in the source; not in the show, PDF or
                             handout (reveal's data-visibility="hidden")
   @slide nohandout          shown, but left out of the student version
-                            and the handout
+                            and the handout (hidden and nohandout apply
+                            to every slide the chunk makes, e.g. all of
+                            a @zoom's slides: carrySlideFlags)
   @slide static             nothing builds unless marked (click marks,
                             @pause, @note build still do)
   @slide build              lists build here even in a listBuild:false deck
   @slide build=auto         the slide's builds run without clicks (0.9 s
                             apart), stopping when the slide is left
+  @slide build=all          every block after the heading arrives in
+                            reading order (paragraphs, h3s, tables, list
+                            items one by one); a block with builds of its
+                            own (a table of answers) arrives, then those
+                            builds; menus and source lines stay put
   @slide morph              auto-animate from the slide before (written on
                             this slide only); words: every word a piece
                             (words=loose ignores punctuation and case);
                             duration=1.5 (seconds; default 1)
   @slide morphemes=split    the state of every morpheme word on the slide
-  @slide statement          one large centred sentence or quotation
+  @slide statement          one large centred sentence or quotation; a
+                            paragraph given class md-gloss (an element
+                            comment, e.g. a paraphrase above and below)
+                            is set centred at body size
   @slide activity           room activity: lighter ground, accent bar at
-                            the screen edge
+                            the screen edge (not used in Marc's lectures:
+                            leave it out when converting)
   @slide text=N, placeholder, textbox   corporate decks: body size in
                             pt; the template's content placeholder or a
                             text box (see Corporate mode)
@@ -226,8 +253,14 @@ Sidenote options (after ` :: ` at the end; a ` :: ` followed by anything
 other than these stays part of the text, so glosses are safe):
   @note Each step is a sense attested in the OED. :: top build
   (top: straight after the heading; build: a click of its own)
+  @note Look out for conjunctions! :: float
+  (float: a reminder box at the foot of the slide, centred, out of the
+  flow, so the content above does not move between step slides with
+  and without it; shows from the start unless build)
 Source line (small, upright, subtle, right-aligned; markdown allowed;
-replaces <p class="md-source">, which still works):
+replaces <p class="md-source">, which still works; after a displayed
+quotation, a left-aligned source starts where the quotation's text
+does; the block after a source keeps a gap):
   @source *OED Online*, s.v. *silly*, adj.
 Group builds: everything after @pause, up to the next @pause or the end
 of the slide, appears on one click as one piece (lists included):
@@ -239,6 +272,9 @@ Displayed quotation (body of the chunk = the quote, markdown allowed):
   @quote attrib="W. E. Gladstone, HC Deb 20 April 1877" [contrast] [card]
   '...the primary record, and not *Hansard's Debates*...'
   (card: the quotation on the turned-corner card)
+  Quotation marks hang into the margin; a quotation (or a split
+  layout's text) that does not open with a quotation mark is set flush
+  (unhangQuotes adds md-no-hang).
 The turned-corner card, a callout for anything (a transcript, an image
 with text, notes), to @end or the end of the slide; each form draws its
 own, the other themes a plain one:
@@ -246,6 +282,19 @@ own, the other themes a plain one:
   @transcript
     a: Are you doing anything on Friday?
   @end
+Example sentences on a card (the card's list has no markers and builds
+as usual; a sub-item or a %%aside%% is a note in the body face; plain
+lines keep their line breaks):
+  @card ex
+  * He **awoke** in the night and **discovered** he **loved** grammar.
+    * Note the commas: ...
+  @end
+  The examples are set in the form's contrasting face, --ex-font (a sans
+  in a serif form: Concourse in Plate and Key, Thumb Index and Fair
+  Copy; a serif in a sans one: Bitter in Attested Forms, Lantern Slide
+  and Quiet Index), scaled by --ex-scale; other themes keep their own
+  face. [Bill is happy.]{ex} sets an example inline (class md-exs) in
+  the same face, for examples inside a list.
 References (hanging indents, smaller, list items never fragment):
   @refs [title="References"]
   * Knight, C. (1865) *Passages of a Working Life*. London.
@@ -291,10 +340,15 @@ consecutive slides with a menu of the same set morph by themselves:
   @menu honours 2>3                 steps: the arrow between 2 and 3 lit
   The heading aligns with the lit item's nearer edge; a form that sets
   --menu-head-align: centre on .md-menu-head centres it under the item.
+  Thumb Index hangs the heading under a strip's lit item on a stem:
+  positionMenuHeads centres it in pixels, inside the side margins, and
+  a morph slide with the same item lit keeps the slide before's left
+  edge (so Abbreviation to Abbrev. changes in place). Autofit never
+  zooms a menu.
   style=strip (circles with icons; the default when every item has an
   icon), tabs (a stack of ribbon tabs), steps (boxes with arrows; the
-  default otherwise). Icons must be in base.css's subset (add a
-  codepoint pair there).
+  default otherwise). Icons must have a codepoint pair in base.css
+  (any icon in the licensed font may be added; see Fonts).
 ```
 
 ### Morph
@@ -325,8 +379,10 @@ the affix side, the state after the bracket.
                                         fades it out
 ```
 
-Pieces are coloured by position from a cycle and take their id from the
-word and the piece, so the same word on adjacent slides morphs.
+Pieces are coloured by their text: each new piece in a deck (un-, help,
+-ful) takes the next colour of a cycle and keeps it wherever it appears
+again, so -ful is the same colour in unhelpful and lustful. Ids come from
+the word and the piece, so the same word on adjacent slides morphs.
 
 ### Text blocks
 
@@ -374,23 +430,28 @@ Numbered examples (numbering runs through the deck):
     text :: (N)                       (a field wholly in parentheses is a tag)
   `@ex x` later repeats a named block with its original numbers.
 Table formatting (prefix for the markdown table that follows):
-  @table [head=COLOUR] [band] [rowhead] [caps] [small] [bars] [widths=22,26,26,26]
+  @table [head=COLOUR] [band] [rowhead] [caps] [small] [bars] [build] [widths=22,26,26,26]
   A header row of empty cells is hidden. widths= are preferred
   percentages; a cell never shrinks below its longest word.
   bars: a cell ending in "(N%)" gets a bar of that length beneath its
   text where the form draws bars (Plate and Key); elsewhere nothing shows.
+  build: body rows arrive one per click, the table laid out full size
+  from the start. {++x++} in a cell opens out without widening the
+  column.
 Concordance (KWIC):
   @kwic [build=context] [prose] [window=N]
     the hammer was used to | strike | the nail into the wall
   \| for a literal bar. build=context: nodes first, contexts on a click.
   window=N (1 to 8): N words either side in position columns (-3 ... +3).
 Trees (indented item lines):
-  @tree [style=diagram|outline] [build | build=level | build=up]
+  @tree [style=diagram|outline] [big] [build | build=level | build=up]
     FTA
       commit the FTA
   diagram: brace diagram; outline: `code :: label` rows. build is
   reading order, build=level one level per click, build=up the leaves
-  first.
+  first. big: 1.2 times the size, for a tree that is the slide. A node
+  that is one set tag ([[Free]]) is drawn as a tinted block with its
+  icon, at the text's size.
 Transcripts (conversation analysis):
   @transcript [numbers] [mono] [overlay] [morph] [build]
     a: Are you doing anything on Friday // evening?
@@ -419,8 +480,8 @@ handout.css.
 
 ```
 Clause and phrase analysis (one item line per analysed line):
-  @parse [steps="class mh brackets+form function clauses highlight"]
-         [paired] [layout=leech] [left]
+  @parse [steps="class mh brackets+form function clauses highlight sentence"]
+         [show="..."] [paired] [layout=leech] [left] [plain] [big]
     [MCl (^S_NP His^M_d family^H_N) (^P_VP bought^H_V) (^O_NP a^M_d house^H_N)]
   word^A_B          A above the word, B below it (either may be empty:
                     has^_a, Bob^H_)
@@ -437,7 +498,11 @@ Clause and phrase analysis (one item line per analysed line):
   Closers may be glued to a word: eyes.)]]}
   Tiers: class (below words), mh (above words), brackets, form (below
   brackets), function (above brackets), clauses (clause brackets and
-  labels), highlight (the ! bands). steps= gives one click per group,
+  labels), sentence ({...} and its Se label), highlight (the ! bands).
+  show= names the tiers on view before any step (show=words: none);
+  tiers neither shown nor stepped keep their space invisibly, so words
+  never move as labels arrive. plain: function labels in the ink, no
+  grammar colours. big: larger labels. steps= gives one click per group,
   a+b sharing a click; tiers not named show from the start; a tier with
   nothing in it takes no click. paired: the list just before the block
   builds with it, item k arriving with step k (the extra items take
@@ -476,6 +541,7 @@ straight after a closing bracket styles the bracketed text.
 ```
   ==x==            highlight (--r-highlight; light-gold by default)
   [x]{name}        text in a palette colour; {accent} = the theme accent
+  [x]{ex}          an example sentence, in the form's example face
   [S x]            grammar function: S P O Od Oi C Cs Co A cj, then a
                    space. Colour at the text's own weight (bold with
                    **[S x]**); Od/Oi take the object colour, Cs/Co the
@@ -493,6 +559,11 @@ straight after a closing bracket styles the bracketed text.
                    version (export page, phase 5)
   [a- + b]{split}  a morpheme word (see Morph above)
 ```
+
+A word starting with a hyphen (an affix: -ness, -mageddon) never breaks
+after its hyphen: joinAffixHyphens (directives.js, MgaBuilds.init) puts a
+word joiner (U+2060) between the hyphen and the letter in the rendered
+slides. Not in corporate mode.
 
 Every paired mark needs a non-space just inside each marker (`a == b`
 stays literal). Static and colour marks nest (`==^^x^^==`,
@@ -582,7 +653,11 @@ fade, slide, convex, concave, zoom; corporate none); `"lockTheme"` and
 `"pdfTheme"` (see Theming). A deck with exactly ONE logo
 takes a restrained title variant automatically: sentence-case title,
 event and date as the subtle line beneath the names, the logo alone
-on the right. Use
+on the right; with a series line too, the logo sits at the top right,
+level with the series (the teaching decks). Teaching decks write the
+series as "English Language & Linguistics 1^^A^^ | Meaning and
+Structure" (course above, lecture series below) and set "closing":
+false (lectures go to Moodle, so no QR slide). Use
 `author` (string) for the common single-author case; `authors` for
 co-authored decks. `logos` maps to the registry in inc/meta.js
 (leverhulme, uog, ht) — add new logos there. Logos are always declared
@@ -594,7 +669,12 @@ data-meta="title" placeholder; both mechanisms coexist.
 
 Copy icame47 (the reference example), edit meta.json, and write
 content.md — index.html and handout.html are generic and should not need
-editing. Keep `<meta charset="utf-8">` as the first thing in `<head>`,
+editing. A teaching deck goes two folders down (`1a/8/`, `words/2/`):
+copy `words/2/index.html` and `handout.html`, which point at
+`../../inc/`. head.js takes the site root from that path and sets
+`window.MGA_ROOT` ('../' or '../../'); everything in inc/ that names a
+site file goes through it, so never write a literal `../inc/` or
+`../img/` in inc/. The landing page and CI find decks at either depth. Keep `<meta charset="utf-8">` as the first thing in `<head>`,
 followed by `<script src="../inc/head.js"></script>`. A deck's own
 default theme and palette go in meta.json: `"theme": "plate"`,
 `"palette": "petrol"` (keys in inc/head.js). head.js reads meta.json
@@ -814,6 +894,11 @@ Quiet Index (thumb-quiet; cream-oxblood / charcoal-brass), Lantern
 Slide (lantern; silver-lamp / claret-gold). The menu's palette swatches
 (paper with the accent in the lower half) show only while a form is the
 theme. The design record is in `994 Agents/2026-10-30-mga-slides-build/5b-design/`.
+Changed after Marc's review (1 Nov): Fair Copy's body is 46px (was 54)
+and its list items take a quiet en dash rather than hanging out of
+their own text; a Plate and Key blockquote in running text has the
+quotation mark in the margin, like one in a split layout's text
+column, instead of a rule. Teaching decks set `"transition": "fade"`.
 
 ### Theme files
 
@@ -917,7 +1002,7 @@ file.
 Change `VERSION` in sw.js to discard all stored copies.
 
 Fonts are self-hosted WOFF2 (Concourse, Equity, Century Supra by Matthew
-Butterick; Premiera (Burgundy, Petrol); Bitter, OFL, variable (Slate);
+Butterick; Premiera (Burgundy, Petrol); Bitter, OFL, variable (Slate; version 3.021, the same file as Bitter Pro's variable font, with small caps, oldstyle figures and Cyrillic);
 Bild by DJR, variable (was Marginalia's; now unused);
 Monaspace Neon (slide code); JetBrains Mono (handout code); Luciole for
 accessibility; Noto Sans 2.000 for the University of Glasgow theme, as
@@ -925,10 +1010,30 @@ accessibility; Noto Sans 2.000 for the University of Glasgow theme, as
 on Marc's Mac; subset to Latin, Greek, Cyrillic and IPA). Noto Sans/Serif from Google Fonts is linked from head.js
 without blocking the page, as a glyph-coverage fallback (IPA and phonetic
 symbols, non-Latin). A Font Awesome 5 Duotone subset is self-hosted for
-content icons (`<i class="fad fa-code"></i>`); the available icons are the
-codepoint pairs listed in base.css — add a pair there to use a new icon.
+content icons (`<i class="fad fa-code"></i>`). fa-duotone-900.woff2 holds
+Marc's whole licensed Font Awesome 5 Duotone set (about 3,700 icons), so
+any of them may be used: add the codepoint pair in base.css
+(`.fa-NAME::before { content: '\fXXX' } .fa-NAME::after { content:
+'\10fXXX' }`). Agents converting decks may choose freely from it.
 
 ## Conventions for AI assistants
+
+- Converting a deck: reproduce the original, then list at the end of the
+  report the slides that would work better with another construction,
+  with one line each on what it would change for the room. Revising a
+  deck: propose those changes first and build once Marc agrees. Never
+  change what a slide says, only how it is shown. Strong constructions
+  to offer: @parse steps (words never move) instead of copied slides
+  with labels added; @marks and @zoom instead of annotated screenshots;
+  {++ -- ~~ ==} inline changes and {answer} on one slide instead of
+  slide runs; @set with @menu for orientation in long topics; morpheme
+  words and @slide morph where the motion explains; @cards (arrows,
+  stack, accent) for comparisons and scales; @card ex for example
+  sentences; @kwic build=context; @transcript overlay; @image hold for
+  a chart under changing commentary; @video for explanatory motion.
+  Weak here: hand-placed boxes, rotated text, decorative motion, more
+  than about eight list items. (reference.html in the Agents folder,
+  "Designing for the framework", has the full table.)
 
 - Use the @-directives for all image slides; do not hand-write layout divs
   or inline font-size styles in markdown.

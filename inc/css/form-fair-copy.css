@@ -28,7 +28,7 @@
     --r-serif-font: 'Equity', 'Bitter', 'Noto Serif', Georgia, serif;
     --r-heading-font: 'Concourse', 'Noto Sans', 'Helvetica Neue', sans-serif;
     --r-heading-bold-font: 'Concourse', 'Noto Sans', 'Helvetica Neue', sans-serif;
-    --r-main-font-size: 54px;
+    --r-main-font-size: 46px;   /* 54px until 1 Nov: Marc chose the smaller size */
     --sc-tracking: 0;
 
     --fc-ink2: var(--pal-ink2);
@@ -96,7 +96,8 @@ html.reveal-print .reveal .slides .pdf-page > section.md-statement:not(.stack) {
 }
 .reveal strong, .reveal b { font-weight: 700; }
 
-/* ---------- lists: no markers; each item hangs out of its own text ---------- */
+/* ---------- lists: a quiet en dash hanging before each item (1 Nov;
+   until then no marker, each item hanging out of its own text) ---------- */
 .reveal .slides section ul {
     display: block;
     list-style: none;
@@ -107,15 +108,22 @@ html.reveal-print .reveal .slides .pdf-page > section.md-statement:not(.stack) {
 .reveal .slides section ul ul { font-size: 100%; margin: 0.24em 0 0 0.92em; }
 .reveal .slides section li :not(li) { text-indent: 0; }
 .reveal .slides section ul > li {
-    padding-left: 0.92em;
-    text-indent: -0.92em;
+    position: relative;
+    padding-left: 0.9em;
+    text-indent: 0;
     margin: 0 0 0.48em;
 }
 .reveal .slides section ul ul > li {
     font-size: 0.88em;
-    padding-left: 0.91em;
-    text-indent: -0.91em;
+    padding-left: 0.9em;
+    text-indent: 0;
     margin: 0 0 0.18em;
+}
+.reveal .slides section ul > li::before {
+    content: '\2013';
+    position: absolute;
+    left: 0;
+    color: var(--fc-ink2);
 }
 .reveal .slides section ul ul > li:last-child { margin-bottom: 0; }
 .reveal .slides section ol > li { margin: 0 0 0.48em; }
@@ -327,6 +335,7 @@ html.reveal-print .reveal .slides .pdf-page > section.md-statement:not(.stack) {
 .reveal .md-cards.md-ncols-2 { font-size: 0.9em; }
 .reveal .md-cards.md-ncols-3 { font-size: 0.8em; }
 .reveal .md-cards.md-ncols-4 { font-size: 0.72em; column-gap: 30px; }
+.reveal .md-cards.md-ncols-4.md-arrows { column-gap: 2.2em; }
 .reveal .md-style-box .md-card {
     background: var(--pal-quiet);
     border: none;
@@ -350,8 +359,8 @@ html.reveal-print .reveal .slides .pdf-page > section.md-statement:not(.stack) {
 .reveal .slides section .md-card ul { margin: 0; }
 .reveal .slides section .md-card ul > li {
     line-height: 1.22;
-    padding-left: 0.75em;
-    text-indent: -0.75em;
+    padding-left: 0.9em;
+    text-indent: 0;
     margin: 0 0 0.4em;
 }
 /* on a contrast slide the panels are veils of the slide's ink */
@@ -493,6 +502,7 @@ html.reveal-print .reveal .slides .pdf-page > section.md-statement:not(.stack) {
     padding-left: 0;
     text-indent: 0;
 }
+.reveal .slides section.md-refs ul > li::before { content: none; }
 .reveal .slides section.md-refs ul > li {
     line-height: 1.24;
     padding-left: 1.53em;
@@ -578,3 +588,6 @@ html.pal-dark .reveal .md-quote-inner.md-slip > blockquote {
 .reveal .md-quote-inner.md-slip > blockquote {
     padding: 0.88em 1.6em 0.94em 1.34em;
 }
+
+/* example sentences (@card ex, [x]{ex}): the contrasting face */
+.reveal { --ex-font: 'Concourse', 'Noto Sans', sans-serif; }

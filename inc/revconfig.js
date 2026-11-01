@@ -113,7 +113,7 @@
             bar.className = 'menu-topbar';
             const jd = document.createElement('a');
             jd.className = 'menu-jackdaw';
-            jd.href = '../';
+            jd.href = window.MGA_ROOT || '../';
             jd.title = 'All presentations';
             jd.setAttribute('aria-label', 'All presentations');
             bar.appendChild(jd);

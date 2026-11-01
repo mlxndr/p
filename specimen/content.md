@@ -102,6 +102,21 @@ The turned-corner card holds any markdown, here a transcript:
 
 --
 
+## Example Sentences
+
+* A simple sentence has one Predicator; [Bill **is** happy.]{ex} is one.
+
+@card ex
+* He **awoke** in the night and **discovered** he **loved** grammar.
+* I **loved** grammar when I first **read** about it.
+  * A note on the card, in the body face.
+* You **can kick** my dog, but you **can't insult** grammar.
+@end
+
+@note A reminder that floats at the foot of the slide. :: float
+
+--
+
 ## An Inline Blockquote
 
 Markdown's own quotation marker:

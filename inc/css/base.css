@@ -3035,6 +3035,8 @@ html.mga-coords .reveal .md-marks-box { cursor: crosshair; }
     background: transparent;
 }
 .reveal .md-video-split .md-split-img video { flex: 1 1 0; }
+/* with controls, the box hugs the picture so the bar spans only the video */
+.reveal video.md-video[data-controls] { width: auto; max-width: 100%; margin: 0 auto; }
 
 
 /* ===========================================

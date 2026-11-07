@@ -230,7 +230,7 @@
        slide arrives instead. Markdown after the directive becomes a side
        column, as with @image-left. The poster is what the PDF shows. */
     const VIDEO_KEYS = ['alt', 'caption', 'poster', 'split', 'id'];
-    const VIDEO_FLAGS = ['autoplay', 'loop', 'muted'];
+    const VIDEO_FLAGS = ['autoplay', 'loop', 'muted', 'controls'];
     function emitVideo(opts, bodyLines, deck, srcLine, lineNo, name) {
         const fail = function (m) { return { md: errorSlide(name, lineNo, srcLine, '@video: ' + m), isError: true }; };
         for (const k of Object.keys(opts)) {
@@ -250,7 +250,7 @@
         const video = '<video class="md-video" data-md-video="' + esc(vid) + '" src="' + esc(opts._path) + '"' +
             (opts.poster ? ' poster="' + esc(opts.poster) + '"' : '') +
             ' preload="metadata" playsinline' + (has(opts, 'muted') ? ' muted' : '') + (has(opts, 'loop') ? ' loop' : '') +
-            (auto ? ' data-autoplay' : '') +
+            (auto ? ' data-autoplay' : '') + (has(opts, 'controls') ? ' data-controls' : '') +
             ' aria-label="' + esc(opts.alt || (opts.caption || '').replace(/\*/g, '')) + '"></video>\n' +
             (auto ? '' : '<span class="fragment md-video-cue" data-md-video="' + esc(vid) + '" aria-hidden="true"></span>\n');
         const caption = opts.caption ? '<figcaption class="md-frame-caption">' + capHtml(opts.caption) + '</figcaption>\n' : '';
@@ -3825,7 +3825,10 @@
     }
 
     /* @video: the hidden cue fragment plays the video once from the start
-       (it stops on its last frame); stepping back stops it and rewinds */
+       (it stops on its last frame); stepping back stops it and rewinds.
+       The controls flag shows the browser's own controls while the pointer
+       is over the video, and hands the keyboard back to the deck after each
+       use so the clicker and arrow keys still move the slides */
     function wireVideos(deck) {
         // export and print views: every video shows its poster
         if (document.documentElement.classList.contains('mga-final') || (window.MGA_EXPORT || {}).print) {
@@ -3834,6 +3837,13 @@
             document.querySelectorAll('.reveal .md-video-cue').forEach(function (c) { c.classList.remove('fragment'); });
             return;
         }
+        document.querySelectorAll('.reveal video[data-controls]').forEach(function (v) {
+            v.addEventListener('mouseenter', function () { v.controls = true; });
+            v.addEventListener('mouseleave', function () { v.controls = false; v.blur(); });
+            ['play', 'pause', 'seeked', 'volumechange'].forEach(function (t) {
+                v.addEventListener(t, function () { setTimeout(function () { v.blur(); }, 0); });
+            });
+        });
         const each = function (e, fn) {
             (e.fragments || [e.fragment]).forEach(function (f) {
                 if (!f || !f.classList.contains('md-video-cue')) return;

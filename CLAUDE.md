@@ -237,7 +237,10 @@ Captions on every image directive take *italic* and **bold**
 Video (a click plays it once and it stops on its last frame; markdown
 after it becomes a side column as with @image-left; the poster is what
 the PDF shows; the file is kept for offline use):
-  @video ./media/clip.mp4 poster=./img/clip.png alt="..." [split=66] [caption="..."] [autoplay] [loop] [muted]
+  @video ./media/clip.mp4 poster=./img/clip.png alt="..." [split=66] [caption="..."] [autoplay] [loop] [muted] [controls]
+  controls: the browser's own controls appear while the pointer is over
+  the video (pause, scrub, replay), and the keyboard returns to the deck
+  after each use, so the clicker still moves the slides.
 ```
 
 ### Text-slide directives

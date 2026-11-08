@@ -16,11 +16,12 @@ the browser. CI: `.github/workflows/build-manifest.yml` regenerates
 series index pages) from each folder's `meta.json` on push; `.github/workflows/slides-pdf.yml` exports each changed deck to
 `<deck>/slides.pdf` (DeckTape, 1920x1080, fragments shown, spares at the
 end, `pdfTheme` if set) and `<deck>/slides-handout.pdf` (the student
-version, two slides to an A4 page, via `scripts/handout-nup.py`), and,
-where the deck has a handout.html, `<deck>/text-handout.pdf` (the text
-handout, student version) and `<deck>/notes.pdf` (the notes in two
-columns, full copy), printed by headless Chrome with
-`scripts/text-handout-pdf.js`; it can be run by hand to rebuild every
+version, two slides to an A4 page, via `scripts/handout-nup.py`),
+`<deck>/slides-16up.pdf` (the full slides.pdf, 16 to a landscape A4 page,
+for the lectern) and, where the deck has a handout.html,
+`<deck>/notes.pdf` (the notes in two columns, full copy), printed by
+headless Chrome with `scripts/text-handout-pdf.js` (the text handout is
+printed on demand from the export page, not by CI); it can be run by hand to rebuild every
 deck after inc/ changes.
 
 Test locally with any static server, e.g. `python3 -m http.server 8000`,
@@ -134,7 +135,7 @@ archive/                    Old presentations (note: their ../inc/ paths
                             are broken one level deep — known issue)
 f/                          Binary file storage (PDF/PPTX exports)
 scripts/                    build-manifest.js (CI); handout-nup.py (CI:
-                            slides.pdf to an A4 handout, N per page);
+                            slides.pdf to an A4 handout, 1, 2, 3, 6 or 16 per page);
                             text-handout-pdf.js (CI: handout.html to PDF
                             in headless Chrome, with puppeteer-core);
                             build-palettes.py (by hand: palettes.css)
@@ -910,18 +911,18 @@ dividers are never scaled.
 slides (head.js reads the options into `window.MGA_EXPORT`;
 script-loader.js loads `inc/export.js`); the menu's top band links to
 it ("Export"). It offers: the slides for printing, final state or a page
-for every build; a handout of 1, 2, 3 or 6 slides to an A4 page, framed
+for every build; a handout of 1, 2, 3, 6 or 16 slides to an A4 page (16: a landscape grid, no lines), framed
 and numbered, optionally with lines for notes; the text handout
 (`handout.html`, where the deck has one); the source files (content.md,
 meta.json, title.md, every `@include`d file); links to the CI's
-`slides.pdf`, `slides-handout.pdf`, `text-handout.pdf` and `notes.pdf`
+`slides.pdf`, `slides-handout.pdf`, `slides-16up.pdf` and `notes.pdf`
 where they exist. Theme and palette
 are chosen on the page (default `pdfTheme`, else the deck's theme);
 corporate decks print in the template.
 
 The print views are reveal's print mode (`?print-pdf`) with these
 options: `fragments=false` (final state), `builds=1` (a page per build:
-`pdfSeparateFragments`), `handout=1|2|3|6`, `lines=1`, `student=1`,
+`pdfSeparateFragments`), `handout=1|2|3|6|16`, `lines=1`, `student=1`,
 `spares=0`, `paper=1`, plus `theme=`/`palette=`. A bar at the top (not
 printed) holds the Print button, enabled once pages, fonts and images are
 ready, and says which paper and orientation to choose; then refitSlides

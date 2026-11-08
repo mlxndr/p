@@ -8,7 +8,7 @@
      - a bar at the top of the screen with the Print button, enabled once
        every page is laid out, fonts loaded and images decoded (the bar
        is not printed);
-     - handouts (handout=1|2|3|6): reveal's one-slide pages are moved
+     - handouts (handout=1|2|3|6|16): reveal's one-slide pages are moved
        onto A4 sheets, framed and numbered, with lines for notes if
        asked (lines=1), and the page number at the foot;
      - once ready, slide measurements are frozen (refitSlides does
@@ -120,7 +120,7 @@
               '<p class="ex-desc">The deck’s own ' + (META.pdfTheme ? 'theme for PDFs' : 'theme') +
                 ' is chosen to begin with. Both apply to the slides and the handout.</p>';
 
-        const per = [1, 2, 3, 6].indexOf(prefs.perPage) !== -1 ? prefs.perPage : 2;
+        const per = [1, 2, 3, 6, 16].indexOf(prefs.perPage) !== -1 ? prefs.perPage : 2;
         const main = document.createElement('main');
         main.className = 'mga-export';
         main.innerHTML =
@@ -162,10 +162,10 @@
 
             '<section class="ex-sec" aria-labelledby="ex-h-handout">' +
                 '<h2 id="ex-h-handout">Handout</h2>' +
-                '<p class="ex-desc">Slides on A4, each framed and numbered, final state.</p>' +
+                '<p class="ex-desc">Slides on A4, each framed and numbered, final state; 16 to a page is a landscape grid to glance at from the lectern.</p>' +
                 '<div class="ex-row ex-per" role="radiogroup" aria-label="Slides per page">' +
                     '<span class="ex-label">Slides per page</span>' +
-                    [1, 2, 3, 6].map(function (n) { return radio('per', n, String(n), n === per); }).join('') +
+                    [1, 2, 3, 6, 16].map(function (n) { return radio('per', n, String(n), n === per); }).join('') +
                 '</div>' +
                 '<div class="ex-col">' +
                     check('h-lines', 'Lines for notes', !!prefs.lines) +
@@ -175,6 +175,8 @@
                 '<p><a class="ex-go" id="ex-go-handout" target="_blank" rel="noopener">Open the handout for printing</a></p>' +
                 '<p class="ex-ready" id="ex-ready-handout" hidden>Ready-made: <a href="./slides-handout.pdf">slides-handout.pdf</a>, ' +
                     'two slides to a page, student version, made each time the deck is published.</p>' +
+                '<p class="ex-ready" id="ex-ready-16up" hidden>Ready-made: <a href="./slides-16up.pdf">slides-16up.pdf</a>, ' +
+                    'sixteen slides to a landscape page for the lectern, full copy, made each time the deck is published.</p>' +
             '</section>' +
 
             '<section class="ex-sec" aria-labelledby="ex-h-text" id="ex-text" hidden>' +
@@ -271,14 +273,14 @@
         /* ready-made files and the text handout, where they exist */
         exists('./slides.pdf').then(function (ok) { document.getElementById('ex-ready-slides').hidden = !ok; });
         exists('./slides-handout.pdf').then(function (ok) { document.getElementById('ex-ready-handout').hidden = !ok; });
+        exists('./slides-16up.pdf').then(function (ok) { document.getElementById('ex-ready-16up').hidden = !ok; });
         exists('./handout.html').then(function (ok) { document.getElementById('ex-text').hidden = !ok; });
-        Promise.all([exists('./text-handout.pdf'), exists('./notes.pdf')]).then(function (r) {
-            const files = [];
-            if (r[0]) files.push('<a href="./text-handout.pdf">text-handout.pdf</a> (the handout, student version)');
-            if (r[1]) files.push('<a href="./notes.pdf">notes.pdf</a> (the notes, full copy)');
+        // CI makes notes.pdf only (an old text-handout.pdf is not offered:
+        // it is no longer kept up to date)
+        exists('./notes.pdf').then(function (ok) {
             const p = document.getElementById('ex-ready-text');
-            p.innerHTML = 'Ready-made: ' + files.join(' and ') + ', made each time the deck is published.';
-            p.hidden = !files.length;
+            p.innerHTML = 'Ready-made: <a href="./notes.pdf">notes.pdf</a> (the notes, full copy), made each time the deck is published.';
+            p.hidden = !ok;
         });
         // choosing the notes style suggests the full copy, the handout the student version
         form.querySelectorAll('input[name="tstyle"]').forEach(function (r) {
@@ -313,10 +315,13 @@
 
     /* Where each slide goes on an A4 sheet, in mm. One per page fills a
        landscape sheet; otherwise portrait, slides in a column (2 or 3) or
-       in two columns (6). With lines, the lines go beneath (1 and 2 per
-       page) or beside each slide (3, and 6 in a single column). */
+       in two columns (6); 16 is a four-by-four grid on a landscape sheet,
+       to glance at from the lectern, and has no lines. With lines, the
+       lines go beneath (1 and 2 per page) or beside each slide (3, and 6
+       in a single column). */
     function sheetPlan(n, lines, ratio) {
-        const orient = (n === 1 && !lines) ? 'landscape' : 'portrait';
+        if (n === 16) lines = false;
+        const orient = ((n === 1 && !lines) || n === 16) ? 'landscape' : 'portrait';
         const PW = orient === 'landscape' ? 297 : 210, PH = orient === 'landscape' ? 210 : 297;
         const L = 14, T = 14, B = 20;                // B: room for the page number
         const AW = PW - 2 * L, AH = PH - T - B;
@@ -354,6 +359,14 @@
             }
         } else if (n === 3) {
             column(3, 8, lines ? 96 : AW, lines ? true : undefined);
+        } else if (n === 16) {
+            const gap = 5, colW = (AW - 3 * gap) / 4, rowH = (AH - 3 * gap) / 4;
+            const h = Math.min(colW * ratio, rowH - NUM), w = h / ratio;
+            for (let r = 0; r < 4; r++) {
+                for (let k = 0; k < 4; k++) {
+                    cells.push({ x: L + k * (colW + gap) + (colW - w) / 2, y: T + r * (rowH + gap) + (rowH - h - NUM) / 2, w: w, h: h });
+                }
+            }
         } else if (n === 6 && !lines) {
             const colW = (AW - 8) / 2, rowH = (AH - 2 * 8) / 3, h = colW * ratio;
             for (let r = 0; r < 3; r++) {
@@ -611,7 +624,7 @@
     /* What to choose in the print dialogue, for the bar */
     function dialogueAdvice() {
         if (X.handout) {
-            const land = X.handout === 1 && !X.lines;
+            const land = (X.handout === 1 && !X.lines) || X.handout === 16;
             return 'In the print dialogue, choose A4, ' + (land ? 'landscape' : 'portrait') + '.';
         }
         if (X.paper) {

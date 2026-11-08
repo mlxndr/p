@@ -11,6 +11,19 @@ Who decides how we ought to speak?
 
 ---
 
+## Today
+
+@table widths=50,50
+| Section | Who decides |
+|---|---|
+| Verbal hygiene | everyone |
+| Says who? | experts |
+| Unparliamentary language | institutions |
+| Accents, dialects and Scots | schools |
+| Verbal hygiene for positive ends? | campaigners |
+
+---
+
 ## The LPA toolbox
 
 @cards cols=4
@@ -47,7 +60,7 @@ Who decides how we ought to speak?
 
 @card ex
 * The plural of *octopus* {==should==} be *octopuses*.
-* Most people in this room said *octopi*.
+* Many people in a survey said *octopi* and most people recognised what was meant by the word.
 @end
 
 --
@@ -311,13 +324,6 @@ Who decides how we ought to speak?
 
 --
 
-## Words the Speaker has ruled out
-
-* Erskine May printed a list of expressions ruled unparliamentary until its 20th edition (1983) dropped it
-* Current Commons guidance: “There is no hard and fast list of unparliamentary words”
-
---
-
 ## Sent out of the Chamber
 
 @table build widths=18,30,30,22
@@ -405,22 +411,6 @@ Who decides how we ought to speak?
 
 @slide statement
 *dreich*, *glaikit*, *hoose*, *peely-wally*
-
---
-
-## In the *Dictionary of the Scots Language*
-
-@table build widths=20,56,24
-| Word | Sense | Record |
-|---|---|---|
-| *dreich* | “dreary, cheerless, bleak” (of weather) | from 1721 |
-| *glaikit* | “Senseless, foolish” | from c1475 |
-| *hoose* [hus] | “Sc. forms of Eng. *house*” | 1702 to 2004 |
-| *peelie-wally* | sickly, pale, ill-looking | from 1833 |
-
-@pause
-
-@source *Dictionary of the Scots Language* (dsl.ac.uk): *SND*, *DOST*
 
 --
 
@@ -539,6 +529,19 @@ At least 13.5% of 2024 PubMed abstracts were processed with LLMs, found through 
 
 * Glasgow pupils’ judgements of Scots sentences as “incorrect” fell after a discussion of Scots
 * Cushing (2020): school bans discourage pupils from speaking at all
+
+---
+
+## Who decides how we ought to speak?
+
+@table build widths=26,74
+| Who | Today’s examples |
+|---|---|
+| Everyone | settling arguments about *octopus*, *literally* and *irregardless* |
+| Experts | the Académie française; Johnson; *Webster’s Third*; the Usage Panel |
+| Institutions | the Speaker; Hansard; GOV.UK; Rees-Mogg’s office |
+| Schools | banned-word lists; attitudes to Glaswegian and Scots |
+| Campaigners | the Plain English Campaign; autistic people; critics of “political correctness” |
 
 ---
 

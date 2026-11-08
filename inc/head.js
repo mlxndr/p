@@ -238,7 +238,8 @@
        mode (?print-pdf) with these options:
          fragments=false   final state (reveal's own option)
          builds=1          one page per build
-         handout=1|2|3|6   slides per A4 page, framed and numbered
+         handout=1|2|3|6|16 slides per A4 page, framed and numbered
+                           (16: a landscape grid for the lectern)
          lines=1           lines for notes beside or beneath each slide
          student=1         leaves out @slide nohandout and hides answers
          spares=0          leaves out @slide spare slides
@@ -263,13 +264,13 @@
         print: !!(q && q.has('print-pdf')),
         final: !!(q && q.get('fragments') === 'false'),
         builds: opt('builds', false),
-        handout: [1, 2, 3, 6].indexOf(perPage) !== -1 ? perPage : 0,
+        handout: [1, 2, 3, 6, 16].indexOf(perPage) !== -1 ? perPage : 0,
         lines: opt('lines', false),
         student: opt('student', false),
         spares: opt('spares', true),
         paper: opt('paper', false)
     };
-    if (q && q.has('handout') && !X.handout) console.warn('[export] handout= takes 1, 2, 3 or 6 slides per page');
+    if (q && q.has('handout') && !X.handout) console.warn('[export] handout= takes 1, 2, 3, 6 or 16 slides per page');
     if (!X.print) X.handout = 0;
     var ua = navigator.userAgent || '';
     var WEBKIT = /AppleWebKit\//.test(ua) && !/(Chrome|Chromium|Edg|OPR)\//.test(ua);

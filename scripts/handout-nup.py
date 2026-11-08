@@ -4,7 +4,9 @@ N slides to a page, each framed with its number beneath, and the page
 number at the foot, as the export page's handout (inc/export.js) and
 PowerPoint's handout print lay them out. The slides stay vector.
 
-usage: handout-nup.py slides.pdf slides-handout.pdf [1|2|3|6]   (default 2)
+usage: handout-nup.py slides.pdf slides-handout.pdf [1|2|3|6|16]   (default 2)
+
+16 is a four-by-four grid on landscape A4, for the lectern.
 
 Used by .github/workflows/slides-pdf.yml; needs pypdf and reportlab."""
 import io
@@ -19,12 +21,20 @@ MM = 72 / 25.4
 def plan(n, ratio):
     """Slide boxes on one sheet, in mm from the top left (as sheetPlan in
     inc/export.js, without lines)."""
-    landscape = n == 1
+    landscape = n in (1, 16)
     pw, ph = (297, 210) if landscape else (210, 297)
     left, top, bottom, num = 14, 14, 20, 6
     aw, ah = pw - 2 * left, ph - top - bottom
     cells = []
-    if n == 6:
+    if n == 16:
+        gap = 5
+        col_w, row_h = (aw - 3 * gap) / 4, (ah - 3 * gap) / 4
+        h = min(col_w * ratio, row_h - num)
+        w = h / ratio
+        for r in range(4):
+            for k in range(4):
+                cells.append((left + k * (col_w + gap) + (col_w - w) / 2, top + r * (row_h + gap) + (row_h - h - num) / 2, w, h))
+    elif n == 6:
         col_w, row_h = (aw - 8) / 2, (ah - 16) / 3
         h = col_w * ratio
         for r in range(3):
@@ -45,8 +55,8 @@ def main():
         sys.exit(__doc__)
     src, dst = sys.argv[1], sys.argv[2]
     per = int(sys.argv[3]) if len(sys.argv) > 3 else 2
-    if per not in (1, 2, 3, 6):
-        sys.exit('slides per page: 1, 2, 3 or 6')
+    if per not in (1, 2, 3, 6, 16):
+        sys.exit('slides per page: 1, 2, 3, 6 or 16')
     pages = PdfReader(src).pages
     if not len(pages):
         sys.exit('no pages in ' + src)

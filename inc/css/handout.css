@@ -180,6 +180,9 @@ html.ho-doc, html.ho-doc body { margin: 0; padding: 0; background: #8C8984; colo
 .ho-notes .ho-part { text-align: center; font-size: 11.5pt; padding-top: 2mm; border-top: 0.3mm solid var(--ho-ink); font-variant-caps: small-caps; letter-spacing: 0.04em; margin: 1em 0 0.6em; }
 .ho-notes .ho-body ul, .ho-notes .ho-body ol { padding-left: 0.9em; }
 .ho-notes .ho-body ol { padding-left: 1.2em; }
+/* references keep their hanging indent: the list rules above would
+   otherwise shrink the padding below the negative text-indent */
+.ho-doc .ho-body .ho-refs ul, .ho-doc .ho-body ul.ho-refs { padding-left: 1.5em; }
 .ho-notes .ho-body ul > li::before { left: -0.9em; }
 .ho-notes .ho-fig img { max-height: 52mm; margin: 0 auto; }
 .ho-notes .ho-side img { max-height: 36mm; }

@@ -379,14 +379,14 @@ Who decides how we ought to speak?
 
 @image-left ./img/harris-academy-banned-words.jpg alt="A red sign headed Harris Academy Upper Norwood, ‘Banned Words’: COZ, AINT, LIKE, BARE, EXTRA, INNIT, YOU WOZ and WE WOZ, beginning sentences with BASICALLY, ending sentences with YEAH" split=48 caption="Harris Academy, Upper Norwood (2013); photo: @_griff on Twitter"
 
-* A classroom whiteboard (US, 2024): *skibidi*, *rizz*, *gyatt*, *edging* and others
+* A classroom whiteboard (US, 2024): *skibidi*, *rizz*, *gyatt*, *sigma* and others
 * *6-7*: Dictionary.com’s Word of the Year 2025, banned by US teachers, and top of Lake Superior State University’s 2026 Banished Words List
 
 --
 
 ## Glasgow
 
-* A university lecturer: “The accent of the lowest state of Glaswegians is the ugliest one can encounter.”
+* A university lecturer: “The accent of the lowest state of Glaswegians is the ugliest one can encounter.” (Macaulay 1975)
 * 40 pupils at Lochend Secondary, Easterhouse: 88% rated /hus/ (*house*) as slang, 75% as Scots
 
 @pause
@@ -399,7 +399,7 @@ Who decides how we ought to speak?
 
 @pause
 
-@source Janet Menzies, STELLA, University of Glasgow
+@source Janet Menzies. 1991. An Investigation of Attitudes to Scots and Glasgow Dialect Among Secondary School Pupils. *Scottish Language* 10, 30-46.
 
 --
 
